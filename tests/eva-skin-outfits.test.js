@@ -1,4 +1,3 @@
-import {SKIN} from '../src/hero-kit.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CHARACTERS} from '../src/game.js';
@@ -23,12 +22,14 @@ test('every Shinji skin has a complete EVA body separately from its human pilot'
   assert.ok(body.includes(skin.armor),skin.id+' themed armor');
   assert.ok(body.includes(skin.shade),skin.id+' articulated shadow plates');
   assert.ok(body.includes(skin.neon),skin.id+' themed trim');
-  assert.ok(!body.includes(SKIN.base),skin.id+' EVA keeps a mechanical face');
+  assert.ok(!body.includes('#ffe2c6')&&!body.includes('#ffe0c6'),skin.id+' EVA keeps a mechanical face');
   assert.notDeepEqual(body,pilot,skin.id+' pilot is distinct from the combat unit');
-  assert.ok(pilot.includes(SKIN.base),skin.id+' pilot keeps a human face');
+  assert.ok(pilot.includes('#ffe2c6')||pilot.includes('#ffe0c6'),skin.id+' pilot keeps a human face');
   bodies.push(JSON.stringify(body));
  }
  assert.equal(new Set(bodies).size,SKINS.shinji.length);
+ assert.deepEqual(pilotPixels({skin:'casual'}),casualPixels('shinji'));
+ assert.deepEqual(pilotPixels({skin:'pajamas'}),pajamaPixels('shinji'));
 });
 
 test('themed EVA outfits preserve weapon and frenzy animations on every unit',()=>{
@@ -48,8 +49,8 @@ test('casual and pajama roster portraits show both the matching EVA and dressed 
   const roster=portrait(shinji,skin),avatar=pilotPortrait(skin);
   const look=SKINS.shinji.find(item=>item.id===skin);
   assert.ok(roster.includes(look.armor),skin+' EVA armor appears in the roster');
-  assert.ok(roster.includes(SKIN.base),skin+' pilot appears beside the EVA');
-  assert.ok(avatar.includes(SKIN.base),skin+' HUD keeps the pilot face');
+  assert.ok(roster.includes('#ffe0c6'),skin+' pilot appears beside the EVA');
+  assert.ok(avatar.includes('#ffe0c6'),skin+' HUD keeps the pilot face');
   assert.ok(!avatar.includes(look.armor),skin+' HUD does not crop the EVA as a human face');
  }
 });

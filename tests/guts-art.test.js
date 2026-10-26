@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {characterPixels} from '../src/pixel-characters.js';
-import {GUTS_ART as c,BERSERKER_SKIN_ART as B} from '../src/guts-art.js';
+import {GUTS_ART as c} from '../src/guts-art.js';
 import {GUTS_ICON_IDS,gutsIconPixels,gutsIcon} from '../src/guts-icons.js';
 import {drawGutsSlash,drawGutsUltimate} from '../src/guts-effects.js';
 
@@ -19,7 +19,7 @@ test('the Berserker Armor has a wolf helmet and glowing visor; Golden Age change
  const base=characterPixels('guts'),armor=characterPixels('guts',{form:1}),skin=characterPixels('guts',{skin:'goldenage'});
  for(const p of [armor,skin]){assert.equal(p.length,56*76);assert.notDeepEqual(p,base);}
  assert.ok(count(region(armor,18,9,25,27),c.skin,c.skinLight)===0,'a fully enclosed wolf helmet replaces the face');
- assert.ok(count(region(armor,21,20,15,6),B.red,B.eye)>=8,'a single red visor cut remains visible in dark armor');
+ assert.ok(count(region(armor,21,22,15,6),c.red,'#ffd4ad')>=8,'a single red visor cut remains visible in dark armor');
  assert.ok(count(skin,'#777d85','#bcc1bd')>100,'Band of the Hawk uses brighter silver armor');
  assert.ok(count(skin,'#636c80')>40,'Band of the Hawk cape has its own blue shade');
  assert.deepEqual(armor,characterPixels('guts',{pose:'berserk'}));

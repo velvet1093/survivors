@@ -90,9 +90,3 @@ export function skirt(r,walk,{top=48,bottom=62,width=11,flare=7,colors,hem,tiers
  for(const fx of [-7,-2,3,8])line(28+fx*.6,top+2,28+fx*1.15+walk,bottom-2,lite||mix(mid,'#ffffff',.25));
  if(hem){const l=Math.round(28-width-flare+walk),w=Math.round((width+flare)*2);for(let i=0;i<w;i+=3){rect(l+i,bottom-1,2,2,hem);}}
 }
-// Face accents layered over eye()/mouth() so each hero keeps a signature look.
-// lid: heavy upper lid covering `rows` of the eye (sleepy, deadpan or narrowed eyes).
-export function lid(r,x,y,{lash,rows=1,side=-1}){for(let i=0;i<rows;i++)r.line(x,y+1+i,x+3,y+1+i,i===rows-1?lash:mix(lash,SKIN.shade,.55));r.put(side<0?x-1:x+4,y+rows,lash);}
-// brow: a slanted brow line; tilt>0 angles it down toward the nose (stern), tilt<0 up (worried).
-export function brow(r,x,y,{color,side=-1,tilt=1}){const inner=side<0?x+3:x,outer=side<0?x:x+3;r.line(outer,y,inner,y+tilt,color);}
-export function tear(r,x,y){r.put(x,y,'#bfe6f7');r.put(x,y+1,'#8cc8e6');}
