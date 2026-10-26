@@ -46,7 +46,7 @@ export function tierEntries(category='characters'){
  if(category==='characters')return CHARACTERS.map(hero=>heroEntry(hero,category)).sort(compare);
  if(category==='ultimates')return [...CHARACTERS.map(hero=>heroEntry(hero,category)),frierenBarrageEntry()].sort(compare);
  const type=category==='weapons'?'weapon':'passive';
- return [...Object.entries(ITEMS).filter(([,item])=>item.type===type&&!item.fusionOnly).map(([id,item])=>itemEntry(id,item,category)),...FUSIONS.filter(item=>fusionType(item)===type).map(item=>itemEntry(item.id,item,category,true))].sort(compare);
+ return [...Object.entries(ITEMS).filter(([id,item])=>item.type===type&&(!item.fusionOnly||!FUSIONS.some(f=>f.id===id))).map(([id,item])=>itemEntry(id,item,category)),...FUSIONS.filter(item=>fusionType(item)===type).map(item=>itemEntry(item.id,item,category,true))].sort(compare);
 }
 export function filterTierEntries(category='characters',{query='',form='all'}={}){
  const needle=clean(query);

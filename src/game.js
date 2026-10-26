@@ -1,6 +1,6 @@
 import {DENJI_CHARACTER,DENJI_ITEMS,DENJI_FUSIONS} from './denji-data.js';
 import {PAIRED_ITEMS,PAIRED_FUSIONS} from './paired-item-data.js';
-import {SOUL_GEM_ITEMS,QUINTET_FUSION,SALVATION_FUSION} from './soul-gem-data.js';
+import {SOUL_GEM_IDS,SOUL_GEM_ITEMS,QUINTET_FUSION,SALVATION_FUSION} from './soul-gem-data.js';
 import {COMPLEX_ITEMS,COMPLEX_FUSIONS} from './complex-item-data.js';
 import {TOKYO_MAPS} from './tokyo-maps.js';
 import {BERSERK_MAP} from './berserk-map.js';
@@ -140,12 +140,16 @@ export const fusionIngredients=f=>f.ingredients?[...f.ingredients]:fusionType(f)
 export const fusionConsumedIngredients=f=>f.consumedIngredients?[...f.consumedIngredients]:[...(f.weapon2?[f.weapon2]:[]),...(f.passive2?[f.passive2]:[])];
 export const hasComposite=(p,id)=>!p.hardcore&&ITEMS[id]?.fusionOnly&&(p.passives?.[id]||0)>=ITEMS[id].max&&FUSIONS.some(f=>f.resultItem===id&&p.fusions?.[id]===f.id);
 export const hasQuintet=p=>hasComposite(p,'quintet');
-export const consumedFusionIngredient=(p,id)=>FUSIONS.some(f=>p.fusions?.[fusionBase(f)]===f.id&&fusionConsumedIngredients(f).includes(id))||hasQuintet(p)&&p.quintetPurified===true&&id==='griefseed'||hasComposite(p,'chozosuit')&&p.chozoBarrier===true&&id==='atfield';
+// Soul Bond: maxed Soul Gems merge into one slot a gem at a time, keeping every bonus.
+export const soulBondGems=p=>!p.hardcore&&(p.passives?.soulbond||0)>=1&&Array.isArray(p.soulBond)?p.soulBond.filter(id=>SOUL_GEM_IDS.includes(id)):[];
+const bondPurified=p=>p.soulBondPurified===true&&soulBondGems(p).includes('soulgem');
+export const consumedFusionIngredient=(p,id)=>soulBondGems(p).includes(id)||bondPurified(p)&&id==='griefseed'||FUSIONS.some(f=>p.fusions?.[fusionBase(f)]===f.id&&fusionConsumedIngredients(f).includes(id))||hasQuintet(p)&&p.quintetPurified===true&&id==='griefseed'||hasComposite(p,'chozosuit')&&p.chozoBarrier===true&&id==='atfield';
 // Absorbed passives keep all their statistics and still unlock weapon evolutions.
 export function effectivePassiveRank(p,id){
  if(forbiddenPassive(p,id))return 0;
  const owned=p.passives[id]||0;
  if(id==='griefseed'&&hasQuintet(p)&&p.quintetPurified===true)return Math.max(owned,ITEMS.griefseed.max);
+ if(soulBondGems(p).includes(id)||id==='griefseed'&&bondPurified(p))return Math.max(owned,ITEMS[id].max);
  if(id==='atfield'&&hasComposite(p,'chozosuit')&&p.chozoBarrier===true)return Math.max(owned,ITEMS.atfield.max);
  return FUSIONS.some(f=>hardcoreFusionAllowed(p,f)&&fusionConsumedIngredients(f).includes(id)&&ITEMS[id]?.type==='passive'&&p.fusions?.[fusionBase(f)]===f.id&&((fusionType(f)==='passive'?p.passives:p.weapons)[fusionBase(f)]||0)>=ITEMS[fusionBase(f)].max)?Math.max(owned,ITEMS[id].max):owned;
 }
@@ -162,7 +166,7 @@ export function createPlayer(character,meta={}) {
 }
 export function refreshStats(p) {
   p.shieldRulesVersion=2;
-  const rank=id=>effectivePassiveRank(p,id);const m=p.meta||{},panacea=!p.hardcore&&p.fusions.herbs==='panaceapouch',barrier=!p.hardcore&&(p.fusions.energytank==='adaptivebarrier'||hasComposite(p,'chozosuit')&&p.chozoBarrier===true),purified=!p.hardcore&&(p.fusions.soulgem==='purifiedsoul'&&(p.passives.soulgem||0)>=ITEMS.soulgem.max||hasQuintet(p)&&p.quintetPurified===true),codex=!p.hardcore&&p.fusions.grimoire==='sagecodex';
+  const rank=id=>effectivePassiveRank(p,id);const m=p.meta||{},panacea=!p.hardcore&&p.fusions.herbs==='panaceapouch',barrier=!p.hardcore&&(p.fusions.energytank==='adaptivebarrier'||hasComposite(p,'chozosuit')&&p.chozoBarrier===true),purified=!p.hardcore&&(p.fusions.soulgem==='purifiedsoul'&&(p.passives.soulgem||0)>=ITEMS.soulgem.max||hasQuintet(p)&&p.quintetPurified===true||bondPurified(p)),codex=!p.hardcore&&p.fusions.grimoire==='sagecodex';
   p.maxHp=p.baseHp+rank('senzu')*15+rank('energytank')*18+rank('freedom')*10+rank('masscore')*10+rank('brand')*12+rank('bloodengine')*10+rank('variasuit')*5+(m.hp||0);
   p.regen=1+rank('senzu')*1.5+rank('herbs')*.6+rank('freedom')*.3+rank('bluegem')*.35+rank('toadoil')*.2+(m.regen||0)+(panacea?1:0);p.healing=1+rank('herbs')*.15+rank('toadoil')*.05+(m.healing||0)+(panacea?.25:0)+(purified?.2:0);
   p.cooldown=1-rank('eyes')*.08-rank('timepiece')*.06-rank('griefseed')*.03-rank('purplegem')*.03-rank('sagebeads')*.02-rank('witchring')*.02-(codex?.06:0);
@@ -206,17 +210,38 @@ export function getUpgradePool(p) {
     pool.push({kind:'item',id,level:level+1});
   }
   for(const f of FUSIONS) if(fusionReady(p,f))pool.push({kind:'fusion',id:f.id});
+  pool.push(...soulBondChoices(p));
   if(pool.length<3)pool.push({kind:'heal',id:'heal'});
   return pool;
 }
 export function getChoices(p, random=Math.random,exclude=[]) {
-  const pool=getUpgradePool(p), fusions=pool.filter(c=>c.kind==='fusion');
-  const regular=pool.filter(c=>c.kind!=='fusion');
+  const pool=getUpgradePool(p), fusions=pool.filter(c=>c.kind==='fusion'||c.kind==='bond');
+  const regular=pool.filter(c=>c.kind!=='fusion'&&c.kind!=='bond');
   for(let i=regular.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[regular[i],regular[j]]=[regular[j],regular[i]];}
   // An available fusion is always offered; other slots remain random.
   return [...fusions,...regular.filter(c=>!exclude.includes(c.id)),...regular.filter(c=>exclude.includes(c.id))].slice(0,3);
 }
+// Offered like a fusion: start a bond from two maxed gems, or add one more maxed gem.
+// Skipped while all five gems sit equipped, since the Quintet fusion is then ready.
+export function soulBondChoices(p){
+  if(p.hardcore||hasQuintet(p)||fusionReady(p,QUINTET_FUSION))return [];
+  const bond=soulBondGems(p),ready=SOUL_GEM_IDS.filter(id=>!bond.includes(id)&&(p.passives[id]||0)>=ITEMS[id].max);
+  if(bond.length)return ready.slice(0,1).map(id=>({kind:'bond',id}));
+  return ready.length>=2?[{kind:'bond',id:ready[1],with:ready[0]}]:[];
+}
+function applySoulBond(p,choice){
+  const offer=soulBondChoices(p).find(c=>c.id===choice.id&&(c.with||null)===(choice.with||null));if(!offer)return false;
+  const added=[...(offer.with?[offer.with]:[]),offer.id],gems=[...soulBondGems(p),...added],oldMax=p.maxHp,oldShield=p.maxShield;
+  for(const id of added){if(id==='soulgem'&&p.fusions.soulgem==='purifiedsoul')p.soulBondPurified=true;delete p.passives[id];delete p.fusions[id];}
+  p.passives.soulbond=1;p.soulBond=gems;
+  if(SOUL_GEM_IDS.every(id=>gems.includes(id))){
+    // The fifth gem completes the circle: the bond becomes the Quintet.
+    delete p.passives.soulbond;delete p.soulBond;p.passives.quintet=ITEMS.quintet.max;p.fusions.quintet=QUINTET_FUSION.id;p.quintetPurified=p.soulBondPurified===true;delete p.soulBondPurified;
+  }
+  refreshStats(p);p.hp=Math.min(p.maxHp,p.hp+Math.max(0,p.maxHp-oldMax));p.shield=Math.min(p.maxShield,p.shield+Math.max(0,p.maxShield-oldShield));return true;
+}
 export function applyChoice(p, choice) {
+  if(choice.kind==='bond')return applySoulBond(p,choice);
   if(choice.kind==='fusion') {
     const f=FUSIONS.find(f=>f.id===choice.id);
     if(!f||!fusionReady(p,f))return false;

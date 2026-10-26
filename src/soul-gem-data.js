@@ -1,5 +1,6 @@
 export const SOUL_GEM_IDS=['soulgem','bluegem','yellowgem','redgem','purplegem'];
 export const SOUL_GEM_ITEMS={
+ soulbond:{name:'Soul Bond',type:'passive',series:'PUELLA MAGI MADOKA MAGICA',color:'#e9c3dc',max:1,fusionOnly:true,description:'Maxed Soul Gems bonded together in one passive slot, one gem at a time. Every bonded gem keeps its max-rank bonus. Bond all five (Pink, Blue, Yellow, Red and Purple) and the bond becomes Soul Gems of the Quintet.',scaling:'Every bonded gem keeps its max-rank bonus'},
  quintet:{name:'Soul Gems of the Quintet',type:'passive',series:'PUELLA MAGI MADOKA MAGICA',color:'#f0d5bd',max:1,fusionOnly:true,description:'The five maxed Soul Gems united in one passive slot. Retains Pink’s shield and damage, Blue’s regeneration, Yellow’s area, Red’s damage and Purple’s cooldown and dodge. Combine with Madoka’s Ultimate Madoka bow for Salvation.',scaling:'All five max-rank Soul Gem bonuses'},
  bluegem:{name:'Blue Soul Gem',type:'passive',series:'PUELLA MAGI MADOKA MAGICA',color:'#89c9ed',max:3,description:'Sayaka’s wish of recovery grants +0.35 HP regeneration per second per rank. One of the five Soul Gems needed to create Soul Gems of the Quintet.',scaling:'+0.35 HP/s per rank'},
  yellowgem:{name:'Yellow Soul Gem',type:'passive',series:'PUELLA MAGI MADOKA MAGICA',color:'#eacb7d',max:3,description:'Mami’s binding ribbons grant +5% weapon area per rank. One of the five Soul Gems needed to create Soul Gems of the Quintet.',scaling:'+5% weapon area per rank'},
@@ -9,7 +10,7 @@ export const SOUL_GEM_ITEMS={
 export const QUINTET_FUSION={
  id:'quintet',name:'Soul Gems of the Quintet',type:'passive',passive:'quintet',resultItem:'quintet',series:'PUELLA MAGI MADOKA MAGICA',color:'#f0d5bd',
  ingredients:[...SOUL_GEM_IDS],consumedIngredients:[...SOUL_GEM_IDS],acceptsFusions:{soulgem:['purifiedsoul']},
- description:'Pink + Blue + Yellow + Red + Purple Soul Gems → unite all five LV 3 gems into Soul Gems of the Quintet. Retains every max-rank bonus in one passive slot and frees four slots. A Purified Pink Soul Gem keeps its extra benefits. Any character can unite the gems; Madoka then combines this item with Ultimate Madoka for Salvation.',
+ description:'Pink + Blue + Yellow + Red + Purple Soul Gems → unite all five LV 3 gems into Soul Gems of the Quintet. Retains every max-rank bonus in one passive slot and frees four slots. No need to hold all five at once: bond any two maxed gems into a Soul Bond and add the rest one at a time; the fifth gem completes the Quintet. A Purified Pink Soul Gem keeps its extra benefits. Any character can unite the gems; Madoka then combines this item with Ultimate Madoka for Salvation.',
 };
 export const SALVATION_FUSION={
  id:'salvation',name:'Salvation: Five Wishes',weapon:'rosebow',series:'PUELLA MAGI MADOKA MAGICA',color:'#f4ddc0',

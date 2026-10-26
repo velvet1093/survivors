@@ -1610,6 +1610,19 @@ export const TIER_MEASUREMENTS={
     ]
    ]
   },
+  "soulbond": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+39%"
+    ],
+    [
+     "Effective HP",
+     "+53%"
+    ]
+   ]
+  },
   "senzu": {
    "label": "FROM STAT FORMULAS",
    "stats": [

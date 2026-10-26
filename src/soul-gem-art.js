@@ -1,6 +1,6 @@
 // Native equipment icons and original effects for the five Soul Gems.
 // These drawings only read saved simulation state; they never create hitboxes.
-export const SOUL_GEM_ART_IDS=['soulgem','bluegem','yellowgem','redgem','purplegem','salvation','quintet'];
+export const SOUL_GEM_ART_IDS=['soulgem','bluegem','yellowgem','redgem','purplegem','salvation','quintet','soulbond'];
 export const SOUL_GEM_COLORS=['#f6add5','#a5dafa','#f5d48b','#ee9a9f','#c7b1ed'];
 const INK='#293346',GOLD='#c5a56d',LIGHT='#f4e4b6',TAU=Math.PI*2,cache=new Map();
 const finite=(n,fallback=0)=>Number.isFinite(n)?n:fallback;
@@ -51,6 +51,14 @@ function gem(a,index){
   L(5,14,5,18,LIGHT);L(27,14,27,18,LIGHT);
  }
 }
+// Soul Bond: three gems tied together by a pink ribbon, the circle not yet closed.
+function soulBondIcon(a){
+ const {L,R,E}=a,gems=[[10,11,'#77b5d7','#c2e6ed'],[22,11,'#a88dca','#dfcaf0'],[16,23,'#d97ba8','#f7c3dc']];
+ for(const [[x,y],[nx,ny]]of [[gems[0],gems[1]],[gems[1],gems[2]],[gems[2],gems[0]]])L(x,y,nx,ny,'#b85a86',2);
+ for(const [x,y,base,light]of gems){E(x,y+1,5,6,GOLD);E(x,y,4,5,base);E(x-1,y-2,1.6,2,light);R(x-3,y+5,7,1,GOLD);}
+ // The ribbon knot and its loose tails.
+ E(16,15,2.2,2.2,'#f2a6c6');L(16,15,12,19,'#f2a6c6');L(16,15,20,19,'#f2a6c6');R(15,14,2,1,'#ffe0ee');
+}
 function quintetIcon(a){
  const {P,L,R,E}=a,positions=[[16,6],[26,13],[22,25],[10,25],[6,13]];
  // Five egg-shaped crystals sit in individual gold claws around a silver
@@ -85,7 +93,7 @@ function bowIcon(a){
 }
 export function soulGemPixels(id){
  if(!SOUL_GEM_ART_IDS.includes(id))return null;if(cache.has(id))return cache.get(id);
- const a=pixelFrame(),index=SOUL_GEM_ART_IDS.indexOf(id);if(index<5)gem(a,index);else if(id==='quintet')quintetIcon(a);else bowIcon(a);
+ const a=pixelFrame(),index=SOUL_GEM_ART_IDS.indexOf(id);if(index<5)gem(a,index);else if(id==='quintet')quintetIcon(a);else if(id==='soulbond')soulBondIcon(a);else bowIcon(a);
  const result=[...a.p];for(let y=0;y<32;y++)for(let x=0;x<32;x++)if(a.p[y*32+x])for(const[dx,dy]of[[-1,0],[1,0],[0,-1],[0,1]]){const xx=x+dx,yy=y+dy;if(xx>=0&&xx<32&&yy>=0&&yy<32&&!a.p[yy*32+xx])result[yy*32+xx]=INK;}
  cache.set(id,result);return result;
 }

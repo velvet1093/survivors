@@ -79,7 +79,7 @@ function restoreRunMode(g,character){
  if(!allowed.has('crimson'))g.crimsonEchoes=[];
  // A forged or migrated mixed loadout must not retain foreign attacks in flight.
  if(removed){g.shots=[];g.fields=[];g.summons=[];g.crimsonEchoes=[];g.effects=[];if(g.garuda){g.garuda.inFlight=false;g.garuda.flightId=null;}refreshStats(g.p);}
- const legal=choice=>choice?.kind==='heal'||choice?.kind==='item'&&!!ITEMS[choice.id]&&!forbiddenItem(g.p,choice.id)&&!inactiveFormWeapon(g.p,choice.id)||choice?.kind==='fusion'&&FUSIONS.some(f=>f.id===choice.id&&hardcoreFusionAllowed(g.p,f));
+ const legal=choice=>choice?.kind==='heal'||choice?.kind==='item'&&!!ITEMS[choice.id]&&!forbiddenItem(g.p,choice.id)&&!inactiveFormWeapon(g.p,choice.id)||choice?.kind==='fusion'&&FUSIONS.some(f=>f.id===choice.id&&hardcoreFusionAllowed(g.p,f))||choice?.kind==='bond'&&SOUL_GEM_IDS.includes(choice.id)&&(!choice.with||SOUL_GEM_IDS.includes(choice.with));
  if(g.levelChoices?.some(choice=>!legal(choice)))g.levelChoices=null;
  // A legacy fusion-only cache may have offered only a foreign passive fusion.
  // Preserve its reward opportunity without reopening an empty selection screen.

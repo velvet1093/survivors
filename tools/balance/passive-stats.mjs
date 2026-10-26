@@ -29,6 +29,11 @@ for(const {id,fusion}of passives){
  const score=(gain("offense")*100+gain("defence")*60+gain("ultimate")*30+gain("move")*30+gain("magnet")*4)/slots;
  rows.push({id,slots,offense:+(gain('offense')*100).toFixed(1),defence:+(gain('defence')*100).toFixed(1),ultimate:+(gain('ultimate')*100).toFixed(1),move:+(gain('move')*100).toFixed(1),magnet:+(gain('magnet')*100).toFixed(1),score:+score.toFixed(1)});
 }
+// Soul Bond is built gem by gem rather than through a fusion: measure a four-gem bond.
+{const p=player();for(const id of ['soulgem','bluegem','yellowgem','redgem'])p.passives[id]=G.ITEMS[id].max;G.refreshStats(p);
+ for(let i=0;i<3;i++){const c=G.soulBondChoices(p)[0];if(!c||!G.applyChoice(p,c))break;}
+ if(!p.passives.soulbond)rows.push({id:'soulbond',error:'not bondable'});else{G.refreshStats(p);const v=profile(p),slots=Object.keys(p.passives).length||1,gain=k=>v[k]/base[k]-1;
+  rows.push({id:'soulbond',slots,offense:+(gain('offense')*100).toFixed(1),defence:+(gain('defence')*100).toFixed(1),ultimate:+(gain('ultimate')*100).toFixed(1),move:+(gain('move')*100).toFixed(1),magnet:+(gain('magnet')*100).toFixed(1),score:+((gain('offense')*100+gain('defence')*60+gain('ultimate')*30+gain('move')*30+gain('magnet')*4)/slots).toFixed(1)});}}
 rows.sort((a,b)=>(b.score??-1)-(a.score??-1));
 for(const r of rows)console.log(JSON.stringify(r));
 const fs=await import('fs');fs.mkdirSync(new URL('./results/',import.meta.url),{recursive:true});fs.writeFileSync(new URL('./results/passive-stats.json',import.meta.url),JSON.stringify(rows,null,1));

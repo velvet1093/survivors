@@ -511,6 +511,11 @@ export const PASSIVE_RANKINGS={
   comparison:'It roughly triples effective HP from a single slot while freeing the other, so no other defensive passive comes close per slot.',
   caution:'Requires both max-rank ingredients, and shields only recover while you survive the seven-second recharge.',
   bestWith:'Pair it with damage passives in the freed slot; its shield absorbs chip damage so regen and healing go further.'}),
+ soulbond:entry('A',{
+  reason:'Bonds maxed Soul Gems into one slot as you collect them, keeping each gem’s full bonus and freeing a slot with every gem added.',
+  comparison:'Weaker than the finished Quintet, but it pays off long before all five gems are maxed, so the slots work for you the whole way.',
+  caution:'Only gems at max rank can join, and the bond does nothing on its own until two gems are bonded.',
+  bestWith:'Bond the first two maxed gems, keep adding the rest; the fifth gem turns it into Soul Gems of the Quintet.'}),
  quintet:entry('S',{
   reason:'All five Soul Gems become one slot that keeps every bonus: shield, damage, regeneration, area, cooldown and dodge.',
   comparison:'It is the strongest all-round passive in the game per slot and wins outright by freeing four support slots for other items.',

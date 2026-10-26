@@ -40,6 +40,16 @@
   "score": 73.2
  },
  {
+  "id": "soulbond",
+  "slots": 1,
+  "offense": 39.4,
+  "defence": 52.8,
+  "ultimate": 0,
+  "move": 0,
+  "magnet": 0,
+  "score": 71.1
+ },
+ {
   "id": "senzu",
   "slots": 1,
   "offense": 0,

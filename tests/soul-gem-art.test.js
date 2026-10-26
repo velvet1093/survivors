@@ -8,9 +8,9 @@ import {SPRITE_WIDTH,SPRITE_HEIGHT} from '../src/pixel-characters.js';
 function canvas(){let depth=0;const ops=[],c=new Proxy({globalAlpha:1,save(){depth++;ops.push(['save']);},restore(){depth--;assert.ok(depth>=0);ops.push(['restore']);}},{get(t,k){return k in t?t[k]:(...args)=>{assert.ok(args.filter(v=>typeof v==='number').every(Number.isFinite),String(k));ops.push([k,...args]);};},set(t,k,v){if(typeof v==='number')assert.ok(Number.isFinite(v),String(k));t[k]=v;ops.push(["set",k,v]);return true;}});return{c,ops,depth:()=>depth};}
 const shot=(i=0,extra={})=>({type:'salvation-arrow',colorIndex:i,x:50,y:60,vx:300,vy:40,age:.4,life:1.8,max:2.5,r:7,hits:new Set([101]),...extra});
 
-test('all five Soul Gems, their Quintet and Salvation have distinct native outlined art in the real inventory hook',()=>{
+test('all five Soul Gems, the Soul Bond, the Quintet and Salvation have distinct native outlined art in the real inventory hook',()=>{
  const drawings=new Set(),silhouettes=new Set();for(const id of SOUL_GEM_ART_IDS){const p=soulGemPixels(id);assert.equal(p.length,1024);assert.ok(p.filter(Boolean).length>240,id+' readable complete silhouette');assert.ok(p.every(c=>c===null||/^#[0-9a-f]{6}$/i.test(c)));assert.ok(p.includes('#293346'));drawings.add(JSON.stringify(p));silhouettes.add(p.map(c=>c?'1':'0').join(''));assert.match(icon(id),new RegExp('data-pixel-icon="'+id+'"'));assert.match(soulGemIcon(id),/<rect /);assert.ok(!icon(id).includes('http'));}
- assert.equal(drawings.size,7);assert.ok(silhouettes.size>=6,'the gem mounts differ in outline as well as colour');assert.equal(soulGemPixels('unknown'),null);assert.equal(soulGemIcon('unknown'),null);
+ assert.equal(drawings.size,SOUL_GEM_ART_IDS.length);assert.ok(silhouettes.size>=6,'the gem mounts differ in outline as well as colour');assert.equal(soulGemPixels('unknown'),null);assert.equal(soulGemIcon('unknown'),null);
  const final=soulGemPixels('salvation');for(const color of SOUL_GEM_COLORS)assert.ok(final.includes(color),'each wish remains visible on the fusion bow');
 });
 

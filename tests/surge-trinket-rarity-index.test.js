@@ -46,3 +46,32 @@ test('the recipe index tracks each ingredient and flags a fusion as ready once a
  s=recipeStatus(g.p,f);assert.equal(s.ready,true);assert.equal(s.done,s.parts.length);
  const locked=FUSIONS.find(f=>f.requiredCharacter&&f.requiredCharacter!=='goku');if(locked)assert.equal(recipeStatus(g.p,locked).locked,true);
 });
+import {SOUL_GEM_IDS} from '../src/soul-gem-data.js';
+import {getUpgradePool,getChoices,applyChoice,refreshStats,soulBondGems,soulBondChoices,effectivePassiveRank,hasQuintet} from '../src/game.js';
+import {createPlayer} from '../src/game.js';
+import {saveRun,loadRun} from '../src/run-save.js';
+const fresh=()=>{const p=createPlayer(hero('goku'));p.passives={};p.fusions={};refreshStats(p);return p;};
+const maxGem=(p,id)=>{p.passives[id]=ITEMS[id].max;refreshStats(p);};
+test('soul gems bond one at a time into one slot, keep every bonus, and the fifth makes the Quintet',()=>{
+ const p=fresh(),base={damage:p.damage,regen:p.regen,area:p.area,cooldown:p.cooldown,shield:p.maxShield};
+ maxGem(p,'bluegem');assert.deepEqual(soulBondChoices(p),[],'one gem cannot bond alone');
+ maxGem(p,'redgem');const [start]=soulBondChoices(p);assert.deepEqual(start,{kind:'bond',id:'redgem',with:'bluegem'});
+ assert.ok(getChoices(p,()=>.5).some(c=>c.kind==='bond'),'the bond is offered first, like a fusion');
+ const before={damage:p.damage,regen:p.regen};assert.ok(applyChoice(p,start));
+ assert.deepEqual(Object.keys(p.passives),['soulbond']);assert.deepEqual(soulBondGems(p),['bluegem','redgem']);
+ assert.equal(p.damage,before.damage);assert.equal(p.regen,before.regen);assert.equal(effectivePassiveRank(p,'bluegem'),3);
+ assert.ok(!getUpgradePool(p).some(c=>c.kind==='item'&&['bluegem','redgem'].includes(c.id)),'bonded gems are not offered again');
+ for(const id of ['yellowgem','purplegem','soulgem']){maxGem(p,id);const [add]=soulBondChoices(p);assert.equal(add.id,id);assert.equal(add.with,undefined);assert.ok(applyChoice(p,add));}
+ assert.ok(hasQuintet(p));assert.equal(p.passives.soulbond,undefined);assert.deepEqual(Object.keys(p.passives),['quintet']);
+ assert.ok(p.damage>base.damage&&p.regen>base.regen&&p.area>base.area&&p.cooldown<base.cooldown&&p.maxShield>base.shield);
+ assert.deepEqual(soulBondChoices(p),[]);
+});
+test('a purified pink gem keeps its extra benefits through the bond, and bonds save',()=>{
+ const p=fresh();for(const id of ['soulgem','griefseed'])maxGem(p,id);assert.ok(applyChoice(p,{kind:'fusion',id:'purifiedsoul'}));const healing=p.healing;
+ maxGem(p,'bluegem');const [start]=soulBondChoices(p);assert.ok(applyChoice(p,start));assert.equal(p.healing,healing,'purified healing kept');assert.equal(effectivePassiveRank(p,'griefseed'),ITEMS.griefseed.max);
+ const g=createRun(hero('goku'));Object.assign(g.p,{passives:{...p.passives},fusions:{...p.fusions},soulBond:[...p.soulBond],soulBondPurified:true});refreshStats(g.p);
+ const store={data:null,getItem(){return this.data;},setItem(k,v){this.data=v;},removeItem(){this.data=null;}};assert.ok(saveRun(g,store));const r=loadRun(store);
+ assert.deepEqual(r.p.soulBond,['soulgem','bluegem']);assert.equal(r.p.passives.soulbond,1);assert.equal(effectivePassiveRank(r.p,'bluegem'),3);
+ const hard=fresh();hard.hardcore=true;maxGem(hard,'bluegem');maxGem(hard,'redgem');assert.deepEqual(soulBondChoices(hard),[]);
+ assert.ok(SOUL_GEM_IDS.length===5);
+});
