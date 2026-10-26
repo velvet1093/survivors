@@ -1,0 +1,18 @@
+.soul-gem-profile{margin-top:18px;padding:16px;border:1px solid #d5bf8d66;border-radius:8px;background:linear-gradient(125deg,#35263d88,#252b3588);text-align:left}
+.soul-gem-label{display:block;font-size:8px;font-weight:600;letter-spacing:1.1px;color:#f0d49b;margin:10px 0}
+.soul-gem-profile h3{font-size:27px;color:#f5e5da}
+.soul-gem-quintet{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;max-width:350px;margin:16px 0}
+.soul-gem-quintet>span{display:grid;justify-items:center;gap:6px;background:color-mix(in srgb,var(--gem) 7%,transparent);border:1px solid color-mix(in srgb,var(--gem) 32%,transparent);border-radius:6px;padding:9px 3px}
+.soul-gem-quintet .item-icon{width:33px;height:33px}
+.soul-gem-quintet small{font-size:8px;color:var(--gem)}
+.soul-gem-stage{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid #d9bd8c55;border-radius:6px;background:#1c202d66}
+.soul-gem-stage>.item-icon{width:42px;height:42px}.soul-gem-stage small{display:block;font-size:7px;letter-spacing:.7px;color:#d9bd8c}.soul-gem-stage strong{display:block;font:600 22px 'Barlow Condensed',sans-serif;color:#f1dfc9;margin:4px 0}.soul-gem-stage div>span{font-size:9px;color:#beb2c8}
+.soul-gem-evolution{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:15px 0 5px;color:#b4a6bd;font-size:11px}.soul-gem-evolution>.item-icon{width:29px;height:29px}.soul-gem-evolution b{font:600 22px 'Barlow Condensed',sans-serif;color:#efdec4}
+.soul-gem-profile p{line-height:1.8!important}.soul-gem-profile b{color:#eee0ed}
+.soul-gem-mode{display:block;font-size:7px;letter-spacing:.6px;line-height:1.7;color:#b4a9bd}
+.soul-gem-guide{display:flex;justify-content:space-between;gap:15px;width:100%;margin-top:14px;padding:12px 10px;font-size:9px;letter-spacing:.6px;color:#f0d8ad;border-color:#ccb48655;background:#2c2833}
+.soul-gem-ingredients{display:inline-flex;align-items:center;gap:4px;flex-wrap:nowrap;max-width:100%}
+.soul-gem-ingredients>.item-icon{width:24px;height:24px;flex-shrink:0}.soul-gem-ingredients>span{font-size:9px}
+.soul-gem-recipe{border-color:#e4c58c88;background:linear-gradient(125deg,#34263a,#222635)}
+.soul-gem-recipe .recipe-formula{gap:8px}.soul-gem-recipe>small{line-height:1.8}.soul-gem-recipe>h3{color:#f4ddc0}
+@media(max-width:480px){.soul-gem-profile{padding:13px}.soul-gem-quintet{gap:5px}.soul-gem-quintet>span{padding:9px 1px}.soul-gem-profile h3{font-size:25px}.soul-gem-ingredients{gap:3px}.soul-gem-ingredients>.item-icon{width:23px;height:23px}}

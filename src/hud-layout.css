@@ -1,0 +1,81 @@
+/* Health, character charge, equipment and statuses share one top-left stack. */
+.arena .hud{display:grid;grid-template-columns:262px minmax(0,1fr);gap:20px;align-items:start;z-index:2}
+.hud-left{display:flex;flex-direction:column;align-items:stretch;gap:9px;min-width:0;width:100%}
+.hud-left .hero-hud{min-width:0;width:100%;align-items:center}
+.hud-left .hero-hud>div{flex:1;min-width:0}
+.hud-left .hero-hud strong{gap:8px;line-height:1.35;overflow-wrap:anywhere}
+.hud-left .hero-hud strong small{flex:none;white-space:nowrap}
+.hud-left .hp-track{width:100%}
+.hud-left .hero-mechanic{position:static;inset:auto;width:100%;margin:0;padding:10px 12px}
+.hud-left .hero-mechanic>span{font-size:8px;letter-spacing:1.1px;line-height:1.4}
+.hud-left .hero-mechanic strong{margin:5px 0 7px;line-height:1.45}
+.hud-left #trait-detail{margin:0 0 7px;line-height:1.5;overflow-wrap:anywhere}
+.hud-left .inventory,.hud-left .buffs{position:static;inset:auto;margin:0;max-width:none;width:100%}
+.hud-left .inventory{display:grid;gap:5px}
+.hud-left .inventory button{pointer-events:auto}
+.hud-left .buffs{gap:5px}
+.arena .hud>.run-stats{grid-column:2;grid-row:1;justify-self:end}
+.arena .hud>.time{position:absolute;left:50%;right:auto;top:0;transform:translateX(-50%);max-width:200px}
+.arena .hud>.boss-bars{position:absolute;left:50%;right:auto;top:87px;transform:translateX(-50%);width:min(420px,calc(100vw - 600px));min-width:190px}
+/* Erza's separate mechanic panel remains removed; Requip is still available. */
+.erza-arena .hud-left .hero-mechanic{display:none}
+@media(max-width:1100px) and (min-width:701px){
+ .arena .hud{grid-template-columns:240px minmax(0,1fr)}
+ .arena .hud>.boss-bars{left:auto;right:0;top:88px;transform:none;width:min(360px,calc(100% - 265px));min-width:0}
+ .arena .hud>.time{left:auto;right:0;top:58px;transform:none;width:min(360px,calc(100% - 265px));max-width:none}
+ .arena .hud>.time>span{display:none}.arena .hud>.time>strong{font-size:24px}.arena .hud>.time>small{font-size:6px}
+ .arena .hud>.boss-bars{top:118px}
+}
+@media(max-width:700px){
+ .arena .hud{top:16px;left:12px;right:12px;grid-template-columns:minmax(188px,204px) minmax(0,1fr);gap:8px}
+ .hud-left{gap:7px}
+ .hud-left .hero-hud{gap:7px}
+ .hud-left .hero-hud strong{font-size:9px;gap:5px;line-height:1.4}
+ .hud-left .hero-hud strong small{font-size:6px}
+ .hud-left .hero-mechanic{padding:8px 9px;width:100%}
+ .hud-left .hero-mechanic>span{font-size:6px;letter-spacing:.7px;line-height:1.5}
+ .hud-left .hero-mechanic strong{font-size:8px;margin:4px 0 6px;line-height:1.5}
+ .hud-left #trait-detail{font-size:7px;margin:0 0 6px;line-height:1.5}
+ .hud-left .inventory{gap:4px}
+ .hud-left .inventory-row,.hud-left .trinket-row{gap:4px}
+ .hud-left .inventory-row>span:first-child,.hud-left .trinket-row>span:first-child{width:18px;font-size:5px;flex:none}
+ .hud-left .inventory-slot,.hud-left .trinket-slot{width:30px;height:30px;flex:none}
+ .hud-left .inventory-slot .item-icon,.hud-left .trinket-slot svg{width:23px;height:23px}
+ .hud-left .buffs>span{font-size:6px;padding:4px;line-height:1.5}
+ .arena .hud>.run-stats{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 28px;align-items:start;gap:6px;width:100%;max-width:128px}
+ .arena .hud>.run-stats>div{min-width:0;padding-top:2px}
+ .arena .hud>.run-stats>div>span{font-size:5px;letter-spacing:0}
+ .arena .hud>.run-stats b{font-size:18px;line-height:1.1;overflow-wrap:anywhere;display:block}
+ .arena .hud>.run-stats .icon-button{width:28px;height:30px}
+ .arena .hud>.time{left:auto;right:0;top:64px;transform:none;min-width:0;width:calc(100% - 216px);max-width:none}
+ .arena .hud>.time>span{font-size:5px;letter-spacing:.3px;line-height:1.5;overflow-wrap:anywhere}
+ .arena .hud>.time>strong{font-size:24px}
+ .arena .hud>.time>small{font-size:5px;letter-spacing:.2px;line-height:1.6;display:block}
+ .arena .hud>.boss-bars{left:auto;right:0;top:137px;transform:none;width:calc(100% - 216px);min-width:0;gap:6px}
+ .arena .hud>.boss-bars .boss-bar{padding:6px 6px}
+ .arena .hud>.boss-bars .boss-bar>div:first-child{display:block;line-height:1.35}
+ .arena .hud>.boss-bars strong{font-size:9px;display:block;overflow-wrap:anywhere}
+ .arena .hud>.boss-bars span{font-size:5px;display:block;line-height:1.5;margin-top:2px;overflow-wrap:anywhere}
+ .arena .hud>.boss-bars .boss-health{margin-top:5px}
+}
+@media(max-width:360px){
+ .arena .hud{grid-template-columns:188px minmax(0,1fr)}
+ .arena .hud>.time,.arena .hud>.boss-bars{width:calc(100% - 200px)}
+ .arena .hud>.run-stats{gap:4px;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 26px}
+ .arena .hud>.run-stats .icon-button{width:26px}
+ .arena .hud>.run-stats b{font-size:16px}
+}
+@media(max-height:450px) and (orientation:landscape){
+ .arena .hud{top:13px;left:12px;right:12px;grid-template-columns:188px minmax(0,1fr);gap:12px}
+ .hud-left{gap:6px}
+ .hud-left .hero-hud{gap:7px}.hud-left .avatar{width:34px;height:38px}.hud-left .avatar>svg{width:29px;height:36px}
+ .hud-left .hero-hud strong{font-size:9px;line-height:1.35}.hud-left .hero-hud strong small{font-size:6px}
+ .hud-left .hp-track{height:6px;margin:5px 0 3px}.hud-left #health{font-size:6px}
+ .hud-left .hero-mechanic{padding:7px 9px}.hud-left .hero-mechanic>span{font-size:6px;letter-spacing:.7px}.hud-left .hero-mechanic strong{font-size:8px;margin:3px 0 5px}.hud-left #trait-detail{font-size:6px;margin-bottom:5px}
+ .hud-left .inventory{gap:4px}.hud-left .inventory-row,.hud-left .trinket-row{gap:4px}.hud-left .inventory-row>span:first-child,.hud-left .trinket-row>span:first-child{width:18px;font-size:5px;flex:none}
+ .hud-left .inventory-slot,.hud-left .trinket-slot{width:30px;height:30px;flex:none}.hud-left .inventory-slot .item-icon,.hud-left .trinket-slot svg{width:23px;height:23px}
+ .hud-left .buffs>span{font-size:6px;padding:4px}.arena .hud>.time{left:50%;right:auto;top:0;transform:translateX(-50%);width:180px;min-width:0;max-width:none}
+ .arena .hud>.time>span{display:block;font-size:6px}.arena .hud>.time>strong{font-size:26px}.arena .hud>.time>small{font-size:6px}
+ .arena .hud>.boss-bars{left:50%;right:auto;top:81px;transform:translateX(-50%);width:min(360px,calc(100vw - 460px));min-width:0}
+ .arena .hud>.run-stats{display:flex;width:auto;max-width:none;gap:12px}.arena .hud>.run-stats b{font-size:22px}.arena .hud>.run-stats .icon-button{width:30px;height:32px}
+}

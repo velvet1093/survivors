@@ -1,0 +1,18 @@
+.rift-offer{width:min(620px,100%);position:relative;isolation:isolate;border-color:color-mix(in srgb,var(--rift-color) 50%,transparent);background:radial-gradient(ellipse at 50% 0%,color-mix(in srgb,var(--rift-color) 18%,#1b1a28),#1b1a28 55%)}
+.rift-offer>.eyebrow{font-size:8px;letter-spacing:1.6px;color:var(--rift-color);line-height:1.6}
+.rift-offer-art{width:150px;height:154px;position:relative;display:grid;place-items:center;margin:18px auto 6px}
+.rift-offer-art svg{width:103px;height:140px;position:relative;image-rendering:pixelated;filter:drop-shadow(0 5px 16px #0007)}
+.rift-offer-orbit{position:absolute;inset:16px 3px 3px;border:2px solid var(--rift-color);border-radius:50%;box-shadow:0 0 24px color-mix(in srgb,var(--rift-color) 20%,transparent),inset 0 0 24px color-mix(in srgb,var(--rift-color) 12%,transparent);transform:rotate(-18deg) scaleX(.95)}
+.rift-offer-orbit:after{content:'';position:absolute;inset:9px;border:1px dashed color-mix(in srgb,var(--rift-color) 45%,transparent);border-radius:50%}
+.rift-danger{font-size:9px;letter-spacing:2px;color:#edaf9f}
+.rift-offer h2{font-size:clamp(32px,8vw,46px);line-height:1.05;margin:12px 0 7px}
+.rift-offer .rift-offer-title{font-size:8px;letter-spacing:1.5px;color:var(--rift-color);margin:0 0 18px}
+.rift-offer>p{font-size:11px;line-height:1.8;color:#c9bed6}
+.rift-loot-preview{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:20px 0;padding:16px 0;border-top:1px solid #ffffff1c;border-bottom:1px solid #ffffff1c}
+.rift-loot-preview span{font-size:7px;letter-spacing:.4px;line-height:1.6;color:#bcaecb}
+.rift-loot-preview b{display:block;color:#f1d59a;font:600 26px 'Barlow Condensed',sans-serif}
+.rift-offer .rift-offer-hint{font-size:10px;color:#aa9fb7}
+.rift-offer-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.rift-offer-actions button{min-height:46px;font-size:10px;flex:1;white-space:normal}
+@media(max-width:480px){.rift-offer{padding:24px 18px}.rift-offer-art{height:128px;margin:12px auto 8px}.rift-offer-art svg{height:120px;width:89px}.rift-offer h2{font-size:34px}.rift-offer>p{font-size:10px}.rift-loot-preview{margin:16px 0;padding:12px 0;gap:4px}.rift-loot-preview span{font-size:6px}.rift-offer-actions{flex-direction:column}.rift-offer-actions button{width:100%;flex:auto}}
+@media(max-height:500px) and (orientation:landscape){.rift-offer-art{float:left;width:120px;height:140px;margin:10px 20px 10px 0}.rift-offer{text-align:left}.rift-offer h2{font-size:32px}.rift-loot-preview{clear:both}.rift-offer>.eyebrow{justify-content:flex-start}}

@@ -1,0 +1,47 @@
+export const PETS=[{id:'pochita',name:'Pochita',description:'A tiny chainsaw pup, here for company.'},{id:'kyubey',name:'Kyubey',description:'A little white familiar with scarlet eyes and long ears.'},{id:'chopper',name:'Chopper',description:'The miniature doctor with a pink hat and antlers.'},{id:'kon',name:'Kon',description:'A round plush lion with a very important tail.'},{id:'none',name:'No companion',description:'Travel solo.'},{id:'metroid',name:'Baby Metroid',description:'A little green hatchling with ruby nuclei and ivory fangs.'},{id:'wisp',name:'Star Wisp',description:'A tiny wandering star with ribbon-like light.'}];
+PETS.push({id:'pikachu',name:'Pikachu',description:'A tiny electric mouse with red cheeks and a lightning tail.'},{id:'totoro',name:'Mini Totoro',description:'A round forest spirit with a leaf umbrella.'},{id:'happy',name:'Happy',description:'A blue winged cat carrying a tiny green pack.'},{id:'kero',name:'Kero',description:'A golden guardian with cream wings and a cheerful little face.'});
+PETS.sort((a,b)=>(['none','metroid','wisp','pochita','kyubey','chopper','kon','pikachu','totoro','happy','kero'].indexOf(a.id)-['none','metroid','wisp','pochita','kyubey','chopper','kon','pikachu','totoro','happy','kero'].indexOf(b.id)));
+export const petFor=id=>PETS.find(p=>p.id===id)||PETS[0];
+const artCache=new Map();
+export function petPixels(id,frame=0){
+ const key=id+frame;if(artCache.has(key))return artCache.get(key);const pixels=Array(32*32).fill(null),put=(x,y,color)=>{if(x>=0&&x<32&&y>=0&&y<32)pixels[y*32+x]=color;},rect=(x,y,w,h,color)=>{for(let yy=y;yy<y+h;yy++)for(let xx=x;xx<x+w;xx++)put(xx,yy,color);};
+ if(id==='metroid'){
+  const rows=[[5,12,8],[6,9,14],[7,7,18],[8,6,20],[9,5,22],[10,4,24],[11,4,24],[12,3,26],[13,3,26],[14,3,26],[15,4,24],[16,5,22],[17,6,20],[18,8,16]];
+  for(const [y,x,w]of rows)rect(x,y,w,1,'#244b59');for(const [y,x,w]of rows.slice(1,-1))rect(x+1,y,w-2,1,y<10?'#8edba8':'#58b98c');rect(9,8,11,2,'#bef2bd');rect(7,10,4,2,'#b7f0ce');rect(6,12,2,3,'#90e2c7');rect(22,10,2,3,'#b4edc8');
+  for(const [x,y]of [[10,13],[17,12],[14,17]]){rect(x-1,y,6,4,'#804859');rect(x,y-1,4,6,'#804859');rect(x,y,4,4,'#d7787e');rect(x+1,y,2,2,'#ffb39e');}
+  for(const [x,side]of [[7,-1],[23,1]]){rect(x,18,3,5,'#254355');rect(x+side,22,3,4,'#254355');rect(x+side*2,24,3,4,'#254355');rect(x+1,18,1,5,'#ecedd3');rect(x+side+1,22,1,4,'#fff4d8');rect(x+side*2+1,25,1,2,'#c8dbbd');}rect(13,22,2,3,'#92c89c');rect(18,22,2,3,'#92c89c');if(frame%2)rect(20,7,2,1,'#efffe1');
+ }else if(id==='pochita'){
+  rect(7,15,19,11,'#754c3f');rect(6,17,21,7,'#754c3f');rect(8,14,16,13,'#de944b');rect(7,17,19,8,'#efa95c');rect(10,26,4,4,'#bc773e');rect(21,25,4,4,'#bc773e');rect(9,14,4,3,'#f4c377');rect(6,19,3,5,'#b4693e');rect(23,18,2,3,'#302d38');rect(14,19,2,3,'#302d38');rect(14,19,1,1,'#fff0cc');rect(23,18,1,1,'#fff0cc');rect(17,23,4,2,'#7c4541');rect(23,12,8,4,'#424a56');rect(24,12,6,2,'#c9d2c8');for(const x of [24,27,30])rect(x,15,1,2,'#e7e7d0');rect(13,8,10,3,'#393945');rect(12,9,3,5,'#393945');rect(21,9,3,5,'#393945');rect(15,10,6,2,'#202432');rect(3,17+frame%2,5,2,'#e4a054');
+ }else if(id==='kyubey'){
+  rect(9,17,15,10,'#b5c3c5');rect(10,16,13,11,'#edf1df');rect(11,25,3,5,'#dbe7de');rect(20,25,3,5,'#dbe7de');rect(7,11,18,11,'#dce7df');rect(9,9,14,13,'#f4f4e7');rect(6,5,4,13,'#e7eee2');rect(23,5,4,13,'#e7eee2');rect(4,14,4,11,'#dbe7de');rect(25,14,4,11,'#dbe7de');rect(3,23,5,3,'#b89770');rect(25,23,5,3,'#b89770');rect(5,9,3,4,'#d899ac');rect(25,9,3,4,'#d899ac');rect(10,15,3,2,'#ba647e');rect(20,15,3,2,'#ba647e');rect(11,15,1,1,'#efbac5');rect(20,15,1,1,'#efbac5');rect(15,19,3,1,'#9d8392');rect(24,24,5,3,'#ecf1df');rect(28,20-frame%2,2,6,'#ecf1df');
+ }else if(id==='chopper'){
+  for(const side of [-1,1]){const x=side<0?5:25;rect(x,6,2,10,'#9a7659');rect(x-2,8,5,2,'#9a7659');rect(x-2,4,2,5,'#b49671');}rect(10,20,13,8,'#b58b63');rect(10,26,5,4,'#6d99ae');rect(18,26,5,4,'#6d99ae');rect(8,16,17,10,'#9c7359');rect(10,16,13,9,'#d0ad7c');rect(10,7,13,11,'#c67c9d');rect(7,14,20,4,'#e0a1b9');rect(15,9,3,7,'#f2eadf');rect(13,11,7,3,'#f2eadf');rect(12,19,2,2,'#384051');rect(21,19,2,2,'#384051');rect(16,21,3,2,'#6a9fb6');rect(8,22+frame%2,3,4,'#b58b63');rect(23,22-frame%2,3,4,'#b58b63');
+ }else if(id==='kon'){
+  rect(8,20,17,8,'#a77a50');rect(10,18,13,11,'#dbb66d');rect(9,27,5,3,'#c49559');rect(20,27,5,3,'#c49559');rect(7,8,20,14,'#8c674c');rect(5,12,24,8,'#8c674c');rect(9,9,16,13,'#e8ca80');rect(7,6,6,6,'#ac8057');rect(22,6,6,6,'#ac8057');rect(10,7,2,3,'#e2bf79');rect(23,7,2,3,'#e2bf79');rect(11,13,3,2,'#4f4b49');rect(21,13,3,2,'#4f4b49');rect(15,17,5,2,'#95694f');rect(17,19,1,2,'#8c624e');rect(8,22,3,4,'#d6b06b');rect(24,22,3,4,'#d6b06b');rect(26,24,4,2,'#cfaa69');rect(29,19-frame%2,2,7,'#cfaa69');rect(28,18-frame%2,4,3,'#926a4c');
+ }else if(id==='pikachu'){
+  const bob=frame%2;rect(7,4,4,12,'#aa803e');rect(6,2,4,8,'#393746');rect(8,8,4,8,'#f1cc64');rect(23,3,4,12,'#aa803e');rect(24,1,4,7,'#393746');rect(22,8,4,8,'#f1cc64');
+  rect(9,20,14,9,'#aa803e');rect(10,19,12,10,'#edc35b');rect(8,27,6,3,'#e5b34e');rect(20,27,6,3,'#e5b34e');rect(7,12,18,12,'#ad813c');rect(8,11,16,13,'#f6d372');rect(10,12,7,2,'#ffe9a0');rect(7,18,4,4,'#d77667');rect(21,18,4,4,'#d77667');rect(11,16,2,3,'#34394a');rect(20,16,2,3,'#34394a');rect(11,16,1,1,'#fff4d2');rect(20,16,1,1,'#fff4d2');rect(15,20,3,1,'#7e5948');rect(16,22,2,1,'#a66e53');
+  rect(25,20,4,3,'#99723e');rect(27,15-bob,4,7,'#ecc359');rect(26,12-bob,5,5,'#ecc359');rect(29,8-bob,3,5,'#f6d87f');rect(26,12-bob,3,2,'#ffeba8');rect(7,23+bob,4,3,'#f6d372');rect(22,23-bob,4,3,'#f6d372');
+ }else if(id==='totoro'){
+  const bob=frame%2;rect(9,6,4,9,'#53616c');rect(20,6,4,9,'#53616c');rect(10,7,2,7,'#8b9b9c');rect(21,7,2,7,'#8b9b9c');rect(7,14,19,15,'#53616c');rect(5,20,23,7,'#53616c');rect(8,13,17,17,'#8a9b9c');rect(7,19,19,9,'#8a9b9c');rect(11,20,11,9,'#d6d4b6');rect(10,23,13,5,'#dedcc1');rect(10,16,4,3,'#eef0d7');rect(20,16,4,3,'#eef0d7');rect(12,17,1,2,'#374350');rect(21,17,1,2,'#374350');rect(16,19,3,1,'#374350');for(const x of [12,17,21]){rect(x,23,2,1,'#7d8c86');rect(x+1,24,1,1,'#7d8c86');}rect(11,29,4,2,'#64777d');rect(21,29,4,2,'#64777d');rect(4,22+bob,4,4,'#a3b4ad');rect(25,22-bob,4,4,'#a3b4ad');
+  rect(24,4,1,20,'#c4aa77');rect(13,3,18,3,'#3f7461');rect(17,1,12,3,'#6da17a');rect(19,2,8,1,'#a6c88c');rect(24,0,1,5,'#d0dda6');
+ }else if(id==='happy'){
+  const wing=frame%2?2:0;rect(1,14-wing,5,7,'#edf1e1');rect(3,18-wing,6,5,'#c6dae0');rect(26,14-wing,5,7,'#edf1e1');rect(24,18-wing,6,5,'#c6dae0');rect(11,20,12,9,'#3a7296');rect(12,19,10,10,'#72b8ca');rect(10,27,5,3,'#8cced4');rect(20,27,5,3,'#8cced4');rect(10,6,5,10,'#3e7f9d');rect(22,6,5,10,'#3e7f9d');rect(11,8,2,5,'#ddb1bc');rect(24,8,2,5,'#ddb1bc');rect(8,12,19,11,'#3e7f9d');rect(10,11,15,13,'#87c9d6');rect(11,13,5,2,'#b9e7df');rect(12,16,2,3,'#354556');rect(22,16,2,3,'#354556');rect(16,19,3,1,'#756f80');rect(16,21,4,1,'#5f7d89');rect(12,23,11,3,'#629976');rect(16,23,3,6,'#95c68d');rect(25,25,5,2,'#72b8ca');rect(29,21-wing,2,6,'#72b8ca');rect(8,23,4,3,'#88ced5');
+ }else if(id==='kero'){
+  const wing=frame%2?2:0;rect(1,15-wing,7,6,'#d1d5c5');rect(2,13-wing,3,6,'#f4edd9');rect(3,19-wing,6,4,'#f4edd9');rect(24,15-wing,7,6,'#d1d5c5');rect(27,13-wing,3,6,'#f4edd9');rect(23,19-wing,6,4,'#f4edd9');rect(10,21,13,8,'#b48b4f');rect(11,20,11,9,'#e4bb69');rect(10,28,5,3,'#d6a956');rect(20,28,5,3,'#d6a956');rect(7,8,7,7,'#b48b4f');rect(21,8,7,7,'#b48b4f');rect(8,9,4,4,'#f2ce84');rect(23,9,4,4,'#f2ce84');rect(8,13,18,11,'#b48b4f');rect(9,12,16,12,'#f1ce83');rect(11,13,6,2,'#ffe6a6');rect(12,17,2,2,'#594b47');rect(21,17,2,2,'#594b47');rect(16,20,3,1,'#926d56');rect(15,22,5,1,'#a57b5b');rect(13,25,7,4,'#f4deaa');rect(24,26,5,2,'#d9b164');rect(28,23+wing,3,4,'#d9b164');rect(27,22+wing,4,3,'#f4cf7f');
+ }else if(id==='wisp'){
+  for(let y=5;y<=24;y++)for(let x=5;x<=26;x++){const d=Math.abs(x-16)+Math.abs(y-14)*.85;if(d<10&&(Math.abs(x-16)<3||Math.abs(y-14)<3||d<6))put(x,y,'#f3d59a');}
+  rect(12,12,2,2,'#5f6083');rect(19,12,2,2,'#5f6083');rect(16,16,2,1,'#bf8a91');rect(15,8,3,2,'#fff7cf');rect(14,24,3,3,'#bba1d2');rect(17+(frame%2),27,3,2,'#8c95bf');
+ }
+ artCache.set(key,pixels);return pixels;
+}
+export function petSvg(id){let art='';const pixels=petPixels(id);for(let y=0;y<32;y++)for(let x=0;x<32;x++){const color=pixels[y*32+x];if(color)art+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${color}"/>`;}return `<svg class="pet-portrait" viewBox="0 0 32 32" shape-rendering="crispEdges" aria-hidden="true">${id==='none'?'<path d="M8 8 24 24M24 8 8 24" stroke="#a59bb8" stroke-width="2"/>':art}</svg>`;}
+export function updatePet(g,dt){
+ const pet=g.pet;if(!pet||pet.id==='none')return;pet.age+=dt;const x=g.p.x-(g.p.facing||1)*35,y=g.p.y+5,d=Math.hypot(pet.x-x,pet.y-y);if(d>420){pet.x=x;pet.y=y;}else{const blend=1-Math.exp(-5*dt);pet.x+=(x-pet.x)*blend;pet.y+=(y-pet.y)*blend;}
+}
+const bitmaps=new Map();
+export function drawPet(c,pet,reduced=false){
+ if(!pet||pet.id==='none')return;const frame=reduced?0:Math.floor(pet.age*3)%2,key=pet.id+frame;
+ if(!bitmaps.has(key)){const cv=document.createElement('canvas');cv.width=cv.height=32;const ctx=cv.getContext('2d');petPixels(pet.id,frame).forEach((color,i)=>{if(color){ctx.fillStyle=color;ctx.fillRect(i%32,Math.floor(i/32),1,1);}});bitmaps.set(key,cv);}
+ c.save();c.imageSmoothingEnabled=false;const bob=reduced?0:Math.sin(pet.age*3)*2;c.drawImage(bitmaps.get(key),Math.round(pet.x-13),Math.round(pet.y-31+bob),26,26);c.restore();
+}

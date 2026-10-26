@@ -1,0 +1,133 @@
+/* Character selection stays compact while leaving the native pixel art crisp. */
+.shell .brand{color:#eeeaf4;text-decoration:none}
+.shell .legend-selection{margin-top:28px;scroll-margin-top:20px}
+.shell .roster-heading{align-items:flex-end;margin-bottom:16px}
+.shell .roster-heading h2{font:600 22px/1.2 'Barlow Condensed',sans-serif;letter-spacing:.8px}
+.shell .roster-heading h2>span{font:10px 'DM Sans',sans-serif;vertical-align:middle;margin-right:10px}
+.shell .roster-heading>span{font-size:10px;line-height:1.5;letter-spacing:.3px;text-align:right;color:#a9a0ba}
+.shell .roster-tools{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.shell .roster-search{display:flex;align-items:center;gap:10px;flex:1;min-width:0;min-height:46px;padding:0 14px;background:#191923;border:1px solid #aaa0bd38;border-radius:8px;color:#bfaed5}
+.shell .roster-search:focus-within{border-color:#c5a9ea;box-shadow:0 0 0 2px #b99ad51f}
+.shell .roster-search .item-icon{width:20px;height:20px}
+.shell .roster-search>svg{flex:none;width:19px;height:19px}
+.shell #character-search{width:100%;min-width:0;min-height:44px;padding:9px 0;background:none;color:#eee9f5;border:0;outline:none;font-size:12px}
+.shell #character-search::placeholder{color:#a39aaf;opacity:1}
+.shell #character-series{min-width:170px;max-width:34%;min-height:46px;padding:10px 34px 10px 13px;border:1px solid #aaa0bd38;border-radius:8px;background:#191923;color:#e1d8ed;font-size:11px}
+.shell #clear-character-search{min-height:46px;padding:10px 14px;background:#252132;font-size:10px;letter-spacing:.4px}
+.shell .roster-status{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.shell .roster-empty{padding:35px 18px;text-align:center;border:1px dashed #9a82b566;border-radius:9px;background:#1b1927;color:#b9adc8;font-size:12px;line-height:1.7}
+.shell .roster-empty strong{display:block;font:600 25px 'Barlow Condensed',sans-serif;color:#e7deef;margin-bottom:8px}
+.shell .roster-empty button{min-height:44px;padding:11px 18px;margin-top:12px;font-size:11px;background:#34283f;border-color:#b49cc15c;color:#e8d8f5}
+.shell .roster{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;align-items:stretch}
+.shell .roster .character{min-width:0;display:flex;flex-direction:column;border-radius:10px;border-color:#bbb0d324;background:#1c1b29;transition:border-color .15s,box-shadow .15s,transform .15s}
+.shell .roster .character:hover{border-color:color-mix(in srgb,var(--accent) 65%,#645b72);box-shadow:0 8px 24px #0003;transform:translateY(-2px)}
+.shell .roster .character.selected{border-color:var(--accent);box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 40%,transparent),0 8px 22px #0003}
+.shell .roster .character.selected .portrait{background:radial-gradient(ellipse at 50% 58%,color-mix(in srgb,var(--accent) 20%,transparent),#252230 80%)}
+.shell .roster .card-top{top:13px;left:14px;right:14px;gap:10px;align-items:flex-start;font-size:9px;line-height:1.4;letter-spacing:.15px;color:#c5bdcf}
+.shell .roster .card-top>span:first-child{min-width:0;max-width:calc(100% - 35px);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.shell .roster .selection-indicator{width:24px;height:24px;flex:none;border-color:#b7a9c64a;font-size:13px;background:#1b1b29aa}
+.shell .roster .selected .selection-indicator{background:var(--accent);border-color:var(--accent);color:#26212e}
+.shell .roster .portrait{height:180px;align-items:flex-end;padding:37px 0 10px;background:radial-gradient(ellipse at 50% 58%,color-mix(in srgb,var(--accent) 10%,transparent),#ffffff02);width:100%;flex:none}
+.shell .roster .portrait>svg{width:112px;height:145px;max-width:76%;filter:drop-shadow(0 6px 0 #0f0f1929)}
+.shell .roster .portrait-halo{top:47px;width:125px;height:125px;border-color:color-mix(in srgb,var(--accent) 27%,transparent)}
+.shell .roster .card-bottom{padding:14px 15px 13px;width:100%;display:flex;flex-direction:column;flex:1;border-top:1px solid #ffffff08;background:#1a1925}
+.shell .roster .selected .card-bottom{background:linear-gradient(115deg,color-mix(in srgb,var(--accent) 7%,#1c1a28),#1a1925)}
+.shell .roster .character-title{font-size:9px;letter-spacing:.8px;line-height:1.45;display:flex;align-items:center}
+.shell .roster .card-bottom h3{min-width:0;font-size:30px;line-height:1.15;gap:7px;margin:4px 0 9px;align-items:center;letter-spacing:.1px;overflow-wrap:anywhere}
+.shell .roster .card-bottom h3>span{flex:none;font-size:18px;color:#aea1c133}
+.shell .roster .weapon{margin-top:auto;padding-top:9px;gap:7px;flex-wrap:wrap;font-size:10px;line-height:1.45;color:#c7bdcf;min-height:34px}
+.shell .roster .weapon .item-icon{width:22px;height:22px}
+.shell .roster .weapon>span:not(.role){flex:1;min-width:0;overflow-wrap:anywhere}
+.shell .roster .weapon .role{flex-basis:100%;align-self:flex-start;margin:3px 0 0 29px;padding:0;border:0;font-size:8px;letter-spacing:.75px;color:#978aa7;white-space:normal}
+.shell .roster .card-bottom>.role{align-self:flex-start;margin:6px 0 0 29px;padding:0;border:0;font-size:8px;line-height:1.5;letter-spacing:.65px;color:#a194b1;white-space:normal}
+.shell .roster .hero-prestige-badge{font-size:8px;padding:4px 5px;white-space:nowrap}
+.shell .character[hidden],.shell .roster-status[hidden],.shell .roster-empty[hidden],.shell .selection-dock[hidden]{display:none!important}
+
+/* The selected hero gets one clear header, then story and equipment columns. */
+.shell #character-profile{display:block;margin-top:24px;padding:24px;border:1px solid color-mix(in srgb,var(--accent) 42%,#4b425a);border-radius:12px;scroll-margin-top:20px;background:linear-gradient(125deg,color-mix(in srgb,var(--accent) 7%,#211e2c),#1a1925 78%);min-width:0}
+.shell .selected-profile-heading{display:flex;align-items:center;gap:16px;padding-bottom:20px;margin-bottom:21px;border-bottom:1px solid #b6a6ca25;min-width:0}
+.shell .profile-portrait{display:grid;place-items:center;width:74px;height:89px;flex:none;border:1px solid color-mix(in srgb,var(--accent) 34%,transparent);border-radius:9px;background:radial-gradient(ellipse at center,color-mix(in srgb,var(--accent) 13%,transparent),#161520)}
+.shell .profile-portrait>svg{width:62px;height:80px;max-width:100%;image-rendering:pixelated}
+.shell .profile-identity{min-width:0;flex:1}
+.shell .profile-identity .small-label{font-size:9px;letter-spacing:1.2px;color:var(--accent);line-height:1.5}
+.shell .profile-identity h2{font:700 38px/1.1 'Barlow Condensed',sans-serif;margin:6px 0 5px;color:#f0eaf5;overflow-wrap:anywhere}
+.shell .profile-identity p,.shell .profile-identity>span{font-size:11px;line-height:1.5;color:#b5a7c3;margin:0}
+.shell .profile-change{min-height:44px;padding:11px 14px;font-size:10px;letter-spacing:.35px;color:#d5c4e7;background:#2b2436;border-color:#a994c642;flex:none}
+.shell .profile-content{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(235px,.8fr);gap:28px;align-items:start}
+.shell .profile-content .hero-summary{min-width:0}
+.shell .hero-summary>.small-label{font-size:9px;letter-spacing:1px;color:#bcb0ca;line-height:1.6}
+.shell .profile-content .hero-summary>p{font-size:12px;line-height:1.85;margin:11px 0 0;color:#c0b5cb}
+.shell .profile-content .hero-summary>.trait-note{padding:14px 16px;border:1px solid color-mix(in srgb,var(--accent) 20%,transparent);background:#17152055;border-radius:7px;font-size:11px!important;line-height:1.8!important;margin-top:17px!important}
+.shell .profile-content .trait-note b{font-size:12px;margin-bottom:5px;letter-spacing:.25px}
+.shell .profile-equipment{min-width:0;display:grid;gap:15px;padding:17px;border:1px solid #b7a5ce24;border-radius:9px;background:#15141e66}
+.shell .profile-equipment .signature-pair{display:grid;gap:16px}
+.shell .profile-equipment .signature-item{min-width:0;gap:11px;font-size:12px;line-height:1.5;align-items:center}
+.shell .profile-equipment .signature-item>div{min-width:0;overflow-wrap:anywhere}
+.shell .profile-equipment .signature-item small{font-size:9px;line-height:1.5;letter-spacing:.65px;color:#aa9bbd;margin-bottom:4px}
+.shell .profile-equipment .item-art{width:46px;height:46px;border-radius:7px}
+.shell .profile-equipment .item-art .item-icon{width:34px;height:34px}
+.shell .profile-equipment .fusion-link{justify-content:flex-start;min-height:44px;padding:12px 0 0;border-top:1px solid #b8a6cf26;border-radius:0;font-size:10px;letter-spacing:.45px;white-space:normal;text-align:left;line-height:1.5}
+.shell .profile-equipment .fusion-link b{margin-left:auto}
+.shell #character-profile .ultimate-profile{margin-top:20px;padding:17px;border-radius:9px}
+.shell #character-profile .ultimate-profile-heading h3{font-size:28px;line-height:1.15}
+.shell #character-profile .ultimate-profile-heading>div>small{font-size:8px}
+.shell #character-profile .ultimate-profile-cooldown>small{font-size:7px;line-height:1.4}
+.shell #character-profile .ultimate-profile>p{font-size:12px;line-height:1.8;color:#c9bdd5}
+.shell #character-profile .ultimate-profile-controls{font-size:8px;letter-spacing:.7px;line-height:1.5}
+.shell #character-profile .hero-prestige-note{flex-wrap:wrap;gap:10px;margin-top:16px;line-height:1.6}
+.shell #character-profile .hero-prestige-note>span{font-size:10px}
+.shell #character-profile .hero-prestige-note button{min-height:44px}
+.shell #character-profile .requip-profile{padding:15px;margin-top:20px}
+.shell #character-profile .requip-profile>div>small{font-size:9px;line-height:1.5}
+.shell #character-profile .requip-profile>div>strong{font-size:23px}
+.shell #character-profile .requip-profile>div>p{font-size:11px;line-height:1.75}
+.shell #character-profile .requip-forms{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.shell #character-profile .requip-forms article{min-width:0;padding:12px 9px}
+.shell #character-profile .requip-forms article>strong{font-size:21px}
+.shell #character-profile .requip-forms article>p{font-size:10px;line-height:1.65}
+
+/* Outfit choices form a swipeable rail instead of expanding the whole lobby. */
+.shell .skin-picker{display:block;padding:21px 23px;border-radius:10px;min-width:0}
+.shell .skin-picker>div:first-child{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}
+.shell .skin-picker .small-label{font-size:10px;line-height:1.6;letter-spacing:.7px;color:#cfc0df}
+.shell .skin-picker p{font-size:10px;line-height:1.5;margin:0;color:#a798b8}
+.shell .skin-options{display:flex;flex-wrap:nowrap;justify-content:flex-start;gap:9px;overflow-x:auto;max-width:100%;padding:3px 3px 11px;scroll-snap-type:x proximity;overscroll-behavior-x:contain;scrollbar-color:#766384 #17151f;scrollbar-width:thin}
+.shell .skin-option{flex:0 0 108px;min-width:0;min-height:113px;padding:10px 8px;display:flex;flex-direction:column;gap:7px;justify-content:center;text-align:center;border-radius:8px;background:#24202f;border-color:#a895bf29;scroll-snap-align:start;font-size:10px;line-height:1.4}
+.shell .skin-option.active{border-color:var(--purple);background:#392f47;box-shadow:inset 0 0 0 1px #bc9bdd33}
+.shell .skin-option>svg{width:43px;height:60px;max-height:none;flex:none}
+.shell .skin-option>span{max-width:100%;overflow-wrap:anywhere}
+.shell .skin-option:hover{border-color:#c1a9e0}
+
+/* Quick routes stay available while browsing the full cast. */
+.shell.has-selection-dock{padding-bottom:100px}
+.shell .selection-dock{position:fixed;z-index:12;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);display:grid;grid-template-columns:44px minmax(0,1fr) auto auto;align-items:center;gap:13px;width:min(720px,calc(100% - 36px));min-height:76px;padding:10px 14px;border:1px solid color-mix(in srgb,var(--accent,#bba5e2) 50%,#60516e);border-radius:11px;background:#211d2af5;box-shadow:0 8px 34px #0008;backdrop-filter:blur(12px)}
+.shell .selection-dock-portrait{width:42px;height:54px;display:grid;place-items:center;background:#14131c88;border-radius:5px;overflow:hidden}
+.shell .selection-dock-portrait>svg{width:39px;height:53px;image-rendering:pixelated}
+.shell .selection-dock-copy{display:flex;flex-direction:column;gap:4px;min-width:0}
+.shell .selection-dock-copy small{font-size:8px;letter-spacing:.8px;color:#b4a4c4;line-height:1.5}
+.shell .selection-dock-copy strong{font:600 24px/1.1 'Barlow Condensed',sans-serif;overflow-wrap:anywhere;color:#eee5f4}
+.shell .selection-dock button{min-height:44px;padding:12px 15px;font-size:10px;line-height:1.4;letter-spacing:.35px;border-radius:6px;white-space:nowrap}
+.shell .selection-dock #view-character{background:#302738;border-color:#b49cc15c;color:#e1d0ef}
+.shell .selection-dock #choose-map{background:#bda6df;color:#272031;border-color:#d1b9f0;font-weight:700}
+
+@media(min-width:1200px){.shell .roster .portrait{height:184px}.shell .roster .portrait>svg{width:112px;height:144px}.shell .roster .portrait-halo{width:125px;height:125px;top:47px}.shell #character-profile .requip-forms{grid-template-columns:repeat(4,minmax(0,1fr))}.shell #character-profile .requip-forms article{padding:11px 7px}.shell #character-profile .requip-forms article>strong{font-size:20px}}
+@media(max-width:1100px) and (min-width:761px){.shell .roster{grid-template-columns:repeat(3,minmax(0,1fr))}.shell .profile-content{grid-template-columns:minmax(0,1.35fr) minmax(205px,.8fr);gap:20px}.shell #character-profile{padding:20px}.shell .profile-identity h2{font-size:34px}}
+@media(max-width:760px){
+ .shell .legend-selection{margin-top:23px;scroll-margin-top:12px}.shell .roster-heading{gap:12px;margin-bottom:13px}.shell .roster-heading h2{font-size:22px;letter-spacing:.4px;flex-shrink:0}.shell .roster-heading>span{font-size:9px;max-width:110px;min-width:0}
+ .shell .roster-tools{flex-wrap:wrap;gap:8px;margin-bottom:13px}.shell .roster-search{flex-basis:100%;min-height:46px;padding:0 12px}.shell #character-search{font-size:16px}.shell #character-series{max-width:none;min-width:0;flex:1;min-height:44px;font-size:16px}.shell #clear-character-search{min-height:44px;padding:10px 15px;font-size:10px}
+ .shell .roster{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.shell .roster .character{border-radius:9px}.shell .roster .card-top{top:11px;left:11px;right:11px;font-size:9px;gap:7px;line-height:1.35}.shell .roster .selection-indicator{width:22px;height:22px;font-size:12px}.shell .roster .card-top>span:first-child{max-width:calc(100% - 29px)}
+ .shell .roster .portrait{height:145px;padding-top:31px;padding-bottom:7px}.shell .roster .portrait>svg{width:84px;height:107px;max-width:78%}.shell .roster .portrait-halo{width:99px;height:99px;top:39px}.shell .roster .card-bottom{padding:11px 12px 12px}.shell .roster .character-title{font-size:8px;letter-spacing:.5px;min-height:0;line-height:1.45}.shell .roster .card-bottom h3{font-size:29px;line-height:1.1;min-height:32px;margin:5px 0 9px}.shell .roster .card-bottom h3>span{display:none}.shell .roster .weapon{font-size:10px;gap:6px;padding-top:8px;min-height:32px}.shell .roster .weapon .item-icon{width:22px;height:22px}.shell .roster .weapon .role{font-size:7px;letter-spacing:.5px;margin-left:28px;line-height:1.5}.shell .roster .card-bottom>.role{display:none}.shell .roster .hero-prestige-badge{font-size:7px;padding:3px;position:absolute;top:29px;right:0}
+ .shell #character-profile{margin-top:20px;padding:18px;border-radius:10px;scroll-margin-top:12px}.shell .selected-profile-heading{gap:12px;flex-wrap:wrap;padding-bottom:16px;margin-bottom:17px}.shell .profile-portrait{width:59px;height:78px}.shell .profile-portrait>svg{width:53px;height:72px}.shell .profile-identity h2{font-size:33px;margin-top:5px}.shell .profile-identity .small-label{font-size:8px;letter-spacing:.8px}.shell .profile-identity p,.shell .profile-identity>span{font-size:10px}.shell .profile-change{flex-basis:100%;font-size:10px;min-height:44px;padding:10px 12px}
+ .shell .profile-content{grid-template-columns:minmax(0,1fr);gap:18px}.shell .profile-content .hero-summary>p{font-size:12px;line-height:1.8}.shell .profile-content .hero-summary>.trait-note{padding:12px 13px;font-size:11px!important}.shell .profile-content .trait-note b{font-size:12px}.shell .profile-equipment{padding:14px;gap:13px}.shell .profile-equipment .signature-pair{gap:14px}.shell .profile-equipment .signature-item{font-size:12px;line-height:1.5}.shell .profile-equipment .signature-item small{font-size:9px}
+ .shell #character-profile .ultimate-profile{padding:14px;margin-top:17px}.shell #character-profile .ultimate-profile-heading{gap:9px}.shell #character-profile .ultimate-profile-heading h3{font-size:25px}.shell #character-profile .ultimate-profile-heading>div>small{font-size:7px}.shell #character-profile .ultimate-profile-cooldown{font-size:24px;padding-left:5px}.shell #character-profile .ultimate-profile-cooldown>small{font-size:6px;letter-spacing:.15px}.shell #character-profile .ultimate-profile>p{font-size:11px;line-height:1.8}.shell #character-profile .ultimate-profile-controls{font-size:7px}.shell #character-profile .hero-prestige-note>span{font-size:10px}.shell #character-profile .requip-profile{padding:12px}.shell #character-profile .requip-forms{gap:8px}.shell #character-profile .requip-forms article{padding:11px 7px}.shell #character-profile .requip-forms article>strong{font-size:20px}.shell #character-profile .requip-forms article>p{font-size:10px}
+ .shell .skin-picker{padding:17px;border-radius:10px}.shell .skin-picker>div:first-child{display:block;margin-bottom:11px}.shell .skin-picker .small-label{font-size:10px;letter-spacing:.5px}.shell .skin-picker p{font-size:10px;margin-top:5px}.shell .skin-options{gap:8px;padding-bottom:11px}.shell .skin-option{flex-basis:96px;min-height:113px;font-size:10px;padding:9px 7px}
+ .shell .selection-dock{bottom:max(9px,env(safe-area-inset-bottom));width:calc(100% - 22px);min-height:68px;grid-template-columns:33px minmax(0,1fr) auto auto;gap:8px;padding:9px;border-radius:10px}.shell .selection-dock-portrait{width:33px;height:46px}.shell .selection-dock-portrait>svg{width:32px;height:44px}.shell .selection-dock-copy{gap:4px}.shell .selection-dock-copy small{font-size:6px;letter-spacing:.4px}.shell .selection-dock-copy strong{font-size:21px}.shell .selection-dock button{font-size:9px;padding:10px 10px;letter-spacing:.05px;white-space:normal;max-width:90px}.shell.has-selection-dock{padding-bottom:90px}
+}
+@media(max-width:380px){
+ .shell .roster{gap:9px}.shell .roster .card-top{left:9px;right:9px;font-size:9px}.shell .roster .portrait{height:136px;padding-bottom:7px}.shell .roster .portrait>svg{width:79px;height:98px}.shell .roster .portrait-halo{width:92px;height:92px;top:38px}.shell .roster .card-bottom{padding:10px}.shell .roster .character-title{font-size:8px;letter-spacing:.35px}.shell .roster .card-bottom h3{font-size:26px}.shell .roster .weapon{font-size:10px}.shell .roster .weapon .role{font-size:7px}
+ .shell .roster .character[data-hero="featherine"] .card-bottom h3{font-size:23px;letter-spacing:0}
+ .shell #character-profile{padding:14px}.shell .profile-identity h2{font-size:30px}.shell #character-profile .ultimate-profile{padding:12px}.shell #character-profile .ultimate-profile-heading h3{font-size:23px}.shell #character-profile .ultimate-profile-icon{width:34px;height:34px}.shell #character-profile .ultimate-profile-icon .item-icon{width:27px;height:27px}.shell #character-profile .ultimate-profile-cooldown{font-size:21px}.shell #character-profile .requip-forms article>strong{font-size:18px}
+ .shell .selection-dock{gap:6px;grid-template-columns:29px minmax(0,1fr) auto auto;padding:8px}.shell .selection-dock-portrait{width:29px}.shell .selection-dock-portrait>svg{width:28px}.shell .selection-dock-copy strong{font-size:19px}.shell .selection-dock button{font-size:8px;padding:9px 8px;max-width:77px}.shell .selection-dock-copy small{font-size:5.5px}
+}
+@media(max-height:450px) and (orientation:landscape){.shell .selection-dock{min-height:56px;padding:6px 12px;bottom:7px;max-width:600px}.shell .selection-dock-portrait{height:40px}.shell .selection-dock-portrait>svg{height:40px}.shell .selection-dock-copy strong{font-size:21px}.shell .selection-dock button{min-height:40px;padding:9px 13px}.shell.has-selection-dock{padding-bottom:78px}}
+@media(prefers-reduced-motion:reduce){.shell .roster .character{transition:none}.shell .roster .character:hover{transform:none}}

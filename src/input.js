@@ -1,0 +1,23 @@
+import {clampZoom} from './game.js';
+export class BattleInput {
+ constructor(canvas,run,onPause,onSpecial,onZoom,onDash=()=>{},onRequip=()=>{},onSecondary=()=>{}){
+  this.run=run;this.keys=new Set();this.points=new Map();this.anchor=null;this.moveId=null;this.pinching=false;this.pinchIds=[];this.onZoom=onZoom;
+  this.controller=new AbortController();const listen=(target,name,fn,options={})=>target?.addEventListener(name,fn,{signal:this.controller.signal,...options});
+  const refreshPinch=()=>{const ids=[...this.points.keys()];this.pinchIds=ids.length>=3?ids.filter(id=>id!==this.moveId).slice(0,2):ids.slice(0,2);this.pinching=ids.length===2;const [a,b]=this.pinchIds.map(id=>this.points.get(id));if(a&&b){this.pinchDistance=Math.hypot(a.x-b.x,a.y-b.y);this.pinchZoom=run.targetZoom;}if(this.pinching)this.hideStick();};
+  listen(canvas,'pointerdown',e=>{if(run.status!=='playing')return;e.preventDefault();canvas.setPointerCapture(e.pointerId);this.points.set(e.pointerId,{x:e.clientX,y:e.clientY});if(this.moveId===null){this.moveId=e.pointerId;this.anchor={x:e.clientX,y:e.clientY};this.stick();}refreshPinch();});
+  listen(canvas,'pointermove',e=>{if(!this.points.has(e.pointerId))return;this.points.set(e.pointerId,{x:e.clientX,y:e.clientY});if(this.pinchIds.length===2){const [a,b]=this.pinchIds.map(id=>this.points.get(id));if(a&&b)this.zoom(this.pinchZoom*Math.hypot(a.x-b.x,a.y-b.y)/Math.max(1,this.pinchDistance));}if(!this.pinching)this.stick();});
+  const release=e=>{if(!this.points.has(e.pointerId))return;const wasPinching=this.pinching;this.points.delete(e.pointerId);if(this.moveId===e.pointerId){this.moveId=this.points.keys().next().value??null;this.anchor=this.moveId===null?null:{...this.points.get(this.moveId)};}else if(wasPinching&&this.points.size===1)this.anchor={...this.points.get(this.moveId)};refreshPinch();if(this.anchor&&!this.pinching)this.stick();else this.hideStick();};
+  for(const name of ['pointerup','pointercancel','lostpointercapture'])listen(canvas,name,release);
+  // Action pointers never enter the joystick/pinch collection. Fire on press, once.
+  for(const [id,action] of [['special',onSpecial],['dash',()=>onDash(this.direction())],['requip',onRequip],['secondary-special',onSecondary]]){const button=document.getElementById(id);listen(button,'pointerdown',e=>{e.preventDefault();e.stopPropagation();button.setPointerCapture?.(e.pointerId);if(run.status==='playing')action();});listen(button,'click',e=>{if(e.detail===0&&run.status==='playing')action();});}
+  listen(canvas,'wheel',e=>{e.preventDefault();this.zoom(run.targetZoom*Math.exp(-e.deltaY*.001));},{passive:false});
+  listen(window,'keydown',e=>{if(e.target?.closest?.('input,textarea,select,[contenteditable="true"]'))return;if(['Space','Enter'].includes(e.code)&&e.target?.closest?.('button'))return;if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Equal','Minus','ShiftLeft','ShiftRight','KeyR','KeyE'].includes(e.code))e.preventDefault();this.keys.add(e.code);if(e.repeat)return;if(e.code==='Escape'||e.code==='KeyP')onPause();if(run.status==='playing'){if(e.code==='Space')onSpecial();if(['ShiftLeft','ShiftRight','KeyL'].includes(e.code))onDash(this.direction());if(e.code==='KeyR')onRequip();if(e.code==='KeyE')onSecondary();if(e.code==='Equal')this.zoom(run.targetZoom+.1);if(e.code==='Minus')this.zoom(run.targetZoom-.1);}});
+  listen(window,'keyup',e=>this.keys.delete(e.code));listen(window,'blur',()=>{this.reset();if(run.status==='playing')onPause();});listen(document,'visibilitychange',()=>{if(document.hidden){this.reset();if(run.status==='playing')onPause();}});
+ }
+ zoom(value){this.run.targetZoom=clampZoom(value);this.onZoom?.();}
+ direction(){if(this.pinching)return{x:0,y:0};const p=this.points.get(this.moveId);if(this.anchor&&p)return{x:(p.x-this.anchor.x)/45,y:(p.y-this.anchor.y)/45};return{x:Number(this.keys.has('KeyD')||this.keys.has('ArrowRight'))-Number(this.keys.has('KeyA')||this.keys.has('ArrowLeft')),y:Number(this.keys.has('KeyS')||this.keys.has('ArrowDown'))-Number(this.keys.has('KeyW')||this.keys.has('ArrowUp'))};}
+ stick(){const stick=document.querySelector('#joystick'),p=this.points.get(this.moveId);if(!stick||!this.anchor||!p)return;const dx=p.x-this.anchor.x,dy=p.y-this.anchor.y,d=Math.hypot(dx,dy),s=Math.min(27,d)/(d||1);stick.style.cssText=`display:block;left:${this.anchor.x-38}px;top:${this.anchor.y-38}px`;stick.firstElementChild.style.transform=`translate(${dx*s}px,${dy*s}px)`;}
+ hideStick(){const s=document.querySelector('#joystick');if(s)s.style.display='none';}
+ reset(){this.keys.clear();this.points.clear();this.anchor=null;this.moveId=null;this.pinching=false;this.pinchIds=[];this.hideStick();}
+ dispose(){this.reset();this.controller.abort();}
+}

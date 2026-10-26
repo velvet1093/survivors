@@ -1,0 +1,27 @@
+/* Objectives remain visible when the optional combat HUD is hidden. This layer
+   never captures a finger intended for movement or a combat control. */
+#rift-trial-hud{position:fixed;inset:0;z-index:7;pointer-events:none}
+.arena.has-rift-trial .boss-bars,.arena.has-rift-trial .inventory,.arena.has-rift-trial .buffs,.arena.has-rift-trial .hero-mechanic,.arena.has-rift-trial .ultimate-banner,.arena.has-rift-trial .battle-help{display:none!important}
+.rift-trial-objective{--trial:#dddccb;position:absolute;left:50%;bottom:26px;transform:translateX(-50%);width:min(490px,calc(100vw - 440px));box-sizing:border-box;padding:13px 16px 12px;border:1px solid color-mix(in srgb,var(--trial) 45%,transparent);border-radius:9px;background:linear-gradient(115deg,#111824f5,#161b29f2);box-shadow:0 8px 28px #03060d88;color:#e8e5dc}
+.rift-trial-objective .trial-heading{display:flex;justify-content:space-between;align-items:center;gap:14px}
+.rift-trial-objective .trial-heading span{display:block;font-size:7px;line-height:1.4;letter-spacing:1.4px;color:var(--trial)}
+.rift-trial-objective h2{font-family:"Barlow Condensed",sans-serif;text-transform:uppercase;font-size:23px;line-height:1.05;margin:4px 0 0;letter-spacing:.4px;color:#f2eee6}
+.rift-trial-objective .trial-heading>b{font-family:"Barlow Condensed",sans-serif;font-size:31px;font-weight:700;color:var(--trial);white-space:nowrap}
+.rift-trial-objective .trial-heading>b small{font-family:"DM Sans",sans-serif;font-size:11px;color:#b7bac2;letter-spacing:1px;margin-left:4px}
+.rift-trial-objective p{margin:9px 0 10px;font-size:11px;line-height:1.5;letter-spacing:0;color:#e0dfe0}
+.rift-trial-objective .trial-progress{display:flex;gap:5px;height:4px;margin:0 0 9px}
+.rift-trial-objective .trial-progress i{flex:1;background:#424555;border-radius:2px}
+.rift-trial-objective .trial-progress i.done{background:var(--trial);box-shadow:0 0 6px color-mix(in srgb,var(--trial) 20%,transparent)}
+.rift-trial-objective .trial-detail{display:flex;justify-content:space-between;gap:12px;font-size:9px;line-height:1.4;color:var(--trial)}
+.rift-trial-objective .trial-detail>small{font-size:6px;letter-spacing:.7px;color:#9ea5b5;text-align:right;white-space:nowrap;padding-top:2px}
+.rift-trial-objective[data-trial="blackout"]{background:linear-gradient(115deg,#090f15f7,#111922f4);border-color:#d7ded54d}
+@media(max-width:1000px){.rift-trial-objective{width:min(420px,calc(100vw - 370px))}.rift-trial-objective .trial-detail{display:block}.rift-trial-objective .trial-detail>small{display:block;text-align:left;margin-top:3px}}
+@media(max-width:700px){
+ .rift-trial-objective{left:12px;right:12px;bottom:max(116px,calc(env(safe-area-inset-bottom) + 110px));width:auto;transform:none;padding:12px 13px 11px;border-radius:7px}
+ .rift-trial-objective h2{font-size:22px}.rift-trial-objective .trial-heading span{font-size:7px;letter-spacing:1.1px}.rift-trial-objective .trial-heading>b{font-size:29px}.rift-trial-objective p{font-size:11px;line-height:1.45;margin:8px 0 9px}.rift-trial-objective .trial-detail{display:flex;font-size:9px}.rift-trial-objective .trial-detail>small{display:none}.rift-trial-objective .trial-progress{margin-bottom:8px}
+}
+@media(max-height:450px) and (orientation:landscape){
+ .arena.has-rift-trial .dash-button{right:12px;bottom:72px}
+ .rift-trial-objective{left:50%;right:auto;bottom:15px;width:min(420px,calc(100vw - 365px));transform:translateX(-50%);padding:10px 12px 9px}
+ .rift-trial-objective .trial-heading span{font-size:6px}.rift-trial-objective h2{font-size:20px;margin-top:3px}.rift-trial-objective .trial-heading>b{font-size:26px}.rift-trial-objective p{font-size:10px;line-height:1.35;margin:6px 0 7px}.rift-trial-objective .trial-progress{margin-bottom:6px;height:3px}.rift-trial-objective .trial-detail{font-size:8px}.rift-trial-objective .trial-detail>small{display:none}
+}

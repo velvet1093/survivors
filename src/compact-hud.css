@@ -1,0 +1,41 @@
+/* Compact battle controls keep the center of the arena clear. */
+.arena .hud{grid-template-columns:210px minmax(0,1fr);gap:12px}
+.arena .hud-left{gap:6px;max-width:210px}
+.arena .hud-left .avatar{width:32px;height:37px}.arena .hud-left .avatar>.item-icon{width:26px;height:26px}
+.arena .hud-left .hero-hud{gap:7px}.arena .hud-left .hero-hud strong{font-size:10px}.arena .hud-left .hero-hud strong small{font-size:7px}
+.arena .hud-left .hero-mechanic{padding:7px 9px;border-radius:5px}
+.arena .hud-left .hero-mechanic>span{font-size:6px;letter-spacing:.8px}.arena .hud-left .hero-mechanic strong{font-size:8px;line-height:1.3;margin:3px 0 5px}.arena .hud-left #trait-detail{font-size:6px;line-height:1.3;margin-bottom:5px}
+.arena .hud-left .trait-track{height:3px}.arena .hud-left .inventory{gap:3px}
+.arena .hud-left .inventory-row,.arena .hud-left .trinket-row{gap:3px}.arena .hud-left .inventory-row>span:first-child,.arena .hud-left .trinket-row>span:first-child{width:16px;font-size:5px;flex:none}
+.arena .hud-left .inventory-slot,.arena .hud-left .trinket-slot{width:30px;height:30px;min-height:0;flex:none;border-radius:4px}.arena .hud-left .inventory-slot .item-icon,.arena .hud-left .trinket-slot svg{width:23px;height:23px}.arena .hud-left .inventory-slot small,.arena .hud-left .trinket-slot small{font-size:6px}
+.arena .hud-left .buffs>span{font-size:6px;padding:3px;line-height:1.4}
+.arena .hud>.time{position:absolute;left:50%;right:auto;top:0;transform:translateX(-50%);width:190px;max-width:190px;min-width:0;text-align:center}
+.arena .hud>.time>strong{font-size:34px;line-height:1.1}.arena .hud>.time>span{font-size:6px}.arena .hud>.time>small{font-size:6px;line-height:1.5;letter-spacing:.3px;display:block}
+.arena .hud>.boss-bars{left:50%;right:auto;top:76px;transform:translateX(-50%);width:min(380px,calc(100vw - 480px));min-width:180px}
+.arena .special{min-height:46px;max-width:180px;padding:8px 12px;gap:8px}.arena .special>div{font-size:10px}.arena .special small{font-size:6px}.arena .special-art{width:29px;height:29px}.arena .special-art>.item-icon{width:29px;height:29px}.arena .cooldown-ring{width:37px;height:37px}
+.arena .dash-button{min-height:38px;min-width:94px;padding:7px 10px;gap:7px}.arena .dash-button>span{font-size:9px}.arena .dash-button small{font-size:6px}.arena .dash-button>.item-icon{width:23px;height:23px}
+#toggle-hud{position:fixed;left:12px;bottom:12px;z-index:8;min-width:38px;height:34px;padding:0 10px;font-size:9px;letter-spacing:.5px;background:#171b28e8;border:1px solid #baa5e244;color:#d3c3e5;border-radius:6px;touch-action:manipulation;pointer-events:auto}
+.arena.hud-hidden>.hud,.arena.hud-hidden>.xp-track,.arena.hud-hidden>.battle-help,.arena.hud-hidden>.ultimate-banner,.arena.hud-hidden>#toast,.arena.hud-hidden>.special,.arena.hud-hidden>.dash-button,.arena.hud-hidden>.requip-button{visibility:hidden;pointer-events:none!important}
+#toggle-hud[aria-pressed="true"]{background:#171b28bb;color:#d3c3e5}
+#pause-save-manager{min-height:44px;margin-top:8px;width:100%}
+.audio-settings{display:grid;gap:10px;border:1px solid #ffffff18;background:#242132;border-radius:6px;padding:13px;margin:16px 0;text-align:left}.audio-settings label{display:grid;grid-template-columns:100px 1fr 34px;align-items:center;gap:8px;font-size:9px}.audio-settings input{width:100%;accent-color:#bba4e0}.audio-settings button{min-height:36px;font-size:10px}
+.save-loading{min-height:100dvh;display:grid;place-items:center;color:#c5b5d8;font-size:14px}
+@media(max-width:1100px){.arena .hud>.time{left:50%;right:auto;top:0;transform:translateX(-50%);width:150px;max-width:150px}.arena .hud>.boss-bars{left:50%;right:auto;top:72px;transform:translateX(-50%);width:min(340px,calc(100vw - 440px));min-width:160px}}
+@media(max-width:700px){
+ .arena .hud{left:12px;right:12px;top:14px;grid-template-columns:148px minmax(0,1fr);gap:8px}.arena .hud-left{max-width:148px;margin-top:46px;gap:5px}
+ .arena .hud-left .hero-hud{gap:5px}.arena .hud-left .avatar{width:25px;height:30px}.arena .hud-left .avatar>.item-icon{width:23px;height:23px}.arena .hud-left .avatar>svg{width:24px;height:29px}
+ .arena .hud-left .hero-hud strong{font-size:8px;gap:4px}.arena .hud-left .hero-hud strong small{font-size:5px}.arena .hud-left .hp-track{height:5px;margin:4px 0 3px}.arena .hud-left #health{font-size:5px}
+ .arena .hud-left .hero-mechanic{padding:6px 7px}.arena .hud-left .hero-mechanic>span{font-size:5px;letter-spacing:.5px}.arena .hud-left .hero-mechanic strong{font-size:7px;margin:3px 0 4px}.arena .hud-left #trait-detail{font-size:5px;margin-bottom:4px}
+ .arena .hud-left .inventory-slot,.arena .hud-left .trinket-slot{width:24px;height:24px}.arena .hud-left .inventory-slot .item-icon,.arena .hud-left .trinket-slot svg{width:18px;height:18px}.arena .hud-left .inventory-row,.arena .hud-left .trinket-row{gap:2px}.arena .hud-left .inventory-row>span:first-child,.arena .hud-left .trinket-row>span:first-child{width:12px;font-size:4px}.arena .hud-left .inventory-slot small,.arena .hud-left .trinket-slot small{font-size:5px}
+ .arena .hud-left .buffs>span{font-size:5px;padding:2px}.arena .hud-left .buffs{gap:3px}
+ .arena .hud>.time{left:50%;right:auto;top:0;transform:translateX(-50%);width:100px;max-width:100px}.arena .hud>.time>strong{font-size:28px}.arena .hud>.time>span{font-size:5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.arena .hud>.time>small{font-size:5px;line-height:1.4;letter-spacing:0}
+ .arena .hud>.run-stats{max-width:100px;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 28px;gap:5px}.arena .hud>.run-stats>div>span{font-size:4px}.arena .hud>.run-stats b{font-size:17px}.arena .hud>.run-stats .icon-button{width:28px;height:30px}
+ .arena .hud>.boss-bars{left:auto;right:0;top:71px;transform:none;width:calc(100% - 160px);min-width:0;gap:4px}.arena .hud>.boss-bars .boss-bar{padding:5px}.arena .hud>.boss-bars strong{font-size:8px}.arena .hud>.boss-bars span{font-size:4px}
+ .arena .special{bottom:12px;right:12px;max-width:158px;min-height:43px;padding:7px 9px;gap:7px}.arena .special>div{font-size:9px}.arena .special small{font-size:5px;letter-spacing:.4px}.arena .special-art{width:25px;height:25px}.arena .special-art>.item-icon{width:25px;height:25px}.arena .cooldown-ring{width:33px;height:33px}
+ .arena .dash-button{bottom:65px;right:12px;min-height:35px;min-width:90px;padding:6px 9px}.arena .requip-button{bottom:109px;right:12px;min-height:35px;min-width:105px;padding:6px 9px}.arena .requip-button>span{font-size:8px}.arena .requip-button small{font-size:5px}
+ .arena .battle-help{display:none}#toggle-hud{min-width:36px;height:32px;font-size:8px}
+}
+@media(max-height:450px) and (orientation:landscape){
+ .arena .hud{top:12px;grid-template-columns:148px minmax(0,1fr)}.arena .hud-left{margin-top:0;max-width:148px;gap:4px}.arena .hud-left .inventory-slot,.arena .hud-left .trinket-slot{width:24px;height:24px}.arena .hud-left .inventory-slot .item-icon,.arena .hud-left .trinket-slot svg{width:18px;height:18px}
+ .arena .hud>.time{left:50%;right:auto;top:0;transform:translateX(-50%);width:180px;max-width:180px}.arena .hud>.time>strong{font-size:27px}.arena .hud>.boss-bars{left:50%;right:auto;top:70px;transform:translateX(-50%);width:min(330px,calc(100vw - 350px));min-width:0}.arena .hud>.run-stats{display:flex;max-width:none;width:auto;gap:10px}
+}

@@ -1,0 +1,41 @@
+/* A short, skippable treasure reveal; reward controls remain deliberate. */
+.chest-modal{--treasure:#eac78e;width:min(650px,100%);position:relative;border-color:#e4b66e55;background:radial-gradient(ellipse at 50% 0,#47324466,transparent 55%),#1b1a28;overflow-x:hidden;scrollbar-gutter:stable}
+.chest-modal.rift-treasure{--treasure:#c4b9ff;border-color:#b2a5ef88;background:radial-gradient(ellipse at 50% 0,#62568a66,transparent 55%),#1b1a28}
+.chest-modal .eyebrow{color:var(--treasure);line-height:1.8;overflow-wrap:anywhere;letter-spacing:1.6px}
+.chest-modal h2{margin:9px 0;font-size:42px}
+.chest-art-stage{height:162px;display:grid;place-items:center;position:relative;isolation:isolate;margin:2px auto 0;width:min(240px,100%)}
+.chest-art-stage:before{content:'';position:absolute;width:160px;height:120px;border-radius:50%;background:radial-gradient(ellipse,#eac78e22,transparent 70%);z-index:-1}
+.rift-treasure .chest-art-stage:before{background:radial-gradient(ellipse,#b8a0fc33,transparent 70%)}
+.chest-art-stage .treasure-illustration{width:185px;height:166px;image-rendering:pixelated;overflow:visible}
+.chest-opening{min-height:350px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px 0}
+.chest-opening .chest-art-stage{height:195px;margin:0 0 12px}
+.chest-opening .treasure-illustration{width:228px;height:205px}
+.chest-opening>p{font-size:12px;color:#c9bfd3;line-height:1.8;margin:9px 0 19px}
+.chest-opening .secondary{font-size:10px;min-height:44px;min-width:150px}
+.chest-opening.is-opening .treasure-lid{transform-box:view-box;transform-origin:40px 38px;animation:treasure-lid-lift 1.2s cubic-bezier(.2,.7,.3,1) both}
+.chest-opening.is-opening .treasure-rays{animation:treasure-light 1.2s ease-out both}
+.chest-opening.is-opening .treasure-interior{animation:treasure-light 1.2s ease-out both}
+.chest-opening.is-opening .treasure-sparks{animation:treasure-shine 1.2s ease-out both}
+.chest-progress{height:3px;width:130px;background:#4a3c52;margin:13px auto 0;overflow:hidden;border-radius:3px}
+.chest-progress:before{content:'';display:block;height:100%;background:var(--treasure);animation:treasure-progress 1.2s linear both;transform-origin:left}
+.chest-opening-copy{display:block;font-size:8px;letter-spacing:1.6px;color:var(--treasure);line-height:1.8}
+.chest-modal .chest-offer{margin:18px auto 12px;padding:20px;background:linear-gradient(145deg,color-mix(in srgb,var(--item) 8%,#242333),#242333);animation:treasure-card-in .26s ease-out both}
+.chest-offer h3{overflow-wrap:anywhere;line-height:1.1}
+.chest-offer>p{font-size:12px;line-height:1.8;color:#cec3dc}
+.chest-offer>small{font-size:9px;letter-spacing:.5px;line-height:1.7}
+.chest-choice-actions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:20px}
+.chest-choice-actions button{width:100%;min-height:46px;margin:0!important;font-size:11px;letter-spacing:1px;white-space:normal}
+.chest-modal #ignore-chest{margin:5px 0 8px;min-height:44px;font-size:9px;padding:12px 15px}
+.chest-modal .chest-odds{line-height:1.9;font-size:8px;color:#b6a6c4;letter-spacing:.5px}
+.chest-reward{border-radius:5px;min-width:105px}.chest-reward small{letter-spacing:1px;color:#d4bd8b}
+.chest-modal #claim{min-height:48px;font-size:11px}
+.chest-modal .reward-index{font-size:10px;line-height:1.8;color:#bfb1cc;margin:7px 0}
+.chest-resolved .chest-art-stage{height:115px}.chest-resolved .treasure-illustration{width:145px;height:130px}
+@keyframes treasure-lid-lift{0%,32%{transform:translateY(0) rotate(0)}42%{transform:translateY(-2px) rotate(-2deg)}100%{transform:translateY(-15px) rotate(-7deg)}}
+@keyframes treasure-light{0%,42%{opacity:0}67%{opacity:.9}100%{opacity:.65}}
+@keyframes treasure-shine{0%{opacity:.3}35%{opacity:1}60%{opacity:.45}100%{opacity:1}}
+@keyframes treasure-progress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes treasure-card-in{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:480px){.chest-modal{padding:23px 17px}.chest-modal h2{font-size:34px}.chest-modal .eyebrow{font-size:8px;letter-spacing:1px}.chest-art-stage{height:132px}.chest-art-stage .treasure-illustration{width:156px;height:140px}.chest-modal .chest-offer{padding:17px 14px;margin-top:15px}.chest-offer>p{font-size:11px}.chest-offer h3{font-size:29px}.chest-opening{min-height:330px}.chest-modal .chest-rewards{gap:8px}.chest-reward{flex-basis:43%;padding:13px 8px;min-width:90px}.chest-reward strong{font-size:10px}.chest-modal .chest-odds{font-size:7px}}
+@media(max-height:480px){.chest-art-stage{height:100px}.chest-art-stage .treasure-illustration{width:125px;height:113px}.chest-opening{min-height:240px;padding:4px 0}.chest-opening .chest-art-stage{height:115px}.chest-opening .treasure-illustration{width:150px;height:135px}.chest-opening>p{margin:3px 0 12px}.chest-progress{margin:7px auto 0}}
+@media(prefers-reduced-motion:reduce){.chest-modal *{animation:none!important}.chest-progress:before{transform:scaleX(1)}}

@@ -1,0 +1,32 @@
+import {enemyArtFrame} from './enemy-art-kit.js';
+export const TITAN_VARIANT_IDS=['smilingtitan','beardedtitan','crawlingtitan','smalltitan','abnormal','puretitan'];
+function grin(R,L,x,y,w,ink){R(x,y,w,4,ink);R(x+1,y,w-2,2,'#f0ddbb');for(let xx=x+3;xx<x+w-2;xx+=3)L(xx,y,xx,y+2,'#a07b68');L(x+2,y+4,x+w-3,y+4,'#a77363');}
+export function variantTitanPixels(id,m={}){
+ if(!TITAN_VARIANT_IDS.includes(id))return null;
+ const {R,P,L,leg,arm,head,attack,ink,finish}=enemyArtFrame(m),skin=id==='beardedtitan'?'#c7a285':id==='crawlingtitan'?'#cfa88f':id==='abnormal'?'#d3b298':'#dfbb9a',shade='#9c7769',light='#efd1ac',deep='#77594f';
+ if(id==='crawlingtitan'){
+  // A horizontal back and four flexed limbs give the crawler its own anatomy.
+  P([[15,44],[23,37],[34,37],[44,43],[48,51],[43,57],[30,57],[20,52]],shade);P([[19,43],[25,40],[34,40],[42,45],[44,51],[38,54],[29,52],[22,48]],skin);L(24,41,34,42,light,2);L(29,48,40,51,shade);
+  for(const [x,d,yy]of [[18,-arm,47],[31,arm,47],[38,leg,50]]){L(x,yy,x+d-5,61,shade,6);L(x,yy,x+d-4,59,skin,4);L(x+d-4,59,x+d+2,68,shade,5);L(x+d-3,59,x+d+3,67,skin,3);R(x+d,67,9,4,skin);L(x+d+1,68,x+d+6,68,light);}
+  L(42,46,45-leg,58,shade,6);L(42,46,44-leg,57,skin,4);L(45-leg,57,47,68,skin,4);R(45,68,8,3,shade);
+  P([[7+head,30],[12+head,24],[21+head,25],[27+head,33],[26+head,43],[21+head,49],[12+head,47],[6+head,39]],shade);P([[9+head,31],[14+head,27],[20+head,28],[24+head,34],[23+head,42],[19+head,46],[12+head,43],[8+head,37]],skin);
+  P([[5+head,38],[4+head,31],[8+head,24],[14+head,20],[22+head,24],[28+head,31],[27+head,39],[23+head,34],[20+head,30],[16+head,34],[12+head,30],[9+head,39]],'#4b4240');L(10+head,27,15+head,24,'#777066');L(8+head,35,11+head,31,'#777066');L(10+head,36,13+head,36,ink);L(20+head,36,23+head,36,ink);R(11+head,37,1,1,'#dfdcc2');R(21+head,37,1,1,'#dfdcc2');grin(R,L,11+head,42,12,ink);
+  return finish();
+ }
+ const small=id==='smalltitan',beard=id==='beardedtitan',smile=id==='smilingtitan',abnormal=id==='abnormal',pure=id==='puretitan',top=small?43:beard?31:abnormal?35:33,bw=beard?6:small?-3:abnormal?1:0;
+ for(const [x,d]of [[small?21:beard?16:19,-leg],[small?31:beard?33:32,leg]]){const w=beard?9:small?5:7;P([[x,50],[x+w,50],[x+w+d,59],[x+w-2+d,69],[x+d,69],[x-2+d,60]],shade);P([[x+1,52],[x+w-1,52],[x+w-2+d,59],[x+w-3+d,66],[x+d,65]],skin);L(x+2,53,x+2+d,60,light,2);R(x+d,61,w-1,2,shade);P([[x+d,67],[x+w-3+d,67],[x+w+2+d,72],[x-3+d,72],[x-3+d,70]],skin);L(x-2+d,70,x+w-2+d,70,light);}
+ P([[19-bw,top],[25,top-3],[33,top-2],[39+bw,top+3],[40+bw,top+13],[35,55],[22,55],[15-bw,top+13]],shade);P([[21-bw,top+1],[26,top-1],[33,top],[37+bw,top+4],[37+bw,top+12],[33,52],[24,52],[18-bw,top+12]],skin);
+ if(beard){P([[23,39],[32,38],[38,43],[38,48],[33,54],[24,53],[19,47],[20,42]],'#d7b08d');L(23,40,30,39,light,2);L(23,49,31,51,shade);R(28,47,2,2,deep);}
+ else{L(21,top+4,26,top+6,light);L(32,top+6,36,top+4,light);L(28,top+6,28,top+16,shade);R(24,top+9,3,2,light);R(30,top+9,3,2,light);R(25,top+13,2,2,light);R(30,top+13,2,2,light);L(22,52,27,54,deep);L(29,54,34,52,deep);}
+ // Arm lengths, reach and weight differ across the variants.
+ for(const [x,side]of [[18-bw,-1],[37+bw,1]]){const reach=arm*side,hy=small?(attack?49:58):beard?(attack?47:55):abnormal?(side<0?attack?39:44:attack?50:57):attack?46:58,ex=Math.max(5,Math.min(46,x+side*(small?5:beard?3:abnormal?7:5)+reach));L(x,top+4,ex,top+15,shade,small?4:beard?7:5);L(x+1,top+4,ex+1,top+13,skin,small?3:beard?5:4);L(ex,top+13,ex+side,hy,shade,small?4:beard?6:4);L(ex+1,top+13,ex+side+1,hy-2,skin,small?3:beard?4:3);L(x+1,top+5,ex+1,top+10,light);R(ex+side-2,hy,small?5:7,small?4:5,skin);L(ex+side-1,hy,ex+side+3,hy,light);R(ex+side,hy+3,1,2,shade);R(ex+side+2,hy+3,1,2,shade);}
+ const fy=small?24:beard?7:abnormal?10:8,fx=abnormal?2+head:head;
+ if(smile||pure){const dark=smile?'#8d704d':'#3c3b3d',hair=smile?'#c8aa73':'#555151';P([[16+fx,fy+12],[16+fx,fy+3],[22+fx,fy-2],[32+fx,fy-2],[39+fx,fy+4],[41+fx,fy+17],[42+fx,fy+31],[37+fx,fy+35],[33+fx,fy+26],[22+fx,fy+28],[17+fx,fy+35],[12+fx,fy+29],[13+fx,fy+17]],dark);P([[17+fx,fy+10],[18+fx,fy+3],[23+fx,fy],[32+fx,fy+1],[37+fx,fy+5],[38+fx,fy+18],[38+fx,fy+29],[35+fx,fy+31],[32+fx,fy+23],[22+fx,fy+25],[17+fx,fy+30],[15+fx,fy+26]],hair);}
+ P([[18+fx,fy+9],[23+fx,fy+3],[32+fx,fy+3],[38+fx,fy+10],[37+fx,fy+20],[32+fx,fy+27],[26+fx,fy+29],[20+fx,fy+23],[17+fx,fy+15]],shade);P([[20+fx,fy+10],[24+fx,fy+6],[31+fx,fy+6],[35+fx,fy+11],[34+fx,fy+20],[30+fx,fy+25],[26+fx,fy+26],[22+fx,fy+21],[20+fx,fy+16]],skin);R(17+fx,fy+13,3,5,skin);R(35+fx,fy+13,3,5,skin);L(27+fx,fy+13,27+fx,fy+18,shade);L(28+fx,fy+17,29+fx,fy+18,light);
+ for(const x of [21+fx,30+fx]){L(x,fy+13,x+3,fy+13,ink);R(x,fy+14,4,2,'#ebe4cc');R(x+1,fy+14,1,2,abnormal?'#ad7e73':'#7e9a87');}
+ if(smile){P([[16+fx,fy+14],[16+fx,fy+6],[21+fx,fy],[28+fx,fy-1],[35+fx,fy+2],[39+fx,fy+8],[38+fx,fy+17],[35+fx,fy+15],[33+fx,fy+7],[29+fx,fy+5],[26+fx,fy+8],[23+fx,fy+5],[20+fx,fy+11],[19+fx,fy+18]],'#d1b27a');L(21+fx,fy+4,26+fx,fy+1,'#ecdaa7');L(31+fx,fy+4,34+fx,fy+8,'#ecdaa7');grin(R,L,20+fx,fy+20,16,ink);L(21+fx,fy+19,23+fx,fy+18,shade);L(33+fx,fy+18,35+fx,fy+19,shade);}
+ else if(beard){P([[17+fx,fy+12],[16+fx,fy+4],[20+fx,fy],[32+fx,fy-1],[38+fx,fy+5],[39+fx,fy+14],[35+fx,fy+12],[32+fx,fy+5],[27+fx,fy+7],[22+fx,fy+4],[20+fx,fy+14]],'#4b4340');L(21+fx,fy+3,25+fx,fy+2,'#7f6c58');P([[18+fx,fy+18],[22+fx,fy+16],[27+fx,fy+19],[33+fx,fy+16],[38+fx,fy+18],[37+fx,fy+28],[33+fx,fy+34],[27+fx,fy+36],[21+fx,fy+31]],'#51453d');P([[21+fx,fy+23],[25+fx,fy+25],[32+fx,fy+22],[35+fx,fy+24],[32+fx,fy+31],[27+fx,fy+33],[23+fx,fy+29]],'#8c7057');L(23+fx,fy+25,25+fx,fy+30,'#b29269');L(31+fx,fy+25,29+fx,fy+31,'#b29269');grin(R,L,23+fx,fy+20,11,ink);}
+ else if(pure){P([[16+fx,fy+15],[15+fx,fy+7],[20+fx,fy+1],[27+fx,fy-1],[34+fx,fy+2],[39+fx,fy+9],[39+fx,fy+20],[35+fx,fy+17],[33+fx,fy+9],[29+fx,fy+7],[25+fx,fy+12],[22+fx,fy+8],[20+fx,fy+20],[17+fx,fy+23]],'#484548');L(21+fx,fy+5,25+fx,fy+2,'#77706a');L(36+fx,fy+10,37+fx,fy+17,'#77706a');grin(R,L,22+fx,fy+21,12,ink);}
+ else{const hair=small?'#83634d':'#3f3d3e';P([[17+fx,fy+14],[15+fx,fy+7],[19+fx,fy+1],[24+fx,fy-2],[31+fx,fy],[37+fx,fy+4],[40+fx,fy+10],[38+fx,fy+16],[34+fx,fy+12],[30+fx,fy+6],[26+fx,fy+11],[22+fx,fy+7],[20+fx,fy+17]],hair);L(21+fx,fy+3,25+fx,fy+1,small?'#b3996d':'#716a62');grin(R,L,abnormal?19+fx:22+fx,fy+21,abnormal?17:12,ink);if(abnormal){L(20+fx,fy+19,21+fx,fy+17,shade);L(34+fx,fy+17,36+fx,fy+20,shade);}}
+ return finish();
+}
