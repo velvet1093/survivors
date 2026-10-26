@@ -1,202 +1,185 @@
-import {enemyArtFrame,enemyLegs,ENEMY_INK,ENEMY_SKIN} from './enemy-art-kit.js';
+import {expeditionBossPixels} from './expedition-boss-art.js';
+import {canvas,selout} from './hero-kit.js';
 
 // Expedition cast on the shared 56 × 76 grid: Fairy Tail mages and beasts, the
 // Orc Disaster's army and Charybdis spawn, Kokushibo, Acnologia and Milim.
+// Everything is painted with the playable heroes' kit: layered tones and a
+// selective outline that darkens each edge in its own colour.
 export const EXPEDITION_PALETTES={
  eisenwald:['#4a5a52','#2a3532','#a9c7a0'],vulcan:['#e6e1d4','#a59f94','#fbf8ee'],phantomshade:['#5d5685','#2f2a4a','#a9a3d6'],
  orctrooper:['#8a9a5a','#55603a','#bcc78a'],megalodon:['#6f93ab','#3f5c74','#e4ecee'],lizardman:['#6fa06a','#3f6a44','#b4d8a0'],
  jellal:['#2f3f6e','#1b2444','#c7b1e8'],geld:['#7d8a52','#4a5232','#c7a86a'],kokushibo:['#6a3a62','#3a1f38','#c98fa8'],
  acnologia:['#2c3246','#161a28','#7d93c4'],milim:['#f0a6b8','#b8607a','#ffd6de'],
 };
-const GOLD='#d6b064',GOLD_LIGHT='#f2dc9a',STEEL='#9aa4b0',STEEL_LIGHT='#dde3ea',BONE='#e8dfc6',RED='#c8404e',GLOW='#bff2ff';
-const SKIN=ENEMY_SKIN;
-function eyes(a,x,y,{gap=9,color='#f4e08a',w=2,h=1}={}){a.R(x,y,w,h,color);a.R(x+gap,y,w,h,color);}
+const INK='#232a3a',STEEL='#a9b2bc',STEEL_LIGHT='#e6ebf0',STEEL_DARK='#6a727c',BONE='#efe6cc',WOOD='#7a5636',WOOD_DARK='#4e3622',GLOW='#bff2ff';
+const SKIN={base:'#f0d2bb',shade:'#cfa38e',light:'#fde8d8'};
+const clamp=(n,max)=>Math.max(-max,Math.min(max,Math.round(n||0)));
+function frame(m={}){const r=canvas();return {r,walk:clamp((m.leg||0)*.4,2),arm:clamp((m.arm||0)*.5,3),tail:clamp((m.tail||0)*.4,3),attack:!!m.attack};}
+function boots(r,x,d,{color,light,sole}){r.rect(x-1+d,64,7,5,color);r.rect(x+d,64,2,3,light);r.rect(x-2+d,68,8,3,color);r.rect(x-1+d,70,7,1,sole);}
 
-// ---- Ordinary enemies ----
+// Eisenwald dark mage: deep green hooded cloak with the guild's skull crest, pale
+// gaunt face with a sneer, bone clasp, wind gathering in an open palm.
 function eisenwald(m){
- // Hooded wind mage of the dark guild, green wind gathering in an open palm.
- const a=enemyArtFrame(m),{P,R,L,r,leg,arm,attack,finish}=a,[base,shade,light]=EXPEDITION_PALETTES.eisenwald;
- enemyLegs(r,{leg,top:52,left:21,right:30,width:6,cloth:'#2f3a38',shade:'#1d2624',light:'#4f5e58',boots:'#2a2a30',bootLight:'#55555e'});
- P([[16,30],[24,27],[33,27],[40,31],[42,58],[33,62],[23,62],[14,58]],shade);P([[18,31],[24,29],[32,29],[38,32],[39,57],[32,60],[24,60],[17,57]],base);
- L(28,32,28,59,shade);for(const y of [40,48])L(20,y,36,y,light);R(25,35,6,5,'#20262a');L(26,36,30,38,'#e6e1d4');L(30,36,26,38,'#e6e1d4');
- for(const [x,s]of [[17,-1],[39,1]]){const hx=attack&&s>0?47:x+s*(2+arm),hy=attack&&s>0?36:50;L(x,33,hx,hy,shade,6);L(x,33,hx,hy-1,base,4);R(hx-2,hy,5,4,SKIN.base);}
- if(attack){for(let i=0;i<3;i++)L(46+i*2,30-i*3,52,33-i*2,light);R(46,34,4,2,GLOW);}
- P([[18,24],[20,12],[28,7],[36,12],[38,24],[34,30],[22,30]],shade);P([[20,23],[22,13],[28,9],[34,13],[36,23],[33,28],[23,28]],base);
- P([[23,16],[33,16],[33,26],[28,29],[23,26]],SKIN.shade);P([[24,17],[32,17],[32,25],[28,28],[24,25]],SKIN.base);P([[22,13],[28,10],[34,13],[34,18],[22,18]],shade);
- R(24,20,3,1,ENEMY_INK);R(30,20,3,1,ENEMY_INK);R(25,20,1,1,light);R(31,20,1,1,light);L(26,25,30,25,'#7d5a5a');
- return finish();
+ const {r,walk,arm,tail,attack}=frame(m),{poly:P,rect:R,line:L,put}=r,w=tail*.5;
+ const cloak='#3e5a4e',shade='#253a32',deep='#172520',light='#5f8272',wind='#b8e6c8';
+ P([[15,34],[41,34],[46+w,66],[40,70],[34,67],[28,70],[22,67],[16,70],[10+w,66]],deep);
+ P([[16,35],[40,35],[44+w,65],[39,67],[34,64],[28,67],[22,64],[17,67],[12+w,65]],shade);
+ for(const [i,x]of [21,30].entries()){const d=i?walk:-walk;R(x+d,54,5,10,'#2a2e34');L(x+1+d,55,x+1+d,62,'#454a54');boots(r,x,d,{color:'#22242a',light:'#4a4c56',sole:'#121318'});}
+ P([[18,36],[38,36],[40,58],[34,62],[22,62],[16,58]],cloak);L(28,38,28,60,shade);L(19,38,18,57,light);L(37,38,38,57,shade);
+ R(18,50,20,2,'#2a2018');R(26,49,4,4,BONE);
+ // Skull crest on the chest.
+ R(24,41,8,6,BONE);R(25,43,2,2,deep);R(29,43,2,2,deep);put(28,45,deep);L(25,47,30,47,'#c8bea4');put(26,47,deep);put(29,47,deep);
+ // Arms in wide sleeves; on the attack one palm opens with a swirl of wind.
+ P([[16,37],[20,37],[16-arm*.3,52],[11-arm*.3,52]],shade);P([[17,38],[19,38],[15-arm*.3,51],[12-arm*.3,51]],cloak);R(12-arm*.3,52,4,3,SKIN.base);
+ if(attack){P([[36,37],[40,37],[48,40],[46,44]],shade);L(38,39,46,41,cloak,2);R(47,38,4,4,SKIN.base);
+  for(let i=0;i<10;i++){const a=i*.7,rr=2+i*.5;put(52+Math.round(Math.cos(a)*rr),36+Math.round(Math.sin(a)*rr),i%2?wind:'#ffffff');}}
+ else{P([[36,37],[40,37],[45+arm*.3,52],[40+arm*.3,52]],shade);P([[37,38],[39,38],[44+arm*.3,51],[41+arm*.3,51]],cloak);R(40+arm*.3,52,4,3,SKIN.base);}
+ // Hood framing a pale, sneering face.
+ P([[15,34],[14,22],[17,12],[24,7],[32,7],[39,12],[42,22],[41,34],[37,30],[19,30]],deep);
+ P([[16,32],[16,22],[19,13],[25,9],[31,9],[37,13],[40,22],[40,32],[36,28],[20,28]],shade);
+ L(19,14,25,10,light);L(17,22,17,30,cloak);
+ P([[20,19],[36,19],[36,28],[32,33],[24,33],[20,28]],'#d2b9a8');P([[21,20],[35,20],[35,27],[31,31],[25,31],[21,27]],'#e8d2c2');
+ P([[19,18],[25,14],[31,14],[37,18],[37,21],[19,21]],deep);
+ for(const x of [22,31]){L(x,23,x+3,23,'#14181a');R(x,24,3,1,'#f2f0e6');put(x+1,24,'#8a2a2a');}
+ L(21,22,25,23,'#14181a');L(31,23,35,22,'#14181a');put(28,26,'#c0a090');L(26,29,30,28,'#7a4040');
+ return selout(r.pixels,INK);
 }
+
+// Vulcan: hulking white forest ape with shaggy layered fur, a dark leathery face,
+// a leering grin and a tuft on its crown; it beats its chest on the attack.
 function vulcan(m){
- // White forest ape: shaggy fur, dark face, long arms and a crest of fur.
- const a=enemyArtFrame(m),{P,R,L,leg,arm,attack,enraged,finish}=a,[base,shade,light]=EXPEDITION_PALETTES.vulcan;
- for(const [x,d]of [[19,-leg],[31,leg]]){P([[x,52],[x+7,52],[x+8+d,66],[x+9+d,71],[x-2+d,71],[x-1+d,64]],shade);R(x+d,56,6,10,base);R(x-2+d,68,10,3,'#8a7a78');}
- P([[13,30],[22,24],[34,24],[43,30],[44,48],[38,57],[18,57],[12,48]],shade);P([[15,31],[23,26],[33,26],[41,31],[42,47],[37,55],[19,55],[14,47]],base);
- P([[21,36],[35,36],[36,50],[28,54],[20,50]],'#d8cdbb');for(const [x,y]of [[17,34],[39,34],[16,44],[40,44]])L(x,y,x+(x<28?-2:2),y+4,light);
- for(const [x,s]of [[14,-1],[42,1]]){const hx=attack?28+s*14:x+s*(4+arm),hy=attack?30:58;L(x,32,hx,hy,shade,9);L(x,32,hx,hy-1,base,6);R(hx-3,hy,7,5,'#8a7a78');for(let i=0;i<3;i++)R(hx-3+i*2,hy+4,1,2,'#5a4a48');}
- P([[18,18],[21,8],[28,4],[35,8],[38,18],[35,27],[21,27]],shade);P([[20,18],[23,10],[28,7],[33,10],[36,18],[33,25],[23,25]],base);
- P([[22,14],[34,14],[35,22],[28,26],[21,22]],'#7a6a6a');P([[23,15],[33,15],[33,21],[28,24],[23,21]],'#9a8886');
- eyes(a,24,17,{gap:6,color:enraged?'#ff8a6a':'#f4e08a'});R(26,21,4,2,'#3a2a2a');R(26,21,1,1,BONE);R(29,21,1,1,BONE);
- for(const x of [24,28,32])P([[x-2,8],[x,1],[x+2,8]],light);
- return finish();
+ const {r,walk,arm,attack}=frame(m),{poly:P,rect:R,line:L,put}=r;
+ const fur='#ece6d8',furShade='#b8b0a2',furDeep='#857d72',furLight='#fffdf6',face='#8c7470',faceLight='#a88c86';
+ for(const [i,x]of [18,31].entries()){const d=i?walk:-walk;P([[x-1,50],[x+8,50],[x+9+d,64],[x-2+d,64]],furShade);R(x+d,51,7,12,fur);L(x+1+d,52,x+1+d,61,furLight);R(x-2+d,64,11,5,furShade);R(x-3+d,68,13,3,face);for(const t of [0,3,6,9])put(x-3+t+d,70,'#5a4a48');}
+ // Barrel body with layered fur tufts and a bare chest.
+ P([[11,32],[19,24],[37,24],[45,32],[46,48],[39,56],[17,56],[10,48]],furShade);P([[13,33],[20,26],[36,26],[43,33],[44,47],[38,54],[18,54],[12,47]],fur);
+ P([[20,34],[36,34],[37,47],[28,52],[19,47]],'#d8ccbc');L(28,36,28,48,'#b8ac9c');L(21,40,26,41,'#b8ac9c');L(30,41,35,40,'#b8ac9c');
+ for(const [x,y]of [[14,36],[42,36],[13,43],[43,43],[17,50],[39,50],[20,29],[36,29]])P([[x-2,y],[x,y+4],[x+2,y]],furDeep);
+ for(const [x,y]of [[15,34],[41,34],[22,27],[34,27]])L(x,y,x+1,y+3,furLight);
+ // Long arms; on the attack both fists rise to pound the chest.
+ for(const s of [-1,1]){const p=x=>28+s*x,hx=attack?p(7):p(18+arm*.3*s),hy=attack?34:58;
+  L(p(15),32,hx,hy-4,furShade,10);L(p(15),32,hx,hy-5,fur,7);L(p(16),33,hx,hy-8,furLight);
+  R(hx-4,hy-4,9,6,face);R(hx-3,hy-4,7,2,faceLight);for(const t of [-3,0,3])put(hx+t,hy+1,'#5a4a48');}
+ // Head: heavy brow, small fierce eyes, flat nose and a wide toothy leer.
+ P([[17,18],[20,8],[28,4],[36,8],[39,18],[37,27],[19,27]],furShade);P([[19,18],[22,10],[28,6],[34,10],[37,18],[35,25],[21,25]],fur);
+ for(const x of [23,28,33])P([[x-2,8],[x,0],[x+2,8]],x===28?furLight:fur);
+ P([[21,13],[35,13],[36,22],[32,26],[24,26],[20,22]],face);P([[22,14],[34,14],[34,21],[31,24],[25,24],[22,21]],faceLight);
+ L(21,15,26,16,'#5a4846',2);L(30,16,35,15,'#5a4846',2);
+ R(23,17,3,2,'#fff2a8');put(24,17,'#3a2a20');R(30,17,3,2,'#fff2a8');put(31,17,'#3a2a20');
+ R(26,20,4,1,'#5a4846');put(26,19,'#5a4846');put(29,19,'#5a4846');
+ P([[22,22],[34,22],[32,26],[24,26]],'#3a2424');for(const x of [23,25,27,29,31,33])put(x,22,'#fffaf0');L(25,25,31,25,'#a85a5a');
+ return selout(r.pixels,INK);
 }
+
+// Phantom Lord shade: a hooded wraith of violet smoke, glowing eyes in a void,
+// skeletal claws and a frayed tail that never touches the ground.
 function phantomshade(m){
- // Hooded phantom of Phantom Lord, drifting on a frayed shadow tail.
- const a=enemyArtFrame(m),{P,R,L,arm,tail,attack,finish}=a,[base,shade,light]=EXPEDITION_PALETTES.phantomshade;
- P([[15,26],[22,20],[34,20],[41,26],[42,50],[36+tail,62],[30,70],[26+tail,62],[19,66],[16,52]],shade);
- P([[17,27],[23,22],[33,22],[39,27],[40,49],[35+tail,59],[30,66],[27+tail,58],[21,62],[18,51]],base);
- for(const x of [22,28,34])L(x,30,x+tail,56,shade);L(20,28,21,48,light);
- for(const [x,s]of [[17,-1],[39,1]]){const hx=attack?28+s*16:x+s*(4+arm),hy=attack?28:44;L(x,30,hx,hy,shade,5);L(x,30,hx,hy-1,base,3);for(let i=0;i<3;i++)L(hx-2+i*2,hy,hx-2+i*2+s,hy+5,light);}
- P([[18,24],[20,10],[28,4],[36,10],[38,24],[33,29],[23,29]],shade);P([[20,23],[22,11],[28,6],[34,11],[36,23],[32,27],[24,27]],base);
- P([[23,14],[33,14],[33,25],[28,28],[23,25]],'#120f20');eyes(a,24,19,{gap:6,color:GLOW,w:2,h:2});L(25,24,31,24,'#4a4470');
- if(attack)for(const [x,y]of [[8,24],[47,24],[28,0]]){R(x,y,3,3,light);R(x+1,y+1,1,1,'#ffffff');}
- return finish();
+ const {r,arm,tail,attack}=frame(m),{poly:P,rect:R,line:L,put}=r;
+ const robe='#5a5288',shade='#38325c',deep='#221e3c',light='#8c84c0',hollow='#0e0c1a';
+ // Frayed smoke tail.
+ P([[16,40],[40,40],[42,54],[37+tail,64],[33,60],[30+tail,72],[26,62],[21+tail,68],[18,56]],deep);
+ P([[18,41],[38,41],[40,53],[36+tail,61],[32,57],[30+tail,67],[26,58],[22+tail,63],[19,54]],shade);
+ for(const [x0,x1]of [[22,22],[28,30],[34,36]])L(x0,44,x1+tail,62,deep);L(20,43,21,55,robe);
+ // Robe body with a torn mantle.
+ P([[15,30],[22,25],[34,25],[41,30],[42,46],[14,46]],shade);P([[17,31],[23,27],[33,27],[39,31],[40,45],[16,45]],robe);
+ for(const x of [18,24,30,36])P([[x,44],[x+2,49],[x+4,44]],robe);L(18,32,17,44,light);L(28,30,28,44,shade);
+ // Chain clasp.
+ for(const x of [23,26,29,32])R(x,31,2,2,'#c8c4d8');
+ // Skeletal claws reaching out.
+ for(const s of [-1,1]){const p=x=>28+s*x,hx=attack?p(18):p(14+arm*.3*s),hy=attack?30:46;
+  P([[p(10),31],[p(13),30],[hx+s*2,hy],[hx-s*2,hy+2]],shade);L(p(11),32,hx,hy,robe,3);
+  for(let i=0;i<3;i++)L(hx-2+i*2,hy+1,hx-2+i*2+s,hy+6,'#e8e4f4');}
+ if(attack)for(const [x,y]of [[6,22],[50,22],[28,1]]){R(x,y,3,3,light);put(x+1,y+1,'#ffffff');}
+ // Deep hood and the void within; only the eyes and a thin grin show.
+ P([[16,28],[17,15],[21,8],[28,4],[35,8],[39,15],[40,28],[34,31],[22,31]],deep);
+ P([[18,27],[19,15],[23,9],[28,6],[33,9],[37,15],[38,27],[33,29],[23,29]],shade);P([[24,8],[28,6],[32,8],[30,10],[26,10]],light);
+ P([[21,15],[35,15],[35,27],[28,30],[21,27]],hollow);
+ for(const x of [23,30]){R(x,19,3,2,GLOW);put(x+1,19,'#ffffff');put(x+(x<28?2:0),21,'#6ab8d8');}
+ L(25,25,31,25,'#3a3460');for(const x of [26,28,30])put(x,26,'#6a64a0');
+ return selout(r.pixels,INK);
 }
+
+// Orc trooper of the Orc Disaster's army: boar face with tusks, mail under a riveted
+// leather cuirass, round shield on the back and a heavy cleaver.
 function orctrooper(m){
- // Starving orc soldier: tusked pig face, crude plates and a heavy cleaver.
- const a=enemyArtFrame(m),{P,R,L,r,leg,arm,attack,finish}=a,[base,shade,light]=EXPEDITION_PALETTES.orctrooper;
- enemyLegs(r,{leg,top:51,left:19,right:31,width:7,cloth:'#5a4a36',shade:'#3a2e22',light:'#7a6650',boots:'#3a3430',bootLight:'#6a5e54'});
- P([[14,31],[22,27],[34,27],[42,31],[42,50],[36,55],[20,55],[14,50]],shade);P([[16,32],[23,29],[33,29],[40,32],[40,49],[35,53],[21,53],[16,49]],base);
- P([[19,33],[37,33],[36,46],[20,46]],'#6a5a48');for(const x of [22,28,34])R(x,35,3,9,STEEL);R(19,46,18,3,'#4a3a2a');R(27,46,3,3,GOLD);
- for(const [x,s]of [[15,-1],[41,1]]){const hx=attack&&s>0?44:x+s*(3+arm),hy=attack&&s>0?28:51;L(x,33,hx,hy,shade,7);L(x,33,hx,hy-1,base,5);R(hx-2,hy,6,5,base);}
- // Cleaver: raised high on the attack, resting low otherwise.
- if(attack){P([[43,28],[46,8],[54,6],[53,26]],STEEL);L(46,10,52,8,STEEL_LIGHT);R(42,26,4,6,'#5a4030');}
- else{P([[42,52],[50,46],[55,58],[48,63]],STEEL);L(44,52,51,48,STEEL_LIGHT);R(40,50,4,5,'#5a4030');}
- P([[17,17],[21,9],[35,9],[39,17],[38,27],[33,31],[23,31],[18,27]],shade);P([[19,17],[23,11],[33,11],[37,17],[36,26],[32,29],[24,29],[20,26]],base);
- P([[24,20],[32,20],[33,26],[23,26]],light);R(25,22,2,2,'#4a3a2a');R(29,22,2,2,'#4a3a2a');eyes(a,22,16,{gap:10,color:'#e8603a'});
- for(const x of [22,33])P([[x,25],[x+1,30],[x+2,25]],BONE);for(const x of [18,37])P([[x-2,10],[x,5],[x+2,11]],shade);
- return finish();
+ const {r,walk,arm,attack}=frame(m),{poly:P,rect:R,line:L,put}=r;
+ const hide='#8a9a5a',hideShade='#5a6838',hideLight='#b2c27c',leather='#6e5236',leatherShade='#4a3622',leatherLight='#8e6e4a',snout='#c9a27c';
+ // Round wooden shield slung on the back.
+ P([[10,32],[14,26],[42,26],[46,32],[44,40],[12,40]],WOOD_DARK);P([[12,32],[15,28],[41,28],[44,32],[42,38],[14,38]],WOOD);L(14,32,42,32,WOOD_DARK);
+ for(const [i,x]of [20,31].entries()){const d=i?walk:-walk;R(x-1+d,52,7,11,leatherShade);R(x+d,52,5,10,'#5a4a3a');L(x+1+d,53,x+1+d,61,'#7a6650');boots(r,x,d,{color:'#3a322c',light:'#6a5e54',sole:'#1e1a16'});R(x-1+d,60,7,2,leather);}
+ // Mail skirt, cuirass and belt.
+ P([[17,48],[39,48],[41,57],[15,57]],'#6a727c');for(let y=50;y<57;y+=2)for(let x=17+(y%4?1:0);x<40;x+=2)put(x,y,'#9aa4ae');
+ P([[16,34],[40,34],[41,49],[15,49]],leatherShade);P([[17,35],[39,35],[40,48],[16,48]],leather);L(18,36,17,47,leatherLight);L(28,36,28,47,leatherShade);
+ for(const [x,y]of [[19,37],[37,37],[19,45],[37,45],[24,41],[32,41]])put(x,y,'#d8c08a');
+ R(15,47,26,3,'#3a2a1a');R(26,46,5,5,'#c9a452');R(27,47,3,3,'#8a6a2a');
+ // Shoulder plates.
+ for(const s of [-1,1]){const p=x=>28+s*x;P([[p(8),33],[p(14),31],[p(16),36],[p(13),40],[p(9),38]],STEEL_DARK);P([[p(9),34],[p(13),32],[p(15),36],[p(12),38]],STEEL);put(p(12),34,STEEL_LIGHT);}
+ // Arms and the cleaver: raised overhead on the attack, resting low otherwise.
+ L(15,38,12-arm*.3,51,hideShade,6);L(15,38,13-arm*.3,50,hide,4);R(10-arm*.3,50,6,5,hide);R(10-arm*.3,48,6,2,leather);
+ if(attack){L(41,38,44,28,hideShade,6);L(41,38,44,29,hide,4);R(41,25,6,5,hide);R(43,24,3,3,WOOD_DARK);P([[42,24],[45,4],[54,2],[54,22]],STEEL_DARK);P([[43,22],[46,5],[53,4],[53,20]],STEEL);L(46,6,52,5,STEEL_LIGHT);}
+ else{L(41,38,44+arm*.3,50,hideShade,6);L(41,38,43+arm*.3,49,hide,4);R(41+arm*.3,49,6,5,hide);P([[44,54],[52,46],[56,52],[56,62],[48,64]],STEEL_DARK);P([[45,54],[52,48],[55,52],[55,60],[49,62]],STEEL);L(46,54,52,49,STEEL_LIGHT);R(42+arm*.3,51,3,4,WOOD_DARK);}
+ // Boar head with ears, small red eyes, a broad snout and tusks.
+ P([[16,20],[18,11],[24,7],[32,7],[38,11],[40,20],[39,29],[33,34],[23,34],[17,29]],hideShade);
+ P([[17,20],[19,12],[24,9],[32,9],[37,12],[39,20],[38,28],[32,32],[24,32],[18,28]],hide);L(21,12,26,10,hideLight);L(30,10,35,12,hideLight);
+ P([[18,14],[12,8],[16,18]],hideShade);P([[38,14],[44,8],[40,18]],hideShade);
+ L(20,18,25,20,hideShade,2);L(31,20,36,18,hideShade,2);R(21,21,3,2,'#1e1a14');put(22,21,'#e0503a');R(32,21,3,2,'#1e1a14');put(33,21,'#e0503a');
+ P([[22,24],[34,24],[35,29],[28,31],[21,29]],'#a07e5c');P([[23,24],[33,24],[34,28],[28,30],[22,28]],snout);R(25,26,2,2,'#3a2418');R(30,26,2,2,'#3a2418');
+ L(23,31,33,31,'#3a2418');for(const [x,s]of [[22,-1],[34,1]])P([[x,31],[x+s*2,25],[x+s*2,31]],BONE);
+ // Dented iron cap.
+ P([[18,13],[21,7],[28,5],[35,7],[38,13]],STEEL_DARK);P([[19,12],[22,8],[28,6],[34,8],[37,12]],STEEL);L(22,8,27,6,STEEL_LIGHT);
+ return selout(r.pixels,INK);
 }
+
+// Megalodon from Charybdis' brood: a storm shark gliding upright through the air,
+// slate back, white belly, gill slits and a jaw full of teeth.
 function megalodon(m){
- // Flying storm shark: grey-blue back, white belly, fins and a toothy grin.
- const a=enemyArtFrame(m),{P,R,L,tail,attack,finish}=a,[base,shade,light]=EXPEDITION_PALETTES.megalodon;
- P([[4,40],[12,32],[30,28],[44,30],[52,36],[54,42],[44,48],[28,50],[12,48]],shade);
- P([[6,40],[13,34],[30,30],[43,32],[50,37],[51,41],[43,45],[28,46],[13,45]],base);
- P([[12,42],[30,42],[46,41],[43,45],[28,47],[13,46]],light);
- P([[24,30],[30,18],[34,30]],shade);P([[26,30],[30,21],[32,30]],base);
- P([[4+tail,40],[0+tail,28],[8,38]],shade);P([[4+tail,41],[0+tail,54],[8,43]],shade);
- for(const x of [18,34])P([[x,46],[x+4,54],[x+7,46]],shade);
- const open=attack?3:1;P([[40,40],[54,38],[54,40+open],[42,43+open]],'#3a1a22');for(let x=42;x<54;x+=2){R(x,39,1,2,'#ffffff');R(x,41+open,1,1,'#ffffff');}
- R(43,34,3,2,'#141a22');R(44,34,1,1,GLOW);for(const x of [36,38])L(x,33,x,37,shade);
- return finish();
+ const {r,tail,attack}=frame(m),{poly:P,line:L,put,rect:R}=r;
+ const back='#5f86a2',shade='#3a5a74',deep='#26405a',light='#86aac2',belly='#eef2f2',bellyShade='#c4ccd2';
+ // Tail fin and pectoral fins.
+ P([[8,40],[0+tail,26],[4+tail,24],[12,37]],deep);P([[8,42],[0+tail,58],[5+tail,58],[12,45]],deep);L(2+tail,27,10,39,shade);
+ P([[20,47],[26,59],[30,58],[30,47]],shade);P([[34,46],[40,56],[43,55],[40,46]],shade);
+ // Body.
+ P([[6,41],[12,33],[24,28],[38,29],[48,33],[54,40],[48,47],[34,51],[18,50],[10,47]],deep);
+ P([[8,41],[13,35],[24,30],[38,31],[47,35],[52,40],[47,45],[34,49],[18,48],[11,46]],back);
+ P([[12,42],[30,42],[44,41],[50,41],[46,45],[34,48],[18,47],[12,45]],belly);L(14,46,44,45,bellyShade);
+ L(14,37,40,32,light);for(const x of [36,38,40])L(x,35,x-1,40,deep);
+ for(const [x,y]of [[20,44],[26,43],[24,46]])put(x,y,bellyShade);
+ // Dorsal fin.
+ P([[22,31],[28,14],[31,15],[34,31]],deep);P([[24,31],[28,17],[30,18],[32,31]],back);L(28,19,26,29,light);
+ // Jaw and eye.
+ const open=attack?4:1;P([[40,40],[55,37],[55,40+open],[42,43+open]],'#3a1a22');P([[42,41],[54,39],[54,40+open],[43,42+open]],'#8a2a3a');
+ for(let x=42;x<55;x+=2){P([[x,39],[x+1,42],[x+2,39]],'#ffffff');P([[x,41+open],[x+1,39+open],[x+2,41+open]],'#ffffff');}
+ R(43,35,3,3,'#0e141c');put(44,35,GLOW);L(42,34,46,33,deep);
+ return selout(r.pixels,INK);
 }
+
+// Lizardman warrior: green scales with a pale banded belly, red crest, yellow slit
+// eyes, leather harness and bracers, a long tail and a stone-tipped spear.
 function lizardman(m){
- // Lizardman spear warrior: scaled snout, leather harness, tail and spear.
- const a=enemyArtFrame(m),{P,R,L,r,leg,arm,tail,attack,finish}=a,[base,shade,light]=EXPEDITION_PALETTES.lizardman;
- P([[30,50],[38,52],[46+tail,62],[50+tail,68],[44+tail,66],[34,58]],shade);P([[31,51],[37,53],[44+tail,62],[47+tail,66],[34,57]],base);
- enemyLegs(r,{leg,top:50,left:20,right:30,width:6,cloth:base,shade,light,boots:'#3a5a3a',bootLight:'#6a8a5a'});
- P([[17,30],[23,27],[33,27],[39,31],[38,50],[33,54],[22,54],[17,50]],shade);P([[19,31],[24,29],[32,29],[37,32],[36,49],[32,52],[23,52],[19,49]],base);
- P([[22,33],[34,33],[33,47],[23,47]],'#c8d8a8');for(let y=35;y<46;y+=3)L(23,y,33,y,'#a8b888');L(20,31,34,48,'#6a4a32',2);R(19,47,18,3,'#6a4a32');
- for(const [x,s]of [[18,-1],[38,1]]){const hx=attack&&s>0?46:x+s*(3+arm),hy=attack&&s>0?38:50;L(x,33,hx,hy,shade,6);L(x,33,hx,hy-1,base,4);R(hx-2,hy,5,4,base);}
- // Spear: thrust forward on the attack, held upright otherwise.
- if(attack){L(30,40,55,36,'#7a5a3a',2);P([[50,33],[56,36],[50,39]],STEEL_LIGHT);}
- else{L(42,64,44,10,'#7a5a3a',2);P([[42,12],[44,2],[46,12]],STEEL_LIGHT);}
- P([[18,20],[22,11],[32,10],[38,16],[44,20],[42,25],[34,28],[22,28],[18,25]],shade);P([[20,20],[23,13],[32,12],[37,17],[42,21],[40,24],[33,26],[23,26],[20,24]],base);
- L(24,14,36,14,light);R(26,17,3,2,'#f4e08a');R(27,17,1,2,ENEMY_INK);L(34,23,42,22,'#3a5a3a');for(const x of [36,39])R(x,23,1,1,'#ffffff');
- for(const x of [24,28,32])P([[x,11],[x+1,6],[x+2,11]],'#c86a4a');
- return finish();
+ const {r,walk,arm,tail,attack}=frame(m),{poly:P,rect:R,line:L,put}=r;
+ const scale='#6fa06a',shade='#45724a',deep='#2e5032',light='#a2cc8e',belly='#d2dcaa',bellyShade='#a8b884',crest='#d0583c',leather='#7a5438',leatherShade='#52381f';
+ P([[30,50],[38,52],[46+tail,62],[52+tail,70],[46+tail,68],[34,58]],deep);P([[31,51],[37,53],[45+tail,62],[49+tail,67],[34,57]],scale);L(33,54,47+tail,65,light);
+ for(const [i,x]of [20,30].entries()){const d=i?walk:-walk;
+  P([[x-1,50],[x+7,50],[x+7+d,60],[x+5+d,64],[x+d,64],[x-2+d,58]],shade);R(x+d,51,5,11,scale);L(x+1+d,52,x+1+d,60,light);
+  R(x-1+d,64,7,4,shade);R(x-2+d,67,9,4,scale);for(const t of [0,3,6])P([[x-2+t+d,70],[x-1+t+d,72],[x+t+d,70]],BONE);
+ }
+ // Torso with belly bands and a crossed harness.
+ P([[17,32],[23,29],[33,29],[39,33],[38,50],[33,54],[22,54],[17,50]],shade);P([[19,33],[24,31],[32,31],[37,34],[36,49],[32,52],[23,52],[19,49]],scale);
+ P([[22,34],[34,34],[33,49],[23,49]],belly);for(let y=36;y<49;y+=3)L(23,y,33,y,bellyShade);
+ L(20,32,35,49,leatherShade,3);L(20,32,35,49,leather);R(19,48,18,3,leatherShade);R(26,47,4,5,'#c9a452');
+ for(const [x,y]of [[21,36],[35,38],[20,44]])put(x,y,light);
+ // Arms with leather bracers; the spear thrusts forward on the attack.
+ L(18,34,14-arm*.3,49,shade,6);L(18,34,15-arm*.3,48,scale,4);R(12-arm*.3,44,6,3,leather);R(12-arm*.3,49,5,4,scale);
+ if(attack){L(38,35,44,40,shade,6);L(38,35,44,39,scale,4);R(41,37,5,3,leather);L(24,42,55,36,WOOD_DARK,2);L(24,41,52,36,WOOD);P([[50,32],[56,36],[50,40]],'#8a9298');put(52,35,'#d8dee2');R(48,35,2,3,crest);}
+ else{L(38,35,42+arm*.3,48,shade,6);L(38,35,41+arm*.3,47,scale,4);R(39+arm*.3,43,6,3,leather);R(40+arm*.3,48,5,4,scale);L(44,66,46,8,WOOD_DARK,2);L(44,64,46,10,WOOD);P([[43,10],[46,0],[49,10]],'#8a9298');put(46,4,'#d8dee2');R(44,10,4,2,crest);}
+ // Head: long snout with a toothy line, yellow slit eye, red crest spikes.
+ P([[17,20],[21,11],[31,9],[38,14],[46,18],[46,24],[37,28],[22,29],[17,25]],deep);
+ P([[19,20],[22,13],[31,11],[37,16],[44,19],[44,23],[36,26],[23,27],[19,24]],scale);P([[22,14],[31,12],[36,16],[29,17],[22,18]],light);
+ L(30,22,45,21,deep);for(const x of [33,36,39,42])put(x,22,'#ffffff');put(44,19,deep);
+ R(25,16,4,3,'#f4d84a');L(27,16,27,18,'#1a1a12');L(23,15,29,14,deep);
+ for(const [x,h]of [[20,6],[24,8],[28,8],[32,6]]){P([[x,13],[x+1,13-h],[x+3,12]],crest);put(x+1,14-h,'#f0906a');}
+ return selout(r.pixels,INK);
 }
 
-// ---- Bosses ----
-function jellal(m){
- // Blue-haired mage, red tattoo over his right eye, dark coat with a white collar.
- const a=enemyArtFrame(m),{P,R,L,r,leg,arm,tail,attack,enraged,finish}=a,[base,shade,light]=EXPEDITION_PALETTES.jellal;
- if(enraged)for(const [x,y,s]of [[6,14,4],[49,18,3],[10,42,3],[46,46,4],[28,2,3]]){P([[x,y-s],[x+1,y-1],[x+s,y],[x+1,y+1],[x,y+s],[x-1,y+1],[x-s,y],[x-1,y-1]],light);R(x,y,1,1,'#ffffff');}
- enemyLegs(r,{leg,top:51,left:20,right:30,width:6,cloth:'#22284a',shade:'#141832',light:'#3a4470',boots:'#1a1a26',bootLight:'#4a4a5a'});
- // Long dark coat flaring behind the legs.
- P([[17,32],[39,32],[44+tail,66],[34,62],[28,67],[22,62],[12+tail,66]],shade);P([[19,33],[37,33],[41+tail,63],[34,59],[28,63],[22,59],[15+tail,63]],base);
- P([[19,30],[24,28],[32,28],[37,30],[37,40],[19,40]],'#e8e4ee');P([[24,30],[28,38],[32,30]],'#22284a');L(28,38,28,58,shade);for(const y of [43,49])R(26,y,5,1,GOLD);
- for(const [x,s]of [[18,-1],[38,1]]){const hx=attack&&s>0?47:x+s*(3+arm),hy=attack&&s>0?24:50;L(x,33,hx,hy,shade,6);L(x,33,hx,hy-1,base,4);R(hx-2,hy,5,4,SKIN.base);}
- if(attack){P([[46,20],[48,14],[50,20],[56,22],[50,24],[48,30],[46,24],[40,22]],light);R(47,21,2,2,'#ffffff');}
- P([[19,18],[23,13],[33,13],[37,18],[36,27],[32,31],[24,31],[20,27]],SKIN.shade);P([[21,18],[24,15],[32,15],[35,19],[34,26],[31,29],[25,29],[22,26]],SKIN.base);
- R(23,21,4,2,'#f4f2ee');R(24,21,2,2,'#5a3a2a');R(30,21,4,2,'#f4f2ee');R(31,21,2,2,'#5a3a2a');L(23,20,26,20,ENEMY_INK);L(30,20,33,20,ENEMY_INK);L(26,26,30,26,'#9a6a6a');
- // Signature red tattoo curling around his right eye.
- L(22,18,22,25,RED);L(22,18,25,17,RED);put(a,21,22,RED);put(a,23,25,RED);
- P([[17,22],[18,11],[24,6],[32,6],[38,11],[39,22],[36,16],[33,13],[28,15],[24,13],[20,16]],'#2c4ea8');P([[19,18],[20,11],[25,8],[31,8],[36,12],[37,17],[33,13],[28,14],[24,12],[21,14]],'#4a74d0');L(23,9,30,8,'#8ab0f0');
- return finish();
-}
-function put(a,x,y,c){a.R(x,y,1,1,c);}
-function geld(m){
- // Towering Orc Lord: massive tusked boar head, bone-plated armour and a meat cleaver.
- const a=enemyArtFrame(m),{P,R,L,leg,arm,attack,enraged,finish}=a,[base,shade,light]=EXPEDITION_PALETTES.geld;
- const skin=enraged?'#5a6a3a':base,skinShade=enraged?'#3a4426':shade;
- if(enraged)P([[6,24],[16,12],[28,18],[40,12],[50,24],[52,52],[44,70],[12,70],[4,52]],'#2e3a1c');
- for(const [x,d]of [[16,-leg],[32,leg]]){P([[x,54],[x+9,54],[x+10+d,66],[x+10+d,71],[x-2+d,71],[x-1+d,64]],skinShade);R(x+d,57,8,9,skin);R(x-3+d,68,13,3,'#3a3028');R(x-2+d,68,11,1,'#6a5a48');}
- P([[9,30],[19,22],[37,22],[47,30],[48,52],[40,60],[16,60],[8,52]],skinShade);P([[11,31],[20,24],[36,24],[45,31],[46,51],[39,58],[17,58],[10,51]],skin);
- P([[15,30],[41,30],[40,48],[28,52],[16,48]],'#4a3e30');for(const [x,y]of [[18,33],[27,32],[36,33]])P([[x,y],[x+5,y],[x+4,y+6],[x+1,y+6]],BONE);
- R(14,48,28,4,'#3a2e22');R(25,48,6,4,GOLD);P([[18,52],[38,52],[40,58],[16,58]],'#5a4a38');
- for(const [x,s]of [[10,-1],[46,1]]){const hx=attack&&s>0?44:x+s*(3+arm),hy=attack&&s>0?20:54;L(x,32,hx,hy,skinShade,10);L(x,32,hx,hy-1,skin,7);R(hx-3,hy,8,6,skin);}
- if(attack){P([[42,22],[44,0],[55,0],[55,20]],STEEL);L(45,2,53,2,STEEL_LIGHT);R(41,18,5,7,'#5a4030');for(const y of [6,12])L(46,y,53,y,'#7a8490');}
- else{P([[44,56],[54,44],[56,62],[48,68]],STEEL);L(46,56,53,47,STEEL_LIGHT);R(42,52,5,6,'#5a4030');}
- P([[14,14],[19,5],[37,5],[42,14],[42,25],[36,31],[20,31],[14,25]],skinShade);P([[16,14],[20,7],[36,7],[40,14],[40,24],[35,29],[21,29],[16,24]],skin);
- P([[22,18],[34,18],[35,26],[21,26]],light);R(24,21,3,2,'#3a2e22');R(29,21,3,2,'#3a2e22');eyes(a,20,13,{gap:13,color:enraged?'#f4e04a':'#e8603a',w:3,h:2});
- for(const x of [19,35])P([[x,24],[x+1,32],[x+3,24]],BONE);
- // Crown of bones and horns.
- for(const [x,h]of [[18,6],[23,8],[28,10],[33,8],[38,6]])P([[x-2,7],[x,7-h],[x+2,7]],BONE);
- return finish();
-}
-function kokushibo(m){
- // Upper Moon One: tied-back black hair, six eyes, purple kimono and the flesh blade.
- const a=enemyArtFrame(m),{P,R,L,r,leg,arm,tail,attack,enraged,finish}=a,[base,shade,light]=EXPEDITION_PALETTES.kokushibo;
- P([[22,6],[30,3],[38,8],[42+tail,34],[44+tail,52],[38,46],[36,24]],'#14121a');P([[24,7],[30,5],[36,9],[40+tail,32],[41+tail,46],[37,40],[35,22]],'#26222e');
- enemyLegs(r,{leg,top:52,left:20,right:30,width:7,cloth:'#1c1a24',shade:'#0e0d14',light:'#3a3646',boots:'#1a1a22',bootLight:'#4a4656'});
- P([[16,31],[24,28],[32,28],[40,31],[41,52],[36,60],[20,60],[15,52]],shade);P([[18,32],[24,30],[32,30],[38,32],[39,51],[34,58],[22,58],[17,51]],base);
- P([[24,30],[28,40],[32,30]],'#e8dcc8');L(24,30,28,40,'#1c1a24');L(32,30,28,40,'#1c1a24');R(18,46,21,3,'#1c1a24');for(const [x,y]of [[21,36],[33,38],[24,52],[32,54]])R(x,y,2,2,light);
- for(const [x,s]of [[17,-1],[39,1]]){const hx=attack&&s>0?44:x+s*(3+arm),hy=attack&&s>0?36:50;L(x,33,hx,hy,shade,7);L(x,33,hx,hy-1,base,5);R(hx-2,hy,5,4,'#e8c8b8');}
- // Kokushibo's flesh blade, eyes along its length; it sprouts branches when enraged.
- const [sx,sy,tx,ty]=attack?[46,36,56,8]:[41,52,47,74];
- L(sx,sy,tx,ty,'#5a2a3a',3);L(sx,sy,tx,ty,'#b05a6a');for(const t of [.3,.55,.8]){const x=Math.round(sx+(tx-sx)*t),y=Math.round(sy+(ty-sy)*t);R(x-1,y,3,2,'#f4e04a');R(x,y,1,1,RED);}
- if(enraged)for(const t of [.4,.7]){const x=Math.round(sx+(tx-sx)*t),y=Math.round(sy+(ty-sy)*t);L(x,y,x-6,y-5,'#5a2a3a',2);L(x,y,x+6,y-4,'#5a2a3a',2);}
- R(sx-2,sy-1,5,3,'#2a1a22');
- P([[19,16],[23,11],[33,11],[37,16],[36,26],[32,30],[24,30],[20,26]],'#c8a89a');P([[21,16],[24,13],[32,13],[35,17],[34,25],[31,28],[25,28],[22,25]],'#e8c8b8');
- // Six eyes: three stacked pairs, the middle pair largest.
- for(const [y,w]of [[16,2],[19,3],[23,2]]){R(23,y,w,1,'#f4e04a');R(31,y,w,1,'#f4e04a');R(23,y,1,1,RED);R(31,y,1,1,RED);}
- L(26,27,30,27,'#7a4a4a');for(const [x,y]of [[22,18],[34,18],[22,22],[34,22]])R(x,y,1,1,'#b04a5a');
- P([[18,18],[20,10],[26,6],[32,6],[38,10],[38,18],[35,13],[28,10],[22,13]],'#14121a');R(27,4,4,3,'#26222e');
- return finish();
-}
-
-// ---- Rift superbosses ----
-function acnologia(m){
- // Black Dragon of the Apocalypse: vast wings, blue line markings, horned head.
- const a=enemyArtFrame(m),{P,R,L,leg,arm,tail,attack,enraged,finish}=a,[base,shade,light]=EXPEDITION_PALETTES.acnologia;
- const flap=Math.round(arm*.6),glow=enraged?'#a8c8ff':light;
- for(const s of [-1,1]){const p=(x,y)=>[28+s*x,y];
-  P([p(8,30),p(18,12-flap),p(27,4-flap),p(28,18),p(27,34),p(22,44),p(14,40)],shade);
-  P([p(9,30),p(18,14-flap),p(25,8-flap),p(25,20),p(24,33),p(20,41),p(14,38)],base);
-  for(const [x0,y0,x1,y1]of [[10,30,24,10],[10,32,26,24],[11,34,22,40]])L(...p(x0,y0),...p(x1,y1-(y1<20?flap:0)),glow);
- }
- P([[22,52],[30,56],[44+tail,64],[52+tail,70],[42+tail,70],[28,62]],shade);P([[24,53],[30,57],[42+tail,64],[48+tail,68],[30,61]],base);
- for(const [x,d]of [[19,-leg],[31,leg]]){P([[x,52],[x+7,52],[x+8+d,66],[x+10+d,71],[x-2+d,71]],shade);R(x+d,55,6,10,base);for(let i=0;i<3;i++)R(x-2+d+i*4,70,2,2,BONE);}
- P([[16,30],[24,24],[32,24],[40,30],[40,50],[34,57],[22,57],[16,50]],shade);P([[18,31],[24,26],[32,26],[38,31],[38,49],[33,55],[23,55],[18,49]],base);
- for(let y=32;y<52;y+=4)L(24,y,32,y,'#3a4258');L(20,32,22,50,glow);L(36,32,34,50,glow);
- P([[20,20],[23,10],[33,10],[36,20],[34,28],[22,28]],shade);P([[22,20],[24,12],[32,12],[34,20],[32,26],[24,26]],base);
- P([[24,22],[32,22],[33,30],[28,34],[23,30]],shade);const jaw=attack?3:0;P([[24,28],[32,28],[31,31+jaw],[25,31+jaw]],'#141820');if(attack){R(25,29,6,2,glow);R(26,29,4,1,'#ffffff');}
- eyes(a,23,17,{gap:8,color:enraged?'#ff6a6a':GLOW,w:2,h:1});
- for(const s of [-1,1]){const p=(x,y)=>[28+s*x,y];P([p(4,12),p(10,1),p(8,13)],BONE);P([p(7,14),p(14,6),p(10,16)],BONE);}
- return finish();
-}
-function milim(m){
- // Milim Nava: long pink twin tails, blue eyes, black studded top and shorts.
- const a=enemyArtFrame(m),{P,R,L,leg,arm,tail,attack,enraged,finish}=a,[base,shade,light]=EXPEDITION_PALETTES.milim;
- if(enraged){for(const s of [-1,1]){const p=(x,y)=>[28+s*x,y];P([p(8,30),p(24,16),p(26,34),p(18,44)],'#ffb0c8');P([p(10,30),p(22,20),p(23,32),p(17,40)],'#ffd6e2');}for(const s of [-1,1])P([[28+s*6,6],[28+s*12,-2],[28+s*9,8]],'#f4e08a');}
- for(const [x,s]of [[15,-1],[41,1]]){P([[x,14],[x+s*4,12],[x+s*8+tail*s,30],[x+s*6+tail*s,52],[x+s*2,56],[x-s*2,40],[x-s*2,22]],shade);P([[x,16],[x+s*3,14],[x+s*6+tail*s,30],[x+s*4+tail*s,50],[x+s,52],[x-s,38],[x-s,22]],base);L(x+s*2,18,x+s*4+tail*s,46,light);}
- for(const [x,d]of [[21,-leg],[30,leg]]){R(x+d,50,5,14,SKIN.base);R(x+1+d,51,2,12,SKIN.light);R(x-1+d,64,7,7,'#2a2630');R(x-1+d,64,7,1,STEEL_LIGHT);}
- P([[20,46],[36,46],[37,52],[19,52]],'#2a2630');for(const x of [22,26,30,34])R(x,48,1,1,STEEL_LIGHT);
- R(21,38,15,8,SKIN.base);R(22,39,13,6,SKIN.light);R(28,43,1,1,SKIN.shade);
- P([[20,30],[36,30],[36,38],[20,38]],'#2a2630');for(const x of [22,25,28,31,34])R(x,31,1,1,STEEL_LIGHT);R(27,34,3,2,'#c84a6a');
- for(const [x,s]of [[19,-1],[37,1]]){const hx=attack?28+s*16:x+s*(4+arm),hy=attack?26:44;L(x,32,hx,hy,SKIN.shade,5);L(x,32,hx,hy-1,SKIN.base,3);R(hx-2,hy-1,5,5,attack?'#f4e08a':SKIN.light);if(attack)R(hx-1,hy,3,3,'#ffffff');R(x+s*2-2,37,5,2,'#2a2630');}
- P([[19,18],[23,12],[33,12],[37,18],[36,26],[32,30],[24,30],[20,26]],SKIN.shade);P([[21,18],[24,14],[32,14],[35,19],[34,25],[31,28],[25,28],[22,25]],SKIN.base);
- for(const x of [22,31]){R(x,20,4,4,'#ffffff');R(x+1,20,3,4,'#3a7ad8');R(x+1,20,3,1,'#1f3f8a');R(x+1,21,1,1,'#ffffff');L(x,19,x+3,19,ENEMY_INK);}
- P([[25,26],[31,26],[30,28],[26,28]],'#8a2a4a');R(26,26,4,1,'#ffffff');
- P([[18,20],[19,10],[25,5],[31,5],[37,10],[38,20],[35,15],[31,12],[28,15],[25,12],[21,15]],shade);P([[20,17],[21,10],[26,7],[30,7],[35,10],[36,16],[33,13],[28,13],[23,13]],base);L(23,9,30,8,light);
- for(const x of [15,41]){R(x-2,12,5,4,'#2a2630');R(x-1,13,3,1,STEEL_LIGHT);}
- return finish();
-}
-export function expeditionEnemyPixels(id,m={}){
- switch(id){
-  case'eisenwald':return eisenwald(m);case'vulcan':return vulcan(m);case'phantomshade':return phantomshade(m);
-  case'orctrooper':return orctrooper(m);case'megalodon':return megalodon(m);case'lizardman':return lizardman(m);
-  case'jellal':return jellal(m);case'geld':return geld(m);case'kokushibo':return kokushibo(m);
-  case'acnologia':return acnologia(m);default:return milim(m);
- }
-}
+const ENEMY_ART={eisenwald,vulcan,phantomshade,orctrooper,megalodon,lizardman};
+export function expeditionEnemyPixels(id,m={}){return ENEMY_ART[id]?ENEMY_ART[id](m):expeditionBossPixels(id,m);}

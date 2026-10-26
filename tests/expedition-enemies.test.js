@@ -56,6 +56,7 @@ test('new sprites are complete native pixel art that animates and changes when e
   const p=expeditionEnemyPixels(id);assert.equal(p.length,56*76);assert.ok(p.filter(Boolean).length>350,id);assert.ok(p.every(c=>c===null||/^#[a-f0-9]{6}$/i.test(c)),id+' valid colours');assert.deepEqual(enemyPixels(id),p);
   assert.notDeepEqual(p,expeditionEnemyPixels(id,{attack:true}),id+' attack pose');assert.notDeepEqual(p,expeditionEnemyPixels(id,{leg:6,arm:6,tail:6}),id+' animates');
   if(BOSSES[id])assert.notDeepEqual(p,expeditionEnemyPixels(id,{enraged:true}),id+' enraged form');
+  assert.ok(new Set(p.filter(Boolean)).size>=14,id+' is shaded with a full palette');
  }
 });
 
@@ -73,10 +74,10 @@ function trialRun(id){
 }
 test('Catch the Dragon Lacrima and Keep Up with Milim are distinct, completable and survive restores',()=>{
  {const {g,e,q}=trialRun('acnologia');assert.equal(q.kind,'orbit');const start=q.goals.map(v=>[v.x,v.y]);updateRiftTrial(g,1,{hitPlayer:()=>{}});assert.notDeepEqual(q.goals.map(v=>[v.x,v.y]),start,'crystals ride the storm');
-  assert.ok(restoreRiftTrial(g));for(let i=0;i<3&&g.riftTrial;i++){const v=q.goals.find(v=>!v.done);g.p.x=v.x;g.p.y=v.y;updateRiftTrial(g,.02,{hitPlayer:()=>{}});}assert.equal(g.riftTrial,null);assert.equal(e.enraged,true);}
+  assert.ok(restoreRiftTrial(g));for(let i=0;i<3&&g.riftTrial;i++){const v=q.goals.find(v=>!v.done);g.p.x=v.x;g.p.y=v.y;updateRiftTrial(g,.02,{hitPlayer:()=>{}});}assert.equal(g.riftTrial,null);assert.equal(e.enraged,true);assert.equal(e.name,'Acnologia · Black Dragon');assert.ok(e.r>BOSSES.acnologia.r,'the dragon is larger than the man');}
  {const {g,e,q}=trialRun('milim');assert.equal(q.kind,'tag');assert.ok(riftTrialText(g).detail.includes('Milim'));
   // Standing still lets the afterimage get away and its ring drains.
   updateRiftTrial(g,4,{hitPlayer:()=>{}});assert.equal(q.progress,0);
   for(let k=0;k<200&&g.riftTrial;k++){const v=q.goals[q.stage];g.p.x=v.x;g.p.y=v.y;updateRiftTrial(g,.05,{hitPlayer:()=>{}});if(k===20&&g.riftTrial)assert.ok(restoreRiftTrial(g));}
-  assert.equal(g.riftTrial,null);assert.equal(e.enraged,true);}
+  assert.equal(g.riftTrial,null);assert.equal(e.enraged,true);assert.equal(e.name,'Milim Nava · Dragon Armor');}
 });

@@ -78,10 +78,10 @@ function revealDarkness(g,e){
 }
 export function finishRiftTrial(g){
  const q=g?.riftTrial;if(!q)return false;const e=owner(g,q);
- if(e&&e.hp>0){e.riftTrialDone=true;e.riftTrialStarted=true;e.riftTrialLocked=false;e.enraged=true;e.riftAttack=null;e.bossUltimate=null;e.windup=0;e.dash=0;e.kvx=0;e.kvy=0;e.moving=false;e.attackCD=Math.max(2.5,e.attackCD||0);e.ultimateCD=Math.max(3,e.ultimateCD||0);e.skill=0;if(q.kind==='blackout')revealDarkness(g,e);}
+ if(e&&e.hp>0){e.riftTrialDone=true;e.riftTrialStarted=true;e.riftTrialLocked=false;e.enraged=true;if(e.riftShiftName){e.name=e.riftShiftName;e.r=e.riftShiftRadius||e.r;}e.riftAttack=null;e.bossUltimate=null;e.windup=0;e.dash=0;e.kvx=0;e.kvy=0;e.moving=false;e.attackCD=Math.max(2.5,e.attackCD||0);e.ultimateCD=Math.max(3,e.ultimateCD||0);e.skill=0;if(q.kind==='blackout')revealDarkness(g,e);}
  restorePower(g,q);recallCompanions(g);g.riftTrial=null;g.invuln=Math.max(g.invuln||0,1.5);g.dash=null;
  if(q.kind==='blackout')g.riftTrialAfterglow={age:0,duration:1.2,kind:'blackout',bossId:q.bossId};
- g.toast=q.kind==='blackout'?'THREE PRAYERS ANSWERED · THE LIGHT RETURNS':'RIFT CHALLENGE COMPLETE · SECOND PHASE';g.toastTime=4;g.checkpointRequested=true;return true;
+ g.toast=q.kind==='blackout'?'THREE PRAYERS ANSWERED · THE LIGHT RETURNS':e?.riftShiftName&&e.hp>0?e.name.toUpperCase()+' · SECOND PHASE':'RIFT CHALLENGE COMPLETE · SECOND PHASE';g.toastTime=4;g.checkpointRequested=true;return true;
 }
 function warn(q,data){q.hazards.push({id:++q.serial,age:0,delay:1.6,duration:.4,damage:8,hit:false,color:q.color,...data});if(q.hazards.length>16)q.hazards.splice(0,q.hazards.length-16);}
 const hpDamage=(g,fraction)=>Math.max(1,(g.p.maxHp||100)*fraction);
