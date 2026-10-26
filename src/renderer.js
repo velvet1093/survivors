@@ -3,6 +3,7 @@ import {drawDenjiSlash} from './denji-effects.js';
 import {drawPairedEffect} from './paired-attack-art.js';
 import {drawDevilAttack} from './devil-attack-art.js';
 import {drawGraveyardAttack} from './graveyard-attack-art.js';
+import {drawExpeditionAttack} from './expedition-attack-art.js';
 import {drawEnemyCircleFx} from './enemy-circle-fx.js';
 import {drawRiftArena} from './rift-arena.js';
 import {riftTrialActive} from './rift-trials.js';
@@ -152,7 +153,7 @@ export function drawScene(canvas,g,reducedMotion=false){
   drawWorldLoot(c,g);drawTrinketDrops(c,g,reducedMotion);drawTrinketCosmetics(c,g,reducedMotion);
   ultimateOver(c,g);evaEffects(c,g,'over');
   drawEnemyCircleFx(c,g,reducedMotion,'caster');
-  for(const e of g.enemies){if(!drawGraveyardAttack(c,e,reducedMotion))drawWorldEventAttack(c,e,reducedMotion);drawDevilAttack(c,e,reducedMotion);drawBerserkBossAttack(c,e,reducedMotion);drawMotherBrainAttack(c,e,reducedMotion);drawBossUltimate(c,e,reducedMotion);}
+  for(const e of g.enemies){if(!drawGraveyardAttack(c,e,reducedMotion)&&!drawExpeditionAttack(c,e,reducedMotion))drawWorldEventAttack(c,e,reducedMotion);drawDevilAttack(c,e,reducedMotion);drawBerserkBossAttack(c,e,reducedMotion);drawMotherBrainAttack(c,e,reducedMotion);drawBossUltimate(c,e,reducedMotion);}
   drawHostileShots(c,g);
   drawEffects(c,g);drawFeatherineGlyphs(c,g);
   for(const q of g.particles){c.globalAlpha=Math.min(1,q.life*2);ellipse(c,q.x,q.y,q.size/2,q.size/2,q.color);}c.globalAlpha=1;

@@ -1,5 +1,6 @@
 import {DEVIL_ENEMIES,DEVIL_BOSSES,devilAttack,updateDevilCast} from './devil-enemies.js';
 import {GRAVEYARD_ENEMIES,GRAVEYARD_BOSSES,graveyardAttack,updateGraveyardCast} from './graveyard-enemies.js';
+import {EXPEDITION_ENEMIES,EXPEDITION_BOSSES,expeditionAttack,updateExpeditionCast} from './expedition-enemies.js';
 import {DARKNESS_ENEMIES,DARKNESS_BOSSES} from './darkness-rift.js';
 import {EVENT_ENEMIES,EVENT_BOSSES,worldEventAttack,updateWorldEventCast} from './world-event-data.js';
 import {updateBerserkCast} from './berserk-enemies.js';
@@ -16,6 +17,7 @@ import {navigateEnemy} from './world.js';
 import {waveAt} from './game.js';
 export const ENEMIES={
   ...GRAVEYARD_ENEMIES,
+  ...EXPEDITION_ENEMIES,
   ...DEVIL_ENEMIES,...DARKNESS_ENEMIES,
   ...EVENT_ENEMIES,
   ...RIFT_MINIONS,
@@ -41,6 +43,7 @@ export const BOSSES={
   sukuna:{name:'Ryomen Sukuna',title:'KING OF CURSES',family:'jjk',hp:2300,speed:84,r:34,color:'#f3a0ab',behavior:'sukuna'},
   walpurgis:{name:'Walpurgisnacht',title:'THE STAGE-CONSTRUCTING WITCH',family:'madoka',hp:2500,speed:40,r:48,color:'#eab3d8',behavior:'walpurgis'},
   ...GRAVEYARD_BOSSES,
+  ...EXPEDITION_BOSSES,
 };
 export const REGULAR_BOSS_IDS=Object.keys(BOSSES).filter(id=>!BOSSES[id].riftOnly&&!BOSSES[id].eventOnly);
 export const MAP_ENEMIES={garden:['shinobi','snake','saibaman','demonsoldier','spiderdemon','hanami'],ruins:['saibaman','soldier','curse','angelspawn','zombie','jogo'],moon:['curse','cursedeye','shinobi','flyhead','transfigured','jogo','hanami','dagon'],labyrinth:['familiar','butterfly','rosewitch'],marineford:['marine','marinesword','cannonier','pacifista','pirate'],citadel:['imperial','frostbeast','icemage']};
@@ -78,6 +81,9 @@ MAP_ENEMIES.eclipse=['possessedknight','eclipseheretic','apostlehound','wingedap
 MAP_BOSSES.eclipse=['zodd','grunbeld','femto'];
 MAP_ENEMIES.graveyard=['gravezombie','coffincrawler','lanternwisp','shadowstitch','hollowghost'];
 MAP_BOSSES.graveyard=['ryuma','moriah'];
+// Expedition foes join the existing worlds; their bosses arrive from wave 15 so earlier openings stay.
+for(const [map,ids]of Object.entries({garden:['eisenwald','lizardman'],ruins:['orctrooper','phantomshade'],moon:['phantomshade','megalodon'],marineford:['megalodon','orctrooper'],citadel:['eisenwald','phantomshade'],castle:['phantomshade','eisenwald','vulcan'],forest:['vulcan','lizardman','eisenwald'],tempest:['orctrooper','megalodon','lizardman']}))MAP_ENEMIES[map].push(...ids);
+for(const [map,ids]of Object.entries({castle:['jellal'],garden:['jellal'],forest:['kokushibo','jellal'],moon:['kokushibo'],tempest:['geld'],ruins:['geld'],leafvillage:['kokushibo']}))MAP_BOSSES[map].splice(2,0,...ids);
 for(const pool of Object.values(MAP_BOSSES))for(const id of REGULAR_BOSS_IDS)if(!pool.includes(id))pool.push(id);
 export function bossForWave(mapId,wave){const list=MAP_BOSSES[mapId];return list[(Math.floor(wave/5)-1)%list.length];}
 export function makeEnemy(g,archetype,boss=false,elite=false){
@@ -114,6 +120,7 @@ export function updateEnemyAI(g,e,dt){
   updateWorldEventCast(e,dt,frozen);
   updateDevilCast(e,dt,frozen);
   updateGraveyardCast(e,dt,frozen);
+  updateExpeditionCast(e,dt,frozen);
   const walkingBrain=e.archetype==='motherbrain'&&e.enraged;
   if(walkingBrain&&e.motherBrainAttack&&!frozen){e.motherBrainAttack.age+=dt;if(e.motherBrainAttack.age>=e.motherBrainAttack.duration)e.motherBrainAttack=null;}
   if(walkingBrain&&!e.motherBrainAttack&&!e.bossUltimate)e.facing=dx<0?-1:1;
@@ -121,16 +128,16 @@ export function updateEnemyAI(g,e,dt){
   let speed=e.speed*Math.min(e.slow>0?.35:1,modifiers.speed)*(frozen?.04:1),mx=Math.cos(a),my=Math.sin(a);
   e.animTime=(e.animTime||0)+dt*(frozen?.05:1)*(e.enraged?1.25:1);
   if(e.riftAttack&&!frozen){e.riftAttack.age+=dt;if(e.riftAttack.age>=e.riftAttack.duration)e.riftAttack=null;}
-  e.attackAnim=Math.max(0,(e.attackAnim||0)-dt);e.facing=e.graveyardAttack?.facing||e.devilAttack?.facing||e.worldEventAttack?.facing||e.berserkAttack?.facing||(walkingBrain&&e.motherBrainAttack?e.motherBrainAttack.facing:(dx<0?-1:1));e.walk=(e.walk||0)+dt*(frozen?1:Math.max(1,e.speed/13));
-  e.attackCD-=frozen?0:dt;e.dash=Math.max(0,e.dash-((['berserk','chainsawman'].includes(e.family)||e.eventOnly||!!e.graveyardAttack)&&frozen?0:dt));e.windup=Math.max(0,e.windup-((walkingBrain||['berserk','chainsawman'].includes(e.family)||e.eventOnly||!!e.graveyardAttack)&&frozen?0:dt));
+  e.attackAnim=Math.max(0,(e.attackAnim||0)-dt);e.facing=e.graveyardAttack?.facing||e.expeditionAttack?.facing||e.devilAttack?.facing||e.worldEventAttack?.facing||e.berserkAttack?.facing||(walkingBrain&&e.motherBrainAttack?e.motherBrainAttack.facing:(dx<0?-1:1));e.walk=(e.walk||0)+dt*(frozen?1:Math.max(1,e.speed/13));
+  e.attackCD-=frozen?0:dt;e.dash=Math.max(0,e.dash-((['berserk','chainsawman'].includes(e.family)||e.eventOnly||!!e.graveyardAttack||!!e.expeditionAttack)&&frozen?0:dt));e.windup=Math.max(0,e.windup-((walkingBrain||['berserk','chainsawman'].includes(e.family)||e.eventOnly||!!e.graveyardAttack||!!e.expeditionAttack)&&frozen?0:dt));
   if(walkingBrain&&e.motherBrainAttack)e.attackAnim=.3;
-  if(e.graveyardAttack||e.devilAttack||e.berserkAttack||e.worldEventAttack)e.attackAnim=.35;
+  if(e.graveyardAttack||e.expeditionAttack||e.devilAttack||e.berserkAttack||e.worldEventAttack)e.attackAnim=.35;
   if(e.boss&&e.archetype!=='cell'&&!e.enraged&&e.hp<e.maxHp*.5){e.enraged=true;g.toast=e.name.toUpperCase()+' · SECOND PHASE';g.toastTime=3;}
   if(e.behavior==='zombie'&&e.hp<e.maxHp*.5)speed*=1.35;
   if(e.windup>0)speed=0;
   else if(e.dash>0){mx=e.dashX;my=e.dashY;speed*=4;}
   else if(walkingBrain){const stride=d>245?1:d<135?-.35:0;mx=Math.cos(a)*stride;my=Math.sin(a)*stride;}
-  else if(['lanternwisp','hollowghost','moriah','paradehollow','peronaparade','ainztomb','batdevil','eternitydevil','leechfiend','eternityflesh','darknessdevil','deathdevil','darknessfragment','beerus','walpurgisrift','aizenrift','madararift','sukunaheian','borosrift','badcompany','fleshbud','dio','kira','shooter','radial','rose','familiar','frieza','walpurgis','jogo','hanami','dagon','aura','sachiel','marine','cannonier','pacifista','icemage','akainu','aokiji','kizaru','budo','icedragon','puppet','cerobat','timewraith','cell','itachi','ulquiorra','zebesian','ridley','redpirate','flyingpirate','goldpirate','eclipseheretic','wingedapostle','femto','eclipsefemto','tempestlord','frostregent','stormwraith'].includes(e.behavior)&&d<280){mx=-Math.cos(a)*.3+Math.sin(g.time+e.phase)*Math.sin(a)*.5;my=-Math.sin(a)*.3-Math.sin(g.time+e.phase)*Math.cos(a)*.5;}
+  else if(['eisenwald','phantomshade','jellal','acnologia','milim','lanternwisp','hollowghost','moriah','paradehollow','peronaparade','ainztomb','batdevil','eternitydevil','leechfiend','eternityflesh','darknessdevil','deathdevil','darknessfragment','beerus','walpurgisrift','aizenrift','madararift','sukunaheian','borosrift','badcompany','fleshbud','dio','kira','shooter','radial','rose','familiar','frieza','walpurgis','jogo','hanami','dagon','aura','sachiel','marine','cannonier','pacifista','icemage','akainu','aokiji','kizaru','budo','icedragon','puppet','cerobat','timewraith','cell','itachi','ulquiorra','zebesian','ridley','redpirate','flyingpirate','goldpirate','eclipseheretic','wingedapostle','femto','eclipsefemto','tempestlord','frostregent','stormwraith'].includes(e.behavior)&&d<280){mx=-Math.cos(a)*.3+Math.sin(g.time+e.phase)*Math.sin(a)*.5;my=-Math.sin(a)*.3-Math.sin(g.time+e.phase)*Math.cos(a)*.5;}
   if(e.behavior==='flyhead'){mx+=Math.sin(g.time*4+e.phase)*.7;my+=Math.cos(g.time*3+e.phase)*.7;}
   if(e.behavior==='serpent'||e.behavior==='butterfly'){mx+=Math.sin(g.time*5+e.phase)*Math.sin(a)*.6;my-=Math.sin(g.time*5+e.phase)*Math.cos(a)*.6;}
   e.moving=speed>1&&(!walkingBrain||Math.hypot(mx,my)>.01);e.lean=e.dash>0?.2:Math.sin(e.walk)*.03;
@@ -141,6 +148,7 @@ export function updateEnemyAI(g,e,dt){
   e.attackAnim=.6;e.skill++;const fast=e.enraged?.72:1;e.attackCD=(e.boss?3.4:e.attack||4)*fast/encounterPressure(g).attackRate;
   if(devilAttack(g,e,p,a,{fan,ring,hazard,summon}))return;
   if(graveyardAttack(g,e,p,a,{fan,ring,hazard,summon}))return;
+  if(expeditionAttack(g,e,p,a,{fan,ring,hazard,summon}))return;
   if(worldEventAttack(g,e,p,a,{fan,ring,hazard,summon}))return;
   if(mimicAttack(g,e,p,a,{fan,ring,hazard,summon}))return;
   if(riftSuperbossAttack(g,e,p,a,{fan,ring,hazard,summon}))return;

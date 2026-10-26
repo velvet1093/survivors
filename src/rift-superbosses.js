@@ -1,5 +1,6 @@
 import {DARKNESS_BOSSES,darknessRiftAttack} from './darkness-rift.js';
 import {DEATH_BOSSES,deathRiftAttack} from './death-rift.js';
+import {EXPEDITION_RIFT_BOSSES,expeditionRiftAttack} from './expedition-enemies.js';
 // Optional rift encounters have their own identities and attack rotations. These
 // bosses never enter the ordinary wave or Boss Rush catalogs.
 export const RIFT_SUPERBOSSES = {
@@ -40,6 +41,7 @@ export const RIFT_SUPERBOSSES = {
   },
   ...DARKNESS_BOSSES,
   ...DEATH_BOSSES,
+  ...EXPEDITION_RIFT_BOSSES,
 };
 
 const TAU=Math.PI*2;
@@ -73,6 +75,7 @@ export function clearOrphanRiftSummons(g){
 
 export function riftSuperbossAttack(g,e,p,a,{hazard,summon}) {
   if(deathRiftAttack(g,e,p,a,{hazard}))return true;
+  if(expeditionRiftAttack(g,e,p,a,{hazard}))return true;
   if(darknessRiftAttack(g,e,p,a,{hazard,summon}))return true;
   if(!RIFT_SUPERBOSSES[e.archetype])return false;
   const count=e.skill%3, fierce=!!e.enraged;

@@ -1,3 +1,4 @@
+import {drawExpeditionRiftAttack} from './expedition-attack-art.js';
 import {drawDeathRiftAttack,DEATH_ATTACK_STYLES} from './death-attack-art.js';
 // Scenic, non-damaging illustrations for the fixed rift attack telegraphs.
 // Every position and beat uses the persisted riftAttack clock, so pause, time
@@ -386,9 +387,10 @@ function darkness(c,e,u,quiet){
  }
 }
 
-export const RIFT_ATTACK_STYLES=['rumbling','ribs','footfall','hakai','afterimages','destruction','stage','clock','buildings','illusions','prison','fragor','meteors','orbs','limbo','shrine','worldslash','furnace','meteoric','starcannon','roaring','severance','primordial','fallingstars',...DEATH_ATTACK_STYLES];
+export const RIFT_ATTACK_STYLES=['rumbling','ribs','footfall','hakai','afterimages','destruction','stage','clock','buildings','illusions','prison','fragor','meteors','orbs','limbo','shrine','worldslash','furnace','meteoric','starcannon','roaring','severance','primordial','fallingstars','dragonroar','apocalypsewing','blackdescent','drago','milimrush','stardust',...DEATH_ATTACK_STYLES];
 export function drawRiftAttack(c,e,reducedMotion=false){
  if(e?.archetype==='deathdevil')return drawDeathRiftAttack(c,e,reducedMotion);
+ if(e?.archetype==='acnologia'||e?.archetype==='milim')return drawExpeditionRiftAttack(c,e,reducedMotion);
  const u=e?.riftAttack;
  if(e?.hp<=0||!u||!Number.isFinite(u.age)||u.age<0||u.age>=u.duration||!RIFT_ATTACK_STYLES.includes(u.style))return false;
  if(!['foundereren','beerus','walpurgisrift','aizenrift','madararift','sukunaheian','borosrift','darknessdevil'].includes(e.archetype)||![u.x,u.y,u.angle].every(Number.isFinite))return false;

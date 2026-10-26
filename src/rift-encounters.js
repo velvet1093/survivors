@@ -19,6 +19,8 @@ export const RIFT_ENCOUNTERS=[
  {id:'borosrift',name:'Boros · Meteoric Burst',title:'DOMINATOR OF THE UNIVERSE',color:'#e8a9d1'},
  {id:'darknessdevil',name:'Darkness Devil',title:'THE PRIMORDIAL FEAR',color:'#c5c8b7'},
  {id:'deathdevil',name:'Death Devil',title:'THE LAST FEAR',color:'#dedbd0'},
+ {id:'acnologia',name:'Acnologia',title:'THE DRAGON OF THE APOCALYPSE',color:'#7d93c4'},
+ {id:'milim',name:'Milim Nava',title:'THE DESTROYER',color:'#f0a6b8'},
 ];
 const finite=(n,fallback=0)=>Number.isFinite(n)?n:fallback;
 const count=n=>Math.max(0,Math.floor(finite(n)));

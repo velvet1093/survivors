@@ -96,8 +96,9 @@ export function restoreBossRush(g){
  const r=g.rush,known=Object.keys(BOSSES).filter(id=>!BOSSES[id].riftOnly&&!BOSSES[id].eventOnly);
  // Keep unfinished pre-expansion gauntlets intact. Append the new opponents
  // after the saved order so the active fight and cleared rounds keep identity.
- for(const added of [['katanaman','batdevil','eternitydevil','ryuma','moriah'],['ryuma','moriah']]){
-  const legacy=known.filter(id=>!added.includes(id));
+ const releases=[['katanaman','batdevil','eternitydevil','ryuma','moriah'],['ryuma','moriah'],['jellal','geld','kokushibo']];
+ for(let i=0;i<releases.length;i++){
+  const added=releases[i],later=releases.slice(i+1).flat(),legacy=known.filter(id=>!added.includes(id)&&!later.includes(id));
   if(r&&Array.isArray(r.order)&&r.total===legacy.length&&r.order.length===legacy.length&&new Set(r.order).size===legacy.length&&r.order.every(id=>legacy.includes(id))){r.order=[...r.order,...added.filter(id=>known.includes(id))];r.total=r.order.length;}
  }
  if(!r||!['draft','loadout','fusion','combat'].includes(r.stage)||!Array.isArray(r.order)||r.order.length!==known.length||new Set(r.order).size!==known.length||r.order.some(id=>!BOSSES[id]||BOSSES[id].riftOnly||BOSSES[id].eventOnly)||!Number.isInteger(r.cleared)||r.cleared<0||r.cleared>known.length||!Number.isInteger(r.round)||r.round<1||r.round>known.length||r.total!==known.length)return false;

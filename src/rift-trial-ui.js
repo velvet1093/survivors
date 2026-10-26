@@ -1,6 +1,6 @@
 import {riftTrialText} from './rift-trials.js';
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const COLORS={darknessdevil:'#dddccb',foundereren:'#d8d5aa',beerus:'#d9b1ef',walpurgisrift:'#d7b3d7',aizenrift:'#c7bbec',madararift:'#d4e1b7',sukunaheian:'#e5aa9d',borosrift:'#a9d9e0',deathdevil:'#dddccb'};
+const COLORS={acnologia:'#a8c0ee',milim:'#f0a6b8',darknessdevil:'#dddccb',foundereren:'#d8d5aa',beerus:'#d9b1ef',walpurgisrift:'#d7b3d7',aizenrift:'#c7bbec',madararift:'#d4e1b7',sukunaheian:'#e5aa9d',borosrift:'#a9d9e0',deathdevil:'#dddccb'};
 export function riftTrialHud(g){
  const q=g?.riftTrial;if(!q||g.status==='over')return '';
  const text=riftTrialText(g);if(!text)return '';

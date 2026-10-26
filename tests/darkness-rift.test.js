@@ -21,7 +21,7 @@ const covers=(h,x,y)=>h.shape==='line'?segmentDistance(x,y,h.x,h.y,h.tx,h.ty)<h.
 function sim(g,seconds){for(let t=0;t<seconds-1e-8;t+=.02)updateRun(g,Math.min(.02,seconds-t));}
 
 test('the eighth calamity has a unique primordial arena and encounter-only boss and servant roster',()=>{
- assert.equal(RIFT_ENCOUNTERS[7].id,'darknessdevil');assert.equal(RIFT_ENCOUNTERS.length,9);assert.equal(BOSSES.darknessdevil.riftOnly,true);assert.ok(!REGULAR_BOSS_IDS.includes('darknessdevil'));assert.equal(RIFT_ARENAS.darknessdevil.id,'primordialnight');
+ assert.equal(RIFT_ENCOUNTERS[7].id,'darknessdevil');assert.equal(RIFT_ENCOUNTERS.length,11);assert.equal(BOSSES.darknessdevil.riftOnly,true);assert.ok(!REGULAR_BOSS_IDS.includes('darknessdevil'));assert.equal(RIFT_ARENAS.darknessdevil.id,'primordialnight');
  for(const id of ['hellhand','darknessfragment']){assert.equal(ENEMIES[id].riftOnly,true);assert.ok(Object.values(MAP_ENEMIES).every(pool=>!pool.includes(id)));}
  const {g,boss}=enter();assert.equal(g.riftArena.bossId,'darknessdevil');assert.equal(g.riftArena.name,'Hell · The Primordial Night');assert.equal(boss.archetype,'darknessdevil');assert.equal(BOSSES.darknessdevil.hp,27000);assert.ok(boss.hp>10000);assert.equal(g.enemies.length,1);
 });

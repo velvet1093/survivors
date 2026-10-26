@@ -8,6 +8,8 @@ export const RIFT_ARENAS={
  sukunaheian:{id:'malevolentcourt',name:'Malevolent Shrine · Forsaken Court',radius:760,dark:'#211922',floor:'#413c43',line:'#b19589',accent:'#deac9e'},
  borosrift:{id:'starship',name:'Dark Matter · Shattered Starship',radius:760,dark:'#121b2b',floor:'#353e4d',line:'#869da9',accent:'#d7b0e2'},
  darknessdevil:{id:'primordialnight',name:'Hell · The Primordial Night',radius:760,dark:'#10131e',floor:'#35383c',line:'#a9ab9e',accent:'#d7d2ba'},
+ acnologia:{id:'tenrou',name:'Tenrou Island · The Dragon’s Storm',radius:760,dark:'#121826',floor:'#2f3a48',line:'#7d93c4',accent:'#a8c0ee'},
+ milim:{id:'forbiddenland',name:'The Forbidden Land · Destroyer’s Playground',radius:760,dark:'#2a1a1e',floor:'#5a4642',line:'#c88a8a',accent:'#f0a6b8'},
  deathdevil:{id:'lastsilence',name:'Hell · The Last Silence',radius:800,dark:'#15151e',floor:'#32323a',line:'#d7d4ca',accent:'#ece6d5'},
 };
 export function createRiftArena(bossId,time=0){const def=RIFT_ARENAS[bossId];return def?{...def,bossId,enteredAt:time,version:1}:null;}
@@ -209,6 +211,17 @@ export function drawRiftArena(c,g,left,top,w,h,reducedMotion=false){
   path(c,[[-350,-r+9],[-270,-r-50],[270,-r-50],[350,-r+9]],'#a1b5bb55',3);
   ellipse(c,0,-r-190,220,220,'#4e727b38');ellipse(c,26,-r-220,198,198,def.dark);
   for(const x of [-480,-250,250,480]){path(c,[[x,-r+20],[x*.88,-r+75],[x*.83,-r+130]],'#90aaa848',4);}
+ }else if(arena.bossId==='acnologia'){
+  // Storm-scarred island stone: cracked slabs, claw furrows and wind-torn trees at the rim.
+  for(let y=-r;y<r;y+=96)for(let x=-r;x<r;x+=96){const n=hash(x,y);c.fillStyle=n>.5?'#7d93c412':'#0c101c30';c.fillRect(x+4,y+4,88,88);if(n>.7)path(c,[[x+12,y+20],[x+48,y+44],[x+80,y+30]],'#141a28',3);}
+  for(const a of [.4,1.9,3.6,5.1])for(let k=0;k<3;k++)path(c,[[Math.cos(a)*200+k*16,Math.sin(a)*200],[Math.cos(a)*520+k*16,Math.sin(a)*520]],'#0e121e',6);
+  for(const side of [-1,1])for(let i=0;i<6;i++){const x=side*(r-50),y=-r+110+i*250;path(c,[[x,y+40],[x+side*6,y-10],[x-side*10,y-50]],'#2a2420',6);ellipse(c,x-side*10,y-58,26,18,'#2a3a2e');}
+  if(!reducedMotion)for(let i=0;i<18;i++){const x=-r+hash(i,7)*r*2,y=-r+(hash(i,3)*r*2+time*(30+i%5*6))%(r*2);path(c,[[x,y],[x-8,y+14]],'#a8c0ee30',1);}
+ }else if(arena.bossId==='milim'){
+  // A cratered wasteland: old Drago Nova scars, scattered boulders and dust.
+  for(let y=-r;y<r;y+=120)for(let x=-r;x<r;x+=120){const n=hash(x,y);c.fillStyle=n>.5?'#c88a6a14':'#2a1a1e28';c.fillRect(x+6,y+6,108,108);}
+  for(const [x,y,rr]of [[-320,-240,110],[300,-300,80],[260,280,130],[-260,320,90],[0,0,170]]){ellipse(c,x,y,rr,rr*.7,'#3a2626');ellipse(c,x,y-6,rr*.8,rr*.5,'#5a4642');path(c,[[x-rr,y],[x-rr*.6,y-rr*.4],[x,y-rr*.5],[x+rr*.6,y-rr*.4],[x+rr,y]],'#7a5a52',3);}
+  for(let i=0;i<14;i++){const x=-r+60+hash(i,2)*(r*2-120),y=-r+60+hash(i,8)*(r*2-120);ellipse(c,x,y,10+hash(i,4)*14,7+hash(i,6)*8,'#4a3634');}
  }else{
   // A theatrical wooden stage suspended before an impossible night city.
   for(let y=-r;y<r;y+=30){c.fillStyle=(Math.floor(y/30)%2)?'#7d587b1b':'#161c2823';c.fillRect(-r,y,r*2,28);path(c,[[-r,y+29],[r,y+29]],'#b0819222');for(let x=-r;x<r;x+=180){const xx=x+(Math.floor(y/30)%2)*80;c.fillStyle='#241e3099';c.fillRect(xx,y+12,3,3);}}

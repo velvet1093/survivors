@@ -27,7 +27,7 @@ test('every rift challenge is explained in its second-phase guide and searchable
   assert.ok(!html.includes('undefined'));
   names.add(trial.name);
  }
- assert.equal(names.size,9,'all nine rifts have distinct challenge names');
+ assert.equal(names.size,11,'all eleven rifts have distinct challenge names');
 });
 
 test('challenge guidance retains the existing attacks, escape advice and servant limits',()=>{

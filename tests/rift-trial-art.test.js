@@ -19,7 +19,7 @@ test('all nine live trial states render distinct bounded scenery and warnings wi
   const before=structuredClone(g),{c,calls,depth}=canvas();assert.ok(drawRiftTrialWorld(c,g,quiet));assert.ok(drawRiftTrialOverlay(c,g,390,844,quiet));assert.equal(depth(),0);assert.deepEqual(g,before);assert.ok(calls.length<4500,'finite drawing cost');assert.ok(calls.some(([k])=>k==='fill'||k==='fillRect'));signatures.add(JSON.stringify(calls));
   if(quiet){const other=canvas();drawRiftTrialWorld(other.c,g,true);drawRiftTrialOverlay(other.c,g,390,844,true);assert.equal(JSON.stringify(calls),JSON.stringify(other.calls),'same saved challenge has identical quiet geometry');}
  }
- assert.equal(signatures.size,10,'all nine themes differ; only Darkness adds a decorative nonessential pulse in normal motion');
+ assert.equal(signatures.size,12,'all eleven themes differ; only Darkness adds a decorative nonessential pulse in normal motion');
 });
 
 test('blackout conceals far remains but reveals recognizable nearby suit parts and keeps source warnings above its veil',()=>{

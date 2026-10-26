@@ -45,7 +45,7 @@ test('every live calamity enters its own challenge at half HP before the ordinar
   updateRun(g,.02);assert.ok(riftTrialActive(g),id);assert.equal(g.riftTrial.bossId,id);assert.equal(g.riftTrial.bossEntityId,boss.id);assert.equal(g.riftTrial.kind,RIFT_TRIALS[id].kind);kinds.add(g.riftTrial.kind);
   assert.equal(boss.enraged,false,'combat phase two waits for its objective');assert.equal(g.bossIntro,null);assert.equal(g.money,0);assert.equal(g.bossKills,0);assert.equal(g.rifts.cleared,0);
  }
- assert.equal(kinds.size,9,'each calamity has a distinct movement objective');
+ assert.equal(kinds.size,11,'each calamity has a distinct movement objective');
 });
 
 test('damage-over-time and a spent ultimate impact crossing half HP enter the objective before another boss action',()=>{

@@ -16,7 +16,7 @@ const memory=()=>({data:new Map(),getItem(k){return this.data.get(k)},setItem(k,
 const covers=(h,x,y)=>h.shape==='line'?segmentDistance(x,y,h.x,h.y,h.tx,h.ty)<h.width+PLAYER_RADIUS:Math.hypot(x-h.x,y-h.y)<h.r+PLAYER_RADIUS;
 
 test('weather and Eclipse rosters are related, event-exclusive and absent from regular map and Boss Rush orders',()=>{
- assert.deepEqual(WORLD_EVENTS.map(e=>e.id),['eclipse','storm','blizzard','ghostparade','tombwake']);assert.equal(REGULAR_BOSS_IDS.length,33);
+ assert.deepEqual(WORLD_EVENTS.map(e=>e.id),['eclipse','storm','blizzard','ghostparade','tombwake']);assert.equal(REGULAR_BOSS_IDS.length,36);
  for(const event of WORLD_EVENTS){assert.ok(event.name&&event.color&&event.weather&&event.triggerId);assert.equal(event.enemies,event.enemyIds);assert.ok(EVENT_BOSSES[event.bossId]);for(const id of event.enemies)assert.ok(ENEMIES[id],id);}
  for(const [id,e]of Object.entries(EVENT_BOSSES)){assert.equal(BOSSES[id].eventOnly,true);assert.ok(!REGULAR_BOSS_IDS.includes(id));assert.ok(Object.values(MAP_BOSSES).every(pool=>!pool.includes(id)));assert.equal(bossPhases(id).length,2);assert.equal(BOSS_CINEMATICS[id].beats.length,3);assert.match(bossPhases(id)[0].description,/Event only/);}
  for(const id of Object.keys(EVENT_ENEMIES))assert.ok(Object.values(MAP_ENEMIES).every(pool=>!pool.includes(id)));

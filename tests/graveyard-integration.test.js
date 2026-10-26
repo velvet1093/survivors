@@ -36,12 +36,12 @@ test('the appended graveyard preserves existing map identities, mode equipment a
 
 test('a saved 31-boss gauntlet appends only the two graveyard opponents and retains its exact active fight',()=>{
  const g=quiet(createBossRushRun,3);while(g.status==='rush-draft')assert.ok(chooseRushDraft(g,getRushDraftChoices(g)[0].id));assert.ok(beginBossRush(g));
- const original=REGULAR_BOSS_IDS.filter(id=>!['ryuma','moriah'].includes(id));assert.equal(original.length,31);Object.assign(g.rush,{order:[...original],total:31,cleared:6,round:7});
+ const original=REGULAR_BOSS_IDS.filter(id=>!['ryuma','moriah','jellal','geld','kokushibo'].includes(id));assert.equal(original.length,31);Object.assign(g.rush,{order:[...original],total:31,cleared:6,round:7});
  const e=spawnEnemy(g,true,false,original[6]);Object.assign(e,{hp:731,maxHp:6000,x:210,y:-10,speed:0,attackCD:999});g.rush.activeBossId=e.id;g.money=177;g.characterXp=49;g.bossKills=6;g.kills=6;g.time=245;g.p.hp=73;
- const store=memory();assert.ok(saveRun(g,store));const loaded=loadRun(store);assert.ok(loaded);assert.equal(loaded.rush.total,33);assert.deepEqual(loaded.rush.order.slice(0,31),original);assert.deepEqual(loaded.rush.order.slice(31),['ryuma','moriah']);
+ const store=memory();assert.ok(saveRun(g,store));const loaded=loadRun(store);assert.ok(loaded);assert.equal(loaded.rush.total,36);assert.deepEqual(loaded.rush.order.slice(0,31),original);assert.deepEqual(loaded.rush.order.slice(31),['ryuma','moriah','jellal','geld','kokushibo']);
  assert.deepEqual([loaded.rush.cleared,loaded.rush.round,loaded.rush.activeBossId],[6,7,e.id]);assert.deepEqual([loaded.money,loaded.characterXp,loaded.bossKills,loaded.kills,loaded.time,loaded.p.hp],[177,49,6,6,245,73]);
  assert.equal(loaded.enemies.length,1);assert.equal(loaded.enemies[0].archetype,e.archetype);assert.equal(loaded.enemies[0].hp,731);assert.equal(loaded.enemies[0].maxHp,6000);
- assert.ok(saveRun(loaded,store));const again=loadRun(store);assert.ok(again);assert.deepEqual(again.rush.order,loaded.rush.order);assert.equal(new Set(again.rush.order).size,33);
+ assert.ok(saveRun(loaded,store));const again=loadRun(store);assert.ok(again);assert.deepEqual(again.rush.order,loaded.rush.order);assert.equal(new Set(again.rush.order).size,36);
  for(const [,event,boss]of events){assert.ok(!again.rush.order.includes(boss));assert.equal(BOSSES[boss].eventId,event);}
 });
 

@@ -23,7 +23,7 @@ export const ANIME_BOSSES={
  akaza:{name:'Akaza',title:'UPPER RANK THREE',family:'demonslayer',hp:2550,speed:91,r:34,color:'#e2a2ba',behavior:'akaza',description:'Compasses of delayed strikes, a destructive rush and spreading shockwave fists. Keep moving between the marks.'},
  sachiel:{name:'Sachiel',title:'THE THIRD ANGEL',family:'evangelion',hp:2700,speed:43,r:43,color:'#e3c995',behavior:'sachiel',description:'Cross-shaped light lances, temporary AT armor and a telegraphed core detonation.'},
 };
-export const ANIME_NAMES={overlord:'Overlord',berserk:'Berserk',onepunchman:'One Punch Man',jojo:'JoJo’s Bizarre Adventure',aot:'Attack on Titan',metroid:'Metroid',bleach:'Bleach',datealive:'Date A Live',onepiece:'One Piece',akame:'Akame ga Kill!',dragonball:'Dragon Ball',naruto:'Naruto',jjk:'Jujutsu Kaisen',madoka:'Madoka Magica',frieren:'Frieren',evangelion:'Evangelion',demonslayer:'Demon Slayer',chainsawman:'Chainsaw Man'};
+export const ANIME_NAMES={overlord:'Overlord',berserk:'Berserk',onepunchman:'One Punch Man',jojo:'JoJo’s Bizarre Adventure',aot:'Attack on Titan',metroid:'Metroid',bleach:'Bleach',datealive:'Date A Live',onepiece:'One Piece',akame:'Akame ga Kill!',dragonball:'Dragon Ball',naruto:'Naruto',jjk:'Jujutsu Kaisen',madoka:'Madoka Magica',frieren:'Frieren',evangelion:'Evangelion',demonslayer:'Demon Slayer',fairytail:'Fairy Tail',tensura:'That Time I Got Reincarnated as a Slime',chainsawman:'Chainsaw Man'};
 export function animeAttack(g,e,p,a,{fan,ring,hazard,summon}){
  if(berserkAttack(g,e,p,a,{fan,ring,hazard,summon}))return true;
  if(jojoAttack(g,e,p,a,{fan,ring,hazard,summon}))return true;

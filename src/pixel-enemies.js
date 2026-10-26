@@ -1,5 +1,6 @@
 import {DEVIL_PALETTES,devilEnemyPixels} from './devil-enemy-art.js';
 import {GRAVEYARD_PALETTES,graveyardEnemyPixels} from './graveyard-enemy-art.js';
+import {EXPEDITION_PALETTES,expeditionEnemyPixels} from './expedition-enemy-art.js';
 import {EVENT_PALETTES,eventEnemyPixels} from './world-event-art.js';
 import {ANIME_PALETTES,animeEnemyPixels} from './anime-pixels.js';
 import {baseEnemyPixels} from './base-enemy-pixels.js';
@@ -7,6 +8,7 @@ import {RIFT_SUPERBOSS_PALETTES,riftSuperbossPixels} from './rift-superboss-art.
 // Hand-drawn clusters on the same 56 × 76 grid as the playable cast.
 export const ENEMY_PALETTES={
  ...GRAVEYARD_PALETTES,
+ ...EXPEDITION_PALETTES,
  ...DEVIL_PALETTES,
  ...EVENT_PALETTES,
  rumblingcolossal:ANIME_PALETTES.bertholdt,
@@ -16,6 +18,7 @@ export const ENEMY_PALETTES={
 };
 export function enemyPixels(id,m={}){
  if(GRAVEYARD_PALETTES[id])return graveyardEnemyPixels(id,m);
+ if(EXPEDITION_PALETTES[id])return expeditionEnemyPixels(id,m);
  if(DEVIL_PALETTES[id])return devilEnemyPixels(id,m);
  if(EVENT_PALETTES[id])return eventEnemyPixels(id,m);
  if(id==='rumblingcolossal')return animeEnemyPixels('bertholdt',{...m,enraged:1});

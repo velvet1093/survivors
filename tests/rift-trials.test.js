@@ -20,10 +20,12 @@ function finishByRules(g){
  else if(q.kind==='seals'){for(const v of q.goals){move(g,v);step(g,1.21);}}
  else if(q.kind==='vents'){for(const v of q.goals){move(g,v);step(g);move(g,{x:0,y:0});step(g,1.51);}}
  else if(q.kind==='procession'){for(let i=0;i<3;i++){move(g,q.path[i+1]);step(g,4);}}
+ else if(q.kind==='orbit'){for(let i=0;i<3;i++){move(g,q.goals.find(v=>!v.done));step(g);}}
+ else if(q.kind==='tag'){for(let k=0;k<200&&g.riftTrial;k++){move(g,q.goals[q.stage]);step(g,.05);}}
 }
 
 test('all nine rifts define distinct playable interludes and complete only their objective without paying boss rewards',()=>{
- assert.equal(Object.keys(RIFT_TRIALS).length,9);assert.equal(new Set(Object.values(RIFT_TRIALS).map(v=>v.kind)).size,9);
+ assert.equal(Object.keys(RIFT_TRIALS).length,11);assert.equal(new Set(Object.values(RIFT_TRIALS).map(v=>v.kind)).size,11);
  for(const [id,def]of Object.entries(RIFT_TRIALS)){
   const {g,e,q}=start(id);assert.equal(q.kind,def.kind);assert.equal(q.total,def.total);assert.ok(def.name&&def.instruction.length>70);assert.equal(e.enraged,false);assert.ok(riftTrialActive(g));assert.equal(riftTrialText(g).instruction,def.instruction);
   for(const v of q.goals){assert.ok(Math.abs(v.x)<g.riftArena.radius-90);assert.ok(Math.abs(v.y)<g.riftArena.radius-90);assert.ok(v.r>0);}

@@ -9,6 +9,8 @@ export const RIFT_TRIALS={
  madararift:{kind:'shelters',name:'Three Falling Heavens',instruction:'Survive three meteor tolls. Reach the lit shelter before each countdown ends. The shelter changes after every impact; being outside hurts, but surviving advances the challenge.',total:3,color:'#d5dfbd'},
  sukunaheian:{kind:'seals',name:'Silence the Shrine',instruction:'Close all three shrine seals in any order. Stand inside a seal until its channel ring fills; stepping away breaks that channel. Leave the warned cutting lanes before they release.',total:3,color:'#e7a599'},
  borosrift:{kind:'vents',name:'Vent the Star Reactor',instruction:'Step onto each of the three reactor vents to arm it, then leave its marked blast radius before it opens. Each vent only erupts once; opening all three restores the battle.',total:3,color:'#e8a9d1'},
+ acnologia:{kind:'orbit',name:'Catch the Dragon Lacrima',instruction:'Three dragon lacrima crystals circle the island on the storm winds. Touch each one as it passes to claim it. Step out of the warned roar marks that follow your position.',total:3,color:'#7d93c4'},
+ milim:{kind:'tag',name:'Keep Up with Milim',instruction:'Milim wants to play tag. Stay close to her darting afterimage until its ring fills, three times. The ring drains while you fall behind; dodge the warned stardust she scatters as she runs.',total:3,color:'#f0a6b8'},
  deathdevil:{kind:'procession',name:'The Funeral Procession',instruction:'Follow the moving lantern sanctuary through three funeral bells. Stay inside its pale circle when each bell tolls. A missed sanctuary hurts, but surviving all three tolls ends the procession.',total:3,color:'#dedbd0'},
 };
 const TAU=Math.PI*2,PLAYER_RADIUS=12,finite=Number.isFinite;
@@ -33,6 +35,8 @@ function makeGoals(g,q){
   const start=point(g.p.x,g.p.y,edge),inward=p=>Math.atan2(-p.y,-p.x),first=point(start.x+Math.cos(inward(start))*200,start.y+Math.sin(inward(start))*200,edge),second=point(first.x+Math.cos(inward(first)+.8)*300,first.y+Math.sin(inward(first)+.8)*300,edge),third=point(second.x+Math.cos(inward(second)-.8)*300,second.y+Math.sin(inward(second)-.8)*300,edge);
   q.goals=[first,second,third].map((p,i)=>goal('shelter-'+(i+1),p.x,p.y,'shelter',110,{order:i+1}));q.roundAge=0;q.roundDuration=4;q.impactFlash=0;activateOrdered(q);
  }
+ else if(q.kind==='orbit'){q.goals=[0,1,2].map(i=>goal('lacrima-'+(i+1),0,0,'lacrima',36,{base:i*TAU/3,orbitR:Math.min(300,edge-60)}));orbitGoals(q);}
+ else if(q.kind==='tag'){q.goals=[0,1,2].map(i=>goal('tag-'+(i+1),0,0,'afterimage',72,{order:i+1}));tagTarget(q,edge);activateOrdered(q);}
  else if(q.kind==='seals')q.goals=[at('seal-1',-260,-210,'seal',55),at('seal-2',260,-210,'seal',55),at('seal-3',0,300,'seal',55)];
  else if(q.kind==='vents')q.goals=[at('vent-1',-260,-200,'vent',60,{armed:false,armedAge:0}),at('vent-2',270,-180,'vent',60,{armed:false,armedAge:0}),at('vent-3',0,330,'vent',60,{armed:false,armedAge:0})];
  else if(q.kind==='procession'){
@@ -40,6 +44,9 @@ function makeGoals(g,q){
   q.path=[start,mid,next,last];q.goals=q.path.slice(1).map((p,i)=>goal('bell-'+(i+1),p.x,p.y,'bell',115,{order:i+1}));q.sanctuary={...start,r:115};q.roundAge=0;q.roundDuration=4;q.impactFlash=0;activateOrdered(q);
  }
 }
+// Lacrima ride the storm around the arena centre; Milim's afterimage traces a looping path.
+function orbitGoals(q){for(const v of q.goals){const a=v.base+q.age*.45;v.x=Math.cos(a)*v.orbitR;v.y=Math.sin(a)*v.orbitR;}}
+function tagTarget(q,edge=520){const ax=Math.min(300,edge-80),ay=Math.min(220,edge-80);for(const v of q.goals){v.x=Math.cos(q.age*.45+q.stage)*ax;v.y=Math.sin(q.age*.7+q.stage*2)*ay;}}
 export function riftTrialActive(g){return !!defFor(g?.riftTrial);}
 export function beginRiftTrial(g,e){
  if(!g||g.status!=='playing'||g.bossIntro||g.riftTrial||!e||!RIFT_TRIALS[e.archetype]||!e.riftBoss||!e.boss||e.hp<=0||e.hp>e.maxHp*.5||e.enraged||e.riftTrialDone||e.riftTrialStarted||g.rifts?.active?.bossEntityId!==e.id||g.rifts.active.bossId!==e.archetype||!g.riftArena)return false;
@@ -80,9 +87,10 @@ function warn(q,data){q.hazards.push({id:++q.serial,age:0,delay:1.6,duration:.4,
 const hpDamage=(g,fraction)=>Math.max(1,(g.p.maxHp||100)*fraction);
 function damage(g,value,api){api.hitPlayer?.(g,value);}
 function pressure(g,q){
- if(!['blackout','paths','offerings','spotlights','seals'].includes(q.kind)||q.age<q.nextPressure)return;
+ if(!['blackout','paths','offerings','spotlights','seals','orbit','tag'].includes(q.kind)||q.age<q.nextPressure)return;
  q.nextPressure=q.age+(q.kind==='blackout'?5.5:q.kind==='offerings'?4.2:3.6);q.pulse++;
- if(q.kind==='blackout'||q.kind==='offerings')warn(q,{shape:'circle',x:g.p.x,y:g.p.y,r:q.kind==='blackout'?56:68,delay:1.8,damage:hpDamage(g,.08),label:q.kind==='blackout'?'A HAND IN THE DARK':'HAKAI · LEAVE THE OFFERING MARK'});
+ if(q.kind==='orbit'||q.kind==='tag')warn(q,{shape:'circle',x:g.p.x,y:g.p.y,r:q.kind==='orbit'?62:56,delay:1.8,damage:hpDamage(g,.08),label:q.kind==='orbit'?'DRAGON’S ROAR · LEAVE THE MARK':'STARDUST · LEAVE THE MARK'});
+ else if(q.kind==='blackout'||q.kind==='offerings')warn(q,{shape:'circle',x:g.p.x,y:g.p.y,r:q.kind==='blackout'?56:68,delay:1.8,damage:hpDamage(g,.08),label:q.kind==='blackout'?'A HAND IN THE DARK':'HAKAI · LEAVE THE OFFERING MARK'});
  else if(q.kind==='paths'){
   const y=[-90,-270,-440][(q.pulse-1)%3],gap=(q.pulse%2?1:-1)*165;
   for(const [x,tx]of [[-630,gap-105],[gap+105,630]])warn(q,{shape:'line',x,y,tx,ty:y,width:28,delay:1.8,damage:hpDamage(g,.1),label:'COLOSSAL MARCH · OPEN CROSSING'});
@@ -115,6 +123,12 @@ function tick(g,q,dt,api){
   q.roundAge+=dt;
   if(q.kind==='procession'){const a=q.path[q.stage],b=q.path[q.stage+1],t=clamp(q.roundAge/q.roundDuration,0,1);q.sanctuary.x=a.x+(b.x-a.x)*t;q.sanctuary.y=a.y+(b.y-a.y)*t;}
   if(q.roundAge>=q.roundDuration-1e-9){const safe=q.kind==='shelters'?q.goals[q.stage]:q.sanctuary;if(distance(g.p,safe)>safe.r-PLAYER_RADIUS)damage(g,hpDamage(g,.12),api);q.goals[q.stage].done=true;q.progress++;q.stage=q.progress;q.roundAge=0;q.impactFlash=.35;activateOrdered(q);g.checkpointRequested=true;}
+ }else if(q.kind==='orbit'){
+  orbitGoals(q);
+  for(const v of remaining(q))if(distance(g.p,v)<=v.r+12){v.done=true;v.active=false;q.progress++;q.stage=q.progress;g.checkpointRequested=true;}
+ }else if(q.kind==='tag'){
+  tagTarget(q,(g.riftArena?.radius||760)-120);const v=q.goals[q.stage];
+  if(v){v.charge=distance(g.p,v)<=v.r?Math.min(1,v.charge+dt/1.5):Math.max(0,v.charge-dt*.4);if(v.charge>=1-1e-9){v.charge=1;v.done=true;q.progress++;q.stage=q.progress;activateOrdered(q);g.checkpointRequested=true;}}
  }else if(q.kind==='vents'){
   for(const v of remaining(q)){
    if(!v.armed&&distance(g.p,v)<=v.r-12){v.armed=true;v.armedAge=0;warn(q,{shape:'circle',x:v.x,y:v.y,r:v.r+24,delay:1.5,damage:hpDamage(g,.12),label:'REACTOR VENT · MOVE AWAY',goalId:v.id});g.checkpointRequested=true;}
@@ -141,6 +155,8 @@ export function riftTrialText(g){
  else if(q.kind==='shelters')detail=`Meteor ${Math.min(3,q.stage+1)} / 3 · shelter before ${Math.max(0,q.roundDuration-q.roundAge).toFixed(1)}s`;
  else if(q.kind==='seals')detail=`${q.progress} / 3 seals closed · hold a seal to channel`;
  else if(q.kind==='vents')detail=`${q.progress} / 3 vents opened · arm a vent, then leave its circle`;
+ else if(q.kind==='orbit')detail=`${q.progress} / 3 lacrima caught · touch a crystal as it passes`;
+ else if(q.kind==='tag')detail=`Tag ${Math.min(3,q.stage+1)} / 3 · ${Math.round((q.goals[q.stage]?.charge||0)*100)}% · stay close to Milim`;
  else if(q.kind==='procession')detail=`Bell ${Math.min(3,q.stage+1)} / 3 in ${Math.max(0,q.roundDuration-q.roundAge).toFixed(1)}s · follow the sanctuary`;
  return {name:def.name,instruction:def.instruction,progress:q.progress,total:q.total,detail};
 }
@@ -148,7 +164,7 @@ export function restoreRiftTrial(g){
  const q=g?.riftTrial;if(!q)return false;const def=defFor(q),e=owner(g,q),edge=(g.riftArena?.radius||800)-30;
  const valid=def&&q.version===1&&q.kind===def.kind&&g.rifts?.active?.bossEntityId===q.bossEntityId&&e?.hp>0&&q.total===def.total&&finite(q.age)&&q.age>=0&&Number.isInteger(q.progress)&&q.progress>=0&&q.progress<q.total&&q.stage===q.progress&&Array.isArray(q.goals)&&q.goals.length===(q.kind==='mirrors'?4:q.total)&&q.goals.every(v=>v&&typeof v.id==='string'&&typeof v.done==='boolean'&&typeof v.active==='boolean'&&[v.x,v.y,v.r,v.charge].every(finite)&&Math.abs(v.x)<=edge&&Math.abs(v.y)<=edge&&v.r>0&&v.r<200&&v.charge>=0&&v.charge<=1)&&(q.kind==='mirrors'||q.goals.filter(v=>v.done).length===q.progress)&&Number.isInteger(q.serial)&&q.serial>=0&&Array.isArray(q.hazards)&&q.hazards.length<=16&&q.hazards.every(h=>h&&['circle','line'].includes(h.shape)&&[h.x,h.y,h.age,h.delay,h.duration,h.damage].every(finite)&&h.age>=0&&h.delay>=0&&h.duration>0&&h.damage>=0&&(h.shape==='circle'?finite(h.r)&&h.r>0:[h.tx,h.ty,h.width].every(finite)&&h.width>0));
  const extras=valid&&(q.kind==='offerings'?q.shrine&&[q.shrine.x,q.shrine.y,q.shrine.r].every(finite)&&(!q.carrying||q.goals.some(v=>v.id===q.carrying&&!v.done)):q.kind==='procession'?Array.isArray(q.path)&&q.path.length===4&&q.path.every(p=>p&&[p.x,p.y].every(finite))&&q.sanctuary&&[q.sanctuary.x,q.sanctuary.y,q.sanctuary.r].every(finite):true);
- const clocks=valid&&(!['shelters','procession'].includes(q.kind)||finite(q.roundAge)&&q.roundAge>=0&&q.roundAge<4&&q.roundDuration===4)&&(!['mirrors'].includes(q.kind)||Number.isInteger(q.seed)&&q.seed>=0&&q.seed<4&&Number.isInteger(q.realIndex)&&q.realIndex>=0&&q.realIndex<4&&q.goals.filter(v=>v.real).length===1&&q.goals[q.realIndex].real&&finite(q.choiceCD)&&q.choiceCD>=0&&q.choiceCD<=1.2)&&(!['blackout','paths','offerings','spotlights','seals'].includes(q.kind)||finite(q.nextPressure)&&Number.isInteger(q.pulse)&&q.pulse>=0)&&(q.kind!=='vents'||q.goals.every(v=>typeof v.armed==='boolean'&&finite(v.armedAge)&&v.armedAge>=0))&&(q.kind!=='blackout'||finite(q.lightRadius)&&q.lightRadius===130+q.progress*30);
+ const clocks=valid&&(!['shelters','procession'].includes(q.kind)||finite(q.roundAge)&&q.roundAge>=0&&q.roundAge<4&&q.roundDuration===4)&&(!['mirrors'].includes(q.kind)||Number.isInteger(q.seed)&&q.seed>=0&&q.seed<4&&Number.isInteger(q.realIndex)&&q.realIndex>=0&&q.realIndex<4&&q.goals.filter(v=>v.real).length===1&&q.goals[q.realIndex].real&&finite(q.choiceCD)&&q.choiceCD>=0&&q.choiceCD<=1.2)&&(!['blackout','paths','offerings','spotlights','seals','orbit','tag'].includes(q.kind)||finite(q.nextPressure)&&Number.isInteger(q.pulse)&&q.pulse>=0)&&(q.kind!=='vents'||q.goals.every(v=>typeof v.armed==='boolean'&&finite(v.armedAge)&&v.armedAge>=0))&&(q.kind!=='blackout'||finite(q.lightRadius)&&q.lightRadius===130+q.progress*30);
  if(!valid||!extras||!clocks){if(e?.hp>0&&g.rifts?.active?.bossEntityId===q.bossEntityId)finishRiftTrial(g);else{restorePower(g,q);g.riftTrial=null;}return false;}
  e.riftTrialStarted=true;e.riftTrialLocked=true;q.hideBoss=q.kind==='blackout';return true;
 }

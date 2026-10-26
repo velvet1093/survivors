@@ -20,8 +20,8 @@ const covers=(h,x,y)=>h.shape==='circle'?Math.hypot(h.x-x,h.y-y)<h.r+PLAYER_RADI
   segmentDistance(x,y,h.x,h.y,h.tx,h.ty)<h.width+PLAYER_RADIUS;
 
 test('rift superbosses are much tougher than ordinary bosses and cannot replace normal wave or Boss Rush bosses',()=>{
-  assert.deepEqual(Object.keys(RIFT_SUPERBOSSES),['foundereren','beerus','walpurgisrift','aizenrift','madararift','sukunaheian','borosrift','darknessdevil','deathdevil']);
-  assert.equal(REGULAR_BOSS_IDS.length,33);
+  assert.deepEqual(Object.keys(RIFT_SUPERBOSSES),['foundereren','beerus','walpurgisrift','aizenrift','madararift','sukunaheian','borosrift','darknessdevil','deathdevil','acnologia','milim']);
+  assert.equal(REGULAR_BOSS_IDS.length,36);
   for(const id of Object.keys(RIFT_SUPERBOSSES)) {
     assert.equal(BOSSES[id].riftOnly,true);
     assert.ok(BOSSES[id].hp>=18000);

@@ -52,7 +52,7 @@ test('each new boss enters with its own named, skippable signature vision on the
 });
 
 test('graveyard guides preserve every existing calamity objective and the regular/event phase boundaries',()=>{
- assert.equal(Object.keys(RIFT_TRIALS).length,9);
+ assert.equal(Object.keys(RIFT_TRIALS).length,11);
  for(const [id,trial]of Object.entries(RIFT_TRIALS)){
   const phases=bossPhases(id);assert.ok(phases[1].description.includes(trial.name));assert.ok(phases[1].description.includes(trial.instruction));assert.ok(!phases[0].description.includes('Rift challenge at half HP'));
  }

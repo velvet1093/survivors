@@ -3,7 +3,7 @@
 const TAU=Math.PI*2;
 const finite=(n,d=0)=>Number.isFinite(n)?n:d,clamp=(n,a=0,b=1)=>Math.max(a,Math.min(b,finite(n)));
 const BONE='#dddccb',GOLD='#ead19a',INK='#101722',TEAL='#a0d8d1',PINK='#d7b3d7';
-const COLORS={darknessdevil:BONE,foundereren:'#d8d5aa',beerus:'#d9b1ef',walpurgisrift:PINK,aizenrift:'#c7bbec',madararift:'#d4e1b7',sukunaheian:'#e5aa9d',borosrift:'#a9d9e0',deathdevil:BONE};
+const COLORS={acnologia:'#a8c0ee',milim:'#f0a6b8',darknessdevil:BONE,foundereren:'#d8d5aa',beerus:'#d9b1ef',walpurgisrift:PINK,aizenrift:'#c7bbec',madararift:'#d4e1b7',sukunaheian:'#e5aa9d',borosrift:'#a9d9e0',deathdevil:BONE};
 const point=p=>p&&Number.isFinite(p.x)&&Number.isFinite(p.y);
 const alpha=(c,a)=>{c.globalAlpha=clamp(a);};
 function line(c,pts,color,width=1){c.strokeStyle=color;c.lineWidth=width;c.lineJoin='round';c.lineCap='round';c.beginPath();pts.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();}
@@ -146,7 +146,21 @@ function procession(c,q){
  lantern(c,v.x,v.y-45);label(c,'FOLLOW THE LANTERN',v.x,v.y+r+20,BONE,9);
  const route=q.route||q.path||[];for(let i=0;i<route.length;i++){const p=route[i];if(point(p))oval(c,p.x,p.y,3,3,'#d7dec444');}
 }
-const drawByBoss={darknessdevil:darkness,foundereren:(_c,_g,q)=>paths(_c,q),beerus:appetite,walpurgisrift:(_c,_g,q)=>spotlights(_c,q),aizenrift:(_c,_g,q)=>mirrors(_c,q),madararift:(_c,_g,q)=>shelter(_c,q),sukunaheian:(_c,_g,q)=>shrineSeals(_c,q),borosrift:(_c,_g,q)=>vents(_c,q),deathdevil:(_c,_g,q)=>procession(_c,q)};
+function lacrima(c,q){
+ // The storm's orbit, then each uncaught crystal on it.
+ const r=finite(q.goals?.[0]?.orbitR,300);ring(c,0,0,r,'#7d93c455',2);
+ for(const v of q.goals||[]){if(!point(v)||v.done)continue;poly(c,[[v.x,v.y-18],[v.x+10,v.y],[v.x,v.y+18],[v.x-10,v.y]],'#2c3a5e','#a8c0ee');poly(c,[[v.x,v.y-11],[v.x+5,v.y],[v.x,v.y+11],[v.x-5,v.y]],'#a8c0ee');oval(c,v.x-2,v.y-5,2,3,'#eef4ff');ring(c,v.x,v.y,v.r,'#a8c0ee66',1);}
+ label(c,'CATCH THE LACRIMA',0,-r-18,'#a8c0ee',9);
+}
+function afterimage(c,q){
+ const v=(q.goals||[])[finite(q.stage)];if(!point(v))return;
+ oval(c,v.x,v.y,v.r,v.r,'#f0a6b81c');ring(c,v.x,v.y,v.r,'#f0a6b8',2);
+ // Charge ring fills as you keep pace.
+ c.strokeStyle='#f4e08a';c.lineWidth=4;c.beginPath();c.arc(v.x,v.y,v.r-6,-Math.PI/2,-Math.PI/2+TAU*Math.max(0,Math.min(1,finite(v.charge)))) ;c.stroke();
+ oval(c,v.x,v.y-14,9,9,'#ffd6de');for(const s of [-1,1])poly(c,[[v.x+s*7,v.y-20],[v.x+s*16,v.y-6],[v.x+s*10,v.y+8],[v.x+s*6,v.y-10]],'#f0a6b8');poly(c,[[v.x-7,v.y-4],[v.x+7,v.y-4],[v.x+6,v.y+12],[v.x-6,v.y+12]],'#2a2630');
+ label(c,'KEEP UP WITH MILIM',v.x,v.y+v.r+18,'#f0a6b8',9);
+}
+const drawByBoss={acnologia:(_c,_g,q)=>lacrima(_c,q),milim:(_c,_g,q)=>afterimage(_c,q),darknessdevil:darkness,foundereren:(_c,_g,q)=>paths(_c,q),beerus:appetite,walpurgisrift:(_c,_g,q)=>spotlights(_c,q),aizenrift:(_c,_g,q)=>mirrors(_c,q),madararift:(_c,_g,q)=>shelter(_c,q),sukunaheian:(_c,_g,q)=>shrineSeals(_c,q),borosrift:(_c,_g,q)=>vents(_c,q),deathdevil:(_c,_g,q)=>procession(_c,q)};
 function objectiveBearing(c,g,q,w,h){
  const goals=(q.goals||[]).filter(v=>point(v)&&!v.done&&!v.carried),nearest=list=>list.slice().sort((a,b)=>Math.hypot(a.x-g.p.x,a.y-g.p.y)-Math.hypot(b.x-g.p.x,b.y-g.p.y))[0];
  let target,name='OBJECTIVE';
@@ -154,6 +168,8 @@ function objectiveBearing(c,g,q,w,h){
  else if(q.kind==='procession'){target=q.sanctuary;name='LANTERN';}
  else if(q.kind==='mirrors'){target=nearest(goals);name='MIRRORS';}
  else if(['paths','spotlights','shelters'].includes(q.kind)){target=goals.find(v=>v.active);name=q.kind==='paths'?'BEACON '+(finite(q.stage)+1):q.kind==='spotlights'?'SPOTLIGHT '+(finite(q.stage)+1):'SHELTER';}
+ else if(q.kind==='orbit'){target=nearest(goals);name='LACRIMA';}
+ else if(q.kind==='tag'){target=goals.find(v=>v.active)||goals[0];name='MILIM';}
  else {target=nearest(goals.filter(v=>!v.armed));name=q.kind==='seals'?'SHRINE SEAL':'REACTOR VENT';}
  if(!point(target))return;
  const zoom=clamp(g.zoom,.2,3),dx=(target.x-g.p.x)*zoom,dy=(target.y-g.p.y)*zoom,sx=w/2+dx,sy=h/2+dy,landscape=w>h&&h<=450,top=landscape?135:130,bottom=landscape?145:250;

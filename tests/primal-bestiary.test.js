@@ -9,10 +9,10 @@ import {bestiary} from '../src/bestiary.js';
 test('Death extends the optional rift rotation without moving existing encounters into waves or Boss Rush',()=>{
  const original=['foundereren','beerus','walpurgisrift','aizenrift','madararift','sukunaheian','borosrift','darknessdevil'];
  assert.deepEqual(RIFT_ENCOUNTERS.slice(0,8).map(e=>e.id),original);
- assert.equal(RIFT_ENCOUNTERS.length,9);assert.equal(RIFT_ENCOUNTERS[8].id,'deathdevil');
+ assert.equal(RIFT_ENCOUNTERS.length,11);assert.equal(RIFT_ENCOUNTERS[8].id,'deathdevil');
  assert.equal(BOSSES.deathdevil.family,'chainsawman');assert.equal(BOSSES.deathdevil.riftOnly,true);
  assert.equal(RIFT_ARENAS.deathdevil.id,'lastsilence');assert.equal(RIFT_ARENAS.darknessdevil.id,'primordialnight');
- assert.equal(REGULAR_BOSS_IDS.length,33);assert.ok(!REGULAR_BOSS_IDS.includes('deathdevil'));
+ assert.equal(REGULAR_BOSS_IDS.length,36);assert.ok(!REGULAR_BOSS_IDS.includes('deathdevil'));
  for(const order of Object.values(MAP_BOSSES))assert.ok(!order.includes('deathdevil'));
 });
 

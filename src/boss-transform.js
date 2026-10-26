@@ -12,7 +12,7 @@ export function transformBoss(g,e){
  // Existing warnings from this boss fade with the old form, giving a fair restart.
  g.enemyShots=g.enemyShots.filter(s=>s.sourceId!==e.id);
  g.hazards=g.hazards.filter(h=>h.sourceId!==e.id);
- queueBossIntro(g,e,g.wave,{transformation:true,previousName:['ryuma','moriah'].includes(e.archetype)?previousName:e.archetype==='motherbrain'?'Tank destroyed':'Human form shattered'});
+ queueBossIntro(g,e,g.wave,{transformation:true,previousName:['ryuma','moriah','jellal','geld','kokushibo'].includes(e.archetype)?previousName:e.archetype==='motherbrain'?'Tank destroyed':'Human form shattered'});
  g.toast=e.name.toUpperCase()+' · TRANSFORMED';g.toastTime=3;
  return true;
 }
