@@ -1,5 +1,5 @@
 import {buildHero,torso,casual,swim,yukata,skirt,emblem,twinTails,longHairBack,fringe,bow,mix,SKIN} from './hero-builder.js';
-import {eye,mouth,limb} from './hero-kit.js';
+import {eye,mouth,limb,lid,brow,tear} from './hero-kit.js';
 // Madoka: short pink twin tails tied with red ribbons and big pink eyes. The magical-girl
 // dress has a white bodice, a red chest bow, puffed sleeves, white gloves and a layered
 // pink bubble skirt. Ultimate Madoka trades it for a white gown, wings and floor-length hair.
@@ -10,7 +10,12 @@ function faceFor(r,c,gold){
  const y=c.y,hurt=c.expression==='hurt',focus=c.expression==='focused'||c.expression==='ultimate';
  for(const [x,side]of [[21,-1],[31,1]])eye(r,x,26+y,{iris:gold?'#e8c46a':C.iris,irisDark:gold?'#a77b2c':'#8e3a63',lash:INK,side,closed:c.blink,hurt,focus});
  for(const x of [20,21,34,35])r.put(x,32+y,mix('#f08aa6',SKIN.base,.4));
- mouth(r,34+y,c.expression,{lip:'#c46a80'});
+ if(!c.blink&&!hurt)for(const x of [21,31])r.put(x+(x<30?2:1),29+y,'#ffffff');
+ if(hurt)for(const x of [22,34])tear(r,x,31+y);
+ // A small open smile; an earnest frown while focusing.
+ if(c.expression==='neutral'){r.rect(27,34+y,3,2,'#c46a80');r.rect(27,35+y,3,1,'#f2a3b6');}
+ else if(c.expression==='focused'){brow(r,21,24+y,{color:C.hairShade||INK,side:-1,tilt:-1});brow(r,31,24+y,{color:C.hairShade||INK,side:1,tilt:-1});mouth(r,34+y,'focused',{lip:'#c46a80'});}
+ else mouth(r,34+y,c.expression,{lip:'#c46a80'});
 }
 function magicalGirl(r,c){
  const b=torso(r,c,{color:C.white,shade:'#d8cdd6',light:'#ffffff',bottom:50});

@@ -1,5 +1,5 @@
 import {buildHero,torso,casual,pajamas,swim,bikini,emblem,mix,SKIN} from './hero-builder.js';
-import {canvas,motion,eye,mouth,limb,selout} from './hero-kit.js';
+import {canvas,motion,eye,mouth,limb,selout,lid,brow,tear} from './hero-kit.js';
 // Samus. Power suits share one armoured body (helmet, visor, shoulder spheres, chest
 // plate, arm cannon) recoloured per suit; Zero Suit and the off-duty looks use the
 // human builder with her blonde ponytail. The bomb pose curls into the Morph Ball.
@@ -58,7 +58,12 @@ function bangs(r,c){
 function face(r,c){
  const y=c.y,hurt=c.expression==='hurt',focus=c.expression==='focused'||c.expression==='ultimate';
  for(const [x,side]of [[21,-1],[31,1]])eye(r,x,26+y,{iris:'#4f8fd0',irisDark:'#244f86',lash:INK,side,closed:c.blink,hurt,focus});
- mouth(r,34+y,c.expression,{lip:'#b86e74'});
+ if(!c.blink&&!hurt)for(const [x,side]of [[21,-1],[31,1]])lid(r,x,26+y,{lash:INK,rows:1,side});
+ if(!c.blink)for(const [x,side]of [[21,-1],[31,1]])brow(r,x,24+y,{color:'#b48a3e',side,tilt:focus?1:0});
+ r.put(34,34+y,'#6a4a3a');
+ if(c.expression==='neutral')r.rect(27,34+y,3,1,'#b86e74');
+ else if(c.expression==='ultimate'){r.rect(26,34+y,4,3,'#7a3a48');r.rect(26,34+y,4,1,'#fff4ec');}
+ else mouth(r,34+y,c.expression,{lip:'#b86e74'});
 }
 function zeroSuit(r,c,{stealth=false}={}){
  const col=stealth?'#2a2d3a':'#3d74c4',shade=stealth?'#171925':'#244a86',light=stealth?'#4a5066':'#78a8e8';

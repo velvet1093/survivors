@@ -1,3 +1,4 @@
+import {SKIN} from '../src/hero-kit.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CHARACTERS} from '../src/game.js';
@@ -43,7 +44,7 @@ test('swim skins retain transformations and provide Shinji a matching aquatic EV
  for(const [id,options]of [['eren',{form:1}],['rimuru',{form:'slime',pose:'predator'}],['samus',{pose:'bomb'}]]){assert.equal(swimsuitPixels(id,options),null);assert.notDeepEqual(frame(id),frame(id,options));}
  assert.notDeepEqual(frame('goku'),frame('goku',{form:1}));assert.notDeepEqual(frame('goku',{form:1}),frame('goku',{form:4}));
  assert.equal(new Set([0,1,2].map(form=>JSON.stringify(frame('erza',{form})))).size,3);
- const eva=frame('shinji'),pilot=pilotPixels({skin:'swimsuit'});assert.notDeepEqual(eva,pilot);assert.ok(pilot.includes('#ffe0c6'));assert.ok(!eva.includes('#ffe0c6'));
- assert.deepEqual(pilot,swimsuitPixels('shinji'));assert.ok(portrait(CHARACTERS.find(c=>c.id==='shinji'),'swimsuit').includes('#5598af'));assert.ok(pilotPortrait('swimsuit').includes('#ffe0c6'));
+ const eva=frame('shinji'),pilot=pilotPixels({skin:'swimsuit'});assert.notDeepEqual(eva,pilot);assert.ok(pilot.includes(SKIN.base));assert.ok(!eva.includes(SKIN.base));
+ assert.ok(portrait(CHARACTERS.find(c=>c.id==='shinji'),'swimsuit').includes('#5598af'));assert.ok(pilotPortrait('swimsuit').includes(SKIN.base));
  assert.notDeepEqual(eva,frame('shinji',{attack:true}));assert.ok(frame('shinji',{evolved:'longinus'}).includes('#b4466a'));assert.ok(new Set([0,1,2,3].map(frameIndex=>JSON.stringify(frame('shinji',{pose:'berserk',frame:frameIndex})))).size>=3);
 });

@@ -1,5 +1,5 @@
 import {buildHero,torso,casual,pajamas,swim,emblem,longHairBack,fringe,mix,SKIN} from './hero-builder.js';
-import {canvas,motion,eye,mouth,limb,selout} from './hero-kit.js';
+import {canvas,motion,eye,mouth,limb,selout,lid,brow,tear} from './hero-kit.js';
 // Rimuru: shoulder-length light-blue hair with straight bangs, gold eyes, a dark
 // traveller's coat and cream scarf. Gluttony (the predator pose or slime form) turns
 // him back into the round blue slime.
@@ -8,7 +8,9 @@ const C=RIMURU_COLORS,H={h:C.hair,s:C.hairShade,l:C.hairLight};
 function face(r,c){
  const y=c.y,hurt=c.expression==='hurt',focus=c.expression==='focused'||c.expression==='ultimate';
  for(const [x,side]of [[21,-1],[31,1]])eye(r,x,26+y,{iris:C.gold,irisDark:C.goldDark,lash:C.ink,side,closed:c.blink,hurt,focus});
- mouth(r,34+y,c.expression,{lip:'#b77b80'});
+ if(c.expression==='neutral'){for(const [x,yy]of [[26,34],[27,35],[28,34],[29,35],[30,34]])r.put(x,yy+y,'#b77b80');}
+ else if(c.expression==='focused'){for(const [x,side]of [[21,-1],[31,1]])if(!c.blink)lid(r,x,26+y,{lash:C.ink,rows:1,side});r.rect(27,34+y,3,1,'#b77b80');}
+ else mouth(r,34+y,c.expression,{lip:'#b77b80'});
 }
 function traveler(r,c,{lord=false}={}){
  const col=lord?'#1c1a24':C.coat,shade=lord?'#0e0d14':C.coatShade,light=lord?'#3a3646':C.coatLight,w=c.walk;

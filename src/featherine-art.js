@@ -1,5 +1,5 @@
 import {buildHero,torso,casual,swim,yukata,skirt,emblem,longHairBack,fringe,bow,mix,SKIN} from './hero-builder.js';
-import {eye,mouth,limb} from './hero-kit.js';
+import {eye,mouth,limb,lid,brow,tear} from './hero-kit.js';
 // Featherine: long purple hime-cut hair with curled horn ornaments, violet eyes, a pink
 // kimono-style dress with a long green stole and gold obi, and her Author's Quill.
 export const FEATHERINE_COLORS={hair:'#5b4a8c',hairShade:'#3a2d63',hairLight:'#8b78bd',horn:'#e9e6f0',hornShade:'#a7a3b8',robe:'#f0b3c4',robeShade:'#c27b92',robeLight:'#ffd8e2',stole:'#7fae5a',stoleShade:'#4e7a3a',gold:'#e0bc6a',iris:'#9b7ad0'};
@@ -16,7 +16,11 @@ function horns(r,c){
 function face(r,c){
  const y=c.y,hurt=c.expression==='hurt',focus=c.expression==='focused'||c.expression==='ultimate';
  for(const [x,side]of [[21,-1],[31,1]])eye(r,x,26+y,{iris:C.iris,irisDark:'#5a3e8c',lash:INK,side,closed:c.blink,hurt,focus});
- mouth(r,34+y,c.expression,{lip:'#b46e84'});
+ const wide=c.expression==='ultimate';
+ if(!c.blink&&!hurt&&!wide)for(const [x,side]of [[21,-1],[31,1]]){lid(r,x,26+y,{lash:INK,rows:2,side});r.put(side<0?x:x+3,31+y,INK);}
+ if(c.expression==='neutral'){r.put(26,33+y,'#b46e84');r.rect(27,34+y,3,1,'#b46e84');r.put(30,33+y,'#b46e84');}
+ else if(wide){r.rect(25,34+y,6,2,'#6a2e48');r.rect(25,34+y,6,1,'#fff4f6');r.put(26,35+y,'#ffffff');r.put(29,35+y,'#ffffff');}
+ else mouth(r,34+y,c.expression,{lip:'#b46e84'});
 }
 function kimono(r,c){
  const w=c.walk,b=torso(r,c,{color:C.robe,shade:C.robeShade,light:C.robeLight,bottom:50});

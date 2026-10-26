@@ -1,5 +1,5 @@
 import {buildHero,torso,casual,swim,yukata,skirt,emblem,fringe,bun,bow,mix,SKIN} from './hero-builder.js';
-import {eye,mouth,limb} from './hero-kit.js';
+import {eye,mouth,limb,lid,brow,tear} from './hero-kit.js';
 // Maomao: dark teal hair in a high bun with long side locks, violet eyes and freckles.
 // The apothecary robe is a green wrap top with bell sleeves over a burgundy skirt.
 export const MAOMAO_COLORS={hair:'#24473f',hairShade:'#142c2f',hairLight:'#4f7462',jade:'#79b999',jadeShade:'#3f7c6d',jadeLight:'#b5deae',burgundy:'#863d61',iris:'#7772b5'};
@@ -9,7 +9,10 @@ function face(r,c){
  for(const [x,side]of [[21,-1],[31,1]])eye(r,x,26+y,{iris:C.iris,irisDark:'#3e3a78',lash:INK,side,closed:c.blink,hurt,focus});
  // Her freckles across the nose.
  for(const [x,yy]of [[22,31],[24,32],[32,32],[34,31]])r.put(x,yy+y,'#c98d7a');
- mouth(r,34+y,c.expression,{lip:'#a97476'});
+ if(!c.blink&&!hurt&&c.expression!=='ultimate')for(const [x,side]of [[21,-1],[31,1]])lid(r,x,26+y,{lash:INK,rows:c.expression==='focused'?1:2,side});
+ if(c.expression==='neutral'){r.rect(27,34+y,3,1,'#a97476');r.put(30,33+y,'#a97476');}
+ else if(c.expression==='focused'){brow(r,31,23+y,{color:INK,side:1,tilt:-1});r.rect(26,34+y,4,1,'#a97476');r.put(30,33+y,'#a97476');r.put(29,34+y,'#ffffff');}
+ else mouth(r,34+y,c.expression,{lip:'#a97476'});
 }
 function back(r,c,{loose=false}={}){
  const y=c.y,{poly}=r;

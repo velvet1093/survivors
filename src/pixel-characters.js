@@ -1,7 +1,6 @@
 import {denjiPixels} from './denji-art.js';
 import {beachOutfitPixels} from './beach-outfit-art.js';
 import {cuteSwimPixels} from './cute-swim-art.js';
-import {pilotSwimPixels,paintPilotEvaSwim} from './pilot-swim-art.js';
 import {swimsuitPixels} from './swimsuit-art.js';
 import {pajamaPixels} from './pajama-art.js';
 import {erzaPixels} from './erza-art.js';
@@ -21,7 +20,8 @@ import {megumiPixels} from './megumi-art.js';
 import {erenPixels} from './eren-art.js';
 import {samusPixels} from './samus-art.js';
 // Heroes redrawn on the shared hero builder route here before the legacy outfit modules.
-const REDRAWN={goku:gokuPixels,gojo:gojoPixels,naruto:narutoPixels,madoka:madokaPixels,maomao:maomaoPixels,esdeath:esdeathPixels,frieren:frierenPixels,megumi:megumiPixels,eren:erenPixels,samus:samusPixels,rimuru:rimuruPixels,featherine:featherinePixels};
+import {shinjiPixels} from './shinji-art.js';
+const REDRAWN={shinji:shinjiPixels,goku:gokuPixels,gojo:gojoPixels,naruto:narutoPixels,madoka:madokaPixels,maomao:maomaoPixels,esdeath:esdeathPixels,frieren:frierenPixels,megumi:megumiPixels,eren:erenPixels,samus:samusPixels,rimuru:rimuruPixels,featherine:featherinePixels,erza:erzaPixels};
 import {rimuruPixels} from './rimuru-art.js';
 import {diavoloPixels} from './diavolo-art.js';
 import {yukiPixels} from './yuki-art.js';
@@ -97,123 +97,7 @@ function maomaoFrame({frame=0,moving=false,pose='',attack=false,expression='neut
   line(31,10+y,43,5+y,'#d9c37b');poly([[32,7+y],[29,4+y],[34,5+y],[37,8+y]],'#95c8b0');rect(34,7+y,2,2,'#e9cf87');
   paintFace(r,'maomao',{y,expression,blink});return outline(r.pixels,p.ink);
 }
-export function pilotPixels({expression='neutral',blink=false,skin='default',frame=0,moving=false,attack=false,pose=''}={}){
- const swimming=pilotSwimPixels({skin,expression,blink,frame,moving,attack,pose});if(swimming)return swimming;
- if(skin==='swimsuit')return swimsuitPixels('shinji',{expression,blink});
- if(skin==='casual')return casualPixels('shinji',{expression,blink});
- if(skin==='pajamas')return pajamaPixels('shinji',{expression,blink});
- const r=raster(),{rect,poly,line}=r,look=skinFor('shinji',skin),id=look.id,ink='#253042',suit=look.suit,shade={default:'#9eafb7',asuka:'#8f3c49',rei:'#a4bbc4',mari:'#914f7e'}[id],light={default:'#f8f5e6',asuka:'#f08c6e',rei:'#fff7e9',mari:'#eeb2c7'}[id],hair=look.hair,hairDark={default:'#18232f',asuka:'#78463d',rei:'#648fa9',mari:'#443445'}[id],hairLight={default:'#526171',asuka:'#e3a25e',rei:'#d1e3e5',mari:'#aa7b6b'}[id],skinTone='#ffe2c6';
- // Each pilot has a different hair silhouette, not just a palette swap.
- if(id==='asuka'){for(const side of [-1,1]){const x=side<0?15:39;poly([[x-3,18],[x+2,19],[x+5,41],[x+2,49],[x-2,46],[x-3,34]],hairDark);poly([[x-2,21],[x+1,23],[x+3,40],[x+1,45],[x-1,37]],hair);line(x,25,x+1,41,hairLight);}}
- if(id==='mari'){for(const x of [16,39]){line(x,24,x-1,49,hairDark,4);for(const yy of [31,36,41,46]){rect(x-2,yy,3,3,hair);rect(x,yy+1,2,2,hairLight);}rect(x-2,49,4,2,'#ba6c82');poly([[x-1,50],[x+2,50],[x+2,55],[x-2,54]],hair);}}
- if(id==='rei')poly([[15,17],[39,17],[41,30],[37,37],[36,28],[19,29],[18,37],[14,30]],hairDark);
- // Fitted plugsuits: dark articulated side panels, hip breaks, knee pads and boots.
- for(const [x,d] of [[21,-1],[30,1]]){poly([[x,53],[x+5,53],[x+6,66],[x+5,69],[x-1,69]],shade);rect(x,54,4,11,suit);rect(x,58,4,3,ink);rect(x+1,59,2,1,light);rect(x+1,62,2,4,light);rect(x-1,68,7,3,ink);rect(x,68,5,1,suit);}
- poly([[20,39],[25,37],[31,37],[36,39],[38,46],[35,52],[36,56],[31,58],[27,55],[24,58],[19,55],[21,50],[18,44]],ink);
- poly([[21,39],[25,38],[31,38],[35,39],[36,44],[32,48],[34,53],[30,55],[27,53],[24,55],[21,53],[23,47],[20,44]],suit);
- poly([[22,40],[27,43],[34,40],[32,45],[28,47],[24,45]],shade);line(22,40,27,43,light);line(27,43,34,40,light);
- rect(26,45,5,8,id==='asuka'?'#cf9a54':id==='mari'?'#8ea75f':'#537e9b');rect(27,46,3,2,'#dde3ca');rect(27,50,3,1,ink);rect(24,54,9,2,shade);rect(27,53,3,2,'#d1b574');
- const chest={default:'01',asuka:'02',rei:'00',mari:'08'}[id];
- // Native-resolution unit markings are clusters rather than small browser text.
- rect(24,42,2,2,ink);if(chest==='01')rect(31,42,1,2,ink);else{rect(30,42,3,1,ink);rect(chest==='02'?32:30,43,1,1,ink);}
- for(const side of [-1,1]){const x=side<0?17:36;line(x+2,41,x+(side<0?-1:5),52,shade,4);line(x+2,41,x+(side<0?-1:5),49,suit,3);rect(x,40,4,3,light);rect(x+(side<0?-1:4),50,4,3,ink);rect(x+(side<0?-1:4),53,4,3,shade);rect(x+(side<0?0:4),53,2,2,light);}
- rect(25,36,7,3,skinTone);rect(24,38,9,2,ink);rect(27,39,3,1,light);
- poly([[18,21],[37,21],[38,31],[34,37],[28,39],[21,36],[17,29]],skinTone);
- paintFace(r,'shinji',{expression,blink});if(!blink&&expression!=='hurt'){const iris={default:'#50768c',asuka:'#4782ac',rei:'#bd667a',mari:'#639d8b'}[id];for(const x of [22,32]){rect(x,29,2,4,iris);rect(x,29,1,1,'#fff9ed');}}
- if(id==='default'){
-  poly([[16,30],[14,23],[17,15],[25,11],[34,13],[41,20],[39,31],[35,23],[31,27],[28,22],[24,27],[21,24],[18,32]],hairDark);poly([[17,24],[19,17],[26,14],[34,16],[38,21],[35,25],[31,21],[28,24],[24,21],[21,25]],hair);line(22,16,30,15,hairLight);
- }else if(id==='asuka'){
-  poly([[16,31],[14,23],[17,15],[24,10],[34,11],[40,17],[41,29],[37,33],[35,22],[31,26],[28,20],[23,25],[20,23],[19,33]],hairDark);poly([[17,23],[19,17],[25,12],[33,13],[38,19],[38,26],[34,20],[31,23],[28,17],[24,22],[21,20]],hair);line(22,15,31,14,hairLight);rect(15,17,5,4,'#a74049');rect(37,17,5,4,'#a74049');rect(16,17,3,1,'#ee856e');rect(38,17,3,1,'#ee856e');
- }else if(id==='rei'){
-  poly([[15,30],[14,21],[18,14],[26,10],[34,12],[40,18],[41,29],[37,35],[37,23],[33,24],[31,20],[27,26],[24,22],[20,28],[18,36]],hairDark);poly([[16,24],[17,18],[22,14],[29,12],[36,16],[39,22],[37,27],[34,21],[31,17],[27,23],[24,18],[21,24],[18,28]],hair);line(22,14,30,13,hairLight);line(18,20,17,29,hairLight);
- }else{
-  poly([[16,31],[14,22],[18,14],[25,10],[34,12],[40,18],[41,30],[37,34],[35,23],[31,25],[28,20],[24,25],[20,23],[19,33]],hairDark);poly([[17,23],[19,17],[25,13],[33,15],[38,20],[38,27],[34,20],[31,23],[28,17],[24,22],[21,20]],hair);line(22,15,30,14,hairLight);rect(16,17,4,2,'#e8dbcf');rect(37,17,4,2,'#e8dbcf');
-  for(const x of [20,30]){line(x,28,x+5,28,'#a65070');line(x,33,x+5,33,'#a65070');line(x,28,x,33,'#a65070');line(x+5,28,x+5,33,'#a65070');}line(25,30,30,30,'#a65070');rect(21,29,1,1,'#fff4de');rect(31,29,1,1,'#fff4de');
- }
- return outline(r.pixels,ink);
-}
-function evaFrame({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin:look=skinFor('shinji'),evolved=''}){
- const r=raster(),{rect,poly,line}=r,p={...CHARACTER_PALETTES.shinji,coat:look.armor,shade:look.shade,light:look.light},step=moving?[0,2,0,-2][frame]:0,bob=moving?frame%2:0,berserk=pose==='berserk',unitId=look.evaBase||look.id;
- // Long articulated legs, neon knee plates and pointed armor boots.
- for(const [x,s] of [[20,-step],[31,step]]){rect(x+s,51,6,15,p.shade);rect(x+s,52,5,7,p.coat);rect(x+s,56,5,2,'#b4d976');rect(x+s,60,4,6,'#253442');poly([[x+s,65],[x+s+5,65],[x+s+7,69],[x+s-2,70]],p.coat);rect(x+s,68,6,2,'#42666b');}
- // Shoulder pylons and limbs form the Unit-01 silhouette.
- for(const side of [-1,1]){const x=side<0?12:38;poly([[x,39],[x-1,28-bob],[x+4,25-bob],[x+7,39]],p.shade);rect(x+1,28-bob,3,10,p.coat);rect(x+1,27-bob,3,3,'#addc70');line(x+3,41,x+(side<0?0:7),52-step*side,p.shade,4);line(x+3,41,x+(side<0?0:7),49-step*side,p.coat,3);rect(x+(side<0?-1:6),50-step*side,4,4,'#273b43');}
- poly([[20,34-bob],[34,34-bob],[38,42],[34,52],[29,56],[21,51],[18,42]],p.shade);poly([[21,35-bob],[33,35-bob],[35,41],[31,49],[25,49],[20,41]],p.coat);poly([[21,36-bob],[27,41],[23,45],[19,41]],'#a8d96c');poly([[34,36-bob],[29,41],[33,45],[37,41]],'#a8d96c');rect(26,37-bob,5,3,'#eab37d');rect(26,44,5,7,'#20333d');rect(27,45,3,1,'#b8d979');rect(27,48,3,1,'#b8d979');rect(24,51,9,2,'#80b574');
- // Helmet, cheek blades and a single forward horn.
- poly([[19,18-bob],[25,12-bob],[34,15-bob],[39,23-bob],[36,33-bob],[29,37-bob],[21,33-bob],[17,26-bob]],p.shade);poly([[21,18-bob],[27,14-bob],[33,18-bob],[36,25-bob],[32,31-bob],[24,30-bob],[20,24-bob]],p.coat);if(unitId==='default'){poly([[24,17-bob],[29,3-bob],[31,6-bob],[29,20-bob]],look.neon);rect(28,10-bob,2,5,'#d6ec9c');}
- poly([[19,27-bob],[23,31-bob],[25,35-bob],[20,32-bob]],'#a4ce77');poly([[36,27-bob],[32,31-bob],[31,35-bob],[36,32-bob]],'#a4ce77');
- line(22,25-bob,26,26-bob,expression==='hurt'?'#f4ad8e':'#eff2cf',2);line(30,26-bob,34,24-bob,expression==='hurt'?'#f4ad8e':'#eff2cf',2);rect(27,27-bob,3,3,'#1e2b3c');
- rect(25,32-bob,7,berserk?4:2,'#172635');if(berserk){rect(26,32-bob,5,1,'#e8e4c6');rect(27,35-bob,4,1,'#e8e4c6');}
- // Slim rib armor, segmented forearms, stronger shoulder pylons and a shaped jaw.
- rect(25,43,7,8,'#1d2c3c');for(const yy of [44,47,50]){rect(26,yy,5,1,look.neon);}rect(18,39,3,4,look.neon);rect(36,39,3,4,look.neon);rect(13,29-bob,2,11,p.light);rect(40,29-bob,2,11,p.light);
- poly([[20,22-bob],[24,18-bob],[32,18-bob],[37,23-bob],[34,29-bob],[31,32-bob],[29,36-bob],[25,33-bob],[22,28-bob]],p.coat);
- poly([[22,28-bob],[25,31-bob],[31,31-bob],[34,28-bob],[31,35-bob],[27,37-bob],[23,33-bob]],p.shade);rect(26,29-bob,5,2,'#e1d6c3');rect(25,32-bob,7,berserk?4:2,'#162638');
- if(berserk){rect(26,32-bob,5,1,'#f3e8cf');rect(27,35-bob,4,1,'#f3e8cf');}
- if(unitId==='rei'){rect(24,19-bob,8,6,'#d1b288');rect(26,21-bob,4,3,'#efcc83');rect(27,21-bob,2,2,'#c66471');poly([[26,10-bob],[31,12-bob],[32,20-bob],[25,20-bob]],p.coat);}
- else if(unitId==='asuka'||unitId==='mari'){for(const x of [22,30])for(const yy of [22,26])rect(x,yy-bob,5,2,unitId==='asuka'?'#d9f0b1':'#bdebad');}
- else{line(21,24-bob,26,26-bob,'#ecedca',2);line(30,26-bob,35,23-bob,'#ecedca',2);poly([[24,19-bob],[28,2-bob],[31,5-bob],[29,21-bob]],look.neon);rect(27,10-bob,1,7,'#e1edb6');}
- // Shinji's everyday outfits extend to the EVA: articulated armor retains the
- // tall pylons, horn, rib cage and boots, with clothing-inspired plate shapes.
- if(look.id==='casual'){
-  const navy='#334860',navyLight='#657e92',white='#f4f0df',silver='#a8bec7',teal='#7cb9bd';
-  // A short school-shirt breastplate over navy waist plates and a loose tie.
-  poly([[20,35-bob],[25,35-bob],[28,39],[32,35-bob],[35,36-bob],[36,42],[32,48],[24,48],[20,43]],white);
-  poly([[20,35-bob],[26,37],[25,42],[21,40]],silver);poly([[34,35-bob],[29,37],[30,42],[35,40]],silver);
-  line(21,35-bob,25,40,white);line(34,35-bob,30,40,white);
-  poly([[27,38],[30,38],[29,41],[31,46],[28,49],[26,46],[28,41]],navy);line(28,41,28,46,navyLight);
-  rect(22,42,3,1,teal);rect(22,44,3,2,silver);rect(24,49,10,3,navy);rect(28,49,3,2,silver);
-  for(const [x,s]of [[20,-step],[31,step]]){rect(x+s,53,6,8,navy);rect(x+s,55,1,5,navyLight);rect(x+s,60,5,2,silver);rect(x+s,63,4,3,navy);poly([[x+s,65],[x+s+5,65],[x+s+8,69],[x+s-2,70]],'#293b50');rect(x+s-1,69,8,1,silver);rect(x+s+1,67,3,1,white);}
-  // Headphones and a silver fin keep the mechanical head readable at HUD size.
-  line(20,17-bob,26,13-bob,navy,2);line(26,13-bob,34,17-bob,navy,2);
-  for(const x of [17,36]){rect(x,21-bob,4,8,navy);rect(x+1,22-bob,2,5,teal);rect(x+1,22-bob,1,2,white);}
-  poly([[25,18-bob],[28,2-bob],[30,5-bob],[29,20-bob]],silver);line(28,5-bob,27,15-bob,white);
-  for(const x of [13,40]){rect(x,28-bob,3,10,navy);rect(x,29-bob,1,7,navyLight);rect(x,31-bob,3,2,teal);}
-  // An audio-player clip on the hip echoes Shinji's after-school outfit.
-  rect(34,48,4,7,navy);rect(35,49,2,2,silver);rect(35,53,2,1,teal);line(37,48,38,42,navyLight);
- }
- if(look.id==='pajamas'){
-  const white='#edf1dc',cream='#c9d8cf',blue='#799eb9',orange='#e2ae65';
-  // Rounded hood plates and split, white penguin cheek panels frame the visor.
-  poly([[19,20-bob],[20,14-bob],[25,10-bob],[32,11-bob],[37,16-bob],[39,24-bob],[37,30-bob],[34,25-bob],[33,19-bob],[24,18-bob],[22,26-bob],[19,30-bob]],p.shade);
-  line(21,16-bob,25,13-bob,blue,2);line(25,13-bob,32,14-bob,p.light);
-  poly([[20,21-bob],[24,20-bob],[25,24-bob],[24,28-bob],[22,30-bob],[20,27-bob]],white);
-  poly([[33,20-bob],[37,22-bob],[36,28-bob],[33,30-bob],[31,27-bob],[32,24-bob]],white);
-  poly([[26,27-bob],[31,27-bob],[29,30-bob],[27,30-bob]],orange);rect(27,27-bob,3,1,'#f6d795');
-  // The original horn emerges through the hood; a moon charm hangs from it.
-  poly([[25,17-bob],[28,3-bob],[30,6-bob],[29,19-bob]],blue);line(28,7-bob,27,14-bob,p.light);
-  poly([[22,36-bob],[26,38],[30,38],[34,36-bob],[35,41],[33,48],[28,52],[23,48],[21,41]],cream);
-  poly([[24,37-bob],[28,39],[32,37-bob],[33,42],[31,47],[28,49],[25,47],[23,42]],white);
-  rect(27,41,3,2,orange);rect(28,44,2,2,orange);rect(26,49,5,2,blue);
-  for(const x of [13,40]){rect(x,28-bob,3,10,blue);rect(x,29-bob,1,6,p.light);rect(x,32-bob,3,1,white);}
-  // Tiny star panels, striped cuffs, and broad penguin slippers add real geometry.
-  for(const [x,s]of [[20,-step],[31,step]]){rect(x+s,53,6,8,p.coat);rect(x+s+2,54,1,5,white);rect(x+s+1,56,3,1,white);rect(x+s,61,5,2,blue);rect(x+s,64,5,2,white);poly([[x+s-2,66],[x+s+6,66],[x+s+9,69],[x+s+8,71],[x+s-3,71],[x+s-3,69]],p.shade);rect(x+s-1,67,6,2,white);rect(x+s+1,68,2,2,orange);rect(x+s-1,67,1,1,'#293e5b');rect(x+s+4,67,1,1,'#293e5b');}
-  for(const x of [17,37]){rect(x,37,3,3,blue);rect(x+1,36,1,5,white);rect(x-1,38,5,1,white);}
- }
- if(look.id==='swimsuit'){
-  const cream='#edf4e3',aqua='#76c0c8',deep='#264b69',gold='#f1c878';
-  // A mechanical swim-team suit: sealed mask, snorkel and fin-shaped boots.
-  poly([[21,20-bob],[35,20-bob],[38,24-bob],[35,29-bob],[22,29-bob],[19,25-bob]],deep);
-  rect(22,22-bob,6,4,aqua);rect(30,22-bob,5,4,aqua);line(23,22-bob,26,22-bob,cream);line(31,22-bob,34,22-bob,cream);
-  line(38,26-bob,40,27-bob,cream,2);line(40,27-bob,40,15-bob,gold,2);line(40,15-bob,44,15-bob,gold,2);rect(43,14-bob,3,3,deep);
-  poly([[22,35-bob],[27,39],[32,35-bob],[35,39],[33,46],[28,49],[23,46],[20,39]],cream);
-  poly([[24,37-bob],[28,40],[32,37-bob],[32,42],[28,46],[24,42]],p.coat);rect(26,40,5,2,gold);rect(28,42,2,3,gold);
-  for(const x of [13,40]){rect(x,29-bob,3,9,aqua);rect(x,30-bob,1,6,cream);rect(x,35-bob,3,2,gold);}
-  rect(21,50,15,4,deep);line(22,50,34,50,gold);line(24,54,24,59,cream);line(33,54,33,59,cream);
-  for(const [x,v]of [[20,-step],[31,step]]){rect(x+v,54,5,7,deep);line(x+v,58,x+v+4,58,aqua);poly([[x+v-2,65],[x+v+5,65],[x+v+10,70],[x+v+9,72],[x+v-3,72]],aqua);line(x+v,67,x+v+6,70,cream);line(x+v+2,67,x+v+8,70,cream);}
-  poly([[25,17-bob],[28,2-bob],[30,5-bob],[29,19-bob]],gold);line(28,5-bob,27,13-bob,cream);
- }
- paintPilotEvaSwim(r,look,{frame,moving,pose,attack,bob,step});
- // Mechanical expressions dim the optic slits instead of painting a human face.
- if(blink||expression==='focused'||expression==='hurt'){
-  const color=expression==='hurt'?'#f29e86':expression==='focused'?'#d9f5c6':'#617984';
-  for(const [x,y]of [[22,25-bob],[31,24-bob]]){rect(x,y,4,3,p.shade);line(x,y+1,x+3,y+(blink?1:0),color);}
- }
- if(pose==='ultimate'){rect(26,37-bob,5,3,'#f6edbb');rect(27,38-bob,3,1,'#fffceb');line(18,40,21,42,look.neon,2);line(35,41,38,39,look.neon,2);}
- if(berserk){const swing=[0,3,1,-2][frame],jaw=[1,2,4,2][frame];rect(25,32-bob,7,jaw+2,'#182635');rect(26,32-bob,5,1,'#f6eed9');rect(26,33-bob+jaw,5,1,'#f6eed9');for(const side of [-1,1]){const hx=side<0?11-swing:43+swing,hy=side<0?42+swing:46-swing;line(side<0?17:39,39,hx,hy,p.shade,5);line(side<0?17:39,39,hx,hy-1,p.coat,3);rect(hx-2,hy,6,5,'#253b42');for(let i=0;i<3;i++)line(hx-2+i*2,hy+3,hx-3+i*2,hy+8,'#e3edc4',1);}rect(27,45,3,1,frame%2?'#e8f7bb':look.neon);}
- if(evolved==='longinus'&&!berserk){line(43,68,46,28,'#8c3454',3);line(44,67,47,29,'#e67e95');line(46,28,42,16,'#b4466a',3);line(42,16,44,7,'#db6e8a',2);line(47,28,52,17,'#b4466a',3);line(52,17,53,6,'#e78299',2);rect(42,47,4,4,'#293c46');}
- else if(!berserk){const raised=attack?3:0;rect(38,46-raised,12,4,'#273642');rect(44,43-raised,4,4,'#72858b');rect(48,46-raised,5,2,'#a7b3af');rect(40,47-raised,7,1,'#9cacac');rect(41,50-raised,3,5,'#46535f');}
- return outline(r.pixels.map(c=>['#a8d96c','#a6d16d','#b4d976','#addc70','#a4ce77','#b8d979','#80b574'].includes(c)?look.neon:c),p.ink);
-}
+export {pilotPixels} from './shinji-art.js';
 function esdeathFrame({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false}){
  const r=raster(),{rect,poly,line}=r,p=CHARACTER_PALETTES.esdeath,step=moving?[0,1,0,-1][frame]:0,y=moving?-frame%2:0,skin='#ffe2c6',navy='#34475e',deep='#233247';
  // Long blue hair splits at the hips and trails behind the boots.
@@ -371,7 +255,6 @@ export function characterPixels(id,{frame=0,moving=false,pose='',attack=false,ex
   if(id==='esdeath'){const result=tintPixels(esdeathFrame({frame,moving,pose,attack,expression,blink}),skinFor(id,skinId));dataCache.set(key,result);return result;}
   if(id==='maomao'&&skinId==='spring'){const result=springCourtFrame({frame,moving,pose,attack,expression,blink});dataCache.set(key,result);return result;}
   if(id==='maomao'){const result=tintPixels(maomaoFrame({frame,moving,pose,attack,expression,blink}),skinFor(id,skinId));dataCache.set(key,result);return result;}
-  if(id==='shinji'){const result=evaFrame({frame,moving,pose,attack,expression,blink,skin:skinFor(id,skinId),evolved});dataCache.set(key,result);return result;}
   const p=CHARACTER_PALETTES[id],r=raster(),{rect,poly,line}=r;
   const madoka=id==='madoka',walk=moving?[0,1,0,-1][frame]:0,bob=moving?(frame%2):0;
   const skin='#ffe2c6',skinShadow='#e8af96',white='#fff5ed',blue='#334e7b';

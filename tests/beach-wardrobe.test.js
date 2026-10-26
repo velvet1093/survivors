@@ -1,3 +1,4 @@
+import {SKIN} from '../src/hero-kit.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CHARACTERS} from '../src/game.js';
@@ -40,7 +41,7 @@ test('female EVA pilot swimwear has paired unit artwork and retains each unit an
  const units=[],pilots=[];
  for(const skin of PILOT_SWIM_OUTFITS){
   assert.equal(skinFor('shinji',skin.id).pilot,skin.pilot);const pilot=pilotPixels({skin:skin.id}),eva=characterPixels('shinji',{skin:skin.id});
-  assert.notDeepEqual(pilot,eva);assert.ok(pilot.includes('#ffe2c6')||pilot.includes('#ffe0c6'));assert.ok(eva.includes(skin.armor));assert.ok(!eva.includes('#ffe0c6')&&!eva.includes('#ffe2c6'));
+  assert.notDeepEqual(pilot,eva);assert.ok(pilot.includes(SKIN.base));assert.ok(eva.includes(skin.armor));assert.ok(!eva.includes('#ffe0c6')&&!eva.includes('#ffe2c6'));
   assert.ok(pilotPortrait(skin.id).includes(skin.hair));assert.ok(portrait(heroFor('shinji'),skin.id).includes(skin.armor));
   assert.notDeepEqual(pilot,pilotPixels({skin:skin.evaBase}));for(const options of [{blink:true},{expression:'hurt'},{attack:true}])assert.notDeepEqual(pilot,pilotPixels({skin:skin.id,...options}));
   assert.ok(new Set([0,1,2,3].map(frame=>JSON.stringify(pilotPixels({skin:skin.id,frame,moving:true})))).size>=3);
