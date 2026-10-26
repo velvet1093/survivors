@@ -110,6 +110,8 @@ export function enterNode(g,id,random=Math.random){
 function clearField(g){g.enemies=[];g.enemyShots=[];g.hazards=[];g.chests=[];g.bossIntro=null;g.bossDeaths=[];}
 export function startZone(g,type,random=Math.random){
  const a=g.ascent,act=a.act,node=ascentNode(g);clearField(g);g.p.x=0;g.p.y=0;g.invuln=Math.max(g.invuln||0,1.2);
+ // Every room is fought on a randomly chosen map, so its enemies and bosses vary too.
+ const maps=MAPS.filter(m=>m.id!==g.map.id);if(maps.length){g.map=pick(random,maps);g.world=createWorld();}a.roomMap=g.map.id;
  const z={type,age:0,startKills:g.kills,spawnTimer:.6,spawned:0,cap:22,interval:1.05,batch:3,target:0,duration:0,eliteAt:[],eliteIds:[],bossId:null,bossEntity:null,bossSpawned:false,done:false};
  if(type==='battle'){z.target=20+act*6+Math.floor((node?.floor||0)*.8);z.interval=.8;z.batch=4;}
  else if(type==='elite'){z.target=18+act*5;z.eliteAt=act>=2?[1.5,12,24]:[1.5,14];z.cap=18;}
@@ -120,8 +122,10 @@ export function startZone(g,type,random=Math.random){
  g.toast=NODE_TYPES[type].name.toUpperCase()+' · '+objectiveText(g);g.toastTime=3.2;
  return z;
 }
+export const LOOT_SECONDS=10;
 export function objectiveText(g){
  const z=g.ascent?.zone;if(!z)return '';
+ if(z.looting)return `ROOM CLEARED · LOOT ${Math.max(0,Math.ceil(z.lootLeft))}s`;
  const kills=g.kills-z.startKills;
  if(z.type==='battle')return `DEFEAT ${Math.min(kills,z.target)} / ${z.target}`;
  if(z.type==='elite')return `DEFEAT ${Math.min(kills,z.target)} / ${z.target} · ELITES ${z.eliteIds.length-aliveElites(g).length} / ${z.eliteAt.length}`;
@@ -136,6 +140,12 @@ export function updateAscent(g,dt,{spawn,queueIntro}={}){
  // A trinket prompt resolved from a menu screen returns to that screen, not to combat.
  if(a.screen&&g.status==='playing'){g.status='ascent';return true;}
  const z=a.zone;if(!z||z.done)return false;
+ // After a clear the room stays open for a short loot window before the rewards.
+ if(z.looting){
+  z.lootLeft-=dt;if(z.lootLeft>0&&!z.skipLoot)return false;
+  if((g.chests||[]).length){for(const c of g.chests){c.x=g.p.x;c.y=g.p.y;}return false;}
+  finishZone(g);return true;
+ }
  z.age+=dt;const kills=g.kills-z.startKills,alive=g.enemies.filter(e=>e.hp>0&&!e.boss).length;
  const wantMore=z.type==='battle'||z.type==='elite'?kills+alive<z.target:true;
  z.spawnTimer-=dt;
@@ -152,9 +162,10 @@ export function updateAscent(g,dt,{spawn,queueIntro}={}){
  else if(z.type==='gauntlet')complete=z.age>=z.duration;
  else complete=z.bossSpawned&&!g.enemies.some(e=>e.id===z.bossEntity&&(e.hp>0||!e.deathComplete&&e.deathQueued))&&!(g.bossDeaths||[]).length;
  if(complete){
-  // Dropped chests are pulled to the hero so their rewards are not lost when the field clears.
-  if((g.chests||[]).length){for(const c of g.chests){c.x=g.p.x;c.y=g.p.y;}return false;}
-  finishZone(g);return true;
+  // Remaining enemies and attacks vanish; gems and chests stay for the loot window.
+  g.enemies=[];g.enemyShots=[];g.hazards=[];g.bossIntro=null;z.looting=true;z.lootLeft=LOOT_SECONDS;
+  g.toast='ROOM CLEARED · '+LOOT_SECONDS+' SECONDS TO GRAB THE LOOT';g.toastTime=3;
+  return false;
  }
  return false;
 }
@@ -168,6 +179,7 @@ export function finishZone(g,random=Math.random){
  a.rewards={gold:addGold(g,plan[0]*s*(z.goldBonus||1)),picks:plan[1],index:0,title:NODE_TYPES[z.type].name+' cleared',bossClear:z.type==='boss'};
  a.zone=null;a.screen='reward';g.status='ascent';g.checkpointRequested=true;
 }
+export function skipLoot(g){const z=g.ascent?.zone;if(!z?.looting)return false;z.skipLoot=true;return true;}
 export function gemGold(g,value){return addGold(g,Math.max(1,Math.round((value||1)*.5)));}
 function maxPicks(g,random){return getChoices(g.p,random).map(c=>c.kind==='item'?{...c,maxLevel:true}:c);}
 

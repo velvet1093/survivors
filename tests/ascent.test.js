@@ -63,3 +63,12 @@ test('ascent runs save and restore on the map and mid-zone, with gold, pacts and
  const s=storage();assert.ok(saveRun(g,s));const r=loadRun(s);assert.equal(r.mode,'ascent');assert.equal(r.ascent.gold,321);assert.deepEqual(r.ascent.pacts,['iron']);assert.equal(r.ascent.nodes.length,g.ascent.nodes.length);assert.equal(r.resumeStatus,'ascent');assert.ok(Math.abs(r.p.maxHp-g.p.maxHp)<1e-9);
  A.enterNode(g,A.reachableNodes(g)[0].id);play(g,3);assert.ok(saveRun(g,s));const mid=loadRun(s);assert.equal(mid.ascent.zone.type,'battle');assert.equal(mid.resumeStatus,'playing');
 });
+test('a cleared room stays open 10 seconds for loot (skippable), and every room rolls a random map',()=>{
+ const g=fresh(21),maps=new Set();
+ for(let i=0;i<6;i++){A.startZone(g,'battle');maps.add(g.map.id);}assert.ok(maps.size>=3,'rooms change worlds');
+ const z=A.startZone(g,'battle');g.kills+=z.target;g.gems=[{x:500,y:0,value:10}];updateRun(g,.02);
+ assert.equal(z.looting,true);assert.equal(g.status,'playing');assert.equal(g.enemies.length,0);assert.ok(g.gems.length,'loot stays on the floor');assert.match(A.objectiveText(g),/LOOT 10s/);
+ for(let t=0;t<5;t+=.1)updateRun(g,.1);assert.equal(g.status,'playing','still looting after 5 s');assert.match(A.objectiveText(g),/LOOT [45]s/);
+ assert.ok(A.skipLoot(g));updateRun(g,.02);assert.equal(g.ascent.screen,'reward');assert.equal(g.status,'ascent');
+ const z2=A.startZone(g,'battle');g.kills+=z2.target;updateRun(g,.02);for(let t=0;t<10.2;t+=.1)updateRun(g,.1);assert.equal(g.ascent.screen,'reward','the window ends on its own');
+});

@@ -79,3 +79,5 @@
  .ascent-offer{grid-template-columns:40px 1fr}
  .ascent-offer button{grid-column:1/-1;width:100%}
 }
+#ascent-skip-loot{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);z-index:9;min-height:46px;padding:0 22px;border-radius:999px;border:1px solid #ffd66a88;background:#2a2312ee;color:#ffe9a8;font-size:12px;font-weight:700;letter-spacing:1px;pointer-events:auto;animation:ascent-pulse 1.6s ease-in-out infinite;--node:#ffd66a}
+#ascent-skip-loot[hidden]{display:none}
