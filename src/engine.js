@@ -277,7 +277,7 @@ export function updateRun(g,dt,input={x:0,y:0}){
   const natural=trainingNatural(g);
   if(natural)updateWorldEvents(g,dt,worldEventAPI(g));
   if(g.status!=='playing'||g.bossIntro)return;
-  if(natural&&!eventCombatActive(g))updateRifts(g,dt,{blocked:(x,y,r)=>pointCollider(g,x,y,r)},g.chestRandom||Math.random);
+  if((natural||g.rifts?.portal)&&!eventCombatActive(g))updateRifts(g,dt,{blocked:(x,y,r)=>pointCollider(g,x,y,r)},g.chestRandom||Math.random);
   if(g.status!=='playing')return;
   const riftActive=riftCombatActive(g);
   g.waveSpawnDelay=Math.max(.3,1.1-g.time*.002)/difficultyFor(g.difficulty).spawnRate;

@@ -1,4 +1,4 @@
-import {trainingRoster,trainingSpawn,trainingItems,setItemLevel,trainingFusions,grantFusion,grantTrinket,setGodMode,setNaturalSpawns,clearEnemies,fullHeal,readyUltimate,levelUp} from './training.js';
+import {trainingRifts,trainingOpenRift,trainingRoster,trainingSpawn,trainingItems,setItemLevel,trainingFusions,grantFusion,grantTrinket,setGodMode,setNaturalSpawns,clearEnemies,fullHeal,readyUltimate,levelUp} from './training.js';
 import {TRINKETS,trinketIcon} from './trinkets.js';
 import {ITEMS,MAX_SLOTS,CHARACTERS} from './game.js';
 import {ANIME_NAMES} from './anime-enemies.js';
@@ -19,6 +19,9 @@ function summonGrid(){
  return list.map(e=>`<button class="training-card" data-summon="${e.id}" style="--item:${e.color||'#c3add9'}"><span class="training-sprite">${portraitFor(e)}</span><small>${KIND_LABEL[e.kind]} · ${esc(ANIME_NAMES[e.family]||e.family)}</small><strong>${esc(e.name)}</strong></button>`).join('')||'<p class="training-empty">No matches.</p>';
 }
 function portraitFor(e){const key=e.id+(ui.phase2&&e.kind!=='enemy'?'|2':'');if(!portraits.has(key))portraits.set(key,`<svg viewBox="0 0 56 76" shape-rendering="crispEdges" aria-hidden="true">${pixelsSvg(enemyPixels(e.id,ui.phase2&&e.kind!=='enemy'?{enraged:1}:{}))}</svg>`);return portraits.get(key);}
+function riftGrid(){
+ return trainingRifts().filter(r=>match(r.name,r.title,ANIME_NAMES[r.family]||'')).map(r=>`<button class="training-card" data-rift="${r.id}" style="--item:${r.color||'#c3add9'}"><span class="training-sprite">${portraitFor({id:r.id,kind:'rift'})}</span><small>${esc(r.title)}</small><strong>${esc(r.name)}</strong></button>`).join('')||'<p class="training-empty">No matches.</p>';
+}
 function itemRows(g){
  const p=g.p,items=trainingItems(p).filter(i=>(ui.itemType==='all'||i.type===ui.itemType)&&match(i.name,i.id)).sort((a,b)=>(b.level>0)-(a.level>0)||a.locked-b.locked||a.name.localeCompare(b.name));
  return items.map(i=>`<div class="training-row ${i.level?'owned':''}" style="--item:${ITEMS[i.id].color||'#c3add9'}"><span class="training-icon">${icon(i.id)}</span><div><small>${i.type.toUpperCase()}${i.fused?' · FUSED':''}${i.locked?' · UNAVAILABLE':''}</small><strong>${esc(i.name)}</strong><span class="training-level">${i.level?'LV '+i.level+' / '+i.max:'NOT EQUIPPED'}</span></div><div class="training-actions">${i.locked?'':`<button data-level="${i.id}" data-to="${i.level-1}" ${i.level?'':'disabled'} aria-label="Lower ${esc(i.name)}">−</button><button data-level="${i.id}" data-to="${i.level+1}" ${i.level>=i.max?'disabled':''} aria-label="Raise ${esc(i.name)}">+</button><button data-level="${i.id}" data-to="${i.max}" ${i.level>=i.max?'disabled':''}>MAX</button><button data-level="${i.id}" data-to="0" ${i.level?'':'disabled'}>REMOVE</button>`}</div></div>`).join('')||'<p class="training-empty">No matches.</p>';
@@ -39,15 +42,16 @@ function tools(g){
 }
 function body(g){
  if(ui.tab==='summon')return `<div class="training-filters"><input id="training-query" type="search" placeholder="Search enemies, bosses or anime" value="${esc(ui.query)}" aria-label="Search the roster"><select id="training-kind" aria-label="Kind">${['all','enemy','boss','rift','event'].map(k=>`<option value="${k}" ${ui.kind===k?'selected':''}>${k==='all'?'ALL':KIND_LABEL[k]+'S'}</option>`).join('')}</select><label>COUNT <select id="training-count">${[1,3,5,10,25].map(n=>`<option ${ui.count===n?'selected':''}>${n}</option>`).join('')}</select></label><label><input type="checkbox" id="training-elite" ${ui.elite?'checked':''}> ELITE</label><label><input type="checkbox" id="training-phase2" ${ui.phase2?'checked':''}> BOSS PHASE II</label></div><p class="training-hint">Tap to summon around you. Bosses are limited to 3 at a time per tap; elite applies to ordinary enemies.</p><div class="training-grid" id="training-list">${summonGrid()}</div>`;
+ if(ui.tab==='rifts')return `<div class="training-filters"><input id="training-query" type="search" placeholder="Search rifts" value="${esc(ui.query)}" aria-label="Search rifts"></div><p class="training-hint">Choose a calamity to open its rift portal beside you, then step in to get the usual rift prompt: its own arena, the half-health challenge and the rift reward. Opening a rift clears the field.</p><div class="training-grid" id="training-list">${riftGrid()}</div>`;
  if(ui.tab==='items'){const p=g.p;return `<div class="training-filters"><input id="training-query" type="search" placeholder="Search weapons and passives" value="${esc(ui.query)}" aria-label="Search items"><select id="training-type" aria-label="Item type">${['all','weapon','passive'].map(k=>`<option value="${k}" ${ui.itemType===k?'selected':''}>${k.toUpperCase()}</option>`).join('')}</select><span class="training-slots">WEAPONS ${Object.keys(p.weapons).length} / ${MAX_SLOTS} · PASSIVES ${Object.keys(p.passives).length} / ${MAX_SLOTS}</span></div><div class="training-rows" id="training-list">${itemRows(g)}</div>`;}
  if(ui.tab==='fusions')return `<div class="training-filters"><input id="training-query" type="search" placeholder="Search fusions" value="${esc(ui.query)}" aria-label="Search fusions"></div><p class="training-hint">Granting a fusion equips its ingredients at max rank first, including earlier evolutions. Free slots if it says they are full.</p><div class="training-rows" id="training-list">${fusionRows(g)}</div>`;
  if(ui.tab==='trinkets')return `<div class="training-filters"><input id="training-query" type="search" placeholder="Search trinkets" value="${esc(ui.query)}" aria-label="Search trinkets"></div><p class="training-hint">Giving a trinket opens the usual equip or refine prompt.</p><div class="training-rows" id="training-list">${trinketRows()}</div>`;
  return tools(g);
 }
-function list(g){return ui.tab==='summon'?summonGrid():ui.tab==='items'?itemRows(g):ui.tab==='fusions'?fusionRows(g):ui.tab==='trinkets'?trinketRows():'';}
+function list(g){return ui.tab==='summon'?summonGrid():ui.tab==='rifts'?riftGrid():ui.tab==='items'?itemRows(g):ui.tab==='fusions'?fusionRows(g):ui.tab==='trinkets'?trinketRows():'';}
 
 export function showTrainingPanel(host,g,{spawn,onClose,onChange,onTrinket}){
- const tabs=[['summon','SUMMON'],['items','ITEMS'],['fusions','FUSIONS'],['trinkets','TRINKETS'],['tools','TOOLS']];
+ const tabs=[['summon','SUMMON'],['rifts','RIFTS'],['items','ITEMS'],['fusions','FUSIONS'],['trinkets','TRINKETS'],['tools','TOOLS']];
  let status='';
  const render=()=>{
   const scroll=host.querySelector('#training-list')?.scrollTop||0;
@@ -59,6 +63,7 @@ export function showTrainingPanel(host,g,{spawn,onClose,onChange,onTrinket}){
  const say=text=>{status=text;const el=host.querySelector('.training-status');if(el)el.textContent=text;};
  const bindList=()=>{
   host.querySelectorAll('[data-summon]').forEach(b=>b.onclick=()=>{const made=trainingSpawn(g,b.dataset.summon,{count:ui.count,elite:ui.elite,phase2:ui.phase2},spawn);say(made.length?`Summoned ${made.length} × ${made[0].name}.`:'Nothing could be summoned.');onChange?.();});
+  host.querySelectorAll('[data-rift]').forEach(b=>b.onclick=()=>{const why=trainingOpenRift(g,b.dataset.rift);if(why){say(why);return;}onChange?.();onClose();});
   host.querySelectorAll('[data-level]').forEach(b=>b.onclick=()=>{const why=setItemLevel(g,b.dataset.level,+b.dataset.to);say(why||`${ITEMS[b.dataset.level].name} set to ${+b.dataset.to?'level '+b.dataset.to:'removed'}.`);onChange?.();render();});
   host.querySelectorAll('[data-fusion]').forEach(b=>b.onclick=()=>{const why=grantFusion(g,b.dataset.fusion);say(why||'Fusion granted.');onChange?.();render();});
   host.querySelectorAll('[data-trinket]').forEach(b=>b.onclick=()=>{if(grantTrinket(g,b.dataset.trinket))onTrinket?.();else say('Finish the current trinket prompt first.');});

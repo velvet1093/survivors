@@ -61,6 +61,16 @@ export function updateRifts(g,dt,{blocked}={},random=Math.random){
  g.toast='A CALAMITY RIFT HAS OPENED · APPROACH TO CHOOSE';g.toastTime=5;
  return true;
 }
+// Opens a portal to a chosen calamity beside the player (Training mode).
+export function openRiftPortal(g,bossId,{blocked,random=Math.random}={}){
+ g.rifts??=newRifts();const r=g.rifts,def=encounter(bossId);
+ if(!def||g.mode==='bossrush'||r.active||g.events?.active)return false;
+ const first=random()*Math.PI*2;let point={x:g.p.x+70,y:g.p.y};
+ for(let i=0;i<12;i++){const a=first+i*Math.PI/6,x=g.p.x+Math.cos(a)*80,y=g.p.y+Math.sin(a)*80;if(!blocked?.(x,y,30)){point={x,y};break;}}
+ r.portal={...point,bossId:def.id,age:0,prompted:false,serial:r.opened+1};r.opened++;r.lastBossId=def.id;
+ g.toast=def.name.toUpperCase()+' · RIFT OPENED · STEP INTO THE PORTAL';g.toastTime=4;
+ return true;
+}
 export function clearRiftOutgoing(g){
  g.shots=[];g.fields=[];g.crimsonEchoes=[];
  if(g.garuda){g.garuda.inFlight=false;g.garuda.flightId=null;}

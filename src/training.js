@@ -2,6 +2,8 @@ import {ITEMS,FUSIONS,MAX_SLOTS,applyChoice,refreshStats,forbiddenItem,inactiveF
 import {syncErenProgress} from './eren-progress.js';
 import {ENEMIES,BOSSES} from './enemies.js';
 import {newTrinkets,trinketFor} from './trinkets.js';
+import {RIFT_ENCOUNTERS,openRiftPortal} from './rift-encounters.js';
+import {pointCollider} from './world.js';
 
 // Training: a sandbox run for testing. Nothing spawns unless the player asks for it,
 // every enemy, boss, item, fusion and trinket can be granted on demand, and the run
@@ -60,6 +62,19 @@ export function trainingSpawn(g,id,{count=1,elite=false,phase2=false,random=Math
 export function updateTraining(g){
  if(g.mode!=='training')return;
  for(const e of g.enemies)if(e.boss&&e.trainingSummon&&!e.enraged&&e.hp>0&&e.hp<=e.maxHp*.5&&(e.riftOnly||e.eventOnly)&&!e.shiftName)enterPhase2(e);
+}
+
+// ---- Rifts ----
+export function trainingRifts(){return RIFT_ENCOUNTERS.map(r=>({id:r.id,name:r.name,title:r.title,color:r.color,family:BOSSES[r.id]?.family}));}
+// Clears the field so the portal can be entered at once, then opens the chosen rift.
+export function trainingOpenRift(g,id){
+ if(g.mode!=='training')return 'Rifts can only be opened this way in Training';
+ if(!RIFT_ENCOUNTERS.some(r=>r.id===id))return 'Unknown rift';
+ if(g.rifts?.active)return 'Finish or leave the current rift first';
+ if(g.events?.active)return 'Wait for the world event to end';
+ if((g.chests||[]).length)return 'Claim or ignore the chest on the field first';
+ clearEnemies(g);
+ return openRiftPortal(g,id,{blocked:(x,y,r)=>pointCollider(g,x,y,r)})?'':'The rift could not open here';
 }
 
 // ---- Items ----

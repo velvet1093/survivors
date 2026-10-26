@@ -1,12 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CHARACTERS,FUSIONS,ITEMS,MAX_SLOTS} from '../src/game.js';
-import {createTrainingRun,spawnEnemy,updateRun} from '../src/engine.js';
+import {createTrainingRun,spawnEnemy,updateRun,resolveRift} from '../src/engine.js';
+import {RIFT_ENCOUNTERS} from '../src/rift-encounters.js';
 import {BOSSES,ENEMIES} from '../src/enemies.js';
 import {TRINKETS} from '../src/trinkets.js';
 import {newProfile,creditRun} from '../src/progression.js';
 import {saveRun,loadRun} from '../src/run-save.js';
-import {trainingRoster,trainingSpawn,setItemLevel,grantFusion,trainingFusions,grantTrinket,setGodMode,setNaturalSpawns,clearEnemies,levelUp} from '../src/training.js';
+import {trainingOpenRift,trainingRoster,trainingSpawn,setItemLevel,grantFusion,trainingFusions,grantTrinket,setGodMode,setNaturalSpawns,clearEnemies,levelUp} from '../src/training.js';
 
 const hero=id=>CHARACTERS.find(c=>c.id===id);
 const storage=()=>({data:null,getItem(){return this.data;},setItem(k,v){this.data=v;},removeItem(){this.data=null;}});
@@ -52,4 +53,15 @@ test('training runs save and restore with their mode and switches',()=>{
  const g=createTrainingRun(hero('goku')),s=storage();setGodMode(g,true);trainingSpawn(g,'vulcan',{count:3},spawnEnemy);setItemLevel(g,'senzu',3);
  assert.ok(saveRun(g,s));const r=loadRun(s);assert.equal(r.mode,'training');assert.equal(r.training.god,true);assert.equal(r.training.natural,false);assert.equal(r.p.passives.senzu,3);
  r.status='playing';delete r.resumeStatus;const before=r.enemies.length;run(r,30);assert.ok(r.enemies.length<=before,'no natural spawns after a restore');
+});
+test('any rift can be opened on demand, entered and fought; natural rifts stay closed',()=>{
+ for(const {id}of RIFT_ENCOUNTERS){
+  const g=createTrainingRun(hero('goku'));setGodMode(g,true);trainingSpawn(g,'vulcan',{count:3},spawnEnemy);
+  assert.equal(trainingOpenRift(g,id),'',id);assert.equal(g.rifts.portal.bossId,id);assert.equal(g.enemies.length,0,'the field is cleared');
+  Object.assign(g.p,{x:g.rifts.portal.x,y:g.rifts.portal.y});run(g,.1);assert.equal(g.status,'rift',id+' prompts on approach');
+  assert.ok(resolveRift(g,true),id);assert.equal(g.status,'playing');assert.equal(g.rifts.active.bossId,id);
+  const boss=g.enemies.find(e=>e.riftBoss);assert.equal(boss.archetype,id);run(g,3,{x:.3,y:.1});if(g.bossIntro)g.bossIntro=null;
+ }
+ const g=createTrainingRun(hero('goku'));g.time=5000;run(g,30);assert.equal(g.rifts.portal,null,'no natural rift opens');
+ assert.equal(trainingOpenRift(g,'nope'),'Unknown rift');
 });
