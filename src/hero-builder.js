@@ -151,3 +151,32 @@ export const emblem={
  dot:(r,x,y,col)=>r.rect(x,y,2,2,col),
  flower:(r,x,y,col,core='#ffe08a')=>{r.put(x,y-1,col);r.put(x-1,y,col);r.put(x+1,y,col);r.put(x,y+1,col);r.put(x,y,core);},
 };
+// ---------- Hair helpers. h = {h, s, l} main, shade and light colours. ----------
+export function longHairBack(r,c,h,{length=54,width=0}={}){
+ const y=c.y,sw=c.walk*.3,{poly,line}=r,L=length;
+ poly([[14-width,22+y],[17,10+y],[39,10+y],[42+width,22+y],[43+width+sw,L],[38,L+4],[34,L-4],[22,L-4],[18,L+4],[13-width+sw,L]],h.s);
+ poly([[15-width,22+y],[18,12+y],[38,12+y],[41+width,22+y],[41+width+sw,L-2],[38,L+1],[35,L-7],[21,L-7],[18,L+1],[15-width+sw,L-2]],h.h);
+ line(16-width,26,16-width+sw,L-4,h.l);line(40+width,26,40+width+sw,L-4,h.s);
+}
+export function headMass(r,c,h){const y=c.y;r.poly([[15,24+y],[17,13+y],[23,8+y],[33,8+y],[39,13+y],[41,24+y],[40,34+y],[16,34+y]],h.s);}
+// Twin tails tied high at the sides. len is how far down they reach.
+export function twinTails(r,c,h,{len=50,flare=6,tie=12}={}){
+ const y=c.y,{poly,line}=r;
+ for(const [x,side]of [[17,-1],[39,1]]){const s=c.walk*side*.6,o=x+side*flare;
+  poly([[x,tie-2+y],[x+side*4,tie+y],[o+side*2,tie+10+y],[o+side+s,len-6],[o-side*2+s,len],[o-side*4+s,len-5],[o-side*3,tie+12+y],[x+side,tie+6+y]],h.s);
+  poly([[x,tie+y],[x+side*3,tie+1+y],[o+side,tie+10+y],[o+s,len-7],[o-side*2+s,len-3],[o-side*3+s,len-7],[o-side*2,tie+12+y]],h.h);
+  line(x+side*2,tie+2+y,o+s,len-10,h.l);
+ }
+}
+// Straight or parted fringe with side locks that frame the jaw.
+export function fringe(r,c,h,{style='straight',locks=36,part=28}={}){
+ const y=c.y,{poly,line,rect}=r;
+ poly([[16,30+y],[15,20+y],[19,12+y],[27,9+y],[35,11+y],[40,18+y],[41,30+y],[38,locks+y],[36,26+y],[35,22+y],[20,22+y],[20,26+y],[18,locks+y]],h.s);
+ if(style==='straight'){poly([[17,27+y],[17,19+y],[21,13+y],[28,11+y],[35,13+y],[39,19+y],[39,27+y],[37,24+y],[19,24+y]],h.h);for(const x of [22,26,30,34])line(x,15+y,x-1,23+y,h.s);}
+ else if(style==='parted'){poly([[17,28+y],[17,19+y],[21,13+y],[part-1,11+y],[part-4,16+y],[21,24+y],[19,30+y]],h.h);poly([[39,28+y],[39,19+y],[35,13+y],[part+1,11+y],[part+4,16+y],[35,24+y],[37,30+y]],h.h);}
+ else {poly([[17,27+y],[17,19+y],[21,13+y],[28,11+y],[35,13+y],[39,19+y],[39,27+y],[37,23+y],[34,19+y],[31,23+y],[29,19+y],[26,23+y],[23,19+y],[21,23+y],[19,27+y]],h.h);}
+ line(21,14+y,26,12+y,h.l);line(18,24+y,18,locks-2+y,h.h);line(38,24+y,38,locks-2+y,h.h);
+}
+export function bun(r,c,h,{x=28,yTop=4,size=7}={}){const y=c.y;r.poly([[x-size/2-1,yTop+size+y],[x-size/2,yTop+2+y],[x,yTop+y],[x+size/2,yTop+2+y],[x+size/2+1,yTop+size+y]],h.s);r.poly([[x-size/2,yTop+size-1+y],[x-size/2+1,yTop+3+y],[x,yTop+1+y],[x+size/2-1,yTop+3+y],[x+size/2,yTop+size-1+y]],h.h);r.line(x-2,yTop+2+y,x+1,yTop+2+y,h.l);}
+// Two-tone ribbon bow.
+export function bow(r,x,y,col,dark=mix(col,'#000000',.3),size=3){r.poly([[x-size-1,y-size+1],[x,y],[x-size-1,y+size]],col);r.poly([[x+size+1,y-size+1],[x,y],[x+size+1,y+size]],dark);r.rect(x-1,y-1,2,2,mix(col,'#ffffff',.3));}
