@@ -1,7 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {CHARACTERS,MAPS,FUSIONS,createPlayer,getUpgradePool,applyChoice,openChest,fusionReady} from '../src/game.js';
 import {createRun,spawnEnemy,castWeapon,updateRun,hitPlayer,useSpecial} from '../src/engine.js';
-import {updateEnemyAI,BOSSES,MAP_BOSSES,MAP_ENEMIES,bossForWave} from '../src/enemies.js';
+import {updateEnemyAI,BOSSES,MAP_BOSSES,MAP_ENEMIES,featuredBosses} from '../src/enemies.js';
 import {finishBossIntro,bossIntroMarkup} from '../src/boss-intro.js';
 import {SKINS} from '../src/skins.js';import {newProfile,sanitizeProfile} from '../src/progression.js';
 import {saveRun,loadRun} from '../src/run-save.js';import {characterPixels} from '../src/pixel-characters.js';
@@ -34,7 +34,7 @@ test('dead bosses and bosses held by Esdeath cannot begin transformations',()=>{
  const g=run(),e=boss(g,'annie');e.hp=0;updateEnemyAI(g,e,.02);assert.equal(g.bossIntro,null);e.hp=e.maxHp*.4;g.ultimate={type:'esdeath',x:e.x,y:e.y,r:500};updateEnemyAI(g,e,.02);assert.equal(g.bossIntro,null);
 });
 test('Shiganshina starts with Annie, Reiner, Bertholdt and supplies unique to the district',()=>{
- assert.equal(MAPS[9].id,'shiganshina');assert.deepEqual([5,10,15].map(w=>bossForWave('shiganshina',w)),['annie','reiner','bertholdt']);assert.ok(MAP_ENEMIES.shiganshina.includes('puretitan'));assert.ok(MAP_ENEMIES.shiganshina.includes('abnormal'));const g=run(),supplies=g.world.active.filter(o=>o.id.startsWith('starter:'));assert.deepEqual(supplies.map(o=>o.type),MAP_SUPPLIES.shiganshina);for(const o of supplies){assert.ok(Number.isFinite(o.hp));assert.ok(o.name);}for(const pool of Object.values(MAP_BOSSES)){assert.equal(new Set(pool).size,normalBossIds.length);for(const id of ['annie','reiner','bertholdt'])assert.ok(pool.includes(id));}
+ assert.equal(MAPS[9].id,'shiganshina');assert.ok(['annie','reiner','bertholdt'].every(id=>featuredBosses('shiganshina').includes(id)));assert.ok(MAP_ENEMIES.shiganshina.includes('puretitan'));assert.ok(MAP_ENEMIES.shiganshina.includes('abnormal'));const g=run(),supplies=g.world.active.filter(o=>o.id.startsWith('starter:'));assert.deepEqual(supplies.map(o=>o.type),MAP_SUPPLIES.shiganshina);for(const o of supplies){assert.ok(Number.isFinite(o.hp));assert.ok(o.name);}for(const pool of Object.values(MAP_BOSSES)){assert.equal(new Set(pool).size,normalBossIds.length);for(const id of ['annie','reiner','bertholdt'])assert.ok(pool.includes(id));}
 });
 test('both reference Eren skins have different silhouettes, animate and retain their saved choice',()=>{
  const profile=newProfile(),arts=[];for(const skin of ['yeagerist','infiltrator']){assert.ok(SKINS.eren.some(s=>s.id===skin));profile.skins.eren=skin;const clean=sanitizeProfile(profile),g=createRun(hero('eren'),9,clean),storage=memory();assert.equal(g.p.skin,skin);saveRun(g,storage);assert.equal(loadRun(storage).p.skin,skin);const art=characterPixels('eren',{skin});arts.push(JSON.stringify(art));assert.notDeepEqual(art,characterPixels('eren',{skin,moving:true,frame:1}));assert.notDeepEqual(art,characterPixels('eren'));useSpecial(g);assert.equal(g.p.skin,skin);assert.equal(g.p.erenForm,'titan');}assert.equal(new Set(arts).size,2);

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {CHARACTERS,ITEMS,FUSIONS,applyChoice,MAPS} from '../src/game.js';
 import {newProfile,sanitizeProfile,creditRun,buyNode} from '../src/progression.js';
 import {createRun,spawnEnemy,castWeapon,updateRun,useSpecial,hitPlayer,damageEnemy} from '../src/engine.js';
-import {ENEMIES,BOSSES,MAP_BOSSES,bossForWave,updateEnemyAI} from '../src/enemies.js';
+import {ENEMIES,BOSSES,MAP_BOSSES,featuredBosses,pickBoss,updateEnemyAI} from '../src/enemies.js';
 import {ANIME_ENEMIES,ANIME_BOSSES,ANIME_NAMES} from '../src/anime-enemies.js';
 import {hasStatus} from '../src/status.js';
 import {faceState} from '../src/expressions.js';
@@ -44,7 +44,7 @@ test('all anime worlds and the new curse types have reachable spawn definitions'
  assert.equal(Object.keys(ANIME_NAMES).length,20);assert.equal(ANIME_NAMES.chainsawman,'Chainsaw Man');for(const id of ['jogo','hanami','dagon','flyhead','transfigured'])assert.equal(ENEMIES[id].family,'jjk');assert.equal(Object.keys(ENEMIES).length,80);assert.equal(normalBossIds.length,36);assert.equal(Object.values(BOSSES).filter(boss=>boss.riftOnly).length,11);for(const id of Object.keys(ANIME_ENEMIES)){let found=false;for(const i of MAPS.map((_,i)=>i)){const g=createRun(shinji,i);g.wave=4;for(let k=0;k<180;k++)if(spawnEnemy(g).archetype===id)found=true;}assert.ok(found,id+' should be reachable');}
 });
 test('early waves omit advanced curses and all maps rotate through all regular bosses',()=>{
- const g=createRun(shinji,2);for(let i=0;i<80;i++)assert.ok(!['jogo','hanami','dagon'].includes(spawnEnemy(g).archetype));for(const map of MAPS){assert.equal(new Set(MAP_BOSSES[map.id]).size,normalBossIds.length);assert.deepEqual(new Set(Array.from({length:normalBossIds.length},(_,i)=>bossForWave(map.id,(i+1)*5))),new Set(normalBossIds));}assert.equal(bossForWave('garden',5),'aura');assert.equal(bossForWave('moon',5),'mahito');
+ const g=createRun(shinji,2);for(let i=0;i<80;i++)assert.ok(!['jogo','hanami','dagon'].includes(spawnEnemy(g).archetype));for(const map of MAPS){assert.equal(new Set(MAP_BOSSES[map.id]).size,normalBossIds.length);assert.deepEqual(new Set(Array.from({length:1000},(_,i)=>pickBoss(map.id,{random:()=>(i+.5)/1000}))),new Set(normalBossIds));}assert.ok(featuredBosses('garden').includes('aura'));assert.ok(featuredBosses('moon').includes('mahito'));
 });
 test('Aura warns before soul balance, summons bound soldiers, and dispels them on defeat',()=>{
  const g=quiet();g.p.weapons={};const e=target(g,240,0,'aura',true);e.attackCD=0;updateEnemyAI(g,e,.01);const h=g.hazards.find(h=>h.label==='SOUL BALANCE');assert.ok(h&&h.delay>=1.5);g.p.dodge=0;g.p.shield=0;const hp=g.p.hp;updateRun(g,.02);assert.equal(g.p.hp,hp);e.attackCD=0;updateEnemyAI(g,e,.01);const children=g.enemies.filter(s=>s.ownerId===e.id);assert.equal(children.length,3);assert.ok(g.hazards.some(h=>h.label==='GUILLOTINE'));for(const s of children){s.x=500;s.y=400;}e.hp=0;e.x=500;updateRun(g,.02);assert.equal(g.enemies.filter(s=>s.ownerId===e.id).length,0);sim(g,1.6);assert.ok(g.chests.some(c=>c.source==='Aura the Guillotine'));

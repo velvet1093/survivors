@@ -1,3 +1,5 @@
+import {BOSSES,SPAWN_WEIGHTS,mapFamilies,weightedPick} from './enemies.js';
+export {MIMIC_DEF,mimicAttack} from './rift-mimic.js';
 import {syncDenjiForm} from './denji.js';
 import {syncGutsArmor} from './guts.js';
 import {chestOffers,openChest,getUpgradePool,waveAt} from './game.js';
@@ -23,6 +25,12 @@ export const RIFT_ENCOUNTERS=[
  {id:'milim',name:'Milim Nava',title:'THE DESTROYER',color:'#f0a6b8'},
 ];
 const finite=(n,fallback=0)=>Number.isFinite(n)?n:fallback;
+// Rifts open in no set order: a calamity from the map's main series is three times
+// as likely, every other rift remains possible and the last one never repeats.
+export function pickRiftEncounter(mapId,lastId,random=Math.random){
+ const families=mapFamilies(mapId),pool=RIFT_ENCOUNTERS.filter(def=>def.id!==lastId);
+ return weightedPick(pool.length?pool:RIFT_ENCOUNTERS,def=>families.has(BOSSES[def.id]?.family)?SPAWN_WEIGHTS.featuredRift:SPAWN_WEIGHTS.other,random)||RIFT_ENCOUNTERS[0];
+}
 const count=n=>Math.max(0,Math.floor(finite(n)));
 const encounter=id=>RIFT_ENCOUNTERS.find(def=>def.id===id);
 const aliveBoss=g=>(g.enemies||[]).some(e=>e.boss&&e.hp>0);
@@ -48,7 +56,7 @@ export function updateRifts(g,dt,{blocked}={},random=Math.random){
   return false;
  }
  if(g.time<r.nextAt||!available(g))return false;
- const def=RIFT_ENCOUNTERS[r.opened%RIFT_ENCOUNTERS.length];
+ const def=pickRiftEncounter(g.map?.id,r.lastBossId,random);r.lastBossId=def.id;
  r.portal={...portalPoint(g,random,blocked),bossId:def.id,age:0,prompted:false,serial:r.opened+1};r.opened++;
  g.toast='A CALAMITY RIFT HAS OPENED · APPROACH TO CHOOSE';g.toastTime=5;
  return true;
@@ -135,16 +143,6 @@ export function defeatedRiftBoss(g,e,{makeGem,coinMultiplier=()=>1,clearOutgoing
 
 // Mimics borrow the promised chest instead of replacing its contents. The chest
 // remains in the world (locked and hidden), which also holds Boss Rush loot gates.
-export const MIMIC_DEF={name:'Rift Mimic',family:'frieren',hp:75,speed:78,r:22,behavior:'mimic',color:'#e6ba77',attack:3.6,description:'A rare treasure chest impostor. It warns a biting lunge, then spits stolen coins. Defeat it to recover the original chest and all its promised rewards. A recovered chest cannot become a mimic again.'};
-export function mimicAttack(g,e,p,a,{fan,hazard}){
- if(e.behavior!=='mimic')return false;
- if(e.skill%2){
-  const length=280;
-  hazard(g,{shape:'line',x:e.x,y:e.y,tx:e.x+Math.cos(a)*length,ty:e.y+Math.sin(a)*length,width:17,label:'MIMIC · HUNGRY LUNGE',delay:.85,duration:.35,damage:19,status:'bleeding',color:e.color,source:'mimic',sourceId:e.id,cancelWithSource:true});
-  e.windup=.85;e.dash=1.25;e.dashX=Math.cos(a);e.dashY=Math.sin(a);
- }else{fan(g,e,a,5,.21,185,'gear');e.windup=.45;}
- return true;
-}
 export function chestRewardOffers(p,chest,random=Math.random){
  if(!Array.isArray(chest.rewardOffers)||!chest.rewardOffers.length){
   chest.rewardOffers=chest.rewardCount?chestOffers(p,chest.rewardCount,random,chest):openChest(p,random,chest);

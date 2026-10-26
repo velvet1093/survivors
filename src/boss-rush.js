@@ -1,5 +1,5 @@
 import {CHARACTERS,ITEMS,FUSIONS,MAX_SLOTS,forbiddenWeapon,inactiveFormWeapon,refreshStats,fusionReady,applyChoice,consumedFusionIngredient} from './game.js';
-import {BOSSES,MAP_BOSSES} from './enemies.js';
+import {BOSSES,shuffledBossOrder} from './enemies.js';
 import {syncErenProgress} from './eren-progress.js';
 import {enemyPressure} from './difficulty.js';
 
@@ -47,7 +47,7 @@ export function banRushDraft(g,id,random=Math.random){
  g.p.vanished??=[];g.p.vanished.push(id);g.p.vanishesLeft--;g.rush.choices=drawChoices(getRushDraftPool(g),random);return true;
 }
 export function initializeBossRush(g){
- const order=[...new Set(MAP_BOSSES[g.map.id])];g.mode='bossrush';g.rush={rulesVersion:2,stage:'draft',round:1,cleared:0,total:order.length,order,activeBossId:null,awaitingLoot:false,intermission:0,choices:null};
+ const order=shuffledBossOrder(g.map.id);g.mode='bossrush';g.rush={rulesVersion:2,stage:'draft',round:1,cleared:0,total:order.length,order,activeBossId:null,awaitingLoot:false,intermission:0,choices:null};
  const required=rushRequiredItems(g);g.p.weapons=Object.fromEntries(required.weapons.map(id=>[id,ITEMS[id].max]));g.p.passives=Object.fromEntries(required.passives.map(id=>[id,ITEMS[id].max]));g.p.fusions={};g.p.cooldowns={};g.p.vanished=[];refreshPreparation(g);getRushDraftChoices(g);g.spawn=g.eliteAt=Infinity;return g;
 }
 // Used for migrating catalog-style preparation and deterministic run fixtures.

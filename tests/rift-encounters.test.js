@@ -1,11 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CHARACTERS,createPlayer,applyChoice} from '../src/game.js';
-import {newRifts,updateRifts,chooseRift,riftCombatActive,defeatedRiftBoss,tryChestMimic,defeatedMimic,resolveChestContents,restoreRifts,mimicAttack,RIFT_ENCOUNTERS,MIMIC_CHANCE} from '../src/rift-encounters.js';
+import {newRifts,updateRifts,chooseRift,riftCombatActive,defeatedRiftBoss,tryChestMimic,defeatedMimic,resolveChestContents,restoreRifts,mimicAttack,RIFT_ENCOUNTERS,MIMIC_CHANCE,pickRiftEncounter} from '../src/rift-encounters.js';
 import {drawRifts,drawRiftCompass} from '../src/rift-event-art.js';
 function run(){return {mode:'survival',status:'playing',time:180,wave:7,p:{...createPlayer(CHARACTERS[0]),x:0,y:0},rifts:newRifts(),enemies:[],enemyShots:[],hazards:[],chests:[],trinkets:{},id:0,shots:[],fields:[],crimsonEchoes:[],gems:[],money:0,kills:0,bossKills:0,characterXp:0,spawn:-1,eliteAt:180,nextBossWave:10,invuln:0,zoom:.9};}
 function spawn(g,boss,elite,id){const e={id:++g.id,archetype:id,name:RIFT_ENCOUNTERS.find(d=>d.id===id)?.name||'Mimic',x:0,y:0,hp:100,maxHp:100,boss,elite,speed:50,attackCD:0};g.enemies.push(e);return e;}
-function open(g){assert.ok(updateRifts(g,.02,{},()=>0));g.p.x=g.rifts.portal.x;g.p.y=g.rifts.portal.y;updateRifts(g,.02);assert.equal(g.status,'rift');}
+function open(g,random=()=>0){assert.ok(updateRifts(g,.02,{},random));g.p.x=g.rifts.portal.x;g.p.y=g.rifts.portal.y;updateRifts(g,.02);assert.equal(g.status,'rift');}
 test('optional rifts open after three minutes, require approach and stop in Boss Rush or interruptions',()=>{
  const g=run();g.time=179.9;assert.equal(updateRifts(g,.1),false);assert.equal(g.rifts.portal,null);g.time=180;assert.ok(updateRifts(g,.1,{},()=>0));assert.equal(g.status,'playing');assert.equal(g.rifts.portal.bossId,'foundereren');assert.equal(g.rifts.portal.x,165);g.status='paused';const age=g.rifts.portal.age;updateRifts(g,10);assert.equal(g.rifts.portal.age,age);g.status='playing';g.p.x=165;updateRifts(g,.1);assert.equal(g.status,'rift');const rush=run();rush.mode='bossrush';assert.equal(updateRifts(rush,99),false);assert.equal(rush.rifts.portal,null);
 });
@@ -25,8 +25,14 @@ test('rift defeat gives one large reward, restores suspended enemies safely and 
  assert.ok(defeatedRiftBoss(g,boss,{coinMultiplier:()=>1.5}));assert.equal(g.money,1620);assert.equal(g.bossKills,1);assert.equal(g.characterXp,150);assert.equal(g.chests.length,1);assert.equal(g.chests[0].rewardCount,5);assert.equal(g.chests[0].tier,'rift');assert.equal(g.gems[0].value,250);assert.ok(g.p.hp>10);assert.ok(Math.hypot(regular.x-g.p.x,regular.y-g.p.y)>=150);assert.ok(g.nextBossWave>Math.floor(g.time/30)+1);assert.equal(g.rifts.active,null);assert.equal(g.rifts.nextAt,720);
  assert.ok(defeatedRiftBoss(g,boss));assert.equal(g.chests.length,1);assert.equal(g.money,1620);assert.equal(g.bossKills,1);
 });
-test('each new portal advances to a different unique superboss',()=>{
- const g=run();const seen=[];for(let i=0;i<RIFT_ENCOUNTERS.length+1;i++){open(g);seen.push(g.rifts.portal.bossId);chooseRift(g,false);g.time=g.rifts.nextAt;}assert.deepEqual(seen,[...RIFT_ENCOUNTERS.map(e=>e.id),RIFT_ENCOUNTERS[0].id]);
+test('each new portal draws a random superboss that never repeats back to back',()=>{
+ const g=run();const seen=[];let seed=7;const random=()=>(seed=(seed*16807)%2147483647)/2147483647;for(let i=0;i<40;i++){open(g,random);seen.push(g.rifts.portal.bossId);chooseRift(g,false);g.time=g.rifts.nextAt;}
+ assert.ok(seen.every(id=>RIFT_ENCOUNTERS.some(e=>e.id===id)));assert.ok(seen.every((id,i)=>!i||id!==seen[i-1]));assert.ok(new Set(seen).size>4,'no fixed order');
+});
+test('rift picks favour the map series without guaranteeing it',()=>{
+ const tally=map=>{const n={};for(let i=0;i<2000;i++){const id=pickRiftEncounter(map,null,()=>(i+.5)/2000).id;n[id]=(n[id]||0)+1;}return n;};
+ const tempest=tally('tempest');assert.ok(tempest.milim>2*tempest.foundereren);assert.equal(Object.keys(tempest).length,RIFT_ENCOUNTERS.length);
+ for(let i=0;i<50;i++)assert.notEqual(pickRiftEncounter('tempest','milim').id,'milim');
 });
 test('five percent mimic rolls once per chest and never consumes or duplicates its promised loot',()=>{
  assert.equal(MIMIC_CHANCE,.05);const g=run(),chest={x:0,y:0,source:'Frieza',rewardCount:5};g.chests.push(chest);g.p.weapons.ki=5;g.p.passives.senzu=3;
@@ -48,5 +54,7 @@ test('rift and mimic state survives serialization without rerolls and legacy or 
 test('portal art and offscreen compass draw in both motion settings without changing simulation state',()=>{
  const g=run();updateRifts(g,.1,{},()=>0);const before=JSON.stringify(g.rifts),commands=[];const c=new Proxy({createRadialGradient:()=>({addColorStop(){}})},{get:(t,k)=>k in t?t[k]:(...args)=>commands.push([k,...args]),set:(t,k,v)=>(t[k]=v,true)});
  for(const quiet of [false,true]){drawRifts(c,g,quiet);g.p.x=2000;drawRiftCompass(c,g,390,844,quiet);g.p.x=0;}
- assert.equal(JSON.stringify(g.rifts),before);assert.ok(commands.some(([k])=>k==='fillText'));assert.ok(commands.some(([k,...args])=>k==='fillText'&&args[0]==='RIFT'));
+ assert.equal(JSON.stringify(g.rifts),before);assert.ok(commands.some(([k])=>k==='fillText'));assert.ok(commands.some(([k,...args])=>k==='fillText'&&/^RIFT.* · \d+m$/.test(args[0])));
+ // The arrow stays up even when the portal is already on screen.
+ commands.length=0;Object.assign(g.p,{x:g.rifts.portal.x+40,y:g.rifts.portal.y});drawRiftCompass(c,g,390,844,false);assert.ok(commands.some(([k,...args])=>k==='fillText'&&/^RIFT/.test(args[0])));
 });

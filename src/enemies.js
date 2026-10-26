@@ -6,7 +6,7 @@ import {EVENT_ENEMIES,EVENT_BOSSES,worldEventAttack,updateWorldEventCast} from '
 import {updateBerserkCast} from './berserk-enemies.js';
 import {guardianTarget} from './guardian-health.js';
 import {RIFT_MINIONS} from './rift-enemies.js';
-import {MIMIC_DEF,mimicAttack} from './rift-encounters.js';
+import {MIMIC_DEF,mimicAttack} from './rift-mimic.js';
 import {RIFT_SUPERBOSSES,riftSuperbossAttack} from './rift-superbosses.js';
 import {updateBossUltimate} from './boss-ultimates.js';
 import {transformBoss} from './boss-transform.js';
@@ -85,7 +85,52 @@ MAP_BOSSES.graveyard=['ryuma','moriah'];
 for(const [map,ids]of Object.entries({garden:['eisenwald','lizardman'],ruins:['orctrooper','phantomshade'],moon:['phantomshade','megalodon'],marineford:['megalodon','orctrooper'],citadel:['eisenwald','phantomshade'],castle:['phantomshade','eisenwald','vulcan'],forest:['vulcan','lizardman','eisenwald'],tempest:['orctrooper','megalodon','lizardman']}))MAP_ENEMIES[map].push(...ids);
 for(const [map,ids]of Object.entries({castle:['jellal'],garden:['jellal'],forest:['kokushibo','jellal'],moon:['kokushibo'],tempest:['geld'],ruins:['geld'],leafvillage:['kokushibo']}))MAP_BOSSES[map].splice(2,0,...ids);
 for(const pool of Object.values(MAP_BOSSES))for(const id of REGULAR_BOSS_IDS)if(!pool.includes(id))pool.push(id);
-export function bossForWave(mapId,wave){const list=MAP_BOSSES[mapId];return list[(Math.floor(wave/5)-1)%list.length];}
+// ---- Weighted random selection ----
+// Nothing follows a fixed order. Each map favours its own roster: its themed
+// enemies, its signature bosses and bosses from its main series are weighted up,
+// but every regular enemy and boss can still appear anywhere.
+// The map's themed group keeps a fixed share of picks however large the catalogue
+// grows; the remainder is spread evenly over everything else.
+export const FEATURED_SHARE={enemy:.7,boss:.55};
+export const SPAWN_WEIGHTS={featuredRift:3,other:1};
+export function weightedPick(items,weight,random=Math.random){
+ const list=items.filter(i=>weight(i)>0);if(!list.length)return undefined;
+ const total=list.reduce((sum,i)=>sum+weight(i),0);let roll=random()*total;
+ for(const i of list){roll-=weight(i);if(roll<0)return i;}
+ return list[list.length-1];
+}
+// Relative weight that gives the featured items `share` of all picks together.
+export function shareWeights(pool,featured,share){
+ const inside=pool.filter(id=>featured.has(id)).length,outside=pool.length-inside;
+ const boost=inside&&outside?share/(1-share)*outside/inside:1;
+ return id=>featured.has(id)?boost:1;
+}
+// Series with at least two themed enemies on the map count as its main series.
+export function mapFamilies(mapId){
+ const counts={};for(const id of MAP_ENEMIES[mapId]||[]){const family=ENEMIES[id]?.family;if(family)counts[family]=(counts[family]||0)+1;}
+ return new Set(Object.entries(counts).filter(([,n])=>n>=2).map(([family])=>family));
+}
+const SPAWNABLE_ENEMIES=[...new Set(Object.values(MAP_ENEMIES).flat())];
+const SIGNATURE_BOSSES=Object.fromEntries(Object.entries(MAP_BOSSES).map(([map,list])=>[map,list.slice(0,3)]));
+export function featuredBosses(mapId){
+ const families=mapFamilies(mapId);
+ return [...new Set([...(SIGNATURE_BOSSES[mapId]||[]),...REGULAR_BOSS_IDS.filter(id=>families.has(BOSSES[id].family))])];
+}
+export function pickEnemy(mapId,wave=1,random=Math.random){
+ const pool=SPAWNABLE_ENEMIES.filter(id=>(ENEMIES[id].minWave||1)<=wave);
+ return weightedPick(pool,shareWeights(pool,new Set(MAP_ENEMIES[mapId]||[]),FEATURED_SHARE.enemy),random);
+}
+// The previous boss is left out so the same fight never comes twice in a row.
+export function pickBoss(mapId,{exclude=[],random=Math.random}={}){
+ const left=REGULAR_BOSS_IDS.filter(id=>!exclude.includes(id)),pool=left.length?left:REGULAR_BOSS_IDS;
+ return weightedPick(pool,shareWeights(pool,new Set(featuredBosses(mapId)),FEATURED_SHARE.boss),random);
+}
+// Boss Rush draws its whole gauntlet once, favouring the map's bosses early.
+export function shuffledBossOrder(mapId,random=Math.random){
+ const left=[...REGULAR_BOSS_IDS],order=[];
+ while(left.length){const id=pickBoss(mapId,{exclude:REGULAR_BOSS_IDS.filter(i=>!left.includes(i)),random});order.push(id);left.splice(left.indexOf(id),1);}
+ return order;
+}
 export function makeEnemy(g,archetype,boss=false,elite=false){
   const def=(boss?BOSSES:ENEMIES)[archetype],wave=g.waveState?.version===1?Math.max(1,g.wave||1):waveAt(g.time),scale=1+(wave-1)*.13;
   const a=Math.random()*Math.PI*2,r=boss?Math.max(230,Math.min(420,Math.min(g.view.w,g.view.h)/(2*g.zoom)-30)):Math.hypot(g.view.w,g.view.h)/(2*g.zoom)+45;

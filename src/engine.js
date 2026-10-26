@@ -34,7 +34,7 @@ import {makeGem,enemyXpValue} from './xp.js';
 import {progressionBonuses} from './progression.js';
 import { createPlayer, forbiddenWeapon, MAPS, grantXp } from './game.js';
 import {newRifts,updateRifts,chooseRift,riftCombatActive,defeatedRiftBoss,tryChestMimic,defeatedMimic,resolveChestContents} from './rift-encounters.js';
-import {ENEMIES,MAP_ENEMIES,makeEnemy,bossForWave,updateEnemyAI} from './enemies.js';
+import {makeEnemy,pickEnemy,pickBoss,updateEnemyAI} from './enemies.js';
 import {createWorld,ensureWorld,updateWorld,moveBody,PLAYER_RADIUS,pointCollider,onWater,damageProp,damagePropsInRadius,segmentDistance,separateEnemies} from './world.js';
 import {startUltimate,updateUltimate} from './ultimates.js';
 import {bowPose} from './bow.js';
@@ -64,8 +64,8 @@ export function damageEnemy(g,e,damage,color='#fff'){
 }
 export function spawnEnemy(g,boss=false,elite=false,archetype){
   if(g.mode==='bossrush'){if(!boss&&archetype!=='mimic')return null;const active=g.enemies.find(e=>e.boss&&e.hp>0);if(boss&&active)return active;}
-  const pool=MAP_ENEMIES[g.map.id].filter(id=>(ENEMIES[id].minWave||1)<=g.wave);
-  const id=archetype||(boss?bossForWave(g.map.id,g.nextBossWave):pool[Math.floor(Math.random()*pool.length)]);
+  const id=archetype||(boss?pickBoss(g.map.id,{exclude:g.lastBossId?[g.lastBossId]:[]}):pickEnemy(g.map.id,g.wave));
+  if(boss&&!archetype)g.lastBossId=id;
   const e=makeEnemy(g,id,boss,elite);e.waveIndex=g.wave;g.enemies.push(e);return e;
 }
 export function hitPlayer(g,damage,{dot=false}={}){

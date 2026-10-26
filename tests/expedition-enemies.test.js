@@ -5,7 +5,7 @@ import {EXPEDITION_PALETTES,expeditionEnemyPixels} from '../src/expedition-enemy
 import {drawExpeditionAttack} from '../src/expedition-attack-art.js';
 import {CHARACTERS} from '../src/game.js';
 import {createRun,spawnEnemy,updateRun} from '../src/engine.js';
-import {ENEMIES,BOSSES,MAP_ENEMIES,MAP_BOSSES,REGULAR_BOSS_IDS,bossForWave,updateEnemyAI} from '../src/enemies.js';
+import {ENEMIES,BOSSES,MAP_ENEMIES,MAP_BOSSES,REGULAR_BOSS_IDS,featuredBosses,updateEnemyAI} from '../src/enemies.js';
 import {enemyPixels} from '../src/pixel-enemies.js';
 import {RIFT_ENCOUNTERS} from '../src/rift-encounters.js';
 import {RIFT_TRIALS,beginRiftTrial,updateRiftTrial,riftTrialText,restoreRiftTrial} from '../src/rift-trials.js';
@@ -26,7 +26,7 @@ test('six expedition enemies, three bosses and two rift bosses join the game wit
  for(const [id,def]of Object.entries(EXPEDITION_BOSSES)){assert.strictEqual(BOSSES[id],def);assert.ok(REGULAR_BOSS_IDS.includes(id));assert.ok(def.shiftName&&def.shiftRadius);assert.ok(BOSS_CINEMATICS[id]);assert.equal(bossPhases(id).length,2);}
  for(const id of Object.keys(EXPEDITION_RIFT_BOSSES)){assert.ok(BOSSES[id].riftOnly);assert.ok(!REGULAR_BOSS_IDS.includes(id));assert.ok(RIFT_ENCOUNTERS.some(r=>r.id===id));assert.ok(RIFT_TRIALS[id]);assert.ok(createRiftArena(id));assert.ok(BOSS_CINEMATICS[id]);for(const pool of Object.values(MAP_BOSSES))assert.ok(!pool.includes(id));}
  // Openings that players already know stay first; the new bosses join from wave 15.
- assert.equal(bossForWave('garden',5),'aura');assert.equal(bossForWave('tempest',5),'kars');assert.equal(bossForWave('tempest',15),'geld');assert.equal(bossForWave('castle',15),'jellal');assert.equal(bossForWave('forest',15),'kokushibo');
+ assert.ok(featuredBosses('garden').includes('aura'));assert.ok(featuredBosses('tempest').includes('kars'));assert.ok(featuredBosses('tempest').includes('geld'));assert.ok(featuredBosses('castle').includes('jellal'));assert.ok(featuredBosses('forest').includes('kokushibo'));
  assert.equal(expeditionAttack({},{archetype:'aura'},{},0,{}),false);
 });
 

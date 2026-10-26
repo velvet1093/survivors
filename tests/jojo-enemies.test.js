@@ -1,6 +1,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {CHARACTERS,MAPS} from '../src/game.js';import {createRun,spawnEnemy,updateRun,hitPlayer} from '../src/engine.js';
-import {JOJO_ENEMIES,JOJO_BOSSES} from '../src/jojo-enemies.js';import {ENEMIES,BOSSES,MAP_ENEMIES,MAP_BOSSES,bossForWave,updateEnemyAI} from '../src/enemies.js';
+import {JOJO_ENEMIES,JOJO_BOSSES} from '../src/jojo-enemies.js';import {ENEMIES,BOSSES,MAP_ENEMIES,MAP_BOSSES,featuredBosses,updateEnemyAI} from '../src/enemies.js';
 import {ANIME_NAMES} from '../src/anime-enemies.js';import {enemyPixels} from '../src/pixel-enemies.js';import {enemyMotion,ENEMY_MOTION_NAMES} from '../src/enemy-animation.js';import {bestiary} from '../src/bestiary.js';import {saveRun,loadRun} from '../src/run-save.js';
 const hero=CHARACTERS.find(c=>c.id==='goku');
 function quiet(){const g=createRun(hero,3);g.spawn=g.eliteAt=g.nextBossWave=1e6;g.p.nextXp=1e6;g.p.weapons={};g.p.regen=g.p.dodge=0;return g;}
@@ -12,7 +12,7 @@ test('all JoJo threats are playable, registered in the bestiary and reachable wi
  assert.equal(Object.keys(JOJO_ENEMIES).length,5);assert.equal(Object.keys(JOJO_BOSSES).length,3);assert.equal(ANIME_NAMES.jojo,'JoJo’s Bizarre Adventure');
  for(const [id,def]of Object.entries(JOJO_ENEMIES)){assert.equal(ENEMIES[id],def);assert.ok(Object.values(MAP_ENEMIES).some(pool=>pool.includes(id)));assert.ok(bestiary({query:def.name}).includes(def.description));}
  for(const [id,def]of Object.entries(JOJO_BOSSES)){assert.equal(BOSSES[id],def);for(const m of MAPS)assert.ok(MAP_BOSSES[m.id].includes(id));assert.ok(bestiary({query:def.name,kind:'boss'}).includes(def.description));}
- assert.equal(bossForWave('castle',5),'aura');assert.equal(bossForWave('castle',10),'dio');assert.equal(bossForWave('forest',5),'orochimaru');assert.equal(bossForWave('forest',10),'kars');assert.equal(bossForWave('zebes',5),'kraid');assert.equal(bossForWave('shiganshina',5),'annie');assert.equal(bestiary({query:'JoJo',kind:'boss'}).match(/bestiary-entry/g).length,3);
+ assert.ok(featuredBosses('castle').includes('aura'));assert.ok(featuredBosses('castle').includes('dio'));assert.ok(featuredBosses('forest').includes('orochimaru'));assert.ok(featuredBosses('forest').includes('kars'));assert.ok(featuredBosses('zebes').includes('kraid'));assert.ok(featuredBosses('shiganshina').includes('annie'));assert.equal(bestiary({query:'JoJo',kind:'boss'}).match(/bestiary-entry/g).length,3);
 });
 test('JoJo pixel art and motion are distinct for every threat, including Kars wings in phase two',()=>{
  const ids=Object.keys({...JOJO_ENEMIES,...JOJO_BOSSES}),art=ids.map(id=>JSON.stringify(enemyPixels(id)));assert.equal(new Set(art).size,8);

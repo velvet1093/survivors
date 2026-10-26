@@ -28,9 +28,17 @@ export function drawRifts(c,g,reducedMotion=false){
 export function drawRiftCompass(c,g,w,h,reducedMotion=false){
  const portal=g.rifts?.portal,active=g.rifts?.active,boss=active&&g.enemies.find(e=>e.id===active.bossEntityId&&e.hp>0),target=portal||boss;
  if(!target||g.mode==='bossrush'||!['playing','paused','rift'].includes(g.status))return;
- const zoom=g.zoom||1,dx=(target.x-g.p.x)*zoom,dy=(target.y-g.p.y)*zoom,sx=w/2+dx,sy=h/2+dy;
- if(sx>42&&sx<w-42&&sy>120&&sy<h-125)return;
+ const zoom=g.zoom||1,dx=(target.x-g.p.x)*zoom,dy=(target.y-g.p.y)*zoom,sx=w/2+dx,sy=h/2+dy,meters=Math.round(Math.hypot(target.x-g.p.x,target.y-g.p.y)/10);
+ // While a rift is on the map an arrow always points to it: hovering over it when
+ // it is in view, pinned to the screen edge when it is not.
+ if(sx>42&&sx<w-42&&sy>120&&sy<h-125){
+  const def=definition(portal?.bossId||active.bossId),bob=reducedMotion?0:Math.sin((g.time||0)*4)*4,y=sy-(portal?62:(target.r||40)*zoom+40)+bob;
+  c.save();c.translate(sx,y);c.beginPath();c.moveTo(0,12);c.lineTo(-10,-2);c.lineTo(-4,-2);c.lineTo(-4,-12);c.lineTo(4,-12);c.lineTo(4,-2);c.lineTo(10,-2);c.closePath();
+  c.fillStyle=def.color;c.strokeStyle='#101421';c.lineWidth=2;c.stroke();c.fill();
+  c.font='700 8px "DM Sans",sans-serif';c.textAlign='center';c.lineWidth=3;c.strokeText((portal?'RIFT':'RIFT BOSS')+' · '+meters+'m',0,-17);c.fillStyle='#f7e9d3';c.fillText((portal?'RIFT':'RIFT BOSS')+' · '+meters+'m',0,-17);c.restore();
+  return;
+ }
  const scale=Math.min((w/2-38)/Math.max(Math.abs(dx),1),(h/2-135)/Math.max(Math.abs(dy),1)),x=w/2+dx*Math.max(.05,scale),y=Math.min(h-125,Math.max(140,h/2+dy*Math.max(.05,scale))),angle=Math.atan2(dy,dx),def=definition(portal?.bossId||active.bossId);
  c.save();c.translate(x,y);c.fillStyle='#121724ed';c.strokeStyle=def.color;c.lineWidth=1.5;c.beginPath();c.roundRect(-19,-19,38,38,9);c.fill();c.stroke();c.rotate(angle);c.beginPath();c.moveTo(11,0);c.lineTo(-6,-7);c.lineTo(-2,0);c.lineTo(-6,7);c.closePath();c.fillStyle=def.color;c.fill();c.rotate(-angle);
- const label=portal?'RIFT':'RIFT BOSS';c.font='700 8px "DM Sans",sans-serif';c.textAlign='center';c.lineWidth=3;c.strokeStyle='#101421';c.strokeText(label,0,31);c.fillStyle='#f7e9d3';c.fillText(label,0,31);c.restore();
+ const label=(portal?'RIFT':'RIFT BOSS')+' · '+meters+'m';c.font='700 8px "DM Sans",sans-serif';c.textAlign='center';c.lineWidth=3;c.strokeStyle='#101421';c.strokeText(label,0,31);c.fillStyle='#f7e9d3';c.fillText(label,0,31);c.restore();
 }

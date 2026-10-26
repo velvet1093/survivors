@@ -159,7 +159,7 @@ export function drawScene(canvas,g,reducedMotion=false){
   for(const q of g.particles){c.globalAlpha=Math.min(1,q.life*2);ellipse(c,q.x,q.y,q.size/2,q.size/2,q.color);}c.globalAlpha=1;
   c.textAlign='center';c.font='600 12px "DM Sans",sans-serif';for(const q of g.hudHidden?[]:g.numbers){c.globalAlpha=Math.min(1,q.life*4);c.fillStyle='#101527';c.fillText(q.amount,q.x+1,q.y+1);c.fillStyle=q.color;c.fillText(q.amount,q.x,q.y);}c.globalAlpha=1;c.restore();
   drawWorldEventWeather(c,g,w,h,reducedMotion);
-  if(!g.hudHidden)drawRiftCompass(c,g,w,h,reducedMotion);
+  drawRiftCompass(c,g,w,h,reducedMotion);
   const vignette=c.createRadialGradient(w/2,h/2,w*.15,w/2,h/2,Math.max(w,h)*.73);vignette.addColorStop(0,'#0e101600');vignette.addColorStop(1,'#080b186b');c.fillStyle=vignette;c.fillRect(0,0,w,h);
   drawRiftTrialOverlay(c,g,w,h,reducedMotion);
 }

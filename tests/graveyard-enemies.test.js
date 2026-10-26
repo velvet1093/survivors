@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {GRAVEYARD_ENEMIES,GRAVEYARD_BOSSES,graveyardAttack,updateGraveyardCast} from '../src/graveyard-enemies.js';
 import {CHARACTERS,MAPS} from '../src/game.js';
 import {createRun,spawnEnemy,updateRun} from '../src/engine.js';
-import {ENEMIES,BOSSES,MAP_ENEMIES,MAP_BOSSES,bossForWave,REGULAR_BOSS_IDS,updateEnemyAI} from '../src/enemies.js';
+import {ENEMIES,BOSSES,MAP_ENEMIES,MAP_BOSSES,featuredBosses,REGULAR_BOSS_IDS,updateEnemyAI} from '../src/enemies.js';
 import {finishBossIntro} from '../src/boss-intro.js';
 import {applyStatus} from '../src/status.js';
 import {saveRun,loadRun} from '../src/run-save.js';
@@ -18,11 +18,11 @@ const covered=(h,x,y)=>h.shape==='line'?segmentDistance(x,y,h.x,h.y,h.tx,h.ty)<h
 
 test('the graveyard has five thematic ordinary enemies and two real opening bosses without replacing earlier maps',()=>{
  assert.equal(Object.keys(GRAVEYARD_ENEMIES).length,5);assert.equal(Object.keys(GRAVEYARD_BOSSES).length,2);
- assert.deepEqual(MAP_ENEMIES.graveyard,Object.keys(GRAVEYARD_ENEMIES));assert.deepEqual([5,10].map(w=>bossForWave('graveyard',w)),['ryuma','moriah']);
+ assert.deepEqual(MAP_ENEMIES.graveyard,Object.keys(GRAVEYARD_ENEMIES));assert.ok(['ryuma','moriah'].every(id=>featuredBosses('graveyard').includes(id)));
  assert.equal(new Set(MAP_BOSSES.graveyard).size,REGULAR_BOSS_IDS.length);
  for(const [id,def]of Object.entries(GRAVEYARD_ENEMIES)){assert.strictEqual(ENEMIES[id],def);assert.equal(def.family,'onepiece');assert.ok(!def.eventOnly&&!def.riftOnly);const {g,e}=cast(id);assert.ok(e.graveyardAttack);assert.ok(g.hazards.length||g.enemyShots.length,id+' actually attacks');}
  for(const [id,def]of Object.entries(GRAVEYARD_BOSSES)){assert.strictEqual(BOSSES[id],def);assert.ok(REGULAR_BOSS_IDS.includes(id));assert.ok(!def.eventOnly&&!def.riftOnly);assert.ok(def.shiftName&&def.shiftRadius);}
- assert.equal(bossForWave('garden',5),'aura');assert.equal(bossForWave('tokyo',5),'dio');
+ assert.ok(featuredBosses('garden').includes('aura'));assert.ok(featuredBosses('tokyo').includes('dio'));
  assert.equal(graveyardAttack({}, {archetype:'other'}, {},0,{}),false);
 });
 

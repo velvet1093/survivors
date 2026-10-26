@@ -26,7 +26,7 @@ test('timed rifts require approaching and opting in, while a declined portal res
  for(const create of [createRun,createHardcoreRun]){
   const g=quiet(create);g.time=180;updateRun(g,.01);assert.equal(g.status,'playing');assert.ok(g.rifts.portal);assert.equal(g.enemies.length,0);
   Object.assign(g.p,{x:g.rifts.portal.x,y:g.rifts.portal.y});updateRun(g,.01);assert.equal(g.status,'rift');const clock=g.time;updateRun(g,10);assert.equal(g.time,clock);
-  const save=storage();assert.ok(saveRun(g,save));const loaded=loadRun(save);assert.equal(loaded.resumeStatus,'rift');assert.equal(loaded.rifts.portal.bossId,'foundereren');
+  const save=storage();assert.ok(saveRun(g,save));const loaded=loadRun(save);assert.equal(loaded.resumeStatus,'rift');assert.equal(loaded.rifts.portal.bossId,g.rifts.portal.bossId);
   resume(loaded);assert.ok(resolveRift(loaded,false));assert.equal(loaded.status,'playing');assert.equal(loaded.rifts.portal,null);assert.equal(loaded.rifts.declined,1);assert.ok(loaded.rifts.nextAt>loaded.time);assert.equal(loaded.enemies.length,0);
  }
 });

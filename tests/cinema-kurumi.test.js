@@ -16,14 +16,14 @@ function steps(g,n=30){for(let i=0;i<n;i++)updateRun(g,.02);}
 
 function finishDeath(g){for(let i=0;i<90&&g.status==='playing'&&g.enemies.some(e=>e.boss&&e.hp<=0&&!e.deathComplete);i++)updateRun(g,.02);}
 test('natural boss entrances freeze combat, statuses, projectiles, cooldowns and player movement',()=>{
- const g=quiet();g.time=120;g.wave=5;g.waveState=newWaveState(5);g.nextBossWave=5;updateRun(g,.01);assert.equal(g.bossIntro.name,'Aura the Guillotine');
+ const g=quiet();g.time=120;g.wave=5;g.waveState=newWaveState(5);g.nextBossWave=5;updateRun(g,.01);assert.ok(g.bossIntro&&g.enemies.some(e=>e.boss&&e.name===g.bossIntro.name));
  g.p.hp=50;g.p.cooldowns.clockshot=7;g.special=6;g.dashCD=8;applyStatus(g.p,'poison',3,{power:10});g.enemyShots=[{x:30,y:10,age:0,life:7,vx:100,vy:0,r:5,damage:20}];g.hazards=[{x:0,y:0,age:0,delay:.5,duration:1,damage:20,shape:'circle',r:50}];
  const before=JSON.stringify([g.time,g.p,g.enemyShots,g.hazards,g.enemies,g.special,g.dashCD]);
  assert.equal(useDash(g),false);assert.equal(useSpecial(g),false);assert.equal(hitPlayer(g,100),false);updateRun(g,.4,{x:1,y:1});
  assert.equal(JSON.stringify([g.time,g.p,g.enemyShots,g.hazards,g.enemies,g.special,g.dashCD]),before);assert.ok(g.bossIntro.age>.3);
 });
 test('entrances finish automatically with a grace period, can be skipped, and never repeat for a wave',()=>{
- const g=quiet();g.time=120;g.wave=5;g.waveState=newWaveState(5);g.nextBossWave=5;updateRun(g,.01);const time=g.time;g.invuln=0;steps(g,Math.ceil(g.bossIntro.duration/.02));assert.equal(g.bossIntro,null);assert.ok(g.invuln>.7);assert.equal(g.time,time);updateRun(g,.02);assert.equal(g.enemies.filter(e=>e.boss).length,1);assert.equal(g.bossIntro,null);
+ const g=quiet();g.time=120;g.wave=5;g.waveState=newWaveState(5);g.nextBossWave=5;updateRun(g,.01);const time=g.time;g.invuln=0;for(let i=0;i<400&&g.bossIntro;i++)updateRun(g,.02);assert.equal(g.bossIntro,null);assert.ok(g.invuln>.7);assert.equal(g.time,time);updateRun(g,.02);assert.equal(g.enemies.filter(e=>e.boss).length,1);assert.equal(g.bossIntro,null);
  g.enemies=[];g.time=270;g.wave=10;g.waveState=newWaveState(10);g.nextBossWave=10;updateRun(g,.01);assert.ok(g.bossIntro);assert.equal(finishBossIntro(g),true);assert.equal(finishBossIntro(g),false);assert.equal(g.nextBossWave,15);updateRun(g,.02);assert.equal(g.bossIntro,null);
 });
 test('paused entrances do not advance; multiple arrivals keep individual titles in order',()=>{

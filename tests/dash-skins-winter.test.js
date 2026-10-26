@@ -6,7 +6,7 @@ import {applyStatus,hasStatus,updateStatuses} from '../src/status.js';
 import {SKINS,skinFor} from '../src/skins.js';
 import {newProfile,sanitizeProfile,creditRun,saveProfile,loadProfile} from '../src/progression.js';
 import {characterPixels,pilotPixels} from '../src/pixel-characters.js';
-import {ENEMIES,BOSSES,MAP_ENEMIES,bossForWave,updateEnemyAI} from '../src/enemies.js';
+import {ENEMIES,BOSSES,MAP_ENEMIES,featuredBosses,updateEnemyAI} from '../src/enemies.js';
 import {WAR_ENEMIES,WAR_BOSSES} from '../src/war-enemies.js';
 import {bestiary} from '../src/bestiary.js';
 const esdeath=CHARACTERS.find(c=>c.id==='esdeath'),shinji=CHARACTERS.find(c=>c.id==='shinji');
@@ -45,7 +45,7 @@ test('frozen shares crowd-control recovery with stun and bosses recover faster',
  const boss={hp:100,boss:true};applyStatus(boss,'frozen',1);assert.equal(boss.statuses.frozen.remaining,.35);assert.equal(applyStatus(boss,'stun',1),false);updateStatuses(boss,.4);assert.equal(applyStatus(boss,'frozen',1),false);updateStatuses(boss,2.1);assert.ok(applyStatus(boss,'stun',1));const g=createRun(esdeath);applyStatus(g.p,'frozen',1);assert.equal(g.p.statuses.frozen.remaining,.75);
 });
 test('new maps have complete spawn families, enemy mechanics and their own opening bosses',()=>{
- assert.equal(MAPS.length,17);assert.equal(bossForWave('marineford',5),'akainu');assert.equal(bossForWave('citadel',5),'budo');for(const map of ['marineford','citadel'])assert.ok(MAP_ENEMIES[map].every(id=>ENEMIES[id]));for(const [id,def] of Object.entries(WAR_ENEMIES)){const g=quiet(),e=target(g,200,0,id);e.attackCD=0;updateEnemyAI(g,e,.02);assert.ok(g.hazards.length||g.enemyShots.length,id);assert.ok(def.description);}
+ assert.equal(MAPS.length,17);assert.ok(featuredBosses('marineford').includes('akainu'));assert.ok(featuredBosses('citadel').includes('budo'));for(const map of ['marineford','citadel'])assert.ok(MAP_ENEMIES[map].every(id=>ENEMIES[id]));for(const [id,def] of Object.entries(WAR_ENEMIES)){const g=quiet(),e=target(g,200,0,id);e.attackCD=0;updateEnemyAI(g,e,.02);assert.ok(g.hazards.length||g.enemyShots.length,id);assert.ok(def.description);}
 });
 test('admirals and imperial bosses have distinct telegraphs and enrage phases',()=>{
  for(const id of Object.keys(WAR_BOSSES)){const g=quiet(),e=target(g,240,0,id,true);for(let i=0;i<3;i++){e.attackCD=0;updateEnemyAI(g,e,.02);}assert.ok(g.hazards.length>0,id);assert.ok(g.hazards.every(h=>h.delay>=.5));e.hp=e.maxHp*.4;updateEnemyAI(g,e,.02);assert.ok(e.enraged);}

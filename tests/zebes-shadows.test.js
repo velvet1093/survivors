@@ -7,7 +7,7 @@ import {newProfile,sanitizeProfile,saveProfile,loadProfile,creditRun} from '../s
 import {saveRun,loadRun} from '../src/run-save.js';
 import {cannonPayload,cannonStage,CANNON_STAGES} from '../src/samus-cannon.js';
 import {ensureWorld,colliders,damageProp} from '../src/world.js';
-import {MAP_ENEMIES,MAP_BOSSES,bossForWave,updateEnemyAI} from '../src/enemies.js';
+import {MAP_ENEMIES,MAP_BOSSES,featuredBosses,updateEnemyAI} from '../src/enemies.js';
 import {hasStatus} from '../src/status.js';
 import {SKINS} from '../src/skins.js';
 import {characterPixels} from '../src/pixel-characters.js';
@@ -78,8 +78,8 @@ test('Mahoraga intercepts shots, adapts and slashes; its HP and persistent life 
 test('summon art is distinct from pets and each shikigami has animated body parts',()=>{
  const ids=['whiteDog','blackDog','nue','mahoraga'];assert.equal(new Set(ids.map(id=>JSON.stringify(summonPixels(id)))).size,4);for(const id of ids){assert.ok(summonPixels(id).filter(Boolean).length>150);assert.notDeepEqual(summonPixels(id,{frame:0}),summonPixels(id,{frame:1}));}
 });
-test('Zebes has exclusive Metroid spawns, three unique breakables, and Kraid → Ridley → Mother Brain',()=>{
- assert.equal(MAPS[8].id,'zebes');assert.deepEqual([5,10,15].map(w=>bossForWave('zebes',w)),['kraid','ridley','motherbrain']);assert.deepEqual(MAP_SUPPLIES.zebes,['missilecache','chozocapsule','containmentpod']);const g=quiet();g.wave=4;for(let i=0;i<100;i++){const e=spawnEnemy(g);assert.equal(e.family,'metroid');}assert.ok(g.world.active.some(o=>o.type==='containmentpod'));for(const pool of Object.values(MAP_BOSSES))for(const id of ['kraid','motherbrain'])assert.ok(pool.includes(id));
+test('Zebes favours Metroid spawns, three unique breakables, and Kraid → Ridley → Mother Brain',()=>{
+ assert.equal(MAPS[8].id,'zebes');assert.ok(['kraid','ridley','motherbrain'].every(id=>featuredBosses('zebes').includes(id)));assert.deepEqual(MAP_SUPPLIES.zebes,['missilecache','chozocapsule','containmentpod']);const g=quiet();g.wave=4;{const own=Array.from({length:300},()=>spawnEnemy(g).family).filter(f=>f==='metroid').length;assert.ok(own>150&&own<300,'Zebes favours Metroid foes');}assert.ok(g.world.active.some(o=>o.type==='containmentpod'));for(const pool of Object.values(MAP_BOSSES))for(const id of ['kraid','motherbrain'])assert.ok(pool.includes(id));
 });
 test('pirate variants have unique attacks: claw lanes, plasma mines, turning missiles and temporary armor',()=>{
  const g=quiet();for(const id of ['greenpirate','redpirate','flyingpirate','goldpirate']){const e=target(g,id);e.attackCD=0;updateEnemyAI(g,e,.02);assert.ok(MAP_ENEMIES.zebes.includes(id));}assert.ok(g.hazards.some(h=>h.label==='DUAL CLAW'));assert.ok(g.hazards.some(h=>h.label==='PLASMA MINE'&&h.duration>2));assert.ok(g.enemyShots.some(q=>q.turn));assert.ok(g.enemies.find(e=>e.archetype==='goldpirate').armorTime>0);

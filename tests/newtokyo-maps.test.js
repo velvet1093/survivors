@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {TOKYO_MAPS,TOKYO_WORLD_PALETTES,drawTokyoTerrain,drawTokyoProp,tokyoMapPreview} from '../src/tokyo-maps.js';
 import {CHARACTERS,MAPS} from '../src/game.js';
 import {createRun,createHardcoreRun,createBossRushRun,spawnEnemy} from '../src/engine.js';
-import {ENEMIES,BOSSES,MAP_ENEMIES,MAP_BOSSES,bossForWave,makeEnemy} from '../src/enemies.js';
+import {ENEMIES,BOSSES,MAP_ENEMIES,MAP_BOSSES,featuredBosses,makeEnemy} from '../src/enemies.js';
 import {MAP_SUPPLIES,SUPPLY_DEFS,supplyGeometry,drawMapSupply} from '../src/map-supplies.js';
 import {ensureWorld,layoutProps,colliders,moveBody,onWater,damageProp} from '../src/world.js';
 import {newProfile,sanitizeProfile} from '../src/progression.js';
@@ -34,10 +34,10 @@ test('each city provides three original sized destructibles with real collision 
 });
 
 test('Shibuya has JJK curses, Tokyo has urban Stand threats, and both retain all regular bosses',()=>{
- for(const [id,first,next]of [['tokyo','dio','kira'],['shibuya','sukuna','mahito']]){const g=createRun(CHARACTERS[0],index(id));g.wave=20;assert.equal(bossForWave(id,5),first);assert.equal(bossForWave(id,10),next);assert.equal(new Set(MAP_BOSSES[id]).size,normalBossIds.length);for(const enemy of MAP_ENEMIES[id])assert.ok(ENEMIES[enemy]&&makeEnemy(g,enemy).hp>0);for(let i=0;i<30;i++)assert.ok(MAP_ENEMIES[id].includes(spawnEnemy(g).archetype));}
+ for(const [id,first,next]of [['tokyo','dio','kira'],['shibuya','sukuna','mahito']]){const g=createRun(CHARACTERS[0],index(id));g.wave=20;assert.ok(featuredBosses(id).includes(first));assert.ok(featuredBosses(id).includes(next));assert.equal(new Set(MAP_BOSSES[id]).size,normalBossIds.length);for(const enemy of MAP_ENEMIES[id])assert.ok(ENEMIES[enemy]&&makeEnemy(g,enemy).hp>0);{const kinds=Array.from({length:200},()=>spawnEnemy(g).archetype);assert.ok(kinds.every(k=>ENEMIES[k]&&!BOSSES[k]));assert.ok(kinds.filter(k=>MAP_ENEMIES[id].includes(k)).length>110,'map enemies are favoured');}}
  assert.deepEqual(new Set(MAP_ENEMIES.shibuya.map(id=>ENEMIES[id].family)),new Set(['jjk','chainsawman']));for(const id of ['curse','cursedeye','flyhead','transfigured','jogo','hanami','dagon'])assert.ok(MAP_ENEMIES.shibuya.includes(id));for(const id of ['zombiedevil','leechfiend','batspawn','eternityflesh'])for(const city of ['tokyo','shibuya'])assert.ok(MAP_ENEMIES[city].includes(id));assert.ok(MAP_ENEMIES.tokyo.includes('badcompany')&&MAP_ENEMIES.tokyo.includes('highwaystar'));
 });
 
 test('Tokyo choices and destroyed city supplies restore in Survival, Hardcore and Boss Rush',()=>{
- for(const map of TOKYO_MAPS)for(const create of [createRun,createHardcoreRun,createBossRushRun]){const profile=newProfile();profile.selection.map=map.id;assert.equal(sanitizeProfile(profile).selection.map,map.id);const g=create(CHARACTERS[0],index(map.id),profile),store=storage();ensureWorld(g);const supply=g.world.active.find(o=>o.id==='starter:crate');assert.ok(damageProp(g,supply,9999,0,0,()=>.95));assert.ok(saveRun(g,store));const restored=loadRun(store);assert.ok(restored);assert.equal(restored.map.id,map.id);assert.equal(restored.mode,g.mode);assert.ok(restored.world.destroyed.has(supply.id));assert.ok(!restored.world.active.some(o=>o.id===supply.id));if(g.mode==='bossrush')assert.equal(restored.rush.order[0],map.id==='tokyo'?'dio':'sukuna');}
+ for(const map of TOKYO_MAPS)for(const create of [createRun,createHardcoreRun,createBossRushRun]){const profile=newProfile();profile.selection.map=map.id;assert.equal(sanitizeProfile(profile).selection.map,map.id);const g=create(CHARACTERS[0],index(map.id),profile),store=storage();ensureWorld(g);const supply=g.world.active.find(o=>o.id==='starter:crate');assert.ok(damageProp(g,supply,9999,0,0,()=>.95));assert.ok(saveRun(g,store));const restored=loadRun(store);assert.ok(restored);assert.equal(restored.map.id,map.id);assert.equal(restored.mode,g.mode);assert.ok(restored.world.destroyed.has(supply.id));assert.ok(!restored.world.active.some(o=>o.id===supply.id));if(g.mode==='bossrush')assert.deepEqual(restored.rush.order,g.rush.order);}
 });

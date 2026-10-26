@@ -6,7 +6,7 @@ import {HERO_MECHANICS,heroKill,heroToxin,heroFreeze,heroDamageBonus,SAIYAN_STAG
 import {finishBossIntro} from '../src/boss-intro.js';
 import {MAP_SUPPLIES,SUPPLY_DEFS} from '../src/map-supplies.js';
 import {ensureWorld,layoutProps,damageProp,moveBody,onWater,colliders} from '../src/world.js';
-import {MAP_ENEMIES,MAP_BOSSES,BOSSES,bossForWave} from '../src/enemies.js';
+import {MAP_ENEMIES,MAP_BOSSES,BOSSES,ENEMIES,featuredBosses} from '../src/enemies.js';
 import {characterPixels} from '../src/pixel-characters.js';
 import {newProfile,saveProfile,loadProfile} from '../src/progression.js';
 import {makeGem} from '../src/xp.js';import {projectileScale} from '../src/projectiles.js';
@@ -56,7 +56,7 @@ test('every map gets three distinct themed supplies that retain collision and pr
  const a=supplies[0];damageProp(g,a,1000,0,0,()=>.9);assert.equal(g.pickups.length,0);assert.equal(damageProp(g,a,1000),false);const b=supplies[1];damageProp(g,b,1000,0,0,()=>.1);assert.equal(g.pickups.length,1);ensureWorld(g);assert.ok(!g.world.active.some(o=>o.id===a.id||o.id===b.id));assert.ok(g.world.debris.length>0);}
 });
 test('Castle and Forest have traversable clearings, complete enemy pools and full rotating boss lists',()=>{
- for(const [id,boss]of [['castle','aura'],['forest','orochimaru']]){const index=MAPS.findIndex(m=>m.id===id),g=quiet('goku',index);assert.equal(bossForWave(id,5),boss);assert.equal(new Set(MAP_BOSSES[id]).size,normalBossIds.length);for(let i=0;i<30;i++)assert.ok(MAP_ENEMIES[id].includes(spawnEnemy(g).archetype));ensureWorld(g);g.world.circles=colliders(g);const body={x:0,y:0};moveBody(g,body,50,0,8);assert.ok(body.x>45);assert.equal(onWater(g.map,650,0),true);assert.equal(onWater(g.map,650+Math.sin(1)*90,400),false);assert.deepEqual(layoutProps(g.map,-500,-500,1000,1000),layoutProps(g.map,-500,-500,1000,1000));}
+ for(const [id,boss]of [['castle','aura'],['forest','orochimaru']]){const index=MAPS.findIndex(m=>m.id===id),g=quiet('goku',index);assert.ok(featuredBosses(id).includes(boss));assert.equal(new Set(MAP_BOSSES[id]).size,normalBossIds.length);{const kinds=Array.from({length:200},()=>spawnEnemy(g).archetype);assert.ok(kinds.every(k=>ENEMIES[k]&&!BOSSES[k]));assert.ok(kinds.filter(k=>MAP_ENEMIES[id].includes(k)).length>110,'map enemies are favoured');}ensureWorld(g);g.world.circles=colliders(g);const body={x:0,y:0};moveBody(g,body,50,0,8);assert.ok(body.x>45);assert.equal(onWater(g.map,650,0),true);assert.equal(onWater(g.map,650+Math.sin(1)*90,400),false);assert.deepEqual(layoutProps(g.map,-500,-500,1000,1000),layoutProps(g.map,-500,-500,1000,1000));}
 });
 test('Spring Court skin has its own outfit silhouette and animated face, and saves without changing stats',()=>{
  const a=characterPixels('maomao'),b=characterPixels('maomao',{skin:'spring'});assert.notDeepEqual(a,b);assert.notDeepEqual(b,characterPixels('maomao',{skin:'spring',moving:true,frame:1}));assert.notDeepEqual(b,characterPixels('maomao',{skin:'spring',blink:true}));const profile=newProfile();profile.coins=87;profile.skins.maomao='spring';profile.characters.maomao.xp=52;const storage={data:'',getItem(){return this.data},setItem(k,v){this.data=v}};saveProfile(profile,storage);const p=loadProfile(storage);assert.equal(p.skins.maomao,'spring');assert.equal(p.characters.maomao.xp,52);assert.equal(p.coins,87);const normal=createRun(hero('maomao')),skin=createRun(hero('maomao'),0,p);for(const key of ['maxHp','damage','move','cooldown'])assert.equal(normal.p[key],skin.p[key]);

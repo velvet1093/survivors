@@ -1,7 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {NEW_ANIME_MAPS,ANIME_WORLD_PALETTES,drawAnimeTerrain,drawAnimeProp,animeMapPreview} from '../src/anime-maps.js';
 import {CHARACTERS,MAPS} from '../src/game.js';import {createRun,spawnEnemy} from '../src/engine.js';
-import {MAP_ENEMIES,MAP_BOSSES,BOSSES,ENEMIES,bossForWave,makeEnemy} from '../src/enemies.js';
+import {MAP_ENEMIES,MAP_BOSSES,BOSSES,ENEMIES,featuredBosses,makeEnemy} from '../src/enemies.js';
 import {MAP_SUPPLIES,SUPPLY_DEFS,supplyGeometry,drawMapSupply} from '../src/map-supplies.js';
 import {layoutProps,ensureWorld,onWater,moveBody,colliders,damageProp} from '../src/world.js';
 import {newProfile,sanitizeProfile} from '../src/progression.js';import {saveRun,loadRun} from '../src/run-save.js';
@@ -24,7 +24,7 @@ test('new maps preserve clear starts, deterministic landmarks and matching river
  if(map.id==='tournament'){for(const y of [-800,0,150,400,800])assert.equal(onWater(map,650+Math.sin(y/400)*90,y,8),false);g.world.active=[];g.world.circles=[];const crossing={x:530,y:0};moveBody(g,crossing,240,0,8);assert.ok(crossing.x>760);}else{assert.equal(onWater(map,650,0,8),true);assert.equal(onWater(map,650+Math.sin(1)*90,400,8),false);}}
 });
 test('Leaf, Tournament and Tempest use thematic encounter pools and keep full rotating boss access',()=>{
- for(const [id,opening,next]of [['leafvillage','orochimaru','itachi'],['tournament','frieza','cell'],['tempest','kars','aura']]){assert.equal(bossForWave(id,5),opening);assert.equal(bossForWave(id,10),next);const map=NEW_ANIME_MAPS.find(m=>m.id===id),g=run(map);g.wave=4;for(const type of MAP_ENEMIES[id]){assert.ok(ENEMIES[type]);assert.ok(makeEnemy(g,type).hp>0);}for(let i=0;i<30;i++)assert.ok(MAP_ENEMIES[id].includes(spawnEnemy(g).archetype));assert.equal(new Set(MAP_BOSSES[id]).size,normalBossIds.length);}
+ for(const [id,opening,next]of [['leafvillage','orochimaru','itachi'],['tournament','frieza','cell'],['tempest','kars','aura']]){assert.ok(featuredBosses(id).includes(opening));assert.ok(featuredBosses(id).includes(next));const map=NEW_ANIME_MAPS.find(m=>m.id===id),g=run(map);g.wave=4;for(const type of MAP_ENEMIES[id]){assert.ok(ENEMIES[type]);assert.ok(makeEnemy(g,type).hp>0);}{const kinds=Array.from({length:200},()=>spawnEnemy(g).archetype);assert.ok(kinds.every(k=>ENEMIES[k]&&!BOSSES[k]));assert.ok(kinds.filter(k=>MAP_ENEMIES[id].includes(k)).length>110,'map enemies are favoured');}assert.equal(new Set(MAP_BOSSES[id]).size,normalBossIds.length);}
  assert.ok(MAP_ENEMIES.leafvillage.every(id=>ENEMIES[id].family==='naruto'||id==='spiderdemon'));assert.ok(MAP_ENEMIES.tournament.includes('celljunior'));
 });
 test('new map choice, destroyed scenery and current procedural world restore from saves',()=>{

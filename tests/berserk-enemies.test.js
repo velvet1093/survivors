@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CHARACTERS} from '../src/game.js';
 import {createRun,spawnEnemy,updateRun} from '../src/engine.js';
-import {ENEMIES,BOSSES,MAP_ENEMIES,MAP_BOSSES,REGULAR_BOSS_IDS,bossForWave,updateEnemyAI} from '../src/enemies.js';
+import {ENEMIES,BOSSES,MAP_ENEMIES,MAP_BOSSES,REGULAR_BOSS_IDS,featuredBosses,updateEnemyAI} from '../src/enemies.js';
 import {BERSERK_ENEMIES,BERSERK_BOSSES} from '../src/berserk-enemies.js';
 import {bossPhases} from '../src/boss-phase-guide.js';
 import {BOSS_CINEMATICS,finishBossIntro} from '../src/boss-intro.js';
@@ -15,7 +15,7 @@ const covered=(h,x,y)=>h.shape==='line'?segmentDistance(x,y,h.x,h.y,h.tx,h.ty)<h
 const sim=(g,n)=>{for(let i=0;i<n;i++)updateRun(g,.01);};
 
 test('Eclipse has four exclusive Berserk threats, three themed first bosses and every regular boss',()=>{
- assert.deepEqual(MAP_ENEMIES.eclipse,Object.keys(BERSERK_ENEMIES));assert.deepEqual([5,10,15].map(w=>bossForWave('eclipse',w)),['zodd','grunbeld','femto']);
+ assert.deepEqual(MAP_ENEMIES.eclipse,Object.keys(BERSERK_ENEMIES));assert.ok(['zodd','grunbeld','femto'].every(id=>featuredBosses('eclipse').includes(id)));
  assert.equal(MAP_BOSSES.eclipse.length,REGULAR_BOSS_IDS.length);
  for(const [id,def]of Object.entries(BERSERK_ENEMIES)){assert.equal(ENEMIES[id].family,'berserk');const g=run(),e=spawnEnemy(g,false,false,id);Object.assign(e,{x:190,y:30,speed:0,attackCD:0});updateEnemyAI(g,e,.01);assert.ok(g.hazards.length||g.enemyShots.length,def.name+' attacks');}
  for(const id of Object.keys(BERSERK_BOSSES)){assert.equal(BOSSES[id].family,'berserk');assert.equal(bossPhases(id).length,2);assert.equal(BOSS_CINEMATICS[id].beats.length,3);}
