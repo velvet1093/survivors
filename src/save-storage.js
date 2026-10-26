@@ -1,5 +1,6 @@
 // Keep the historical keys stable across game builds. The database is a second
 // local copy, not an account or a service, and shares the browser's origin rules.
+import {connectCloud,readCloudRecord,writeCloudRecord} from './cloud-save.js';
 export const SAVE_STORAGE_KEYS=['anime-survivors-progress-v1','anime-survivors-run-v1','anime-best'];
 export const SAVE_DATABASE='anime-survivors-local-saves-v1';
 const META_KEY='anime-survivors-save-meta-v1';
@@ -97,6 +98,48 @@ export async function openSaveStorage(options={}){
  if(recovered)writeLocal(initial);
  const deletions=initial.filter(record=>record.deleted);
  if(deletions.length&&idbAvailable)mirror(deletions,localAvailable);
+ // ---- Cloud copy (claude.ai artifact database) ----
+ const cloudState={cloud:null,known:new Map(),pending:new Map(),timer:null,busy:Promise.resolve(),status:'connecting',syncedAt:null};
+ const schedule=delay=>{if(cloudState.cloud&&cloudState.pending.size&&!cloudState.timer)cloudState.timer=setTimeout(pushCloud,delay);};
+ function pushCloud(){
+  clearTimeout(cloudState.timer);cloudState.timer=null;const cloud=cloudState.cloud;if(!cloud||!cloudState.pending.size)return cloudState.busy;
+  const batch=[...cloudState.pending.values()];cloudState.pending.clear();
+  cloudState.busy=cloudState.busy.then(async()=>{
+   for(const record of batch){
+    try{const chunks=await writeCloudRecord(cloud,record,cloudState.known.get(record.key)?.chunks||0);cloudState.known.set(record.key,{revision:record.revision,chunks});cloudState.status='synced';cloudState.syncedAt=now();}
+    catch{cloudState.status='error';if(!cloudState.pending.has(record.key))cloudState.pending.set(record.key,record);}
+   }
+   if(cloudState.pending.size)schedule(30000);
+  }).catch(()=>{});
+  return cloudState.busy;
+ }
+ // Run saves change every few seconds; the cloud gets the latest value at most every 8 s per key.
+ const queueCloud=changed=>{for(const record of changed)cloudState.pending.set(record.key,{...record,backup:null});schedule(options.cloudDelay??8000);};
+ const applyCloud=rows=>{
+  const changed=[];
+  for(const [index,key]of SAVE_STORAGE_KEYS.entries()){
+   const row=rows[index],current=records.get(key);
+   if(!row){if(current.value!==null)cloudState.pending.set(key,{...current,backup:null});continue;}
+   cloudState.known.set(key,{revision:row.revision,chunks:row.chunks});
+   if(row.revision>current.revision){
+    // The cloud copy is newer: it becomes current and the local value stays as its backup.
+    const record={key,value:row.deleted?null:row.value,backup:row.deleted?null:current.value??current.backup,revision:row.revision,updatedAt:row.updatedAt,deleted:row.deleted};
+    records.set(key,record);cache.delete(key);cache.delete(key+BACKUP_SUFFIX);if(record.value!==null)cache.set(key,record.value);if(record.backup!==null)cache.set(key+BACKUP_SUFFIX,record.backup);
+    changed.push(record);lastSavedAt=Math.max(lastSavedAt||0,record.updatedAt);
+   }else if(current.revision>row.revision&&(current.value!==null||current.deleted))cloudState.pending.set(key,{...current,backup:null});
+  }
+  if(changed.length){writeLocal(changed);mirror(changed,localAvailable);}
+  schedule(1500);
+  return changed.map(record=>record.key);
+ };
+ const cloudSource=Object.prototype.hasOwnProperty.call(options,'cloud')?Promise.resolve(options.cloud):connectCloud();
+ const cloudLoad=cloudSource.then(async cloud=>{
+  if(!cloud){cloudState.status='offline';return [];}
+  const rows=await Promise.all(SAVE_STORAGE_KEYS.map(key=>readCloudRecord(cloud,key).catch(()=>undefined)));
+  // If any read failed, never risk overwriting a newer cloud save with this device's copy.
+  if(rows.includes(undefined)){cloudState.status='error';return [];}
+  cloudState.cloud=cloud;cloudState.status='synced';cloudState.syncedAt=now();return applyCloud(rows);
+ }).catch(()=>{cloudState.status='error';return [];});
  const adapter={
   getItem(key){key=String(key);if(key.endsWith(BACKUP_SUFFIX)&&records.get(key.slice(0,-BACKUP_SUFFIX.length))?.deleted)return null;if(cache.has(key))return cache.get(key);if(records.has(key))return null;try{return local?.getItem(key)??null;}catch{return null;}},
   setItem(key,value){return this.batch([[String(key),String(value)]]);},
@@ -112,9 +155,9 @@ export async function openSaveStorage(options={}){
     if(value!==null)cache.set(key,value);if(record.backup!==null)cache.set(key+BACKUP_SUFFIX,record.backup);
    }
    if(!changed.length){if(!lastDurable)throw new Error(error||'The latest save is only available for this session.');return true;}
-   const localDone=writeLocal(changed);lastSavedAt=Math.max(...changed.map(record=>record.updatedAt));lastDurable=localDone||idbAvailable;
+   const localDone=writeLocal(changed);lastSavedAt=Math.max(...changed.map(record=>record.updatedAt));lastDurable=localDone||idbAvailable||!!cloudState.cloud;
    if(lastDurable)error=null;else error='Browser storage is unavailable. Export a backup before closing.';
-   mirror(changed,localDone);
+   mirror(changed,localDone);queueCloud(changed);
    if(!lastDurable)throw new Error(error);
    return true;
   },
@@ -122,15 +165,21 @@ export async function openSaveStorage(options={}){
    const priorBackup=cache.get(key+BACKUP_SUFFIX)??null;
    this.setItem(key,value);
    const record=records.get(key);record.backup=priorBackup;cache.delete(key+BACKUP_SUFFIX);if(priorBackup!==null)cache.set(key+BACKUP_SUFFIX,priorBackup);
-   recovered=true;writeLocal([record]);mirror([{...record}],localAvailable);return value;
+   recovered=true;writeLocal([record]);mirror([{...record}],localAvailable);queueCloud([record]);return value;
   },
   getRecoveryValues(key){if(records.get(key)?.deleted)return [];const record=mirrored.get(key);return record&&!record.deleted?[record.value,record.backup].filter(value=>typeof value==='string'):[];},
   confirmValid(key,value){const record=records.get(key),saved=mirrored.get(key);if(record&&record.value===value&&idbAvailable&&saved?.revision!==record.revision)mirror([{...record}],localAvailable);},
   async flush(){await queue;return lastDurable;},
-  get persistent(){return localAvailable||idbAvailable;},
-  status(){return {driver:localAvailable?(idbAvailable?'localStorage + IndexedDB':'localStorage'):idbAvailable?'IndexedDB':'memory',persistent:this.persistent,lastSavedAt,recovered,pending:pending>0,error};},
-  close(){db?.close?.();},
+  // Sends pending cloud writes now, e.g. when the tab is hidden or closed.
+  flushCloud(){return pushCloud();},
+  get persistent(){return localAvailable||idbAvailable||!!cloudState.cloud;},
+  status(){return {driver:localAvailable?(idbAvailable?'localStorage + IndexedDB':'localStorage'):idbAvailable?'IndexedDB':'memory',persistent:this.persistent,lastSavedAt,recovered,pending:pending>0,error,cloud:cloudState.status,cloudSyncedAt:cloudState.syncedAt||null};},
+  close(){db?.close?.();clearTimeout(cloudState.timer);},
  };
+ // Wait briefly for the cloud copy so a newer save from another version or device
+ // is in place before the game reads it; a later arrival is applied and reported.
+ const early=await Promise.race([cloudLoad.then(keys=>({keys})),new Promise(resolve=>setTimeout(()=>resolve(null),options.cloudTimeout??8000))]);
+ if(!early)cloudLoad.then(keys=>{if(keys.length)options.onRemoteChange?.(keys);});
  return adapter;
 }
 

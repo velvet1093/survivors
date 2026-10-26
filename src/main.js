@@ -85,8 +85,8 @@ function flushProgress(){
  else{lastSaveOk=saveProfile(profile,storage);if(game){const saved=saveRun(game,storage);if(game.status!=='over'&&game.p.hp>0)lastSaveOk=lastSaveOk&&saved;}}
  updateSaveNotice();
 }
-function updateSaveNotice(){const notice=$('.save-notice');if(!notice)return;const state=storage?.status?.();notice.textContent=lastSaveOk&&state?.persistent!==false?(state?.recovered?'Recovered your local backup. Your progress is saved on this device.':'Progress and unfinished runs save automatically on this device.'):'Local saving is unavailable. Open Save & Backup to export your progress.';}
-window.addEventListener('pagehide',()=>{audioPlayer.stop();flushProgress();});document.addEventListener('visibilitychange',()=>{if(document.hidden){audioPlayer.stop();flushProgress();}});
+function updateSaveNotice(){const notice=$('.save-notice');if(!notice)return;const state=storage?.status?.();notice.textContent=lastSaveOk&&state?.cloud==='synced'?'Progress syncs to your claude.ai account, so it carries over to every game update and device.':lastSaveOk&&state?.persistent!==false?(state?.recovered?'Recovered your local backup. Your progress is saved on this device.':'Progress and unfinished runs save automatically on this device.'):'Local saving is unavailable. Open Save & Backup to export your progress.';}
+window.addEventListener('pagehide',()=>{audioPlayer.stop();flushProgress();storage?.flushCloud?.();});document.addEventListener('visibilitychange',()=>{if(document.hidden){audioPlayer.stop();flushProgress();storage?.flushCloud?.();}});
 const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 function readBest(){try{return Math.max(profile.bestKills||0,Number(storage?.getItem('anime-best')||0));}catch{return profile.bestKills||0;}}
 function tone(){if(sound)audioPlayer.effect('ui');}
@@ -316,8 +316,10 @@ function frame(ts){
   }requestAnimationFrame(frame);
 }
 async function boot(){
- app.innerHTML='<main class="save-loading" role="status">Loading your local progress…</main>';
- try{storage=await openSaveStorage();}catch{storage=undefined;}
+ app.innerHTML='<main class="save-loading" role="status">Loading your saved progress…</main>';
+ // A newer cloud save that arrives after the menu is up replaces the menu's state;
+ // during a run it is left for the next visit rather than interrupting play.
+ try{storage=await openSaveStorage({onRemoteChange:()=>{if(game)return;profile=loadProfile(storage);syncAudio();applyProfileSelection();menu();}});}catch{storage=undefined;}
  profile=loadProfile(storage);syncAudio();applyProfileSelection();menu();requestAnimationFrame(frame);
 }
 boot();
