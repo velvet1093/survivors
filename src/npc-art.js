@@ -110,10 +110,10 @@ function goblinSlayer(r,{bob,blink}){
  r.rect(23,33+y,10,4,D[0]);
  // Plume: red feathers fixed at the back of the helm, streaming out behind it.
  const P=['#6a0e1a','#a81c2c','#dc3c4c'];
- const shaft=[[31,6],[35,4],[40,4],[45,6],[48,10],[50,15],[50,21],[48,26]];
+ const shaft=[[30,5],[34,3],[38,4],[42,7],[44,12],[45,18],[44,24],[42,29]];
  for(let k=0;k<shaft.length-1;k++){const [a,b]=shaft[k],[c,d]=shaft[k+1];r.line(a,b+y,c,d+y,P[1],2);}
  for(let k=1;k<shaft.length;k++){const [a,b]=shaft[k],len=k<3?3:4;r.line(a,b+y,a+len,b+1+y,P[1]);r.line(a,b+1+y,a+len-1,b+len+y,P[0]);r.put(a+len,b+1+y,P[2]);}
- r.line(33,4+y,40,3+y,P[2]);r.line(41,4+y,46,6+y,P[2]);r.line(48,11+y,49,18+y,P[2]);
+ r.line(33,3+y,38,3+y,P[2]);r.line(40,5+y,43,8+y,P[2]);r.line(45,13+y,46,19+y,P[2]);
  // Helm: crested crown, prow-fronted visor with a tapering slit grill, beaked chin.
  const SD='#3e434d',helm=[[28,4],[34,6],[38,10],[40,16],[41,21],[39,30],[34,35],[28,39],[22,35],[17,30],[15,21],[16,16],[18,10],[22,6]];
  r.poly(shift(helm,y),SD);r.poly(inset(shift(helm,y),1),S[1]);
