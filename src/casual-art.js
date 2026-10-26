@@ -1,3 +1,4 @@
+import {gokuHairBack,gokuFace,gokuHairFront} from './goku-art.js';
 import {raster,outline} from './pixel-characters.js';
 
 // Everyday outfits are individually cut and shaded. Hair, compact faces and
@@ -10,7 +11,9 @@ const HAIR={
 };
 const EYES={goku:'#304452',gojo:'#61c1e6',naruto:'#4889b4',madoka:'#b65e8b',maomao:'#8674a7',shinji:'#5a7e93',esdeath:'#548cb6',kurumi:'#b95671',frieren:'#5a9a85',samus:'#6597a2',megumi:'#54716e',eren:'#77a894',yuki:'#9b7f65',diavolo:'#77a47d',rimuru:'#c7a054',featherine:'#a083b2'};
 const LONG=new Set(['esdeath','kurumi','yuki','featherine','eren']);
-function hairBack(r,id,{y,walk}){
+function hairBack(r,id,m){
+ if(id==='goku')return gokuHairBack(r,{y:m.y,stage:m.form||0});
+ const {y,walk}=m;
  const [hair,dark,light]=HAIR[id],{poly:P,line:L,rect:R}=r;
  if(LONG.has(id)){
   P([[16,18+y],[21,10+y],[33,10+y],[39,18+y],[40,35],[42+walk,52],[38+walk,58],[32,52],[28,40],[23,53],[16-walk,57],[14-walk,52],[16,35]],dark);
@@ -107,6 +110,7 @@ function outfit(r,id,m){
  if(id==='featherine'){R(24,36+y,9,3,'#d0b8d2');R(21,52,15,3,'#554359');R(27,52,4,3,'#d7bf88');R(34,40,2,3,'#c9ad72');R(33,41,4,1,'#c9ad72');}
 }
 function face(r,id,m){
+ if(id==='goku')return gokuFace(r,{y:m.y,stage:m.form||0,expression:m.expression,blink:m.blink,focused:m.cast||['focused','ultimate'].includes(m.expression)});
  const {poly:P,rect:R,line:L}=r,{y,blink,expression,cast}=m,focused=cast||['focused','ultimate'].includes(expression);
  P([[18,21+y],[22,16+y],[33,16+y],[38,22+y],[37,31+y],[32,37+y],[26,38+y],[20,34+y],[17,28+y]],SKIN_SHADE);
  P([[20,22+y],[23,18+y],[32,18+y],[36,23+y],[35,31+y],[31,35+y],[25,35+y],[20,31+y]],SKIN);
@@ -121,6 +125,7 @@ function face(r,id,m){
  if(expression==='hurt')R(27,34+y,2,2,'#9b6371');
 }
 function hairFront(r,id,m){
+ if(id==='goku')return gokuHairFront(r,{y:m.y,stage:m.form||0});
  const {poly:P,line:L,rect:R}=r,{y,walk,form=0}=m;
  let [hair,dark,light]=HAIR[id];if(id==='goku'&&form>0)[hair,dark,light]=form===4?['#68bfdb','#34778d','#b8f1e7']:['#e5ca63','#a97a32','#fff1a1'];
  if(id==='goku'){
