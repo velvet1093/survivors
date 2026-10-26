@@ -1,7 +1,11 @@
-import {raster,outline} from './pixel-characters.js';
-
-export const DENJI_ART={ink:'#25303d',hair:'#dda44e',hairDark:'#9c643d',hairLight:'#f4cf7c',skin:'#edc5a2',skinShade:'#c39079',skinLight:'#ffe1b9',shirt:'#eee9d9',shirtShade:'#abb6b6',shirtLight:'#fff5df',pants:'#35404d',pantsShade:'#212a38',pantsLight:'#596473',orange:'#ce743b',orangeDark:'#7c4837',orangeLight:'#edaa5d',steel:'#a8b9bc',steelDark:'#566c79',steelLight:'#edf0d7',red:'#bd5c58'};
-const c=DENJI_ART;
+import {canvas,motion,limb,selout,mix,SKIN} from './hero-kit.js';
+// Denji: lanky adult build, messy straw-blond hair, tired eyes and a shark-tooth grin.
+// The base outfit follows his Public Safety look: rolled shirt sleeves, a loose black
+// tie, brown belt, rolled charcoal slacks and red-trimmed white high-tops. Chainsaw Man
+// (form 1 or the chainsaw pose) shares one design across every skin.
+export const DENJI_ART={ink:'#25303d',hair:'#e3b35a',hairDark:'#a46f3c',hairLight:'#f7d98c',skin:'#f1cfb0',skinShade:'#d2a58a',skinLight:'#ffe6cc',shirt:'#eeece4',shirtShade:'#b9bcb8',shirtLight:'#ffffff',pants:'#333b44',pantsShade:'#20262e',pantsLight:'#4f5965',orange:'#ce743b',orangeDark:'#7c4837',orangeLight:'#edaa5d',steel:'#a8b9bc',steelDark:'#566c79',steelLight:'#edf0d7',red:'#bd5c58'};
+const c=DENJI_ART,TIE='#1d2128',BELT='#6e4632',BUCKLE='#c9ccc6';
+const SK={base:c.skin,shade:c.skinShade,deep:'#b98374',light:c.skinLight};
 function saw(r,x,y,length,{upright=false,hot=false,frame=0}={}){
  const {rect:R,poly:P,line:L}=r,base=hot?'#e5b184':c.steel,shine=hot?'#fff0be':c.steelLight;
  if(upright){
@@ -16,78 +20,112 @@ function saw(r,x,y,length,{upright=false,hot=false,frame=0}={}){
   L(x,y-1,x+length-3,y-1,shine);
  }
 }
+// Longer, slightly angular face with small half-lidded eyes and a jagged grin.
 function face(r,y,{expression,blink}){
- const {rect:R,line:L,poly:P}=r;
- P([[17,20+y],[38,20+y],[38,30+y],[34,37+y],[27,40+y],[20,36+y],[16,30+y]],c.skinShade);
- P([[18,21+y],[36,21+y],[36,30+y],[32,37+y],[25,37+y],[19,32+y]],c.skin);
- R(18,26+y,2,4,c.skinLight);R(34,27+y,2,3,c.skinShade);
- for(const x of [20,30]){
-  if(blink){L(x,28+y,x+5,28+y,c.ink);continue;}
-  if(expression==='hurt'){L(x,27+y,x+4,29+y,c.ink);L(x,29+y,x+4,27+y,c.ink);}
-  else{R(x,27+y,5,1,c.hairDark);R(x,28+y,5,4,'#f9efda');R(x+2,28+y,2,4,'#9b6d48');R(x+2,28+y,1,3,c.ink);R(x+3,28+y,1,1,c.skinLight);if(expression==='focused')L(x-1,26+y,x+4,27+y,c.ink);}
+ const {rect:R,line:L,poly:P,put}=r,ink='#2a2328';
+ R(25,36+y,6,4,SK.shade);
+ P([[18,19+y],[38,19+y],[38,29+y],[36,34+y],[31,38+y],[25,38+y],[20,34+y],[18,29+y]],SK.shade);
+ P([[19,19+y],[37,19+y],[37,29+y],[35,33+y],[30,37+y],[26,37+y],[21,33+y],[19,29+y]],SK.base);
+ R(20,30+y,2,1,SK.light);R(35,30+y,2,1,SK.light);R(36,25+y,1,4,SK.shade);
+ const hurt=expression==='hurt',focus=expression==='focused'||expression==='ultimate';
+ for(const [x,side]of [[21,-1],[31,1]]){
+  if(blink){L(x,28+y,x+3,28+y,ink);continue;}
+  if(hurt){L(x,26+y,x+3,28+y,ink);L(x,28+y,x+3,26+y,ink);continue;}
+  // Heavy upper lid over a small reddish-brown iris: his usual unimpressed look.
+  L(x-(side<0?1:0),26+y,x+3+(side>0?1:0),26+y,ink);R(x,27+y,4,2,'#fbf4e8');R(x+(side<0?1:0),27+y,2,2,'#8f4f3e');put(x+(side<0?1:0),27+y,'#5a2c26');put(x+(side<0?2:1),28+y,'#c98a6a');
+  if(focus)L(x-(side<0?1:0),25+y,x+3+(side>0?1:0),side<0?26+y:25+y,ink);
  }
- if(expression==='hurt'){L(25,35+y,30,34+y,'#996d66');R(20,32+y,3,1,'#d49683');}
- else if(expression==='focused'){L(24,35+y,32,34+y,c.ink);L(26,36+y,30,36+y,c.skinShade);}
- else{P([[23,34+y],[33,33+y],[31,37+y],[26,37+y]],c.ink);L(24,34+y,31,34+y,'#fff2d3');R(26,36+y,3,1,'#c87e74');}
+ // Brows sit flat and a little apart.
+ if(!blink){L(20,24+y,24,24+y,c.hairDark);L(31,24+y,35,24+y,c.hairDark);}
+ if(hurt){P([[25,33+y],[31,33+y],[30,35+y],[26,35+y]],'#6e3b3b');for(const x of [26,28,30])put(x,33+y,'#fff8ee');return;}
+ if(focus){L(25,34+y,31,34+y,ink);for(const x of [26,28,30])put(x,33+y,'#fff8ee');return;}
+ // Toothy grin: a dark mouth with a row of pointed upper teeth, lifted at his left corner.
+ R(25,33+y,7,2,ink);put(32,32+y,ink);put(24,33+y,mix(ink,SK.base,.5));
+ for(const x of [25,27,29,31])put(x,33+y,'#fff8ee');for(const x of [26,28,30])put(x,33+y,'#d8d2c8');for(const x of [26,29])put(x,34+y,'#efe9df');
 }
-function pajamaHood(r,y){
+// Messy short blond hair: uneven spikes, darker roots and a flyaway on top.
+function hair(r,y){
  const {poly:P,line:L,rect:R}=r;
-  P([[12,20+y],[14,11+y],[19,6+y],[21,4+y],[25,9+y],[35,7+y],[40,12+y],[43,22+y],[42,34+y],[38,39+y],[35,31+y],[18,31+y],[15,37+y],[11,29+y]],'#8b4d35');
-  P([[14,20+y],[16,12+y],[20,9+y],[22,11+y],[34,10+y],[39,15+y],[41,26+y],[38,33+y],[34,23+y],[18,22+y],[15,31+y]],'#d88345');
-  R(19,11+y,3,2,'#efb86a');R(35,14+y,3,2,'#efb86a');
+ P([[15,27+y],[14,18+y],[17,13+y],[16,8+y],[22,10+y],[25,4+y],[29,9+y],[34,5+y],[36,11+y],[41,12+y],[40,19+y],[41,27+y],[38,30+y],[36,22+y],[33,20+y],[30,24+y],[28,19+y],[25,23+y],[22,19+y],[20,24+y],[18,31+y]],c.hairDark);
+ P([[16,24+y],[16,18+y],[19,14+y],[18,11+y],[23,12+y],[26,7+y],[29,12+y],[34,8+y],[35,13+y],[39,15+y],[38,21+y],[35,19+y],[32,18+y],[30,22+y],[28,17+y],[25,21+y],[23,17+y],[20,22+y],[18,26+y]],c.hair);
+ L(19,17+y,24,14+y,c.hairLight);L(27,11+y,29,15+y,c.hairLight);L(31,13+y,35,11+y,c.hairLight);R(17,20+y,2,1,c.hairLight);
+ // A couple of uneven tufts stick up from the crown.
+ r.poly([[23,9+y],[22,4+y],[26,7+y]],c.hairDark);r.poly([[23,8+y],[23,5+y],[25,7+y]],c.hair);
 }
-function humanHair(r,y,skin){
- const {poly:P,line:L,rect:R}=r;
- P([[14,26+y],[13,18+y],[17,15+y],[15,10+y],[22,12+y],[25,5+y],[29,10+y],[35,7+y],[36,12+y],[41,14+y],[39,21+y],[40,27+y],[36,30+y],[33,23+y],[28,25+y],[26,20+y],[21,25+y],[20,21+y],[17,30+y]],c.hairDark);
- P([[16,23+y],[16,18+y],[21,16+y],[19,13+y],[24,14+y],[26,9+y],[29,14+y],[34,11+y],[34,15+y],[38,17+y],[36,23+y],[33,20+y],[29,23+y],[26,17+y],[22,22+y],[21,18+y],[18,25+y]],c.hair);
- L(19,18+y,25,15+y,c.hairLight);L(26,12+y,29,16+y,c.hairLight);L(31,16+y,35,14+y,c.hairLight);R(17,20+y,3,1,c.hairLight);R(34,19+y,3,1,'#efbd66');
-}
-function legs(r,{step,skin,hybrid}){
+function pochitaHood(r,y){
  const {poly:P,rect:R,line:L}=r;
- const shorts=skin==='swimsuit'&&!hybrid,pajamas=skin==='pajamas'&&!hybrid;
- for(const [x,d]of [[20,-step],[31,step]]){
-  if(shorts){
-   P([[x-2,53],[x+7,53],[x+7+d,61],[x+5+d,70],[x+d,70],[x-1+d,61]],c.skinShade);R(x,56,5,12,c.skin);L(x+1,58,x+1+d,66,c.skinLight);
-   P([[x-3,68],[x+5,68],[x+8+d,71],[x+7+d,73],[x-3+d,73]],c.ink);R(x-1+d,69,7,2,'#6e8f8f');L(x+d,68,x+4+d,71,'#d9c394');
-  }else{
-   const cloth=pajamas?'#be7748':c.pants,shade=pajamas?'#7d4d3c':c.pantsShade,light=pajamas?'#e6a05e':c.pantsLight;
-   P([[x-3,50],[x+7,50],[x+8+d,61],[x+6+d,70],[x-2+d,70],[x-3+d,61]],shade);
-   P([[x-1,52],[x+5,52],[x+5+d,61],[x+3+d,68],[x+d,68],[x-1+d,60]],cloth);L(x+1,55,x+d,65,light);
-   if(pajamas){R(x+1,57,2,2,'#f3ce8c');R(x+2+d,63,2,2,'#f3ce8c');}
-   const shoe=pajamas?'#6c6755':'#26313d';P([[x-3+d,68],[x+5+d,68],[x+9+d,71],[x+8+d,73],[x-4+d,73],[x-5+d,71]],c.ink);R(x-2+d,69,8,2,shoe);L(x-3+d,72,x+7+d,72,pajamas?'#d1c08d':'#8d9696');
-   if(!pajamas){L(x+d,69,x+3+d,69,'#d6d5bf');}
-  }
- }
- if(shorts){P([[17,49],[37,49],[40,58],[28,60],[27,55],[26,60],[15,58]],'#9b563c');P([[19,50],[35,50],[37,57],[29,57],[27,53],[24,57],[18,57]],'#df9550');L(20,51,34,51,'#eed4a2');L(28,52,29,56,c.ink);L(33,53,36,55,'#597f82');}
+ P([[13,22+y],[14,12+y],[19,7+y],[28,5+y],[37,7+y],[42,12+y],[43,22+y],[41,34+y],[37,30+y],[37,20+y],[19,20+y],[19,30+y],[15,34+y]],'#8b4d35');
+ P([[15,21+y],[16,13+y],[20,9+y],[28,7+y],[36,9+y],[40,13+y],[41,21+y],[38,19+y],[18,19+y]],'#d88345');
+ // Pochita's ears and the little saw blade on the hood's nose.
+ P([[15,12+y],[11,6+y],[18,8+y]],'#8b4d35');P([[41,12+y],[45,6+y],[38,8+y]],'#8b4d35');
+ R(25,4+y,6,4,c.steel);L(26,4+y,30,4+y,c.steelLight);for(const x of [25,27,29])r.put(x,3+y,c.steelLight);
+ R(20,11+y,3,2,'#efb86a');R(34,11+y,3,2,'#efb86a');
 }
-function body(r,{y,step,skin,cast,hybrid}){
- const {poly:P,line:L,rect:R}=r,swim=skin==='swimsuit'&&!hybrid,casual=skin==='casual'&&!hybrid,pj=skin==='pajamas'&&!hybrid,jacket=skin==='devilhunter'&&!hybrid;
- const cloth=pj?'#cc8549':casual?'#cdbb92':c.shirt,shade=pj?'#925a3d':casual?'#8f8c7f':c.shirtShade,light=pj?'#efb86b':casual?'#eee1ba':c.shirtLight;
- P([[18,36+y],[23,34+y],[32,34+y],[38,38+y],[38,50],[35,56],[19,55],[16,47]],swim?c.skinShade:shade);
- P([[20,37+y],[24,36+y],[31,36+y],[35,39+y],[35,50],[32,53],[21,52],[19,45]],swim?c.skin:cloth);L(21,39+y,21,49,swim?c.skinLight:light);
- if(swim){L(25,40+y,27,43+y,c.skinShade);L(31,40+y,29,43+y,c.skinLight);L(26,47,31,47,c.skinShade);}
- else if(casual){
-  P([[22,35+y],[27,40+y],[33,35+y],[35,40+y],[28,45],[20,39+y]],shade);L(23,36+y,27,40+y,light);L(31,37+y,30,44,light);
-  P([[25,43],[31,43],[34,47],[32,50],[24,50],[22,47]],'#bf773f');R(25,44,5,3,'#e7a157');R(25,46,1,1,c.ink);R(30,46,1,1,c.ink);R(31,43,4,1,c.steel);L(22,51,33,51,shade);
- }else if(pj){
-  L(28,39+y,28,54,'#754f3c');R(29,43,1,1,c.shirtLight);R(29,48,1,1,c.shirtLight);R(21,46,4,3,'#e7bd78');L(22,46,24,48,c.shirtLight);R(32,49,3,2,'#e7bd78');
- }else{
-  P([[22,34+y],[27,39+y],[24,43+y],[20,37+y]],light);P([[32,34+y],[27,39+y],[30,43+y],[35,37+y]],light);P([[27,38+y],[30,40+y],[28,43+y],[30,51],[26,54],[24,50],[26,42+y],[25,40+y]],c.ink);R(27,44,1,6,'#59616a');R(32,42+y,3,1,shade);R(33,43+y,1,5,shade);
-  if(hybrid){for(const [x,yy]of [[18,44],[35,46],[21,51]]){P([[x,yy],[x+4,yy+2],[x+1,yy+6]],c.shirt);L(x,yy,x+1,yy+3,c.red);}L(33,49,35,51,c.red);}
+// Legs and footwear per outfit.
+function legs(r,walk,look){
+ const {rect:R,poly:P,line:L}=r;
+ for(const [i,x]of [21,31].entries()){const d=i?walk:-walk;
+  if(look==='swimsuit'){R(x+d,55,5,13,c.skin);R(x+d+4,55,1,13,c.skinShade);R(x+d-1,68,7,3,'#6e8f8f');L(x+d,68,x+d+4,68,'#d9c394');continue;}
+  if(look==='pajamas'){R(x+d-1,52,7,16,'#a8613d');R(x+d,52,5,15,'#d88345');L(x+d+1,54,x+d+1,64,'#efb86a');R(x+d-1,67,7,4,'#6c6755');R(x+d,67,4,1,'#d1c08d');continue;}
+  const pants=look==='casual'?'#4f6e93':c.pants,shade=look==='casual'?'#344b68':c.pantsShade,light=look==='casual'?'#7d98b8':c.pantsLight;
+  R(x+d-1,52,7,14,shade);R(x+d,52,5,13,pants);L(x+d+1,54,x+d+1,63,light);
+  // Rolled cuffs show a lighter fold above the shoes.
+  R(x+d-1,64,7,2,look==='casual'?'#8fa6c2':'#59616c');
+  if(look==='devilhunter'){R(x+d-1,66,7,5,'#1b1f26');R(x+d,66,4,1,'#4a505c');R(x+d-1,70,7,1,'#0e1116');continue;}
+  // White high-tops with red trim, white laces and a dark sole.
+  R(x+d-1,66,7,5,'#f2f0ea');R(x+d-1,66,7,1,'#b4423e');R(x+d-1,69,7,1,'#b4423e');R(x+d+1,67,2,2,'#d8d5ce');R(x+d-1,70,7,1,'#3a3236');
  }
- // The visible pull cord remains on every human outfit, including swimwear.
- L(24,42,22,47,c.ink,1);P([[20,46],[24,46],[25,49],[22,51],[19,49]],c.ink);R(21,47,2,2,'#d7b997');
- const leftY=cast?44:50+step*.35,rightY=cast?41:50-step*.35;
- for(const [x,side,hy]of [[17,-1,leftY],[37,1,rightY]]){
-  const sleeve=swim?c.skin:cloth,ss=swim?c.skinShade:shade;
-  P([[x-3,37+y],[x+4,37+y],[x+side*4+4,44],[x+side*4+2,47],[x+side*4-4,45],[x-4,41+y]],ss);L(x-1,39+y,x+side*3,43,sleeve,4);
-  const hx=x+side*(cast?5:2);L(x+side*3,44,hx,hy,c.skinShade,5);L(x+side*2,44,hx,hy,c.skin,3);R(hx-2,hy-1,5,5,c.skin);L(hx-1,hy+2,hx+2,hy+2,c.skinShade);
-  if(pj){L(x,38+y,hx,hy-1,ss,6);L(x,39+y,hx,hy-2,sleeve,4);R(hx-2,hy-1,5,2,light);}
+}
+// Torso garments. Returns sleeve style so arms can follow.
+function torso(r,y,look,hybrid){
+ const {poly:P,rect:R,line:L,put}=r;
+ if(look==='swimsuit'&&!hybrid){
+  P([[18,38+y],[38,38+y],[36,53],[20,53]],c.skinShade);P([[19,39+y],[37,39+y],[35,52],[21,52]],c.skin);L(28,43+y,28,51,c.skinShade);L(23,46,33,46,c.skinShade);
+  // Orange Pochita-print swim trunks.
+  P([[19,51],[37,51],[38,58],[29,58],[28,55],[27,58],[18,58]],'#9b563c');P([[20,52],[36,52],[37,57],[30,57],[28,54],[26,57],[19,57]],'#df9550');L(20,52,36,52,'#eed4a2');for(const x of [22,33])R(x,54,2,2,'#f3ce8c');
+  return {sleeve:null,pocket:'#9b563c'};
  }
- if(jacket){
-  for(const side of [-1,1]){const x=side<0?17:35;P([[x-2,36+y],[x+5,36+y],[x+side*5+4,46],[x+side*4+2,53],[x+3,52],[x+3,57],[x-2,55]],'#2e3b49');L(x,38+y,x+side*2,48,'#586574',2);P([[x,36+y],[x+4,38+y],[x+1,44]],'#8e9ba1');}R(15,43,3,2,c.red);R(35,43,3,2,c.red);
+ if(look==='pajamas'&&!hybrid){
+  P([[18,38+y],[38,38+y],[37,53],[19,53]],'#a8613d');P([[19,39+y],[37,39+y],[36,52],[20,52]],'#d88345');L(28,40+y,28,52,'#8b4d35');for(const yy of [43,47,51])put(29,yy,'#f3ce8c');R(22,46,4,3,'#efb86a');
+  return {sleeve:'#d88345',sleeveLight:'#efb86a',cuff:'#a8613d',pocket:'#a8613d'};
  }
- return {leftY,rightY};
+ if(look==='casual'&&!hybrid){
+  // Cream tee with an orange Pochita face.
+  P([[18,38+y],[38,38+y],[37,53],[19,53]],'#b9ad8e');P([[19,39+y],[37,39+y],[36,52],[20,52]],'#ece2c4');P([[24,38+y],[32,38+y],[30,40+y],[26,40+y]],c.skin);
+  R(24,43,8,6,'#ce743b');R(25,44,6,4,'#e8994e');put(26,45,c.ink);put(29,45,c.ink);R(27,42,2,2,c.steel);L(25,47,30,47,'#7c4837');
+  return {sleeve:'#ece2c4',sleeveLight:'#ffffff',cuff:'#b9ad8e',short:true,pocket:'#344b68'};
+ }
+ // White collared shirt (all suit looks and the hybrid), loose black tie and brown belt.
+ P([[18,38+y],[38,38+y],[37,53],[19,53]],c.shirtShade);P([[19,39+y],[37,39+y],[36,52],[20,52]],c.shirt);L(20,40+y,21,51,c.shirtLight);
+ P([[23,37+y],[27,40+y],[25,42+y],[22,39+y]],c.shirtLight);P([[33,37+y],[29,40+y],[31,42+y],[34,39+y]],c.shirtLight);
+ // Breast pocket and loosened tie.
+ R(31,43+y,4,3,c.shirtShade);L(31,43+y,34,43+y,c.shirtLight);
+ P([[27,39+y],[30,39+y],[29,41+y]],TIE);P([[27,41+y],[29,41+y],[30,49],[28,51],[26,49]],TIE);L(28,42+y,28,48,'#3c434e');
+ R(19,51,18,2,BELT);R(26,51,4,2,BUCKLE);put(27,51,'#ffffff');
+ if(hybrid){for(const [x,yy]of [[21,44],[34,46],[23,49]]){put(x,yy,c.red);put(x+1,yy+1,c.red);put(x,yy+2,'#8a3a38');}}
+ if(look==='devilhunter'&&!hybrid){
+  // Black Public Safety suit jacket worn open over the shirt.
+  P([[17,38+y],[24,38+y],[26,53],[18,54]],'#1f252e');P([[32,38+y],[39,38+y],[38,54],[30,53]],'#1f252e');
+  L(23,39+y,25,52,'#3b4350');L(33,39+y,31,52,'#3b4350');P([[22,38+y],[25,38+y],[25,44+y]],'#3b4350');P([[34,38+y],[31,38+y],[31,44+y]],'#3b4350');
+  return {sleeve:'#1f252e',sleeveLight:'#3b4350',cuff:c.shirt};
+ }
+ return {sleeve:c.shirt,sleeveLight:c.shirtLight,cuff:c.shirtShade,rolled:true};
+}
+// Starter cord: a small black T-handle hanging from the chest.
+function pullCord(r,y){const {line:L,rect:R}=r;L(24,42+y,23,46,c.ink);R(20,46,6,2,c.ink);R(21,46,4,1,'#5a6270');}
+function arms(r,y,g,{cast,hybrid}){
+ const skinArm={color:c.skin,light:c.skinLight,width:4,hand:c.skin,handShade:c.skinShade};
+ const arm=(x0,y0,x1,y1,opt={})=>{
+  if(!g.sleeve){limb(r,x0,y0,x1,y1,{...skinArm,...opt});return;}
+  const mx=Math.round(x0+(x1-x0)*.5),my=Math.round(y0+(y1-y0)*.5);
+  if(g.rolled||g.short){limb(r,x0,y0,x1,y1,{...skinArm,...opt});limb(r,x0,y0,mx,my,{color:g.sleeve,light:g.sleeveLight,width:5,hand:null});r.rect(mx-2,my,5,2,g.cuff);}
+  else{limb(r,x0,y0,x1,y1,{color:g.sleeve,light:g.sleeveLight,width:5,hand:c.skin,handShade:c.skinShade,...opt});r.rect(x1-1,y1+1,5,2,g.cuff);}
+ };
+ if(hybrid)return;
+ // Left arm hangs loose; right hand rests in the trouser pocket unless he attacks.
+ arm(18,40+y,15,53);
+ if(cast)arm(38,40+y,46,44,{hand:null});
+ else{arm(38,40+y,40,49,{hand:null});r.rect(37,50,4,2,g.pocket||c.pantsShade);}
 }
 function hybridHead(r,y,{cast,frame}){
  const {poly:P,line:L,rect:R}=r;
@@ -105,19 +143,23 @@ function hybridHead(r,y,{cast,frame}){
  L(20,26+y,28,25+y,'#efb26b');R(31,23+y,5,1,c.red);R(17,22+y,2,3,'#edbf7b');
 }
 export function denjiPixels({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='default',form=0}={}){
- const r=raster(),step=moving?[0,2,0,-2][((frame%4)+4)%4]:0,y=moving?-(frame%2):0,hybrid=form===1||pose==='chainsaw',cast=attack||pose==='ultimate'||pose==='rev'||pose==='cleave';
- const look=hybrid?'default':skin;
- legs(r,{step,skin:look,hybrid});
- const arms=body(r,{y,step,skin:look,cast,hybrid});
- if(hybrid){hybridHead(r,y,{cast,frame});
+ const hybrid=form===1||pose==='chainsaw',cast=attack||pose==='ultimate'||pose==='rev'||pose==='cleave';
+ const r=canvas(),{walk,y:bob}=motion({frame,moving}),y=bob-1,look=hybrid?'default':skin;
+ legs(r,walk,look);
+ const g=torso(r,y,look,hybrid);
+ pullCord(r,y);
+ arms(r,y,g,{cast,hybrid});
+ if(hybrid){
+  hybridHead(r,bob,{cast,frame});
   saw(r,11,cast?42:57,cast?22:19,{upright:true,hot:cast,frame});saw(r,43,cast?43:58,cast?23:20,{upright:true,hot:cast,frame});
   for(const x of [11,43]){r.rect(x-4,cast?40:49,8,7,c.orangeDark);r.rect(x-2,cast?41:50,5,5,c.orange);r.line(x-2,cast?41:50,x+2,cast?41:50,c.orangeLight);}
+  for(const [x0,x1]of [[18,13],[38,43]]){r.line(x0,40+y,x1,cast?42:50,c.shirtShade,5);r.line(x0,40+y,x1,cast?42:50,c.shirt,3);}
  }else{
-  if(look==='pajamas')pajamaHood(r,y);
-  face(r,y,{expression,blink});humanHair(r,y,look);
-  const sx=cast?38:40,sy=cast?43:54;
-  saw(r,sx,sy,cast?14:19,{upright:!cast,hot:pose==='ultimate',frame});
-  r.poly([[sx-7,sy-4],[sx+2,sy-4],[sx+5,sy],[sx+3,sy+6],[sx-5,sy+6],[sx-8,sy+2]],c.ink);r.rect(sx-5,sy-2,7,6,c.orange);r.line(sx-4,sy-2,sx+1,sy-2,c.orangeLight);r.rect(sx-4,sy,3,2,c.orangeDark);r.line(sx-7,sy-4,sx-3,sy-7,c.ink,2);r.line(sx-3,sy-7,sx+1,sy-4,c.ink,2);r.rect(sx-4,sy+3,4,2,c.skin);
+  if(look==='pajamas')pochitaHood(r,y);
+  face(r,y,{expression,blink});
+  if(look!=='pajamas')hair(r,y);
+  // Attacking or charging Rev: a chainsaw blade bursts from his right forearm.
+  if(cast)saw(r,46,44,10,{hot:pose==='ultimate',frame});
  }
- return outline(r.pixels,c.ink);
+ return selout(r.pixels,c.ink);
 }

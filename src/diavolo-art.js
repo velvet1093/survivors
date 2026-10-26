@@ -134,12 +134,41 @@ function arms(r,y,g,{attack,special}){
  draw(18,40+y,14,53);
  if(attack)draw(38,40+y,48,40);else draw(38,40+y,42,53);
 }
+// Diavolo's own face: longer and narrower with an angular jaw, high cheekbones,
+// narrow heavy-lidded eyes with dark liner, thin angled brows and dark lipstick.
+const LIP='#4f3a4e',LIP_LIGHT='#76596f',LINER='#2a1f2d';
+function emperorHead(r,y){
+ const {poly,rect,line,put}=r;
+ rect(25,36+y,6,4,SKIN.shade);
+ poly([[19,19+y],[37,19+y],[37,29+y],[35,34+y],[31,39+y],[25,39+y],[21,34+y],[19,29+y]],SKIN.shade);
+ poly([[20,19+y],[36,19+y],[36,29+y],[34,33+y],[30,38+y],[26,38+y],[22,33+y],[20,29+y]],SKIN.base);
+ // Cheekbone hollows and a narrow nose shadow.
+ line(21,30+y,23,33+y,SKIN.shade);line(35,30+y,33,33+y,SKIN.shade);line(28,29+y,28,31+y,SKIN.shade);put(27,32+y,SKIN.shade);
+ rect(22,30+y,2,1,SKIN.light);rect(33,30+y,2,1,SKIN.light);
+}
+function emperorFace(r,y,{expression,blink}){
+ const {rect,line,put}=r,hurt=expression==='hurt',focus=expression==='focused'||expression==='ultimate';
+ for(const [x,side]of [[21,-1],[31,1]]){
+  // Thin brow angled down toward the nose; it drops further when focused.
+  const inner=side<0?x+4:x,outer=side<0?x:x+4;line(outer,23+y,inner,focus?25+y:24+y,LINER);
+  if(blink){line(x,28+y,x+4,28+y,LINER);continue;}
+  if(hurt){line(x,27+y,x+4,28+y,LINER);line(x,29+y,x+4,28+y,LINER);continue;}
+  // Heavy upper lid with liner flicked at the outer corner, a narrow white and a small green iris.
+  line(x,27+y,x+4,27+y,LINER);put(outer+(side<0?-1:1),26+y,LINER);
+  rect(x,28+y,5,2,'#f1ece0');rect(x+(side<0?2:1),28+y,2,2,GREEN);put(x+(side<0?2:2),28+y,GREEN_DARK);put(x+(side<0?3:1),28+y,'#eaf5e4');
+  line(x+1,30+y,x+3,30+y,SKIN.shade);
+ }
+ // Dark lipstick: a full lower lip under a thin upper line.
+ if(hurt){rect(26,34+y,4,2,LIP);put(27,34+y,'#efe6dc');return;}
+ if(expression==='ultimate'){rect(26,34+y,4,2,LIP);rect(27,35+y,2,1,'#2a1f2d');return;}
+ line(26,34+y,30,34+y,LIP);rect(27,35+y,3,1,LIP);put(28,35+y,LIP_LIGHT);
+}
 function face(r,y,{expression,blink,doppio}){
+ if(!doppio){emperorFace(r,y,{expression,blink});return;}
  const hurt=expression==='hurt',focus=expression==='focused'||expression==='ultimate';
- for(const [x,side]of [[21,-1],[31,1]])eye(r,x,26+y,{iris:doppio?'#93ad7f':GREEN,irisDark:doppio?'#5f7a55':GREEN_DARK,lash:INK,side,closed:blink,hurt,focus:focus||!doppio});
- // Diavolo's tinted lips; Doppio has a softer, nervous mouth.
- if(!doppio&&expression==='neutral'){r.rect(26,34+y,4,1,'#7a5068');r.put(30,33+y,'#7a5068');}
- else mouth(r,34+y,expression,{lip:doppio?'#b9707a':'#7a5068'});
+ for(const [x,side]of [[21,-1],[31,1]])eye(r,x,26+y,{iris:'#93ad7f',irisDark:'#5f7a55',lash:INK,side,closed:blink,hurt,focus});
+ // Doppio keeps a softer, nervous mouth.
+ mouth(r,34+y,expression,{lip:'#b9707a'});
 }
 export function diavoloPixels({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='default'}={}){
  const special=!!pose;if(special){expression='ultimate';}
@@ -153,7 +182,7 @@ export function diavoloPixels({frame=0,moving=false,pose='',attack=false,express
  arms(r,y,g,{attack,special});
  // The sheer net sleeves let skin show through a diagonal mesh.
  if(g.net)for(let yy=36;yy<56;yy++)for(let x=6;x<52;x++){const c=r.pixels[yy*56+x];if((c==='#d2a698'||c==='#e6bdac')&&((x+yy)%3===0||(x-yy+90)%3===0))r.put(x,yy,'#a87c84');}
- head(r,y);face(r,y,{expression,blink,doppio});
+ if(doppio)head(r,y);else emperorHead(r,y);face(r,y,{expression,blink,doppio});
  frontHair(r,o.hair,h,y);
  spots(r,h,doppio?[[19,12],[33,10],[38,19],[16,22],[24,8]]:[[19,13],[24,9],[33,9],[37,14],[17,22],[39,24],[16,32],[40,34],[15,42],[41,44],[18,50],[38,50],[20,28],[36,29]]);
  if(o.shades){r.rect(20,9+y,16,2,'#2c2433');r.rect(21,9+y,5,2,'#3e5f7a');r.rect(30,9+y,5,2,'#3e5f7a');r.put(22,9+y,'#9cc7e0');r.put(31,9+y,'#9cc7e0');}

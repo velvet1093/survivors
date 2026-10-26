@@ -58,11 +58,27 @@ function crop(r,y,{dark,mid,light,collar}){
 }
 const GARMENTS={
  default(r,y,walk){
-  // Black high-collar crop top, bare midriff and roomy red trousers.
-  midriff(r,y);crop(r,y,{dark:'#1f2430',mid:'#2b3445',light:'#4d596c',collar:'#262d3a'});
-  trousers(r,walk,{color:RED,shade:RED_DARK,light:RED_LIGHT});r.rect(20,50,17,3,RED_DARK);r.rect(27,50,3,2,'#cfb187');
-  boots(r,walk,{color:'#30323e',light:'#4d5060'});
-  return {sleeve:'#2b3445',sleeveLight:'#4d596c',cuff:'#1f2430'};
+  // Sleeveless black high-neck crop top with a gold zip pull, bare midriff,
+  // baggy red cargo trousers gathered at the ankle, and short black boots.
+  midriff(r,y,45,51);r.put(28,48,SKIN.deep);
+  // Fitted top: covers the chest down to the lower ribs, with cut-in armholes.
+  r.poly([[21,37+y],[35,37+y],[37,40+y],[37,47+y],[19,47+y],[19,40+y]],'#1a1f2b');r.poly([[22,38+y],[34,38+y],[36,41+y],[36,46+y],[20,46+y],[20,41+y]],'#2b3445');
+  r.line(21,41+y,21,45+y,'#4d596c');r.line(23,43+y,26,44+y,'#3b4558');r.line(30,44+y,33,43+y,'#3b4558');r.line(20,46+y,36,46+y,'#1a1f2b');
+  for(const [i,x]of [19,30].entries()){const d=i?walk:-walk;
+   // Balloon legs: wide through the knee, pinched into an elastic cuff above the boot.
+   r.poly([[x,51],[x+9,51],[x+11+d,58],[x+10+d,63],[x+7+d,65],[x+2+d,65],[x-1+d,63],[x-2+d,57]],RED_DARK);
+   r.poly([[x+1,52],[x+8,52],[x+10+d,58],[x+9+d,62],[x+6+d,64],[x+3+d,64],[x+d,62],[x-1+d,57]],RED);
+   r.line(x+2,54,x+1+d,61,RED_LIGHT);r.line(x+7,54,x+8+d,61,RED_DARK);r.line(x+3+d,62,x+7+d,62,RED_DARK);
+   // Side cargo pocket with a flap.
+   const px=i?x+7+d:x-1+d;r.rect(px,56,3,4,RED_DARK);r.line(px,56,px+2,56,RED_LIGHT);
+   r.rect(x+2+d,64,6,2,'#8d4153');
+  }
+  // Elastic waistband with a drawstring.
+  r.rect(19,50,19,3,'#b86677');r.line(19,51,37,51,RED_DARK);r.put(27,52,'#e9d2c2');r.put(29,52,'#e9d2c2');r.line(27,53,26,55,'#e9d2c2');r.line(29,53,30,55,'#e9d2c2');
+  boots(r,walk,{color:'#30323e',light:'#4d5060',top:65});
+  return {sleeve:SKIN.base,sleeveLight:SKIN.light,bare:true,collar(r,y){
+   // Mock-neck collar with a gold zip pull, drawn over the neck.
+   r.rect(24,38+y,8,3,'#1a1f2b');r.rect(25,38+y,6,2,'#2b3445');r.line(25,38+y,30,38+y,'#4d596c');r.rect(28,38+y,1,2,'#d9b45f');r.put(28,40+y,'#f0d58b');}};
  },
  midnight(r,y,walk){
   // High zip collar, fitted black top tucked into blue-gray trousers and brown boots.
@@ -143,8 +159,8 @@ export function yukiPixels({frame=0,moving=false,pose='',attack=false,expression
  const hurt=expression==='hurt',focus=charging||expression==='focused'||expression==='ultimate';
  for(const [x,side]of [[21,-1],[31,1]])eye(r,x,26+y,{iris:'#a07c5c',irisDark:'#5e4636',lash:INK,side,closed:blink,hurt,focus});
  // A lopsided, confident smile.
- if(expression==='neutral'){r.rect(26,34+y,4,1,'#a86f6c');r.put(30,33+y,'#a86f6c');}else mouth(r,34+y,expression,{lip:'#a86f6c'});
- frontHair(r,o.hair,HAIR,y);
+ if(expression==='neutral'){r.rect(26,34+y,4,1,'#5f3d46');r.put(30,33+y,'#5f3d46');r.rect(27,35+y,2,1,'#8a5a62');}else mouth(r,34+y,expression,{lip:'#5f3d46'});
+ g.collar?.(r,y);frontHair(r,o.hair,HAIR,y);
  if(o.shades){r.rect(20,10+y,16,2,'#2b2b36');r.rect(21,10+y,5,2,'#6b4a3a');r.rect(30,10+y,5,2,'#6b4a3a');r.put(22,10+y,'#d6a678');r.put(31,10+y,'#d6a678');}
  if(o.flower){r.rect(37,14+y,4,4,'#e06a6e');r.put(38,15+y,'#ffd27a');r.put(36,16+y,'#f4a0a0');r.put(41,15+y,'#f4a0a0');}
  return selout(r.pixels,INK);

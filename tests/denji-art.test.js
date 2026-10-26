@@ -9,11 +9,11 @@ import {SKINS} from '../src/skins.js';
 const region=(p,x,y,w,h)=>Array.from({length:h},(_,yy)=>p.slice((y+yy)*56+x,(y+yy)*56+x+w)).flat();
 const count=(p,...colors)=>p.filter(v=>colors.includes(v)).length;
 
-test('Denji has messy blond spikes, a pale shirt and tie, visible pullcord and a toothed handheld chainsaw',()=>{
- const p=characterPixels('denji');assert.equal(p.length,56*76);assert.ok(p.filter(Boolean).length>1000);assert.ok(count(region(p,13,5,29,23),c.hair,c.hairDark,c.hairLight)>200);assert.ok(count(region(p,18,35,18,20),c.shirt,c.shirtLight,c.shirtShade)>150);assert.ok(count(region(p,24,38,7,16),c.ink)>25);assert.ok(count(region(p,19,45,6,7),c.ink)>8);assert.ok(count(region(p,32,35,18,24),c.steel,c.steelLight,c.steelDark)>70);
+test('Denji has messy blond spikes, a rolled-sleeve shirt and loose tie, brown belt, red-trimmed high-tops and a chainsaw that appears when he attacks',()=>{
+ const p=characterPixels('denji');assert.equal(p.length,56*76);assert.ok(p.filter(Boolean).length>900);assert.ok(count(region(p,13,1,29,27),c.hair,c.hairDark,c.hairLight)>200);assert.ok(count(region(p,18,35,20,20),c.shirt,c.shirtLight,c.shirtShade)>150);assert.ok(count(region(p,25,38,7,14),'#1d2128')>15,'black tie');assert.ok(count(region(p,18,49,20,4),'#6e4632')>20,'brown belt');assert.ok(count(region(p,18,64,22,8),'#f2f0ea')>=16&&count(region(p,18,64,22,8),'#b4423e')>10,'white high-tops with red trim');
+ assert.ok(count(region(p,32,35,24,24),c.steel,c.steelLight,c.steelDark)<10,'hand in pocket, no saw at idle');assert.ok(count(region(characterPixels('denji',{attack:true}),38,35,18,18),c.steel,c.steelLight,c.steelDark)>20,'saw blade on attack');
  for(const color of p)assert.ok(color===null||/^#[a-f\d]{6}$/i.test(color));
 });
-
 test('Chainsaw Man replaces the face with an orange saw motor, toothed jaw and two real arm saws',()=>{
  const p=characterPixels('denji',{form:1});assert.notDeepEqual(p,characterPixels('denji'));assert.equal(p.length,56*76);assert.equal(count(region(p,14,8,28,25),c.skin,c.skinLight,c.skinShade),0);assert.ok(count(region(p,15,11,25,18),c.orange,c.orangeDark,c.orangeLight)>140);assert.ok(count(region(p,34,12,22,13),c.steel,c.steelDark,c.steelLight)>75);assert.ok(count(region(p,5,32,15,30),c.steel,c.steelDark,c.steelLight)>50);assert.ok(count(region(p,37,32,15,30),c.steel,c.steelDark,c.steelLight)>50);assert.deepEqual(p,characterPixels('denji',{pose:'chainsaw'}));
 });

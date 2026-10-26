@@ -6,6 +6,7 @@ const HAIR={hair:'#2d2a3a',shade:'#1b1925',light:'#4b4662',sheen:'#736c92'};
 export const WHITE_QUEEN_COLORS={hair:'#d2d5dc',hairShade:'#7f8492',hairLight:'#f4f5f3',dress:'#e9e9e7',dressShade:'#b7bbc6',trim:'#777a8c',lining:'#343541',silver:'#bfc7d7',lace:'#fbfbf7'};
 const QUEEN_HAIR={hair:WHITE_QUEEN_COLORS.hair,shade:WHITE_QUEEN_COLORS.hairShade,light:WHITE_QUEEN_COLORS.hairLight,sheen:'#ffffff'};
 const RED='#b85160',RED_DARK='#7a2f45',RED_LIGHT='#e17d7f',GOLD='#d9b45f',GOLD_DARK='#9c7334';
+const ASTRAL={mid:'#e0563f',dark:'#a3332e',light:'#f48a66'};
 // hair: twintails | loose | low | bun | side. eye: clock | patch | hidden.
 const OUTFITS={
  default:{hair:'twintails',eye:'clock',band:'headdress'},
@@ -20,7 +21,7 @@ const OUTFITS={
  bathsuit:{hair:'bun',eye:'clock',band:'pin'},
 };
 export const KURUMI_OUTFIT_IDS=Object.keys(OUTFITS);
-export const KURUMI_COLORS={...HAIR,red:RED,gold:GOLD,iris:'#ba4b64',patch:'#f2efed',barrel:'#c6c7bd'};
+export const KURUMI_COLORS={...HAIR,red:RED,astral:ASTRAL.mid,gold:GOLD,iris:'#ba4b64',patch:'#f2efed',barrel:'#c6c7bd'};
 
 function backHair(r,style,h,walk,y){
  const {poly,line}=r;
@@ -62,8 +63,10 @@ function accessory(r,band,y,walk){
  if(band==='headdress'){
   // Black lace headdress with red ruffles and a small gold clasp.
   poly([[17,13+y],[22,8+y],[34,8+y],[39,13+y],[36,15+y],[28,12+y],[20,15+y]],'#1b1522');
-  for(let i=0;i<6;i++){const x=17+i*4,yy=13-Math.round(Math.sin((i+.5)*Math.PI/6)*5)+y;rect(x,yy,4,3,RED_DARK);rect(x,yy,3,2,RED);put(x+1,yy,RED_LIGHT);}
-  rect(27,9+y,3,2,GOLD);
+  for(let i=0;i<6;i++){const x=17+i*4,yy=13-Math.round(Math.sin((i+.5)*Math.PI/6)*5)+y;rect(x,yy,4,3,ASTRAL.dark);rect(x,yy,3,2,ASTRAL.mid);put(x+1,yy,ASTRAL.light);}
+  rect(27,9+y,3,2,ASTRAL.dark);
+  // Short red ribbons trail from the headdress beside each tail tie.
+  for(const x of [17,38]){line(x,14+y,x,20+y,ASTRAL.dark);put(x,21+y,ASTRAL.mid);}
  }else if(band==='rose'||band==='roseclips'){
   const spots=band==='rose'?[[16,14]]:[[17,30],[38,30]];
   for(const [x,yy]of spots){rect(x,yy+y,5,5,'#7d2e44');rect(x+1,yy+y,3,4,'#b94e64');put(x+2,yy+1+y,'#e48a92');put(x+1,yy+2+y,'#7d2e44');rect(x-1,yy+4+y,2,2,'#4d6a4d');}
@@ -104,7 +107,7 @@ function legsAndShoes(r,o,w){
  const {rect}=r;
  const leg=o.legs||'#1d1824',legLight=o.legLight||mix(leg,'#ffffff',.18),shoe=o.shoe||'#2a1f2c',shoeLight=o.shoeLight||mix(shoe,'#ffffff',.3);
  for(const [i,x]of [22,30].entries()){const d=i?w:-w;
-  rect(x+d,54,5,13,leg);rect(x+d+1,55,1,10,legLight);if(o.garter)rect(x+d,o.garter,5,1,o.garterColor||RED);
+  rect(x+d,54,5,13,leg);rect(x+d+1,55,1,10,legLight);if(o.lace)for(let yy=57;yy<66;yy+=3){r.put(x+d+1,yy,o.lace);r.put(x+d+3,yy,o.lace);r.put(x+d+2,yy+1,o.lace);}if(o.garter)rect(x+d,o.garter,5,1,o.garterColor||RED);
   if(o.boots){rect(x+d-1,o.boots,7,71-o.boots,shoe);rect(x+d,o.boots,1,71-o.boots-1,shoeLight);if(o.laces)for(let yy=o.boots+1;yy<69;yy+=2)rect(x+d+2,yy,2,1,o.laces);rect(x+d-1,70,7,1,mix(shoe,'#000000',.45));}
   else{rect(x+d-1,67,7,4,shoe);rect(x+d,67,4,1,shoeLight);rect(x+d-1,70,7,1,mix(shoe,'#000000',.45));if(o.strap)rect(x+d,68,5,1,o.strap);}
  }
@@ -136,11 +139,33 @@ function arms(r,y,o,{attack,raised}){
 
 const GARMENTS={
  default(r,y,w){
-  frilledSkirt(r,w,{dark:RED_DARK,mid:RED,light:RED_LIGHT,frill:'#1e1724',frillShade:'#0f0c14'});
-  bodice(r,y,{dark:'#1e1724',mid:RED,light:RED_LIGHT,lace:'#1e1724'});
-  r.rect(21,48,14,2,'#1e1724');r.rect(26,48,4,2,GOLD);
-  r.poly([[24,38+y],[28,42+y],[32,38+y]],'#1e1724');r.rect(25,37+y,6,1,RED_DARK);
-  return {sleeve:'#1e1724',puff:RED_DARK,cuff:RED,legs:'#1c1722',garter:56,garterColor:RED,shoe:'#2a1f2c',boots:63,laces:RED};
+  // Astral Dress: orange-red bell skirt banded with scalloped black stripes over a
+  // black ruffle hem, a black apron panel with a red bow, and a laced bodice on thin straps.
+  const A=ASTRAL,B='#1b1419';
+  // Wide bell skirt to mid-calf.
+  r.poly([[21,47],[35,47],[39,51],[46+w,62],[44+w,65],[12+w,65],[10+w,62],[17,51]],A.dark);
+  r.poly([[22,47],[34,47],[38,51],[44+w,61],[42+w,63],[14+w,63],[12+w,61],[18,51]],A.mid);
+  for(const a of [-7,-2,3,8])r.line(28+a*.6,49,28+a*1.9+w,60,A.light);
+  // Two wavy black bands follow the flare.
+  for(const [yy,half]of [[54,13],[59,16]])for(let x=-half;x<=half;x++){const xx=Math.round(28+x+w*(yy-47)/16);r.put(xx,yy+((x+20)%4<2?0:1),B);r.put(xx,yy+((x+20)%4<2?1:2),B);}
+  // Scalloped black ruffle hem.
+  for(let x=11+w;x<46+w;x++)r.put(x,63,B);for(let x=11+w;x<46+w;x+=3){r.rect(x,64,2,2,B);r.put(x+2,64,'#3a2a33');}
+  // Small front apron with a red dashed edge, under a red waist bow.
+  r.poly([[24,48],[32,48],[33,52],[28,54],[23,52]],B);for(let x=24;x<33;x+=2)r.put(x,52,A.dark);
+  r.poly([[24,46],[28,48],[24,50]],A.mid);r.poly([[32,46],[28,48],[32,50]],A.dark);r.rect(27,47,2,2,A.light);r.line(27,49,26,52,A.mid);r.line(29,49,30,52,A.dark);
+  // Bodice: red with a black lace-up panel, black frill along the top edge, bare shoulders above.
+  r.poly([[21,40+y],[35,40+y],[34,48],[22,48]],A.dark);r.poly([[22,41+y],[34,41+y],[33,47],[23,47]],A.mid);r.line(23,42+y,23,46,A.light);
+  r.rect(26,41+y,4,7,B);for(let yy=42+y;yy<47;yy+=2){r.put(26,yy,A.mid);r.put(29,yy,A.mid);r.put(27,yy+1,A.mid);r.put(28,yy+1,A.mid);}
+  for(let x=21;x<35;x+=2){r.rect(x,39+y,2,2,B);}r.put(24,38+y,B);r.put(32,38+y,B);
+  r.line(23,37+y,23,39+y,B);r.line(33,37+y,33,39+y,B);
+  return {sleeve:SKIN.base,sleeveLight:SKIN.light,legs:B,legLight:'#3a2a33',lace:'#4a3a44',shoe:'#1b1419',shoeLight:'#4a3a44',strap:A.mid,
+   after(r,y,{attack,raised}){
+    // Detached black arm gloves with red frills at elbow and wrist.
+    const glove=(x0,y0,x1,y1)=>{const mx=Math.round((x0+x1)/2),my=Math.round((y0+y1)/2);r.line(mx,my,x1,y1,B,4);r.rect(mx-2,my-1,5,2,A.mid);r.put(mx,my-1,A.light);r.rect(x1-1,y1+2,4,2,A.mid);};
+    glove(20,41+y,16,raised?34:51);
+    if(attack)glove(36,41+y,44,42);else glove(36,41+y,40,51);
+   },
+   afterHead(r,y){r.rect(25,38+y,6,1,B);r.put(28,38+y,'#7a6a74');}};
  },
  gothic(r,y,w){
   // Fitted black corset, split velvet overskirt and a white tiered petticoat.
@@ -240,11 +265,12 @@ export function kurumiPixels({frame=0,moving=false,pose='',attack=false,expressi
  else for(const [i,x]of [22,30].entries()){const d=i?walk:-walk;r.rect(x+d,63,5,4,SKIN.base);r.rect(x+d-1,67,7,4,gear.shoe);r.rect(x+d,67,5,1,gear.strap);}
  paint(r,y,walk);
  arms(r,y,gear,{attack,raised});
+ gear.after?.(r,y,{attack,raised});
  if(gear.glove){r.rect(15,raised?37:51+0,4,3,gear.glove);if(attack)r.rect(43,44,3,3,gear.glove);else r.rect(39,52,3,3,gear.glove);}
  if(attack)flintlock(r,44,42,{raised:true,flash:expression!=='ultimate'||raised});else{flintlock(r,40,54);limb(r,40,51,40,51,{color:gear.sleeve,width:1});}
  if(!raised)musket(r,16,52);
  if(raised)flintlock(r,13,27,{raised:true});
- head(r,y);
+ head(r,y);gear.afterHead?.(r,y);
  const closed=blink,hurt=expression==='hurt',focus=expression==='focused'||expression==='ultimate';
  eye(r,21,26+y,{iris:'#ba4b64',irisDark:'#7d2440',lash:INK,side:-1,closed,hurt,focus});
  if(o.eye==='clock')eye(r,31,26+y,{iris:GOLD,irisDark:GOLD_DARK,lash:INK,side:1,closed,hurt,focus,clock:true});

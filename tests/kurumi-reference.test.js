@@ -10,12 +10,12 @@ test('every Kurumi skin has its own redrawn outfit and silhouette',()=>{
  for(const p of arts){assert.equal(p.length,56*76);assert.ok(p.filter(Boolean).length>900);assert.ok(colors(p).size>=15);assert.ok(p.every(c=>c===null||/^#[0-9a-f]{6}$/.test(c)));}
  assert.equal(new Set(arts.map(p=>JSON.stringify(p))).size,arts.length);
 });
-test('Astral Dress keeps the flared uneven twin tails, red dress and golden clock eye',()=>{
+test('Astral Dress keeps the flared uneven twin tails, orange-red bell dress and golden clock eye',()=>{
  const p=kurumiPixels();
  assert.ok(hair(region(p,4,14,14,46))>200,'long left tail flares past the shoulder');
  assert.ok(hair(region(p,38,14,14,40))>150,'shorter right tail');
  assert.ok(hair(region(p,4,14,14,46))>hair(region(p,38,14,14,40)),'tails are deliberately uneven');
- assert.ok(count(region(p,14,44,28,20),K.red)>60,'red tiered skirt');
+ assert.ok(count(region(p,10,44,36,22),K.astral)>150,'orange-red bell skirt');
  assert.ok(count(region(p,30,24,7,7),K.gold,'#9c7334')>=4,'clock eye on her left side');
  assert.ok(count(region(p,20,24,7,7),K.iris)>=2,'red right eye');
 });
