@@ -108,21 +108,33 @@ function goblinSlayer(r,{bob,blink}){
  for(const [x,yy]of [[17,38],[22,38],[27,39],[33,38],[38,38],[42,38]]){r.put(x,yy+y,'#a8a296');r.put(x+1,yy+1+y,'#c8c2b6');}
  // Black cowl at the neck.
  r.rect(23,33+y,10,4,D[0]);
- // Helm: faceted dome, jutting brow ridge, slit grill, beaked chin plate.
- layer(r,[[18,19],[19,11],[23,7],[33,7],[37,11],[38,19]],S,{y});
- r.poly(shift([[20,18],[21,11],[24,8],[28,8],[28,18]],y),S[2]);r.line(28,8+y,28,18+y,S[0]);r.line(22,11+y,25,9+y,S[3]);
- layer(r,[[15,18],[41,18],[40,22],[16,22]],[S[0],S[2],S[3]],{y,d:.6});r.line(16,18+y,40,18+y,S[3]);r.line(17,22+y,39,22+y,D[1]);
- layer(r,[[18,22],[38,22],[37,30],[33,35],[28,37],[23,35],[19,30]],S,{y});
- r.poly(shift([[19,23],[24,23],[24,33],[20,30]],y),S[2]);r.line(32,23+y,36,30+y,S[0]);
- r.poly(shift([[22,23],[34,23],[33,30],[23,30]],y),D[0]);
- for(const x of [24,27,30,33])r.line(x-(x<28?0:0),23+y,x,29+y,x===27?S[2]:S[1]);
- if(!blink){r.put(25,26+y,'#b8402a');r.put(32,26+y,'#b8402a');}
- layer(r,[[23,30],[33,30],[31,35],[28,38],[25,35]],[S[0],S[2],S[3]],{y,d:.6});r.line(28,31+y,28,37+y,S[0]);
- // Side boss and the branching red plume.
- r.rect(37,16+y,6,6,'#7a7460');r.rect(38,17+y,4,4,TAN);r.rect(39,18+y,2,2,'#9a9070');r.put(38,17+y,'#f4ecd0');
- const P='#a01a2a',PL='#d83a4a';
- r.line(42,17+y,47,12+y,P,2);r.line(47,12+y,53,10+y,P,2);r.line(47,12+y,48,5+y,P);r.line(48,6+y,52,3+y,P);r.line(50,11+y,55,13+y,P);r.line(48,8+y,45,4+y,P);r.line(52,10+y,53,6+y,P);
- r.line(43,16+y,47,12+y,PL);r.line(48,11+y,52,10+y,PL);
+ // Plume: red feathers fixed at the back of the helm, streaming out behind it.
+ const P=['#6a0e1a','#a81c2c','#dc3c4c'];
+ const shaft=[[31,6],[35,4],[40,4],[45,6],[48,10],[50,15],[50,21],[48,26]];
+ for(let k=0;k<shaft.length-1;k++){const [a,b]=shaft[k],[c,d]=shaft[k+1];r.line(a,b+y,c,d+y,P[1],2);}
+ for(let k=1;k<shaft.length;k++){const [a,b]=shaft[k],len=k<3?3:4;r.line(a,b+y,a+len,b+1+y,P[1]);r.line(a,b+1+y,a+len-1,b+len+y,P[0]);r.put(a+len,b+1+y,P[2]);}
+ r.line(33,4+y,40,3+y,P[2]);r.line(41,4+y,46,6+y,P[2]);r.line(48,11+y,49,18+y,P[2]);
+ // Helm: crested crown, prow-fronted visor with a tapering slit grill, beaked chin.
+ const SD='#3e434d',helm=[[28,4],[34,6],[38,10],[40,16],[41,21],[39,30],[34,35],[28,39],[22,35],[17,30],[15,21],[16,16],[18,10],[22,6]];
+ r.poly(shift(helm,y),SD);r.poly(inset(shift(helm,y),1),S[1]);
+ // Crown: the lit left plane, the shaded right plane and the crest ridge between.
+ r.poly(shift([[18,11],[22,7],[27,5],[27,15],[17,17]],y),S[2]);r.line(28,4+y,28,15+y,S[3]);r.line(29,5+y,29,15+y,S[0]);
+ r.poly(shift([[30,6],[34,7],[38,11],[39,16],[30,15]],y),S[1]);r.line(20,10+y,24,7+y,S[3]);
+ // Visor edge: dips to a point over the brow, with a shadow under it.
+ r.line(16,16+y,28,19+y,S[3]);r.line(28,19+y,40,16+y,S[2]);r.line(17,17+y,28,20+y,S[0]);r.line(28,20+y,39,17+y,SD);
+ // Visor planes either side of the prow crease.
+ r.poly(shift([[17,18],[28,21],[28,38],[22,34],[18,29]],y),S[2]);r.poly(shift([[28,21],[39,18],[38,29],[34,34],[28,38]],y),S[1]);
+ r.line(28,21+y,28,38+y,S[3]);r.line(29,21+y,29,37+y,S[0]);
+ r.line(18,22+y,20,30+y,S[3]);r.line(38,22+y,36,30+y,S[0]);
+ // Grill: dark opening narrowing downwards, split by vertical bars. No eyes show through.
+ const cols={23:[24,28],24:[23,29],26:[23,30],27:[23,30],29:[23,30],30:[23,30],32:[23,29],33:[24,28]};
+ r.poly(shift([[22,22],[34,22],[33,29],[30,31],[26,31],[23,29]],y),SD);
+ for(const [x,[a,b]]of Object.entries(cols))r.rect(+x,a+y,1,b-a+1,'#0a0a0e');
+ r.line(23,22+y,33,22+y,S[0]);
+ // Chin: seam, then facets converging to the beak.
+ r.line(22,33+y,34,33+y,SD);r.poly(shift([[23,34],[28,34],[28,38]],y),S[3]);r.poly(shift([[28,34],[33,34],[28,38]],y),S[0]);
+ // Round pivot bosses on both temples.
+ for(const x of [14,38]){r.rect(x+1,18+y,2,4,'#6e6852');r.rect(x,19+y,4,2,'#6e6852');r.rect(x+1,19+y,2,2,TAN);r.put(x+1,19+y,'#f4ecd0');}
 }
 // ---- Yumeko Jabami: hime-cut black hair to her knees, red blazer, houndstooth skirt ----
 function yumeko(r,{bob,blink}){
