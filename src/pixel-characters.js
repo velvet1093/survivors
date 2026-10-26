@@ -229,35 +229,6 @@ function esdeathFrame({frame=0,moving=false,pose='',attack=false,expression='neu
  poly([[14,17+y],[17,11+y],[25,7+y],[32,8+y],[40,13+y],[41,18+y],[36,20+y],[18,20+y]],p.shade);poly([[16,16+y],[19,12+y],[26,9+y],[32,10+y],[38,14+y],[39,17+y]],p.coat);line(17,15+y,26,10+y,p.light);line(26,10+y,38,15+y,p.light);rect(15,17+y,25,3,deep);line(17,18+y,38,18+y,'#b5c6d6');poly([[19,20+y],[38,19+y],[35,22+y],[29,24+y],[21,23+y]],navy);line(22,22+y,34,22+y,'#93a9b9');rect(26,13+y,5,5,navy);rect(28,12+y,1,7,'#b8cbd2');rect(25,15+y,7,1,'#b8cbd2');rect(27,14+y,3,3,'#3c526b');
  return outline(r.pixels,p.ink);
 }
-function kurumiFrame({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false}){
- const r=raster(),{rect,poly,line}=r,ink='#342832',hair='#302a35',shine='#65505c',red='#c75b57',light='#f18f73',dark='#813b49',skin='#ffe2c6',step=moving?[0,1,0,-1][frame]:0,y=moving?-frame%2:0;
- // Uneven twin tails and a broad, layered Astral Dress silhouette.
- poly([[15,16+y],[11,21+y],[9+step,43],[5+step,51],[11+step,48],[17,31],[20,22+y]],hair);
- poly([[37,16+y],[43,20+y],[45-step,40],[50-step,53],[43-step,49],[38,29]],hair);
- line(12,25+y,11+step,42,shine);line(42,25+y,44-step,43,shine);
- rect(22-step,58,5,11,'#e0b4b1');rect(31+step,58,5,11,'#39323e');rect(21-step,66,6,5,'#45313d');rect(30+step,66,7,5,'#45313d');rect(22-step,67,3,2,red);rect(31+step,67,3,1,red);
- poly([[21,48],[35,48],[40+step,55],[45+step,63],[41,66],[34,65],[28,67],[20,65],[12+step,64],[17+step,55]],ink);
- poly([[22,49],[34,49],[39+step,55],[42+step,62],[34,63],[28,65],[20,63],[15+step,62],[19+step,55]],red);
- poly([[25,50],[29,52],[27+step,63],[22,62]],light);poly([[33,52],[35,51],[40+step,62],[35,61]],dark);
- for(let i=0;i<6;i++){const x=15+i*5;rect(x,62+(i%2),3,3,ink);rect(x+1,61+(i%2),2,1,light);}line(20,57,36,59,ink);line(19,60,39,62,dark);
- poly([[21,39+y],[24,37+y],[32,37+y],[36,39+y],[34,47],[36,51],[29,53],[20,50],[22,44]],red);
- poly([[23,39+y],[27,42],[25,48],[22,48]],ink);poly([[33,39+y],[29,42],[31,48],[34,48]],ink);line(26,42,30,46,'#e7aa8a');line(30,42,26,46,'#e7aa8a');rect(25,49,7,3,dark);rect(27,49,3,2,light);
- // Choker, scalloped neckline, detached gloves, and a gold belt bow.
- rect(25,37+y,7,2,ink);rect(28,38+y,1,1,'#e2be81');for(const x of [21,25,29,33])rect(x,40+y,3,2,ink);
- const raised=attack||pose==='clock',armY=raised?43:51;line(19,41,15,49,skin,3);line(15,47,13,53,ink,3);line(36,41,42,armY,skin,3);line(40,armY-1,43,armY+3,ink,3);rect(12,52,3,2,skin);rect(43,armY+2,3,2,skin);
- poly([[26,49],[20,47],[21,52],[27,51]],light);poly([[30,49],[37,47],[36,52],[30,51]],light);rect(27,49,3,3,'#e6a373');
- // Musket and pistol are part of the sprite even between attacks.
- line(12,51,8,36,'#9a6955',3);line(8,36,7,24,'#a9a19a',2);rect(7,34,5,2,'#ddbc82');rect(9,46,4,2,'#e2bf84');
- rect(43,armY-2,8,3,'#8d6654');rect(48,armY-3,5,2,'#d7c4a1');rect(44,armY+1,3,3,'#a87158');
- poly([[18,21+y],[37,21+y],[38,31+y],[34,37+y],[28,39+y],[21,36+y],[17,29+y]],skin);
- paintFace(r,'kurumi',{y,expression,blink});
- if(!blink&&expression!=='hurt'){rect(22,29+y,2,4,'#b94f69');rect(32,29+y,3,4,'#d9b663');rect(33,29+y,1,2,'#785944');rect(32,31+y,2,1,'#785944');rect(22,29+y,1,1,'#fff3e5');rect(32,29+y,1,1,'#fff3c4');}
- poly([[16,29+y],[14,22+y],[18,14+y],[26,10+y],[35,12+y],[41,18+y],[40,31+y],[37,34+y],[35,24+y],[31,20+y],[29,28+y],[24,21+y],[20,27+y],[19,33+y]],hair);
- poly([[18,23+y],[20,16+y],[27,13+y],[34,15+y],[38,20+y],[36,24+y],[31,18+y],[29,23+y],[24,18+y],[20,25+y]],'#4c3a45');line(21,15+y,26,14+y,'#7a5663');line(35,18+y,37,23+y,shine);
- // Red ruffled bonnet and twin-tail ribbons.
- for(let i=0;i<7;i++){const x=15+i*4,yy=14-Math.round(Math.sin(i*Math.PI/6)*6)+y;rect(x,yy,4,4,red);rect(x+1,yy,2,1,light);}poly([[15,17+y],[10,14+y],[10,20+y],[16,19+y]],red);poly([[40,17+y],[46,14+y],[46,20+y],[40,19+y]],red);rect(14,17+y,3,3,light);rect(39,17+y,3,3,light);
- return outline(r.pixels,ink);
-}
 function goddessFrame({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false}){
  const r=raster(),{rect,poly,line}=r,p=CHARACTER_PALETTES.madoka,step=moving?[0,1,0,-1][frame]:0,y=moving?-frame%2:0,white='#fff6f1',shade='#cdbed7';
  // Wings, knee-length pink hair, and a star-lined white dress: a distinct skin.
@@ -322,7 +293,6 @@ function referenceSkinFrame(id,look,{frame=0,moving=false,pose='',attack=false,e
  }
  poly([[18,21+y],[37,21+y],[38,31+y],[34,37+y],[28,39+y],[21,36+y],[17,29+y]],skin);paintFace(r,female?'shinji':id,{y,expression,blink});
  if(female&&!blink&&expression!=='hurt')for(const xx of [22,32]){rect(xx,29+y,2,4,'#64bed7');rect(xx,29+y,1,1,'#f3fcff');}
- if(id==='kurumi'&&!blink&&expression!=='hurt'){rect(22,29+y,2,4,'#bf5e74');rect(32,29+y,2,4,'#d4b66b');rect(22,29+y,1,1,'#fff0e5');rect(32,29+y,1,1,'#fff0cb');}
 
  poly([[16,31+y],[14,22+y],[18,14+y],[25,10+y],[34,11+y],[40,17+y],[41,30+y],[37,35+y],[35,23+y],[31,20+y],[28,27+y],[24,21+y],[20,28+y],[19,34+y]],hairDark);poly([[17,24+y],[18,18+y],[23,13+y],[31,13+y],[38,18+y],[38,27+y],[34,21+y],[31,17+y],[28,23+y],[24,17+y],[21,24+y],[18,29+y]],hair);line(22,14+y,32,14+y,hairLight);line(18,20+y,17,28+y,hairLight);
  if(female){rect(19,15+y,7,4,'#27344e');rect(30,15+y,7,4,'#27344e');line(25,16+y,31,16+y,'#435878');rect(20,15+y,4,1,'#7787a5');rect(31,15+y,4,1,'#7787a5');}
@@ -366,6 +336,9 @@ export function characterPixels(id,{frame=0,moving=false,pose='',attack=false,ex
   frame=((frame%4)+4)%4;const key=[id,frame,moving,pose,attack,expression,blink,skinId,form,evolved].join(':');if(dataCache.has(key))return dataCache.get(key);
   if(id==='denji'){const result=denjiPixels({frame,moving,pose,attack,expression,blink,skin:skinId,form});dataCache.set(key,result);return result;}
   if(id==='guts'){const result=gutsPixels({frame,moving,pose,attack,expression,blink,skin:skinId,form});dataCache.set(key,result);return result;}
+  if(id==='kurumi'){const result=kurumiPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
+  if(id==='diavolo'){const result=diavoloPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
+  if(id==='yuki'){const result=yukiPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id!=='shinji'){const beach=beachOutfitPixels(id,skinId,{frame,moving,pose,attack,expression,blink,form})||cuteSwimPixels(id,skinId,{frame,moving,pose,attack,expression,blink,form});if(beach){dataCache.set(key,beach);return beach;}}
   if(skinId==='swimsuit'&&id!=='shinji'){const swimming=swimsuitPixels(id,{frame,moving,pose,attack,expression,blink,form});if(swimming){dataCache.set(key,swimming);return swimming;}}
   if(skinId==='pajamas'&&id!=='shinji'){const pajamas=pajamaPixels(id,{frame,moving,pose,attack,expression,blink,form});if(pajamas){dataCache.set(key,pajamas);return pajamas;}}
@@ -373,19 +346,15 @@ export function characterPixels(id,{frame=0,moving=false,pose='',attack=false,ex
   if(skinId==='casual'&&id!=='shinji'){const casual=casualPixels(id,{frame,moving,pose,attack,expression,blink,form});if(casual){dataCache.set(key,casual);return casual;}}
   const reference=referenceOutfitPixels(id,{frame,moving,pose,attack,expression,blink,skin:skinId});if(reference){dataCache.set(key,reference);return reference;}
   if(id==='featherine'){const result=featherinePixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
-  if(id==='kurumi'){const result=kurumiPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='goku'){const result=gokuPixels({frame,moving,pose,attack,expression,blink,skin:skinId,form});dataCache.set(key,result);return result;}
   if(id==='rimuru'){const result=rimuruPixels({frame,moving,pose,attack,expression,blink,skin:skinId,form});dataCache.set(key,result);return result;}
-  if(id==='diavolo'){const result=diavoloPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
-  if(id==='yuki'){const result=tintPixels(yukiPixels({frame,moving,pose,attack,expression,blink,skin:skinId}),skinFor(id,skinId));dataCache.set(key,result);return result;}
   if(id==='eren'){const result=erenFrame({frame,moving,pose,attack,expression,blink,skin:skinId,form,evolved});dataCache.set(key,result);return result;}
   if(id==='samus'&&skinId==='fusion'){const result=fusionSuitFrame({frame,moving,pose,attack,expression});dataCache.set(key,result);return result;}
   if(id==='megumi'){const result=tintPixels(megumiFrame({frame,moving,pose,attack,expression,blink}),skinFor(id,skinId));dataCache.set(key,result);return result;}
   if(id==='samus'&&['zerosuit','stealth'].includes(skinId)&&pose!=='bomb'){const result=zeroSuitFrame({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='frieren'){const result=frierenFrame({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='samus'){const result=tintPixels(variaSuitPixels({frame,moving,pose,attack,expression,blink}),skinFor(id,skinId));dataCache.set(key,result);return result;}
-  if((id==='kurumi'&&skinId==='gothic')||(id==='maomao'&&skinId==='dancer')||(id==='gojo'&&skinId==='female')){const result=referenceSkinFrame(id,skinId,{frame,moving,pose,attack,expression,blink});dataCache.set(key,result);return result;}
-  if(id==='kurumi'){const result=tintPixels(kurumiFrame({frame,moving,pose,attack,expression,blink}),skinFor(id,skinId));dataCache.set(key,result);return result;}
+  if((id==='maomao'&&skinId==='dancer')||(id==='gojo'&&skinId==='female')){const result=referenceSkinFrame(id,skinId,{frame,moving,pose,attack,expression,blink});dataCache.set(key,result);return result;}
   if(id==='madoka'&&skinId==='goddess'){const result=goddessFrame({frame,moving,pose,attack,expression,blink});dataCache.set(key,result);return result;}
   if(id==='esdeath'){const result=tintPixels(esdeathFrame({frame,moving,pose,attack,expression,blink}),skinFor(id,skinId));dataCache.set(key,result);return result;}
   if(id==='maomao'&&skinId==='spring'){const result=springCourtFrame({frame,moving,pose,attack,expression,blink});dataCache.set(key,result);return result;}
@@ -427,7 +396,6 @@ export function characterPixels(id,{frame=0,moving=false,pose='',attack=false,ex
   // Character-specific bodies. Dark outlines and two-tone clusters replace gradients.
   poly([[19,40-bob],[24,38-bob],[32,38-bob],[37,40-bob],[36,54],[33,58],[22,58],[20,54]],p.coat);
   rect(22,41-bob,2,11,p.light);rect(34,44-bob,2,11,p.shade);rect(26,38-bob,4,3,skinShadow);
-  if(id==='kurumi'){const result=kurumiPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='goku'){
     poly([[23,40-bob],[28,46-bob],[33,40-bob],[31,51],[25,51]],blue);line(22,41-bob,28,48-bob,'#ffd18a',1);line(34,41-bob,28,48-bob,p.shade,1);
     rect(21,53,15,3,blue);rect(27,55,2,5,'#436492');rect(29,55,2,3,'#203653');rect(33,43-bob,3,4,'#f8e3b4');rect(34,44-bob,1,2,'#35466a');
@@ -455,7 +423,6 @@ export function characterPixels(id,{frame=0,moving=false,pose='',attack=false,ex
     for(const x of [21,31]){rect(x,28+hy,5,1,p.ink);rect(x,29+hy,4,4,'#fff5e6');rect(x+1,29+hy,2,4,iris);rect(x+1,29+hy,1,1,'#fffdf2');rect(x+1,32+hy,2,1,madoka?'#e68bac':id==='naruto'?'#79c7dc':'#58798b');}
     if(madoka){rect(19,34+hy,3,1,'#edb0b5');rect(35,34+hy,3,1,'#edb0b5');}
   }
-  if(id==='kurumi'){const result=kurumiPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='goku'){
     poly([[16,29+hy],[13,24+hy],[7,21+hy],[13,18+hy],[7,12+hy],[19,14+hy],[18,5+hy],[27,12+hy],[31,3+hy],[34,13+hy],[45,8+hy],[41,19+hy],[49,19+hy],[42,25+hy],[38,31+hy],[35,23+hy],[31,20+hy],[28,27+hy],[24,20+hy],[20,25+hy]],p.hairDark);
     poly([[13,14+hy],[21,17+hy],[20,9+hy],[27,15+hy],[31,7+hy],[33,18+hy],[42,12+hy],[38,21+hy],[44,21+hy],[38,26+hy],[34,21+hy],[30,18+hy],[27,24+hy],[24,18+hy],[18,24+hy]],p.hair);
@@ -476,7 +443,6 @@ export function characterPixels(id,{frame=0,moving=false,pose='',attack=false,ex
     for(const x of [12,40]){poly([[x,13+hy],[x+5,17+hy],[x+2,21+hy],[x-3,18+hy]],'#ac3b63');poly([[x,14+hy],[x+3,17+hy],[x+1,19+hy],[x-1,17+hy]],'#dd6b92');rect(x+1,18+hy,3,3,'#bd456e');}
   }
   if(id==='goku'&&form===2){poly([[29,12+hy],[33,0+hy],[36,15+hy]],p.hair);line(33,3+hy,33,10+hy,p.hairLight);poly([[23,18+hy],[27,22+hy],[26,28+hy],[23,23+hy]],p.hair);}
-  if(id==='kurumi'){const result=kurumiPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='goku'){poly([[20,21+hy],[23,19+hy],[25,24+hy],[23,27+hy],[21,24+hy],[19,27+hy]],p.hair);poly([[32,20+hy],[35,22+hy],[38,27+hy],[34,25+hy],[32,27+hy]],p.hair);}
   paintFace(r,id,{y:hy,expression,blink});if(id==='gojo'&&skinId==='unsealed'){rect(18,25+hy,19,7,'#ffe2c6');paintFace(r,'shinji',{y:hy,expression,blink});if(!blink&&expression!=='hurt'){rect(22,29+hy,2,3,'#5ab5df');rect(32,29+hy,2,3,'#5ab5df');}}let result=tintPixels(outline(r.pixels,p.ink),skinFor(id,skinId));if(id==='goku'&&form>0){const hair=form===4?['#67c9e8','#357697','#b5f4f2']:['#ecd064','#ab7d32','#fff1a3'];const shades={'#182331':hair[0],'#101520':hair[1],'#354459':hair[2],'#ecd064':hair[0],'#ab7d32':hair[1],'#fff1a3':hair[2]};result=result.map(c=>shades[c]||c);}dataCache.set(key,result);return result;
 }

@@ -1,11 +1,7 @@
 import {raster,outline} from './pixel-characters.js';
+import {canvas,motion,eye,mouth,head,limb,selout,mix,SKIN} from './hero-kit.js';
 export const CRIMSON_SCALE=1.18;
-const INK='#302d40',PINK='#d48dac',PINK_DARK='#82456f',PINK_LIGHT='#f3bdd0',SPOT='#613c62',SKIN='#d5aa96',PALE='#f2d3ba';
-function eyes(r,{y=0,blink=false,expression='neutral',doppio=false}={}){
- const {rect:R,line:L}=r,closed=blink||expression==='hurt',focus=expression==='focused'||expression==='ultimate';
- for(const x of [21,31]){L(x,27+y,x+4,26+y,INK);if(closed){L(x+1,29+y,x+4,29+y,INK);continue;}R(x+1,28+y,4,2,'#f2ead4');R(x+2,28+y,2,3,doppio?'#9cab88':'#77ae88');R(x+2,29+y,1,2,INK);R(x+2,28+y,1,1,'#eef1ce');if(focus)R(x+1,28+y,4,1,INK);}
- L(26,34+y,30,34+y,expression==='hurt'?'#b98083':'#8c656c');if(!closed&&!doppio)R(31,33+y,1,1,'#aa7880');
-}
+const INK='#302d40';
 // Larger, muscular armor planes keep the Stand distinct from the smaller human sprites.
 export function kingCrimsonPixels({frame=0,attack=false}={}){
  const r=raster(),{rect:R,poly:P,line:L}=r,phase=((frame%4)+4)%4,step=[0,1,0,-1][phase],red='#b54f6b',shade='#743c58',lit='#e5909e',white='#e8e6d3',grey='#aebbc0',green='#afcd79',fist=attack?[1,3,1,0][phase]:0;
@@ -27,30 +23,143 @@ export function kingCrimsonPixels({frame=0,attack=false}={}){
  P([[23,8],[24,3],[29,1],[34,4],[35,10],[31,15],[25,12]],shade);P([[25,6],[29,3],[32,5],[33,10],[29,13],[25,10]],lit);R(26,7,2,1,INK);R(30,7,2,1,INK);R(27,8,1,1,green);R(30,8,1,1,green);R(28,11,3,1,white);
  return outline(r.pixels,INK);
 }
-export function diavoloPixels({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='default'}={}){
- frame=((frame%4)+4)%4;const r=raster(),{rect:R,poly:P,line:L}=r,doppio=skin==='doppio',walk=moving?[0,2,0,-2][frame]:0,y=moving?-(frame%2):0,cast=attack||pose==='erasure',pants=doppio?'#b6a07b':'#79558d',dark=doppio?'#786959':'#493b62',highlight=doppio?'#d8bf96':'#ab7aa8',sweater='#987aa8';
- // Diavolo's long patterned curtains form a wide, straight silhouette down to his hips.
- if(!doppio){P([[15,18+y],[18,10+y],[26,6+y],[34,8+y],[40,15+y],[41,29],[43,54],[37,58],[33,42],[23,51],[13,56],[12,44]],PINK_DARK);P([[17,17+y],[21,10+y],[28,9+y],[35,12+y],[38,19+y],[38,42],[40,52],[37,54],[33,38],[23,46],[15,51],[16,28]],PINK);L(16,29,15-walk*.3,50,PINK_LIGHT);L(38,26,39+walk*.3,49,PINK_LIGHT);}
- else{P([[16,19+y],[18,11+y],[24,7+y],[33,8+y],[39,13+y],[41,22+y],[38,33+y],[33,37+y],[21,36+y],[15,31+y],[13,23+y]],PINK_DARK);P([[17,17+y],[23,10+y],[31,10+y],[37,15+y],[39,24+y],[35,31+y],[22,31+y],[16,25+y]],PINK);}
- for(const [x,d]of [[20,-walk],[31,walk]]){P([[x,48],[x+7,48],[x+7+d,58],[x+8+d,68],[x-2+d,68],[x+d,57]],dark);P([[x+2,50],[x+6,50],[x+5+d,59],[x+6+d,66],[x+d,66],[x+1+d,57]],pants);L(x+2,52,x+3+d,62,highlight);R(x-3+d,68,12,3,INK);R(x-2+d,68,8,1,doppio?'#ba9f8b':'#ae89a9');}
- const lx=cast?(doppio?18:12):16,ly=cast?(doppio?28:41):51,rx=cast?46:41,ry=cast?39:51;
- L(20,38,lx,ly,doppio?sweater:SKIN,5);L(37,38,rx,ry,doppio?sweater:SKIN,5);if(doppio){L(lx-1,ly,lx+3,ly,'#d0a1c2',3);L(rx-1,ry,rx+3,ry,'#d0a1c2',3);}R(lx-1,ly,5,5,PALE);R(rx-1,ry,5,5,PALE);
- if(doppio){P([[22,35],[26,34],[32,34],[37,37],[36,46],[33,49],[22,49],[20,42]],sweater);P([[26,35],[28,38],[31,35],[33,40],[30,44],[26,42]],'#e6bed0');R(23,47,12,2,'#bc91b5');R(23,49,12,3,SKIN);R(23,52,12,2,dark);L(23,38,22,45,'#b999bb',2);}
- else{P([[22,35],[26,33],[33,34],[37,37],[36,47],[38,52],[21,52],[19,43]],SKIN);P([[22,35],[25,34],[29,38],[33,34],[36,36],[35,48],[37,52],[20,52],[20,43]],'#483550');P([[24,36],[29,40],[33,36],[34,44],[30,49],[24,46],[22,40]],SKIN);
-  for(const [x,yy,tx,ty]of [[22,37,35,50],[26,35,36,45],[21,44,32,34],[24,50,36,38],[20,48,28,40]])L(x,yy,tx,ty,'#644066');L(23,51,35,51,'#ae7e9c',2);R(27,51,5,3,'#dac0b3');R(28,51,3,2,'#7b5b72');}
- P([[19,21+y],[24,16+y],[33,16+y],[38,22+y],[37,30+y],[32,36+y],[24,35+y],[19,29+y]],SKIN);P([[22,21+y],[26,18+y],[33,19+y],[36,24+y],[34,30+y],[30,33+y],[24,31+y],[21,26+y]],PALE);
- eyes(r,{y,blink,expression:pose==='erasure'?'ultimate':expression,doppio});
- if(doppio){
-  // The curled side locks and lifted center part separate Doppio from the long-haired skin.
-  P([[16,23+y],[17,15+y],[22,10+y],[28,9+y],[34,11+y],[39,17+y],[40,24+y],[36,30+y],[33,25+y],[33,18+y],[29,22+y],[26,17+y],[22,23+y],[20,31+y],[16,30+y]],PINK);
-  P([[19,17+y],[23,12+y],[27,11+y],[26,17+y],[22,20+y]],PINK_LIGHT);P([[29,12+y],[33,13+y],[36,17+y],[34,21+y],[32,17+y]],PINK_LIGHT);
-  P([[15,23+y],[19,21+y],[22,24+y],[21,30+y],[17,33+y],[13,29+y]],PINK_DARK);P([[16,24+y],[19,23+y],[20,26+y],[18,29+y],[15,28+y]],PINK_LIGHT);R(16,25+y,2,2,PINK);
-  P([[36,22+y],[40,22+y],[43,26+y],[41,31+y],[37,32+y],[34,28+y]],PINK_DARK);P([[37,24+y],[40,24+y],[41,27+y],[38,29+y],[36,27+y]],PINK_LIGHT);R(38,25+y,2,2,PINK);
+// Diavolo and his other personality share a taller adult build: broader
+// shoulders, longer legs and a head set two pixels higher than the petite heroes.
+const HAIR={hair:'#d690b0',shade:'#a65e88',light:'#f5c3d6',spot:'#4e3c5a'};
+const GREEN='#6fae86',GREEN_DARK='#3f7660';
+const OUTFITS={
+ default:{hair:'long'},
+ doppio:{hair:'curly'},
+ casual:{hair:'tied'},
+ pajamas:{hair:'long'},
+ swimsuit:{hair:'long',shades:true},
+};
+export const DIAVOLO_OUTFIT_IDS=Object.keys(OUTFITS);
+export const DIAVOLO_COLORS={...HAIR,green:GREEN,mesh:'#a87c84',lilac:'#a487c0',khaki:'#c2a874'};
+// Leopard spots only land on pixels that are already hair, so they never stain skin or cloth.
+function spots(r,h,list){
+ const hairColors=new Set([h.hair,h.shade,h.light]);
+ for(const [x,y]of list){if(!hairColors.has(r.pixels[y*56+x]))continue;r.rect(x,y,2,2,h.spot);r.put(x+1,y,h.shade);}
+}
+function backHair(r,style,h,walk,y){
+ const {poly,line}=r;
+ if(style==='long'){
+  // Long straight curtains reach his waist and widen his silhouette.
+  poly([[14,20+y],[17,9+y],[24,5+y],[33,5+y],[40,9+y],[43,20+y],[44+walk*.3,52],[39,56],[35,48],[22,48],[18,56],[13+walk*.3,52]],h.shade);
+  poly([[15,20+y],[18,11+y],[24,7+y],[33,7+y],[39,11+y],[42,20+y],[42+walk*.3,50],[39,53],[36,45],[21,45],[18,53],[15+walk*.3,50]],h.hair);
+  line(16,24,16+walk*.3,48,h.light);line(41,24,41+walk*.3,48,h.light);
+ }else if(style==='tied'){
+  poly([[16,18+y],[19,9+y],[25,6+y],[32,6+y],[38,9+y],[40,18+y],[39,34],[17,34]],h.shade);
+  poly([[26,30],[31,30],[33+walk*.5,48],[28+walk*.5,52],[24+walk*.5,47]],h.shade);poly([[27,31],[30,31],[31+walk*.5,47],[28+walk*.5,50],[26+walk*.5,46]],h.hair);
  }else{
-  P([[15,24+y],[17,15+y],[23,9+y],[30,8+y],[37,12+y],[40,20+y],[38,30+y],[35,33+y],[34,22+y],[31,17+y],[28,22+y],[25,17+y],[21,24+y],[19,34+y],[16,34+y]],PINK);
-  P([[19,18+y],[22,12+y],[27,11+y],[26,17+y],[22,22+y]],PINK_LIGHT);P([[29,11+y],[33,12+y],[37,17+y],[36,23+y],[33,19+y]],PINK_LIGHT);
-  // Dark hollow spots read as a leopard pattern at both portrait and combat scale.
-  for(const [x,yy]of [[19,15+y],[29,10+y],[35,16+y],[16,27+y],[36,29],[15,37],[38,42],[16,48],[37,50]]){R(x,yy,3,1,SPOT);R(x-1,yy+1,2,2,SPOT);R(x+2,yy+1,1,2,SPOT);R(x,yy+3,3,1,SPOT);R(x+1,yy+1,1,1,'#e4a4bb');}
+  // Doppio's short curly crop with springy side curls.
+  poly([[16,22+y],[17,11+y],[24,6+y],[33,6+y],[40,11+y],[41,22+y],[40,32+y],[16,32+y]],h.shade);
  }
- return outline(r.pixels,INK);
+}
+function frontHair(r,style,h,y){
+ const {poly,line,rect}=r;
+ if(style==='curly'){
+  poly([[16,26+y],[15,17+y],[20,9+y],[28,7+y],[36,9+y],[41,17+y],[40,26+y],[37,21+y],[33,18+y],[30,21+y],[28,17+y],[25,21+y],[22,18+y],[19,22+y]],h.hair);
+  for(const [x,yy]of [[16,24],[39,24],[15,18],[40,18]]){rect(x-1,yy+y,4,4,h.hair);rect(x,yy+1+y,2,2,h.shade);r.put(x,yy+y,h.light);}
+  poly([[26,9+y],[29,4+y],[33,6+y],[31,10+y]],h.hair);line(27,8+y,30,5+y,h.light);line(20,12+y,26,10+y,h.light);line(31,10+y,36,12+y,h.light);
+  return;
+ }
+ // Center-parted fringe falls in two long curtains past the cheekbones.
+ poly([[17,30+y],[16,18+y],[21,10+y],[28,8+y],[28,12+y],[23,17+y],[21,24+y],[20,38+y],[17,38+y]],h.shade);
+ poly([[39,30+y],[40,18+y],[35,10+y],[28,8+y],[28,12+y],[33,17+y],[35,24+y],[36,38+y],[39,38+y]],h.shade);
+ poly([[18,30+y],[17,19+y],[21,12+y],[27,10+y],[24,15+y],[21,21+y],[20,36+y]],h.hair);
+ poly([[38,30+y],[39,19+y],[35,12+y],[29,10+y],[32,15+y],[35,21+y],[36,36+y]],h.hair);
+ line(20,14+y,25,11+y,h.light);line(31,11+y,36,14+y,h.light);line(19,22+y,19,33+y,h.light);
+ rect(27,8+y,2,3,h.shade);
+}
+function legs(r,walk,{pants,pantsShade,pantsLight,shoe,shoeLight,top=52,cuff,bare=false,short=false}){
+ const {rect}=r;
+ for(const [i,x]of [21,31].entries()){const d=i?walk:-walk;
+  if(bare||short){rect(x+d,top,5,15,SKIN.base);rect(x+d+4,top,1,15,SKIN.shade);}
+  if(!bare){const h=short?8:15;rect(x+d-1,top,7,h,pantsShade);rect(x+d,top,5,h-1,pants);rect(x+d+1,top+1,1,h-3,pantsLight);if(cuff)rect(x+d-1,top+h-2,7,2,cuff);}
+  rect(x+d-1,67,7,4,shoe);rect(x+d,67,4,1,shoeLight);rect(x+d-1,70,7,1,mix(shoe,'#000000',.45));
+ }
+}
+function torso(r,y,{dark,mid,light}){
+ const {poly,line}=r;poly([[17,38+y],[39,38+y],[37,53],[19,53]],dark);poly([[18,39+y],[38,39+y],[36,52],[20,52]],mid);if(light)line(19,40+y,21,51,light);
+}
+const GARMENTS={
+ default(r,y){
+  // Sheer net shirt over a bare midriff, with dark leopard-spotted trousers.
+  torso(r,y,{dark:SKIN.shade,mid:SKIN.base});
+  r.poly([[22,44+y],[34,44+y],[33,50],[23,50]],SKIN.light);r.line(28,45+y,28,50,SKIN.shade);r.line(24,47,32,47,SKIN.shade);
+  for(let yy=38+y;yy<52;yy++)for(let x=18;x<38;x++)if(r.pixels[yy*56+x]&&((x+yy)%4===0||(x-yy+80)%4===0))r.put(x,yy,(x+yy)%8===0?'#7d5670':'#b88a90');
+  r.poly([[22,38+y],[34,38+y],[31,42+y],[25,42+y]],SKIN.base);r.rect(24,38+y,8,1,'#5d3f5e');
+  r.rect(19,51,18,2,'#2c2433');r.rect(26,51,4,2,'#c9a85c');
+  return {sleeve:'#d2a698',sleeveLight:'#e6bdac',net:true,pants:'#5a3c66',pantsShade:'#3a2745',pantsLight:'#7b5a8a',shoe:'#2c2433',shoeLight:'#4c4058',patterned:true};
+ },
+ doppio(r,y){
+  // Lilac cropped knit with a scoop neck over a dark net layer; khaki trousers.
+  torso(r,y,{dark:'#7b5f9a',mid:'#a487c0',light:'#c3abd8'});
+  for(let yy=41+y;yy<52;yy+=3)r.line(19,yy,37,yy,'#8f73ab');
+  r.poly([[23,38+y],[33,38+y],[30,43+y],[26,43+y]],SKIN.base);r.line(24,39+y,32,39+y,'#5d3f5e');
+  r.rect(20,50,16,3,'#5d3f5e');
+  return {sleeve:'#a487c0',sleeveLight:'#c3abd8',cuff:'#7b5f9a',pants:'#c2a874',pantsShade:'#8f7650',pantsLight:'#dcc596',shoe:'#5b4a3a',shoeLight:'#8a7460'};
+ },
+ casual(r,y){
+  // Passione Leisure: open black jacket over a lilac tee and cream trousers.
+  torso(r,y,{dark:'#7b5f9a',mid:'#a487c0'});r.rect(25,41+y,6,2,'#c3abd8');
+  r.poly([[17,38+y],[24,38+y],[25,53],[18,53]],'#221d2b');r.poly([[32,38+y],[39,38+y],[38,53],[31,53]],'#221d2b');
+  r.line(23,39+y,24,52,'#3e3650');r.line(33,39+y,32,52,'#3e3650');r.poly([[22,38+y],[25,38+y],[24,44+y]],'#3e3650');r.poly([[34,38+y],[31,38+y],[32,44+y]],'#3e3650');
+  return {sleeve:'#221d2b',sleeveLight:'#3e3650',cuff:'#3e3650',pants:'#e4dccb',pantsShade:'#aea38f',pantsLight:'#f6f0e2',shoe:'#3e3650',shoeLight:'#6a6080'};
+ },
+ pajamas(r,y,walk){
+  // Crimson Dream Robe: long plum robe with gold piping and a tied sash.
+  r.poly([[17,38+y],[39,38+y],[41+walk,64],[15+walk,64]],'#5a2f55');r.poly([[18,39+y],[38,39+y],[39+walk,63],[17+walk,63]],'#86497c');
+  r.poly([[24,38+y],[28,47],[32,38+y],[30,38+y],[28,43],[26,38+y]],SKIN.base);r.line(24,38+y,28,48,'#d9bd70');r.line(32,38+y,28,48,'#d9bd70');r.line(28,48,26+walk,63,'#d9bd70');
+  r.rect(18,48,20,3,'#d9bd70');r.rect(30,50,3,6,'#b0924d');
+  for(const [x,yy]of [[21,54],[34,57],[23,60]]){r.put(x+walk,yy,'#b45c8c');r.put(x+1+walk,yy+1,'#b45c8c');}
+  return {sleeve:'#86497c',sleeveLight:'#a8649b',cuff:'#d9bd70',bare:true,shoe:'#d9bd70',shoeLight:'#f0dca0'};
+ },
+ swimsuit(r,y){
+  // Crimson Current: open short-sleeved beach shirt, bare chest, swim shorts.
+  torso(r,y,{dark:SKIN.shade,mid:SKIN.base});r.line(28,43+y,28,51,SKIN.shade);r.line(23,47,33,47,SKIN.shade);
+  r.poly([[17,38+y],[25,38+y],[24,53],[18,53]],'#9b3550');r.poly([[31,38+y],[39,38+y],[38,53],[32,53]],'#9b3550');
+  for(const [x,yy]of [[19,42],[21,48],[34,41],[36,47],[19,51]]){r.rect(x,yy,2,2,'#e2b35d');r.put(x,yy,'#f6dba0');}
+  r.rect(19,51,18,2,'#6a2338');
+  return {sleeve:'#9b3550',sleeveLight:'#c25570',bareArm:true,short:true,pants:'#2f5d74',pantsShade:'#1f3f52',pantsLight:'#4c86a0',cuff:'#e2b35d',shoe:'#8b5a3c',shoeLight:'#b98864'};
+ },
+};
+function arms(r,y,g,{attack,special}){
+ const sleeve={color:g.sleeve,light:g.sleeveLight,width:5};
+ const bare={color:SKIN.base,light:SKIN.light,width:4};
+ // Short sleeves stop at the elbow so the forearm shows skin.
+ const draw=(x0,y0,x1,y1)=>{if(g.bareArm){const mx=Math.round((x0+x1)/2),my=Math.round((y0+y1)/2);limb(r,x0,y0,x1,y1,{...bare});limb(r,x0,y0,mx,my,{...sleeve,hand:null});}else limb(r,x0,y0,x1,y1,sleeve);if(g.cuff&&!g.bareArm)r.rect(x1-1,y1+1,5,2,g.cuff);};
+ if(special){draw(18,40+y,9,33);draw(38,40+y,47,33);return;}
+ draw(18,40+y,14,53);
+ if(attack)draw(38,40+y,48,40);else draw(38,40+y,42,53);
+}
+function face(r,y,{expression,blink,doppio}){
+ const hurt=expression==='hurt',focus=expression==='focused'||expression==='ultimate';
+ for(const [x,side]of [[21,-1],[31,1]])eye(r,x,26+y,{iris:doppio?'#93ad7f':GREEN,irisDark:doppio?'#5f7a55':GREEN_DARK,lash:INK,side,closed:blink,hurt,focus:focus||!doppio});
+ // Diavolo's tinted lips; Doppio has a softer, nervous mouth.
+ if(!doppio&&expression==='neutral'){r.rect(26,34+y,4,1,'#7a5068');r.put(30,33+y,'#7a5068');}
+ else mouth(r,34+y,expression,{lip:doppio?'#b9707a':'#7a5068'});
+}
+export function diavoloPixels({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='default'}={}){
+ const special=!!pose;if(special){expression='ultimate';}
+ const o=OUTFITS[skin]||OUTFITS.default,paint=GARMENTS[skin]||GARMENTS.default,h=HAIR,doppio=skin==='doppio';
+ const r=canvas(),{walk,y:bob}=motion({frame,moving}),y=bob-2;
+ backHair(r,o.hair,h,walk,y);
+ const g=paint(canvas(),y,walk);
+ if(g.bare)legs(r,walk,{...g,bare:true});else legs(r,walk,g);
+ if(g.patterned)for(const [i,x]of [21,31].entries()){const d=i?walk:-walk;for(const yy of [55,60,64])r.rect(x+d+1+(yy%2),yy,2,1,'#3a2745');}
+ paint(r,y,walk);
+ arms(r,y,g,{attack,special});
+ // The sheer net sleeves let skin show through a diagonal mesh.
+ if(g.net)for(let yy=36;yy<56;yy++)for(let x=6;x<52;x++){const c=r.pixels[yy*56+x];if((c==='#d2a698'||c==='#e6bdac')&&((x+yy)%3===0||(x-yy+90)%3===0))r.put(x,yy,'#a87c84');}
+ head(r,y);face(r,y,{expression,blink,doppio});
+ frontHair(r,o.hair,h,y);
+ spots(r,h,doppio?[[19,12],[33,10],[38,19],[16,22],[24,8]]:[[19,13],[24,9],[33,9],[37,14],[17,22],[39,24],[16,32],[40,34],[15,42],[41,44],[18,50],[38,50],[20,28],[36,29]]);
+ if(o.shades){r.rect(20,9+y,16,2,'#2c2433');r.rect(21,9+y,5,2,'#3e5f7a');r.rect(30,9+y,5,2,'#3e5f7a');r.put(22,9+y,'#9cc7e0');r.put(31,9+y,'#9cc7e0');}
+ if(special){
+  // Time Erasure: a crimson glare frames his raised hands.
+  for(const [x,yy]of [[8,30],[46,30]]){r.rect(x,yy,3,3,'#e8566e');r.put(x+1,yy+1,'#ffd6dc');}
+ }
+ return selout(r.pixels,INK);
 }

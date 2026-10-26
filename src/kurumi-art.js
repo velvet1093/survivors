@@ -1,222 +1,256 @@
-import {raster,outline} from './pixel-characters.js';
-const INK='#262631',HAIR='#252732',HAIR_DARK='#161c28',HAIR_LIGHT='#505065',SKIN='#f1cbb2',PALE='#ffdec3',SKIN_SHADE='#c8968c',RED_EYE='#ba4b64',GOLD_EYE='#d9b45f';
-function rose(r,x,y,color='#a5658d'){
- const {rect:R}=r;R(x+1,y-2,3,6,'#523a60');R(x-1,y,7,3,color);R(x,y-1,5,5,color);R(x+1,y,3,3,'#70476f');R(x+2,y,2,1,'#cb8eb3');R(x+2,y+2,1,1,'#dfa5bd');
-}
-function face(r,{y=0,skin='default',blink=false,expression='neutral'}={}){
- const {rect:R,poly:P,line:L}=r,closed=blink||expression==='hurt',focus=['focused','ultimate'].includes(expression),covered=skin==='crimson'||skin==='school';
- P([[18,20+y],[23,15+y],[33,16+y],[38,23+y],[36,31+y],[31,36+y],[24,35+y],[19,30+y]],SKIN);
- P([[21,21+y],[26,18+y],[33,19+y],[36,24+y],[34,30+y],[30,33+y],[24,32+y],[21,28+y]],PALE);
- R(17,25+y,3,5,SKIN);R(36,25+y,3,4,SKIN);R(18,26+y,1,2,SKIN_SHADE);
- const eye=(x,color)=>{L(x,26+y,x+3,26+y,INK);if(closed){L(x,28+y,x+3,28+y,INK);return;}R(x,27+y,4,4,'#f7eade');R(x+1,27+y,2,4,color);R(x+1,28+y,1,3,'#563c51');R(x+1,27+y,1,1,'#fff1dd');if(focus)R(x,27+y,4,1,INK);};
- eye(21,RED_EYE);if(!covered&&skin!=='gothic')eye(31,skin==='whitequeen'?'#8da4c9':GOLD_EYE);
- if(skin==='default'&&!closed){R(32,28+y,1,2,'#735443');R(32,29+y,2,1,'#735443');}
- L(26,33+y,29,33+y,expression==='hurt'?'#a46d77':'#9e7175');if(!closed&&!focus)R(30,32+y,1,1,'#bb8a88');
-}
-function eyepatch(r,y){
- const {rect:R,poly:P,line:L}=r;
- // A small white dressing sits beneath the left-eye fringe (viewer-right).
- // Paint it before the hair so only its lower corner can peek through.
- L(34,25+y,37,26+y,'#c8c1cb');
- P([[31,26+y],[34,26+y],[35,28+y],[34,30+y],[30,30+y],[30,27+y]],'#c8c1cb');
- R(30,27+y,4,3,'#f2efed');R(31,26+y,3,1,'#f2efed');
-}
-function flintlocks(r,{y=0,cast=false,skin='default'}={}){
- const {rect:R,poly:P,line:L}=r,black=skin==='crimson',metal=black?'#b5bac5':'#c6c7bd',wood=black?'#765567':'#94644e',handY=cast?39:51;
- // A slender musket leans upright in the relaxed hand and levels into a true long barrel when firing.
- if(cast){L(40,handY,52,handY,wood,3);L(46,handY-1,54,handY-1,metal,2);R(43,handY+2,3,4,wood);R(42,handY-2,3,1,'#e4c58b');R(48,handY+2,1,2,INK);}
- else{L(12,51,8,39,wood,3);L(8,39,7,26,metal,2);R(7,37,5,2,'#d3b488');R(9,46,4,2,'#d5b999');}
- if(skin==='default'||skin==='gothic'){R(43,handY-2,8,3,wood);R(48,handY-3,5,2,metal);R(44,handY+1,3,3,wood);}
-}
-function gothicKurumiPixels({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false}={}){
- const r=raster(),{rect:R,poly:P,line:L}=r,walk=moving?[0,2,0,-2][frame]:0,y=moving?-(frame%2):0,cast=attack||pose==='clock';
- const velvet='#272936',fold='#141b27',lit='#494656',lace='#f4e8e2',laceLight='#fff7ec',laceShade='#b7abba',roseRed='#b94e64';
- // This gown has loose flowing hair, rather than the Astral outfit's separated tails.
- P([[16,18+y],[16,12+y],[23,8+y],[33,9+y],[40,15+y],[41,31],[45+walk,43],[51+walk,49],[46+walk,51],[39,45],[43+walk,58],[37,54],[32,44],[21,46],[12-walk,58],[11,49],[6-walk,51],[12-walk,36]],HAIR_DARK);
- P([[17,21+y],[20,14+y],[28,11+y],[36,14+y],[38,22+y],[37,34],[41+walk,43],[47+walk,48],[41,45],[38,41],[40+walk,52],[34,45],[29,37],[20,43],[14-walk,53],[16-walk,40],[12,43],[15,31]],HAIR);
- L(15,33,12-walk,47,HAIR_LIGHT);L(38,30,41+walk,40,HAIR_LIGHT);L(42+walk,44,47+walk,48,'#3f3e52');
- // Two stockings and small heeled shoes remain visible below the bell-shaped hem.
- for(const [x,step]of [[21,-walk],[32,walk]]){
-  P([[x,57],[x+5,57],[x+5+step,67],[x+3+step,70],[x-1+step,69]],'#30313e');
-  L(x+1,60,x+step+1,66,'#5b5365');R(x,58,5,2,fold);R(x+1,59,3,1,'#776275');
-  P([[x+step,67],[x+step+5,67],[x+step+5,70],[x+step+3,72],[x+step-3,72],[x+step-3,70]],'#222632');
-  R(x+step-1,69,5,1,'#6b5d71');R(x+step+4,71,1,2,fold);
- }
- // White petticoats form a separate scalloped silhouette beneath the split black overskirt.
- P([[22,48],[34,48],[39+walk,54],[46+walk,61],[43+walk,64],[39,63],[35,66],[31,64],[27,66],[23,64],[19,65],[15+walk,63],[10+walk,63],[12+walk,58],[18+walk,52]],laceShade);
- P([[23,49],[33,49],[37+walk,55],[42+walk,60],[40+walk,62],[35,61],[32,64],[27,62],[23,64],[19+walk,62],[14+walk,62],[16+walk,57],[21,52]],lace);
- for(const [x,yy]of [[16,58],[21,60],[27,61],[33,60],[39,59]]){
-  P([[x+walk*.5,yy-2],[x+3+walk*.5,yy-1],[x+4+walk*.5,yy+2],[x+2+walk*.5,yy+3],[x-1+walk*.5,yy+1]],laceLight);
-  L(x+walk*.5,yy,x+2+walk*.5,yy+2,laceShade);
- }
- // Three shaded scalloped seams keep the white waterfall legible as separate frilled tiers.
- for(const [x0,x1,yy]of [[23,33,53],[20,36,56],[17,39,60]]){
-  const sway=walk*.5,points=[];
-  for(let x=x0;x<=x1;x+=2)points.push([x+sway,yy+((x-x0)/2%2)]);
-  for(let i=1;i<points.length;i++){
-   const a=points[i-1],b=points[i];L(a[0],a[1]-1,b[0],b[1]-1,laceLight);L(a[0],a[1],b[0],b[1],'#8c7c91');
-  }
- }
- // Sweeping velvet side panels expose a stepped white waterfall through the center.
- P([[21,47],[28,50],[24+walk*.5,54],[21+walk,58],[16+walk,61],[10+walk,60],[12+walk,56],[16+walk,52]],fold);
- P([[22,48],[25,50],[21+walk,54],[15+walk,58],[11+walk,58],[15+walk,54]],velvet);
- P([[32,48],[36,48],[41+walk,53],[46+walk,58],[44+walk,62],[39+walk,61],[34+walk*.5,57],[30,52]],fold);
- P([[34,49],[38+walk*.5,52],[43+walk,56],[44+walk,59],[40+walk,58],[35+walk*.5,54],[32,51]],velvet);
- L(14+walk,56,21+walk*.5,52,lit);L(36+walk*.5,53,42+walk,57,lit);
- for(const [x,yy]of [[12,59],[17,57],[21,54],[35,54],[39,57],[43,60]]){
-  R(x+walk,yy,3,1,laceShade);R(x+walk+1,yy+1,2,1,lace);
- }
- // Fitted buttoned corset, white blouse and a deep lace collar replace the old white bodice.
- R(25,33+y,7,5,SKIN);P([[20,36+y],[25,34+y],[29,37+y],[33,34+y],[38,37+y],[35,43],[32,45],[24,45],[20,41]],laceShade);
- P([[23,35+y],[27,36+y],[29,39+y],[31,36+y],[34,35+y],[35,39+y],[31,43],[25,43],[21,39+y]],lace);
- for(const [x,yy]of [[23,36],[25,38],[28,39],[31,38],[33,36]])R(x,yy+y,2,2,laceLight);
- P([[22,40+y],[26,42+y],[29,41+y],[32,42+y],[35,40+y],[33,47],[35,50],[30,52],[23,50],[22,47]],fold);
- P([[24,42+y],[28,43+y],[31,42+y],[33,43+y],[31,49],[28,50],[24,48]],velvet);
- L(24,43,24,47,lit);L(32,43,31,47,lit);L(25,49,30,50,'#655568');
- for(const yy of [43,46,49]){R(28,yy,2,1,'#c9b59c');R(28,yy+1,1,1,'#7f6b77');}
- // Puffed white sleeves and long black gloves follow the raised musket arm.
- const leftY=cast?46:29,rightY=cast?38:47;
- P([[20,36+y],[17,36+y],[14,39+y],[17,43+y],[21,41+y],[23,38+y]],laceShade);
- P([[18,36+y],[15,39+y],[18,41+y],[21,39+y]],lace);R(17,37+y,2,2,laceLight);
- L(17,40+y,cast?14:12,leftY,SKIN,3);L(cast?14:12,cast?43:34,cast?14:10,leftY,fold,3);R(cast?13:9,leftY-1,4,3,SKIN);
- P([[35,36+y],[39,36+y],[42,39+y],[39,43+y],[35,41+y],[33,38+y]],laceShade);
- P([[36,36+y],[40,38+y],[39,41+y],[35,39+y]],lace);R(37,37+y,2,2,laceLight);
- L(39,40+y,cast?44:42,rightY,SKIN,3);L(cast?42:41,cast?39:43,cast?46:43,rightY,fold,3);R(cast?44:42,rightY,4,3,PALE);
- const wood='#8b5b4e',metal='#c6c7bd';
- if(cast){
-  L(41,39,52,39,wood,3);L(46,37,54,37,metal,2);R(43,41,3,4,wood);R(43,36,3,1,'#dcc092');R(49,40,1,2,'#d3ba8e');
-  L(12,47,7,37,wood,3);L(7,37,5,30,metal,2);R(9,43,3,2,'#c7aa80');
- }else{
-  L(1,24,14,26,wood,3);L(1,22,10,23,metal,2);R(11,26,3,4,wood);R(10,23,3,2,'#d8bd8e');R(4,24,2,1,'#675265');
-  L(42,47,50,45,wood,3);L(47,43,54,42,metal,2);R(43,49,3,3,wood);R(45,44,2,1,'#d8bd8e');
- }
- face(r,{y,skin:'gothic',blink,expression:pose==='clock'?'ultimate':expression});
- eyepatch(r,y);
- // A low side fringe and loose cheek locks keep her face compact and readable.
- P([[16,28+y],[15,20+y],[18,14+y],[23,10+y],[30,9+y],[37,12+y],[40,19+y],[40,29+y],[37,35+y],[36,25+y],[34,21+y],[30,17+y],[27,23+y],[24,20+y],[21,25+y],[19,34+y],[16,35+y]],HAIR);
- P([[18,20+y],[20,15+y],[25,12+y],[31,11+y],[36,14+y],[38,19+y],[36,23+y],[31,16+y],[28,20+y],[25,17+y],[22,22+y],[19,25+y]],'#38394b');
- L(22,14+y,27,12+y,'#676173');L(35,15+y,37,19+y,HAIR_LIGHT);L(18,27+y,17,32+y,'#474354');
- // The long side-swept fringe covers nearly all of the patch and its strap.
- P([[29,15+y],[35,15+y],[39,23+y],[38,31+y],[35,35+y],[33,32+y],[32,29+y],[30,28+y],[29,24+y],[27,20+y]],HAIR);
- L(33,19+y,36,28+y,'#414052');L(36,28+y,35,32+y,HAIR_LIGHT);
- // Red rose sprigs and a tiny neck rose are the only strong accents on the monochrome gown.
- L(15,13+y,20,9+y,'#62354c');P([[13,14+y],[10,15+y],[12,20+y],[15,17+y],[18,21+y],[18,15+y]],'#703849');
- rose(r,16,12+y,roseRed);R(16,11+y,2,1,'#e99799');R(15,14+y,2,1,'#753548');
- R(26,35+y,6,2,fold);R(27,35+y,4,3,roseRed);R(28,35+y,2,1,'#e99799');R(28,38+y,1,2,'#703849');
- return outline(r.pixels,INK);
-}
+import {canvas,motion,eye,mouth,blush,head,limb,selout,mix,SKIN} from './hero-kit.js';
+// Kurumi Tokisaki. Every outfit shares one petite skeleton, the red/gold
+// heterochromia and the flintlock pair; hair styles and garments change per skin.
+const INK='#241c2b';
+const HAIR={hair:'#2d2a3a',shade:'#1b1925',light:'#4b4662',sheen:'#736c92'};
 export const WHITE_QUEEN_COLORS={hair:'#d2d5dc',hairShade:'#7f8492',hairLight:'#f4f5f3',dress:'#e9e9e7',dressShade:'#b7bbc6',trim:'#777a8c',lining:'#343541',silver:'#bfc7d7',lace:'#fbfbf7'};
-function whiteQueenKurumiPixels({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false}={}){
- const r=raster(),{rect:R,poly:P,line:L}=r,c=WHITE_QUEEN_COLORS,step=moving?[0,2,0,-2][frame]:0,y=moving?-(frame%2):0,cast=attack||pose==='clock';
- // Long silver hair falls past the waist in two shaded curtains. It stays
- // separate from the coat, with dark edges to retain the silhouette on snow.
- P([[16,21+y],[14,14+y],[19,8+y],[28,6+y],[36,8+y],[41,15+y],[41,32],[46+step,49],[51+step,63],[43,62],[38,52],[34,41],[22,41],[16,55],[8-step,65],[6-step,59],[10,42]],c.hairShade);
- P([[17,20+y],[19,12+y],[27,9+y],[35,11+y],[38,17+y],[38,34],[43+step,49],[47+step,59],[43,57],[37,43],[32,36],[23,37],[18,49],[11-step,59],[13,43],[15,31]],c.hair);
- for(const [x0,y0,x1,y1]of [[16,28,11-step,53],[20,34,16-step,54],[39,29,44+step,52],[36,39,41+step,56]])L(x0,y0,x1,y1,c.hairLight);
- // Tall charcoal boots have separate white laced front panels and silver toes.
- for(const [x,d]of [[20,-step],[31,step]]){
-  P([[x,55],[x+6,55],[x+6+d,67],[x+4+d,71],[x-1+d,70]],c.lining);
-  P([[x+1,56],[x+5,56],[x+4+d,66],[x+2+d,68],[x+d,66]],c.dressShade);
-  L(x+2,56,x+2+d,65,c.lace);L(x+4,56,x+4+d,65,c.trim);
-  for(let yy=57;yy<65;yy+=3){const off=d*(yy-55)/12;L(x+1+off,yy,x+4+off,yy+2,c.trim);L(x+4+off,yy,x+1+off,yy+2,c.lace);}
-  P([[x-1+d,67],[x+5+d,67],[x+6+d,70],[x+3+d,73],[x-4+d,72],[x-4+d,70]],c.lining);
-  R(x-3+d,70,6,2,c.silver);R(x-2+d,70,4,1,c.lace);R(x+5+d,70,1,3,c.trim);
+const QUEEN_HAIR={hair:WHITE_QUEEN_COLORS.hair,shade:WHITE_QUEEN_COLORS.hairShade,light:WHITE_QUEEN_COLORS.hairLight,sheen:'#ffffff'};
+const RED='#b85160',RED_DARK='#7a2f45',RED_LIGHT='#e17d7f',GOLD='#d9b45f',GOLD_DARK='#9c7334';
+// hair: twintails | loose | low | bun | side. eye: clock | patch | hidden.
+const OUTFITS={
+ default:{hair:'twintails',eye:'clock',band:'headdress'},
+ gothic:{hair:'loose',eye:'patch',band:'rose'},
+ crimson:{hair:'low',eye:'hidden',band:'roseclips'},
+ school:{hair:'twintails',eye:'hidden',band:'ribbons'},
+ whitequeen:{hair:'loose',eye:'clock',band:'crown',palette:QUEEN_HAIR},
+ casual:{hair:'twintails',eye:'clock',band:'ribbons'},
+ pajamas:{hair:'loose',eye:'clock',band:'nightcap'},
+ swimsuit:{hair:'side',eye:'clock',band:'rose'},
+ cuteswim:{hair:'twintails',eye:'clock',band:'bows'},
+ bathsuit:{hair:'bun',eye:'clock',band:'pin'},
+};
+export const KURUMI_OUTFIT_IDS=Object.keys(OUTFITS);
+export const KURUMI_COLORS={...HAIR,red:RED,gold:GOLD,iris:'#ba4b64',patch:'#f2efed',barrel:'#c6c7bd'};
+
+function backHair(r,style,h,walk,y){
+ const {poly,line}=r;
+ // Mass behind the head and shoulders.
+ poly([[15,24+y],[17,13+y],[23,8+y],[33,8+y],[39,13+y],[41,24+y],[40,36+y],[16,36+y]],h.shade);
+ if(style==='twintails'){
+  // Kurumi's uneven twin tails flare out from high ties; the viewer-left tail is longer.
+  for(const [x,side,len]of [[18,-1,62],[38,1,54]]){const s=walk*side*.8,o=x+side*10;
+   poly([[x,10+y],[x+side*5,13+y],[o+side*2,24+y],[o+side*2+s,36],[o+s,len-8],[o-side*2+s,len],[o-side*5+s,len-6],[o-side*4,34],[x+side*2,20+y]],h.shade);
+   poly([[x,12+y],[x+side*4,14+y],[o+side,25+y],[o+side+s,36],[o-side+s,len-8],[o-side*2+s,len-3],[o-side*4+s,len-8],[o-side*3,33],[x+side*2,21+y]],h.hair);
+   line(x+side*4,16+y,o+s,36,h.light);line(o-side+s,38,o-side*2+s,len-8,h.sheen);line(o-side*3,30,o-side*3+s,len-10,h.shade);
+  }
+ }else if(style==='loose'||style==='side'){
+  poly([[14,22+y],[17,12+y],[39,12+y],[42,22+y],[43+walk*.4,54],[38,58],[33,50],[23,50],[18,58],[13+walk*.4,54]],h.shade);
+  poly([[15,22+y],[18,14+y],[38,14+y],[41,22+y],[41+walk*.4,52],[38,55],[34,47],[22,47],[18,55],[15+walk*.4,52]],h.hair);
+  line(16,26,15+walk*.4,50,h.light);line(40,26,41+walk*.4,50,h.light);line(17,36,17+walk*.4,52,h.sheen);
+  if(style==='side'){poly([[38,18+y],[44,22+y],[47+walk,40],[44+walk,54],[40,50],[40,30]],h.shade);poly([[39,20+y],[43,24+y],[45+walk,40],[43+walk,51],[41,46],[41,30]],h.hair);line(42,26,44+walk,46,h.sheen);}
+ }else if(style==='low'){
+  for(const [x,side]of [[18,-1],[38,1]]){const s=walk*side*.6;poly([[x-3,30],[x+3,30],[x+side*4+s,48],[x+side*2+s,62],[x-side*3+s,58],[x-side*2,42]],h.shade);poly([[x-2,31],[x+2,31],[x+side*3+s,48],[x+side*1+s,59],[x-side*2+s,55],[x-side,42]],h.hair);line(x,34,x+side*2+s,54,h.light);}
+ }else if(style==='bun'){
+  poly([[22,8+y],[26,3+y],[32,3+y],[35,8+y],[33,12+y],[24,12+y]],h.shade);poly([[23,8+y],[26,4+y],[31,4+y],[34,8+y],[31,11+y],[25,11+y]],h.hair);line(25,6+y,30,5+y,h.light);
  }
- // A dark petticoat peeks below the bright, asymmetrical military coat-dress.
- P([[20,46],[35,46],[40+step,53],[49+step,61],[46+step,65],[41,64],[37,67],[31,65],[27,67],[22,65],[17-step,67],[10-step,64],[5-step,63],[12-step,54]],c.lining);
- P([[21,48],[34,48],[39+step,54],[45+step,61],[40,62],[36,65],[29,63],[23,65],[18-step,63],[9-step,62],[15-step,55]],'#535363');
- for(const [x,yy]of [[10,62],[16,63],[22,63],[29,64],[35,63],[42,62]]){R(x+step*.5,yy,3,1,c.silver);R(x+1+step*.5,yy+1,2,1,c.trim);}
- // Broad outer panels sit over a narrow buttoned front. Their curving seams
- // and stepped ruffle edge recreate the reference's layered white hem.
- P([[21,44],[35,44],[40+step,50],[48+step,58],[47+step,62],[40,61],[35,64],[28,62],[22,64],[15-step,61],[7-step,62],[8-step,57],[16-step,49]],c.dressShade);
- P([[22,45],[33,45],[38+step,50],[44+step,57],[43+step,60],[37,59],[34,62],[28,60],[22,62],[16-step,59],[10-step,60],[12-step,55],[18-step,49]],c.dress);
- P([[24,45],[28,47],[25-step*.4,59],[21,61],[18-step,58],[21,51]],c.hairLight);
- P([[33,46],[37+step,51],[41+step,58],[37,59],[33,55]],c.dressShade);
- L(20,49,14-step,57,c.trim);L(35,49,41+step,57,c.trim);L(22,51,20-step*.5,58,c.hairLight);L(32,50,34+step*.5,58,c.hairLight);
- for(const yy of [48,52,56]){R(27,yy,2,2,c.trim);R(28,yy,1,1,c.lace);}
- // A double stepped frill is visible on both wings of the skirt.
- for(const [x,yy]of [[10,59],[15,59],[20,61],[25,61],[30,61],[35,61],[40,59],[44,60]]){
-  R(x+step*.4,yy,3,2,c.lace);R(x+1+step*.4,yy+2,3,1,c.trim);
- }
- // Fitted double-breasted white bodice, split lapels, diamond brooch and bow.
- R(25,33+y,7,5,SKIN);P([[20,36+y],[25,34+y],[32,34+y],[37,37+y],[35,45],[37,48],[31,50],[25,48],[20,49],[21,43]],c.trim);
- P([[22,36+y],[27,37+y],[29,40+y],[32,36+y],[35,38+y],[33,44],[35,47],[30,48],[25,46],[22,47]],c.dress);
- P([[22,36+y],[26,36+y],[28,40+y],[24,39+y]],c.lace);P([[32,36+y],[35,37+y],[31,41+y],[29,40+y]],c.lace);
- L(23,40,23,45,c.dressShade);L(33,40,32,45,c.dressShade);
- for(const xx of [25,31])for(const yy of [41,44]){R(xx,yy,2,1,c.trim);R(xx,yy,1,1,c.silver);}
- P([[28,37+y],[30,39+y],[28,41+y],[26,39+y]],c.silver);R(28,38+y,1,2,c.lace);
- L(21,46,35,46,c.trim);P([[25,45],[28,47],[24,50],[21,48]],c.lace);P([[31,45],[28,47],[32,50],[35,48]],c.dressShade);R(27,46,3,3,c.silver);
- // White gloves and stiff sleeve cuffs support silver, rather than wood,
- // flintlocks; casting keeps a true long barrel above the skirt.
- const rightY=cast?39:49;
- L(19,38+y,14,47,c.trim,6);L(19,38+y,14,46,c.dress,4);R(11,46,6,3,c.silver);R(12,49,5,5,c.lace);R(13,49,2,4,c.dressShade);
- L(37,38+y,cast?43:41,rightY,c.trim,6);L(37,38+y,cast?43:41,rightY,c.dress,4);R(cast?41:39,rightY-1,6,3,c.silver);R(cast?43:40,rightY+2,5,4,c.lace);
- if(cast){L(44,40,52,40,c.trim,3);L(46,38,54,38,c.silver,2);R(46,37,7,1,c.lace);R(44,42,3,4,c.trim);R(49,40,2,2,c.dress);L(13,52,8,42,c.trim,3);L(8,42,7,30,c.silver,2);}
- else{L(13,52,8,39,c.trim,3);L(8,39,7,25,c.silver,2);R(6,26,2,11,c.lace);R(8,38,4,2,c.dress);L(42,51,50,49,c.trim,3);L(46,47,54,46,c.silver,2);R(48,46,5,1,c.lace);}
- face(r,{y,skin:'whitequeen',blink,expression:pose==='clock'?'ultimate':expression});
- // Straight silver fringe, cheek locks and a small open crown are independent
- // from the black-haired Astral, Gothic White and school silhouettes.
- P([[16,25+y],[15,18+y],[18,12+y],[24,8+y],[32,8+y],[38,13+y],[40,20+y],[39,32+y],[36,36+y],[35,24+y],[33,20+y],[30,24+y],[27,20+y],[24,25+y],[21,21+y],[20,31+y],[17,35+y]],c.hairShade);
- P([[17,22+y],[18,16+y],[22,11+y],[29,10+y],[35,12+y],[38,18+y],[37,26+y],[35,23+y],[33,17+y],[30,22+y],[27,17+y],[24,22+y],[21,18+y],[19,25+y]],c.hair);
- L(21,14+y,25,11+y,c.hairLight);L(30,11+y,34,13+y,c.hairLight);L(18,25+y,18,32+y,c.hairLight);L(37,24+y,36,32+y,c.hairLight);
- R(19,9+y,18,2,c.trim);R(20,8+y,16,2,c.silver);L(21,8+y,20,4+y,c.silver);L(25,8+y,25,3+y,c.silver);L(30,8+y,30,2+y,c.silver);L(35,8+y,36,4+y,c.silver);
- for(const [xx,yy]of [[20,4],[25,3],[30,2],[36,4]]){P([[xx,yy-2+y],[xx+1,yy+y],[xx,yy+2+y],[xx-1,yy+y]],c.lace);}
- R(23,9+y,2,1,c.lace);R(30,9+y,3,1,c.lace);
- return outline(r.pixels,INK);
 }
+// Fringe with pointed clumps and long side locks that frame the jaw.
+function frontHair(r,eyeMode,h,y){
+ const {poly,line,rect}=r;
+ poly([[16,30+y],[15,20+y],[19,12+y],[27,9+y],[35,11+y],[40,18+y],[41,30+y],[38,40+y],[36,27+y],[34,22+y],[31,25+y],[29,21+y],[26,25+y],[23,21+y],[21,26+y],[20,40+y],[17,38+y]],h.shade);
+ poly([[17,28+y],[17,20+y],[20,14+y],[27,11+y],[34,13+y],[38,18+y],[39,28+y],[37,24+y],[34,20+y],[31,23+y],[29,19+y],[26,23+y],[23,19+y],[21,24+y],[19,30+y]],h.hair);
+ line(21,15+y,26,13+y,h.light);line(28,13+y,33,14+y,h.light);rect(23,14+y,3,1,h.sheen);
+ line(18,24+y,18,37+y,h.hair);line(38,24+y,38,37+y,h.hair);line(19,27+y,19,34+y,h.light);
+ if(eyeMode!=='clock'){
+  // A long swept clump falls over her left (viewer-right) eye.
+  poly([[29,19+y],[34,18+y],[39,22+y],[39,32+y],[37,33+y],[35,28+y],[31,25+y],[29,22+y]],h.shade);
+  poly([[30,20+y],[34,20+y],[38,23+y],[38,30+y],[35,27+y],[31,24+y]],h.hair);line(33,21+y,37,27+y,h.light);
+ }
+}
+function accessory(r,band,y,walk){
+ const {poly,rect,line,put}=r;
+ if(band==='headdress'){
+  // Black lace headdress with red ruffles and a small gold clasp.
+  poly([[17,13+y],[22,8+y],[34,8+y],[39,13+y],[36,15+y],[28,12+y],[20,15+y]],'#1b1522');
+  for(let i=0;i<6;i++){const x=17+i*4,yy=13-Math.round(Math.sin((i+.5)*Math.PI/6)*5)+y;rect(x,yy,4,3,RED_DARK);rect(x,yy,3,2,RED);put(x+1,yy,RED_LIGHT);}
+  rect(27,9+y,3,2,GOLD);
+ }else if(band==='rose'||band==='roseclips'){
+  const spots=band==='rose'?[[16,14]]:[[17,30],[38,30]];
+  for(const [x,yy]of spots){rect(x,yy+y,5,5,'#7d2e44');rect(x+1,yy+y,3,4,'#b94e64');put(x+2,yy+1+y,'#e48a92');put(x+1,yy+2+y,'#7d2e44');rect(x-1,yy+4+y,2,2,'#4d6a4d');}
+ }else if(band==='ribbons'){
+  for(const x of [13,40]){poly([[x,14+y],[x+3,12+y],[x+3,17+y]],RED);poly([[x+6,14+y],[x+3,12+y],[x+3,17+y]],RED_DARK);rect(x+2,13+y,2,3,RED_LIGHT);}
+ }else if(band==='bows'){
+  for(const x of [12,40]){poly([[x,11+y],[x+3,14+y],[x,17+y]],'#d27a96');poly([[x+7,11+y],[x+4,14+y],[x+7,17+y]],'#a24b6c');rect(x+3,13+y,2,3,'#f2b3c6');}
+ }else if(band==='crown'){
+  // Silver crown with lace points above the fringe.
+  const c=WHITE_QUEEN_COLORS;rect(18,9+y,20,3,c.silver);rect(18,11+y,20,1,c.trim);
+  for(let i=0;i<5;i++){const x=18+i*4.5;poly([[x,9+y],[x+2,3+y],[x+4,9+y]],c.silver);put(x+2,4+y,c.lace);put(x+2,5+y,c.lace);rect(x+1,7+y,2,2,c.lace);}
+  rect(26,9+y,4,2,'#a8b4cc');put(27,9+y,'#ffffff');
+ }else if(band==='nightcap'){
+  poly([[16,15+y],[22,6+y],[33,5+y],[42,10+y],[46+walk*.5,20+y],[40,15+y],[34,12+y],[22,14+y]],'#6e3248');poly([[18,14+y],[23,8+y],[32,7+y],[40,11+y],[38,13+y],[30,10+y],[22,13+y]],'#9b4a63');
+  rect(16,14+y,25,2,'#f1e2d6');rect(44+Math.round(walk*.5),19+y,4,4,'#f1e2d6');
+ }else if(band==='pin'){
+  line(30,5+y,37,1+y,GOLD);rect(36,0+y,3,2,'#c74d63');rect(20,6+y,3,3,'#c74d63');put(21,6+y,'#f0a0a8');
+ }
+}
+function eyePatch(r,y){
+ // Small white patch tucked under the fringe; only its lower edge peeks out.
+ const {rect,line}=r;rect(31,28+y,5,3,'#f2efed');line(31,30+y,35,30+y,'#c8c1cb');
+}
+// Flintlock pistol (right hand) and long musket (left hand).
+function flintlock(r,x,y,{raised=false,flash=false}={}){
+ const {rect,put,line}=r;
+ if(raised){rect(x,y,9,2,'#3d3441');rect(x+2,y,7,1,'#6c6070');rect(x-1,y+1,3,4,'#7a4b34');rect(x+4,y+2,1,1,GOLD);put(x+9,y,GOLD);if(flash){rect(x+10,y-1,3,3,'#ffe9a8');put(x+13,y,'#ffc66d');}}
+ else{rect(x,y,2,8,'#3d3441');rect(x,y,1,7,'#8a7f90');rect(x-1,y-1,2,3,'#7a4b34');put(x+1,y+3,GOLD);put(x,y+8,GOLD);}
+}
+function musket(r,x,y,{aim=false}={}){
+ const {line,rect}=r;
+ if(aim){line(x,y,x-14,y-14,'#5a4134',2);line(x-6,y-6,x-15,y-15,'#c6c7bd',1);rect(x-1,y-1,3,3,'#7a4b34');}
+ else{line(x+2,y-6,x,y+2,'#7a4b34',2);line(x,y+2,x-6,y+20,'#4a4048',2);line(x-1,y+3,x-6,y+19,'#c6c7bd',1);rect(x,y,2,2,GOLD);}
+}
+
+// Garment painters. `w` is the walk offset, `y` the body bob.
+function legsAndShoes(r,o,w){
+ const {rect}=r;
+ const leg=o.legs||'#1d1824',legLight=o.legLight||mix(leg,'#ffffff',.18),shoe=o.shoe||'#2a1f2c',shoeLight=o.shoeLight||mix(shoe,'#ffffff',.3);
+ for(const [i,x]of [22,30].entries()){const d=i?w:-w;
+  rect(x+d,54,5,13,leg);rect(x+d+1,55,1,10,legLight);if(o.garter)rect(x+d,o.garter,5,1,o.garterColor||RED);
+  if(o.boots){rect(x+d-1,o.boots,7,71-o.boots,shoe);rect(x+d,o.boots,1,71-o.boots-1,shoeLight);if(o.laces)for(let yy=o.boots+1;yy<69;yy+=2)rect(x+d+2,yy,2,1,o.laces);rect(x+d-1,70,7,1,mix(shoe,'#000000',.45));}
+  else{rect(x+d-1,67,7,4,shoe);rect(x+d,67,4,1,shoeLight);rect(x+d-1,70,7,1,mix(shoe,'#000000',.45));if(o.strap)rect(x+d,68,5,1,o.strap);}
+ }
+}
+function frilledSkirt(r,w,{top=48,bottom=62,flare=9,dark,mid,light,frill,frillShade,tiers=2}){
+ const {poly,line,rect}=r;
+ for(let t=tiers-1;t>=0;t--){const b=bottom-t*4,f=flare-t*2;
+  poly([[20,top],[36,top],[36+f+w,b],[20-f+w,b]],t?frillShade:dark);
+  if(t){for(let x=20-f+w;x<36+f+w;x+=3)rect(x,b-1,2,2,frill);continue;}
+  poly([[21,top],[35,top],[34+f+w,b-2],[22-f+w,b-2]],mid);
+  for(const [a,bx]of [[23,-4],[27,0],[31,4]])line(a,top+2,a+bx*1.4+w,b-3,light);
+  for(let x=20-f+w;x<36+f+w;x+=3){rect(x,b-1,3,2,frill);rect(x+2,b,1,1,frillShade);}
+ }
+}
+function bodice(r,y,{dark,mid,light,lace}){
+ const {poly,line,rect}=r;
+ poly([[20,39+y],[36,39+y],[35,50],[21,50]],dark);poly([[21,40+y],[35,40+y],[34,49],[22,49]],mid);
+ line(22,41+y,22,48,light);if(lace)for(let yy=41+y;yy<49;yy+=2){rect(27,yy,3,1,lace);}
+}
+function arms(r,y,o,{attack,raised}){
+ // Left arm hangs with the musket; right arm holds the pistol low or aims it.
+ const sleeve=o.sleeve,sleeveLight=o.sleeveLight||mix(sleeve,'#ffffff',.25),cuff=o.cuff;
+ limb(r,20,41+y,16,raised?34:51,{color:sleeve,light:sleeveLight,width:4});
+ if(attack)limb(r,36,41+y,44,42,{color:sleeve,light:sleeveLight,width:4});
+ else limb(r,36,41+y,40,51,{color:sleeve,light:sleeveLight,width:4});
+ if(o.puff){r.poly([[17,39+y],[22,37+y],[23,43+y],[18,45+y]],o.puff);r.poly([[34,37+y],[39,39+y],[38,45+y],[33,43+y]],o.puff);r.rect(19,39+y,2,1,mix(o.puff,'#ffffff',.3));r.rect(35,39+y,2,1,mix(o.puff,'#ffffff',.3));}
+ if(cuff){r.rect(raised?14:14,(raised?33:49)+0,5,2,cuff);if(attack)r.rect(42,41,3,4,cuff);else r.rect(38,49,5,2,cuff);}
+}
+
+const GARMENTS={
+ default(r,y,w){
+  frilledSkirt(r,w,{dark:RED_DARK,mid:RED,light:RED_LIGHT,frill:'#1e1724',frillShade:'#0f0c14'});
+  bodice(r,y,{dark:'#1e1724',mid:RED,light:RED_LIGHT,lace:'#1e1724'});
+  r.rect(21,48,14,2,'#1e1724');r.rect(26,48,4,2,GOLD);
+  r.poly([[24,38+y],[28,42+y],[32,38+y]],'#1e1724');r.rect(25,37+y,6,1,RED_DARK);
+  return {sleeve:'#1e1724',puff:RED_DARK,cuff:RED,legs:'#1c1722',garter:56,garterColor:RED,shoe:'#2a1f2c',boots:63,laces:RED};
+ },
+ gothic(r,y,w){
+  // Fitted black corset, split velvet overskirt and a white tiered petticoat.
+  frilledSkirt(r,w,{dark:'#d8ccc9',mid:'#f4e8e2',light:'#fff7ec',frill:'#fff7ec',frillShade:'#8c7c91',flare:8});
+  r.poly([[20,48],[25,48],[22+w,58],[13+w,61]],'#272936');r.poly([[31,48],[36,48],[43+w,61],[34+w,58]],'#272936');r.line(21,50,15+w,59,'#4a3f55');r.line(35,50,41+w,59,'#4a3f55');
+  for(const yy of [53,57])r.line(21+w,yy,35+w,yy,'#8c7c91');
+  bodice(r,y,{dark:'#141b27',mid:'#272936',light:'#44415a',lace:'#f4e8e2'});
+  r.rect(22,38+y,12,2,'#f4e8e2');r.rect(26,40+y,4,2,'#b94e64');
+  return {sleeve:'#272936',puff:'#f4e8e2',cuff:'#f4e8e2',legs:'#f4e8e2',legLight:'#ffffff',shoe:'#272936',strap:'#b94e64'};
+ },
+ crimson(r,y,w){
+  // Midnight Rose: an ankle-length Victorian gown in plum and charcoal.
+  r.poly([[20,46],[36,46],[42+w,66],[37,68],[19,68],[14+w,66]],'#353340');r.poly([[21,46],[35,46],[40+w,64],[17+w,64]],'#45404f');
+  for(const a of [-5,0,5])r.line(28+a,48,28+a*1.6+w,64,'#5a5266');
+  for(let x=14+w;x<42+w;x+=3){r.rect(x,65,2,2,'#a5658d');}
+  r.poly([[21,46],[35,46],[33,52],[23,52]],'#95558e');r.line(23,47,33,47,'#a5658d');
+  bodice(r,y,{dark:'#2b2433',mid:'#45404f',light:'#5a5266',lace:'#a5658d'});
+  r.rect(22,38+y,12,2,'#a5658d');r.rect(27,40+y,2,2,'#e48a92');
+  return {sleeve:'#353340',puff:'#95558e',cuff:'#a5658d',legs:'#353340',shoe:'#1f1a26'};
+ },
+ school(r,y,w){
+  // Navy blazer over a white shirt, red ribbon tie and purple pleated skirt.
+  r.poly([[21,48],[35,48],[39+w,60],[17+w,60]],'#4e4c84');r.poly([[22,48],[34,48],[37+w,59],[19+w,59]],'#6866a1');
+  for(let x=19+w;x<38+w;x+=3)r.line(x+1,50,x+1,58,'#4e4c84');r.rect(17+w,59,22,1,'#3c3a6a');
+  r.poly([[20,39+y],[36,39+y],[36,50],[20,50]],'#262a40');r.poly([[21,40+y],[35,40+y],[35,49],[21,49]],'#33385a');
+  r.poly([[25,39+y],[31,39+y],[29,46+y],[27,46+y]],'#f3f0ea');r.poly([[26,41+y],[30,41+y],[28,46+y]],RED);r.rect(27,40+y,2,2,RED_DARK);
+  r.rect(22,47,2,1,GOLD);r.rect(32,47,2,1,GOLD);
+  return {sleeve:'#262a40',sleeveLight:'#3c4266',cuff:'#f3f0ea',legs:'#24222e',shoe:'#3a2a26',shoeLight:'#6a5048'};
+ },
+ whitequeen(r,y,w){
+  // Asymmetric white military coat-dress over a charcoal petticoat.
+  const c=WHITE_QUEEN_COLORS;
+  r.poly([[17,50],[39,50],[46+w,64],[10+w,64]],c.lining);for(let x=10+w;x<46+w;x+=3)r.rect(x,63,2,2,'#535363');
+  r.poly([[20,44],[36,44],[44+w,60],[38,62],[28,58],[18,62],[12+w,60]],c.dressShade);
+  r.poly([[21,44],[35,44],[42+w,58],[37,59],[28,56],[19,59],[14+w,58]],c.dress);
+  for(const a of [-6,-2,2,6])r.line(28+a,46,28+a*1.9+w,57,c.lace);r.line(14+w,58,19,59,c.trim);r.line(37,59,42+w,58,c.trim);
+  r.poly([[19,38+y],[37,38+y],[36,50],[20,50]],c.dressShade);r.poly([[20,39+y],[36,39+y],[35,49],[21,49]],c.dress);
+  for(const yy of [41,44,47]){r.rect(24,yy+(yy<44?y:0),1,1,c.silver);r.rect(32,yy+(yy<44?y:0),1,1,c.silver);}
+  r.poly([[24,38+y],[28,44+y],[32,38+y]],c.lace);r.rect(27,41+y,2,2,'#a8b4cc');r.rect(20,48,16,2,c.trim);
+  r.poly([[16,38+y],[22,37+y],[22,41+y],[15,42+y]],c.silver);r.poly([[34,37+y],[40,38+y],[41,42+y],[34,41+y]],c.silver);
+  return {sleeve:c.dress,sleeveLight:c.lace,cuff:c.silver,legs:c.lining,shoe:c.trim,shoeLight:c.silver,boots:61,laces:c.lace,glove:c.lace};
+ },
+ casual(r,y,w){
+  // Crimson Café: striped knit sweater, black pleated skirt and tights.
+  r.poly([[21,49],[35,49],[38+w,59],[18+w,59]],'#1f1b27');for(let x=19+w;x<38+w;x+=3)r.line(x,51,x,58,'#2f2a3a');
+  r.poly([[19,38+y],[37,38+y],[37,51],[19,51]],'#8a3444');r.poly([[20,39+y],[36,39+y],[36,50],[20,50]],'#b64a5a');
+  for(const yy of [42,45,48])r.line(20,yy+(yy<45?y:0),36,yy+(yy<45?y:0),'#d9757c');
+  r.poly([[24,38+y],[32,38+y],[30,41+y],[26,41+y]],'#f3e4da');r.rect(27,41+y,2,2,GOLD);
+  return {sleeve:'#b64a5a',sleeveLight:'#d9757c',cuff:'#8a3444',legs:'#2a2433',shoe:'#5b2e35',shoeLight:'#8a4b52'};
+ },
+ pajamas(r,y,w){
+  // Maroon flannel set with cream piping and little clock buttons.
+  for(const [i,x]of [21,29].entries()){const d=i?w:-w;r.rect(x+d,50,6,16,'#7c2f46');r.rect(x+d+1,51,2,13,'#a24a60');r.rect(x+d,64,6,2,'#f1e2d6');}
+  r.poly([[19,38+y],[37,38+y],[38,53],[18,53]],'#7c2f46');r.poly([[20,39+y],[36,39+y],[36,52],[20,52]],'#a24a60');
+  r.line(28,39+y,28,52,'#f1e2d6');for(const yy of [42,46,50]){r.rect(29,yy,2,2,GOLD);r.put(29,yy,'#fff0c0');}
+  r.poly([[23,38+y],[28,42+y],[33,38+y]],'#f1e2d6');r.rect(21,52,16,1,'#f1e2d6');
+  // A tiny clock print on the pocket.
+  r.rect(22,46,4,4,'#f1e2d6');r.put(23,47,'#5b3a22');r.put(24,47,'#5b3a22');r.put(23,48,'#5b3a22');
+  return {sleeve:'#a24a60',sleeveLight:'#c46a7e',cuff:'#f1e2d6',legs:SKIN.base,legLight:SKIN.light,shoe:'#e9d6c8',shoeLight:'#ffffff'};
+ },
+ swimsuit(r,y,w){
+  // Midnight Beach Clock: black one-piece with a red ruffle skirt and gold clock clasp.
+  r.poly([[20,39+y],[36,39+y],[35,53],[21,53]],SKIN.shade);r.poly([[21,40+y],[35,40+y],[34,52],[22,52]],SKIN.base);
+  r.poly([[21,42+y],[35,42+y],[34,53],[22,53]],'#1e1724');r.line(22,43+y,22,52,'#3a3046');
+  r.poly([[20,50],[36,50],[40+w,57],[16+w,57]],RED_DARK);for(let x=16+w;x<40+w;x+=3)r.rect(x,56,2,2,RED);
+  r.rect(26,44+y,4,4,GOLD);r.put(27,45+y,'#5b3a22');r.put(28,45+y,'#5b3a22');r.put(27,46+y,'#5b3a22');
+  r.line(23,40+y,22,42+y,'#1e1724');r.line(33,40+y,34,42+y,'#1e1724');
+  return {sleeve:SKIN.base,sleeveLight:SKIN.light,legs:SKIN.base,legLight:SKIN.light,shoe:'#1e1724',strap:RED};
+ },
+ cuteswim(r,y,w){
+  // Swim dress: black skirt with pink ribbon trim and a big chest bow.
+  r.poly([[21,38+y],[35,38+y],[34,48],[22,48]],'#2a2234');r.poly([[22,39+y],[34,39+y],[33,47],[23,47]],'#3d3248');
+  r.poly([[20,47],[36,47],[41+w,59],[15+w,59]],'#2a2234');r.poly([[21,47],[35,47],[39+w,57],[17+w,57]],'#3d3248');
+  for(let x=15+w;x<41+w;x+=4){r.rect(x,57,3,2,'#e7a0b8');}r.line(21,49,35,49,'#d27a96');
+  r.poly([[23,40+y],[28,43+y],[23,46+y]],'#d27a96');r.poly([[33,40+y],[28,43+y],[33,46+y]],'#a24b6c');r.rect(27,42+y,2,2,'#f2b3c6');
+  return {sleeve:SKIN.base,sleeveLight:SKIN.light,puff:'#d27a96',legs:SKIN.base,legLight:SKIN.light,shoe:'#d27a96',shoeLight:'#f2b3c6'};
+ },
+ bathsuit(r,y,w){
+  // Clockwork Spa Robe: wine-red wrap robe with a gold obi and clock-hand print.
+  r.poly([[19,38+y],[37,38+y],[39+w,64],[17+w,64]],'#6a2a3c');r.poly([[20,39+y],[36,39+y],[37+w,63],[19+w,63]],'#9c3f55');
+  r.poly([[23,38+y],[28,46],[33,38+y],[31,38+y],[28,43],[25,38+y]],'#f1e2d6');r.line(28,46,26+w,63,'#6a2a3c');
+  r.rect(20,47,16,3,GOLD);r.rect(20,47,16,1,'#f0d58b');r.rect(26,49,4,3,GOLD_DARK);
+  for(const [x,yy]of [[22,54],[32,57],[24,60]]){r.put(x+w,yy,GOLD);r.put(x+1+w,yy,GOLD);r.put(x+w,yy-1,GOLD);}
+  return {sleeve:'#9c3f55',sleeveLight:'#c46a7e',cuff:'#f1e2d6',legs:SKIN.base,legLight:SKIN.light,shoe:'#5b2e35',strap:'#f1e2d6',noLegs:true};
+ },
+};
+
 export function kurumiPixels({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='default'}={}){
- if(skin==='whitequeen')return whiteQueenKurumiPixels({frame:((frame%4)+4)%4,moving,pose,attack,expression,blink});
- if(skin==='gothic')return gothicKurumiPixels({frame:((frame%4)+4)%4,moving,pose,attack,expression,blink});
- frame=((frame%4)+4)%4;const r=raster(),{rect:R,poly:P,line:L}=r,walk=moving?[0,2,0,-2][frame]:0,y=moving?-(frame%2):0,cast=attack||pose==='clock',school=skin==='school',victorian=skin==='crimson',white=skin==='gothic',covered=school||victorian;
- const red='#b85160',redShade='#77394e',redLight='#e27b7c',black='#353340',blackLight='#565061',whiteBase='#f4e8e2',whiteShade='#b2a5b6';
- // Long hair is drawn behind both shoulders; separated swinging tails frame the outfit.
- if(school){P([[17,17+y],[11,24+y],[10-walk,39],[7-walk,54],[14,50],[20,32]],HAIR_DARK);P([[37,17+y],[43,24+y],[45+walk,41],[50+walk,55],[42,51],[35,31]],HAIR_DARK);L(13,29,11-walk,48,HAIR_LIGHT);L(42,29,45+walk,48,HAIR_LIGHT);}
- else if(victorian){P([[15,18+y],[16,11+y],[24,7+y],[33,8+y],[40,15+y],[42,37],[46+walk,57],[38,53],[34,44],[23,49],[13-walk,58],[12,43]],HAIR_DARK);P([[16,23+y],[19,13+y],[27,10+y],[35,12+y],[38,20+y],[39,37],[42+walk,51],[36,47],[29,41],[18,52],[15,49]],HAIR);L(15,33,14-walk,49,HAIR_LIGHT);L(39,28,41+walk,45,HAIR_LIGHT);}
- else{P([[15,18+y],[10,23+y],[9-walk,42],[5-walk,54],[13,49],[20,26]],HAIR_DARK);P([[37,18+y],[43,23+y],[45+walk,41],[51+walk,55],[42,49],[35,27]],HAIR_DARK);L(12,27,10-walk,43,HAIR_LIGHT);L(42,26,45+walk,45,HAIR_LIGHT);}
- // Each outfit has its own legwear and hem: short pleated school skirt versus layered gowns.
- if(victorian){for(const [x,d]of [[21,-walk],[32,walk]]){R(x+d,63,5,7,'#292b37');R(x+d-2,69,9,3,'#262532');R(x+d-1,69,5,1,'#64616c');}}
- else for(const [x,d]of [[21,-walk],[32,walk]]){R(x+d,54,5,15,school?'#393a49':white?'#33333f':'#d5adb0');R(x+d,58,5,1,white?'#a7a1b2':'#7c5367');R(x+d-2,68,9,3,'#292632');R(x+d-1,68,6,1,school?'#707080':white?'#f0dfdb':'#bb657b');}
- if(school){
-  P([[19,47],[36,47],[41+walk,58],[37,61],[29,60],[22,61],[15+walk,58]],'#464a78');P([[21,48],[34,48],[38+walk,57],[33,59],[28,57],[23,59],[18+walk,57]],'#6866a1');for(const x of [21,27,33])L(x,50,x+walk*.45-1,58,'#9690bb');L(18+walk,58,36+walk,59,'#30354f');
- }else if(victorian){
-  P([[21,47],[35,47],[39+walk,54],[44+walk,65],[41,69],[35,68],[28,70],[21,69],[13+walk,68],[16+walk,57]],'#242633');
-  P([[23,48],[33,48],[38+walk,56],[41+walk,64],[35,66],[29,65],[23,67],[16+walk,65],[19+walk,56]],black);P([[24,50],[27,51],[24+walk,64],[21,65]],blackLight);P([[33,50],[35,52],[38+walk,64],[34,62]],'#45404e');
-  for(let row=0;row<3;row++){const yy=54+row*5,x0=19-row*2,x1=37+row*2;P([[x0,yy],[28,yy+2],[x1,yy],[x1+1,yy+3],[30,yy+5],[x0-1,yy+3]],row%2?'#343440':'#45404f');L(x0,yy+2,28,yy+4,'#6a5d70');L(28,yy+4,x1,yy+2,'#56505f');}
-  for(let x=16;x<41;x+=4)R(x,66+(x%3),2,2,'#686071');
- }else{
-  const cloth=white?whiteBase:red,shade=white?whiteShade:redShade,lit=white?'#fff4eb':redLight;
-  P([[21,47],[35,47],[41+walk,56],[46+walk,64],[40,67],[33,65],[28,68],[20,65],[11+walk,65],[16+walk,54]],INK);
-  P([[22,49],[34,49],[39+walk,55],[43+walk,62],[37,64],[28,65],[20,63],[14+walk,63],[19+walk,55]],cloth);
-  P([[24,50],[27,52],[24+walk,62],[20,62]],lit);P([[33,50],[35,53],[40+walk,62],[35,61]],shade);
-  if(white){P([[22,49],[26,50],[21+walk,57],[14+walk,62],[16+walk,55]],black);P([[33,49],[36,50],[40+walk,55],[44+walk,61],[36,58]],black);L(20,54,18+walk,60,blackLight);L(36,54,39+walk,59,blackLight);}
-  for(let row=0;row<2;row++){const yy=57+row*5;L(17+walk-row,yy,28,yy+3,shade);L(28,yy+3,40+walk+row,yy,shade);for(let i=0;i<6;i++){const x=14+i*5;R(x,61+row*3+(i%2),3,2,white?whiteBase:INK);R(x,60+row*3+(i%2),2,1,lit);}}
- }
- // The school blazer, Victorian sleeves and corset silhouettes are independent constructions.
- if(school){
-  P([[20,36+y],[25,34+y],[32,34+y],[37,37+y],[37,48],[34,51],[28,49],[21,51],[18,47]],'#303748');P([[24,35+y],[28,39+y],[32,35+y],[30,43],[26,43]],'#e8e4de');L(21,36+y,28,46,'#c8c9d0');L(35,36+y,28,46,'#c8c9d0');L(28,46,28,50,'#767b8d');R(27,46,2,2,'#c1b58d');
-  P([[27,37+y],[23,40+y],[24,43+y],[28,40+y],[32,43+y],[34,40+y],[30,37+y]],'#b95774');R(27,38+y,3,3,'#dd9b9b');L(29,40+y,30,45,'#a84d68');
- }else if(victorian){
-  P([[19,36+y],[25,34+y],[32,34+y],[38,38+y],[35,48],[36,51],[21,51],[21,45]],black);P([[23,37+y],[27,38+y],[31,37+y],[33,45],[30,50],[24,48]],'#48404e');L(24,39,31,46,'#70616e');L(31,39,24,46,'#70616e');R(22,48,13,3,'#252633');for(const yy of [39,43,47])R(28,yy,1,1,'#bfa8b8');
-  P([[25,34+y],[28,38+y],[31,34+y],[33,39+y],[28,40+y],[23,39+y]],'#292c39');
- }else{
-  P([[20,37+y],[25,35+y],[32,35+y],[37,38+y],[34,46],[36,50],[28,53],[20,50],[22,44]],white?black:red);
-  P([[24,38+y],[28,41+y],[32,38+y],[33,47],[29,51],[24,48]],white?whiteBase:'#ebbbb1');P([[21,39+y],[24,40+y],[25,48],[21,48]],white?'#55505d':INK);P([[33,39+y],[36,40+y],[34,48],[31,49]],white?'#55505d':INK);
-  for(const yy of [41,44,47]){L(25,yy,31,yy+3,white?'#7b6680':'#974e62');L(31,yy,25,yy+3,white?'#7b6680':'#974e62');}R(25,49,9,3,white?black:'#6f354b');
-  for(const x of [20,24,28,32,35])R(x,38+y,3,2,white?whiteBase:INK);R(25,35+y,7,2,INK);R(28,36+y,1,1,'#cbb47f');
- }
- const handY=cast?39:51;
- if(school||victorian){const sleeve=school?'#303748':black;L(19,38+y,14,48,sleeve,victorian?6:5);L(37,38+y,cast?43:41,cast?37:49,sleeve,victorian?6:5);R(12,48,5,3,school?'#d1cbd1':'#645866');R(cast?42:39,cast?36:48,5,3,school?'#d1cbd1':'#645866');R(12,51,5,4,PALE);R(cast?43:40,handY,5,4,PALE);if(victorian){for(const x of [12,15,39,42])R(x,47,2,3,'#282a37');}}
- else{L(19,39+y,14,49,SKIN,4);L(37,39+y,cast?43:42,handY,SKIN,4);L(13,48,13,52,INK,4);L(cast?43:41,handY-1,cast?44:42,handY+2,INK,4);R(12,52,4,3,PALE);R(cast?44:42,handY+2,4,3,PALE);}
- if(victorian&&!cast){L(23,52,23,56,'#8b7187');L(33,52,33,56,'#8b7187');P([[21,55],[35,55],[36,61],[21,62],[19,58]],'#68516d');R(22,56,12,4,'#8e6b86');rose(r,27,57,'#9b659d');}
- else flintlocks(r,{y,cast,skin});
- face(r,{y,skin,blink,expression:pose==='clock'?'ultimate':expression});
- // Swept side bangs frame the face; Victorian and uniform fringes cover the left eye.
- P([[16,25+y],[15,18+y],[19,11+y],[27,8+y],[35,10+y],[40,17+y],[40,29+y],[36,34+y],[35,23+y],[31,18+y],[28,24+y],[24,19+y],[21,27+y],[19,34+y],[16,33+y]],HAIR);
- P([[18,19+y],[21,13+y],[27,11+y],[34,13+y],[37,18+y],[35,22+y],[31,17+y],[28,21+y],[24,16+y],[20,23+y]],'#38394b');L(21,14+y,26,12+y,'#747081');L(35,15+y,37,20+y,HAIR_LIGHT);
- if(covered){P([[29,14+y],[34,15+y],[38,22+y],[37,32+y],[33,34+y],[31,28+y],[29,24+y],[26,20+y]],HAIR);L(32,18+y,35,30+y,HAIR_LIGHT);}
- if(white)eyepatch(r,y);
- if(school){for(const [x,side]of [[16,-1],[39,1]]){P([[x,20+y],[x+side*5,18+y],[x+side*5,24+y],[x,23+y]],'#b95c75');L(x,23+y,x+side*3,29+y,'#dd8b99');}}
- else if(victorian){for(const x of [18,38]){P([[x,34+y],[x-4,36+y],[x-2,41+y],[x+1,38+y],[x+4,41+y],[x+4,36+y]],'#b54f72');rose(r,x,33+y,'#95558e');}}
- else{const trim=white?'#eadbdf':red,lit=white?'#fff3eb':redLight;for(let i=0;i<7;i++){const x=14+i*4,yy=14-Math.round(Math.sin(i*Math.PI/6)*6)+y;R(x,yy,4,4,trim);R(x+1,yy,2,1,lit);}for(const [x,side]of [[15,-1],[40,1]]){P([[x,18+y],[x+side*6,15+y],[x+side*6,22+y],[x,21+y]],white?'#ece0e5':red);R(x-1,18+y,3,3,lit);}if(white)rose(r,15,19+y,'#a24d71');}
- return outline(r.pixels,INK);
+ // Any special pose (the clock of Zafkiel and others) shows the raised flintlock.
+ if(pose){attack=true;expression='ultimate';pose='';}
+ const o=OUTFITS[skin]||OUTFITS.default,h=o.palette||HAIR,paint=GARMENTS[skin]||GARMENTS.default;
+ const r=canvas(),{walk,y}=motion({frame,moving}),raised=attack&&expression==='ultimate';
+ backHair(r,o.hair,h,walk,y);
+  // Garments return their leg, sleeve and shoe colours; read them first so legs sit behind skirts.
+ const gear=paint(canvas(),y,walk);
+ if(!gear.noLegs)legsAndShoes(r,gear,walk);
+ else for(const [i,x]of [22,30].entries()){const d=i?walk:-walk;r.rect(x+d,63,5,4,SKIN.base);r.rect(x+d-1,67,7,4,gear.shoe);r.rect(x+d,67,5,1,gear.strap);}
+ paint(r,y,walk);
+ arms(r,y,gear,{attack,raised});
+ if(gear.glove){r.rect(15,raised?37:51+0,4,3,gear.glove);if(attack)r.rect(43,44,3,3,gear.glove);else r.rect(39,52,3,3,gear.glove);}
+ if(attack)flintlock(r,44,42,{raised:true,flash:expression!=='ultimate'||raised});else{flintlock(r,40,54);limb(r,40,51,40,51,{color:gear.sleeve,width:1});}
+ if(!raised)musket(r,16,52);
+ if(raised)flintlock(r,13,27,{raised:true});
+ head(r,y);
+ const closed=blink,hurt=expression==='hurt',focus=expression==='focused'||expression==='ultimate';
+ eye(r,21,26+y,{iris:'#ba4b64',irisDark:'#7d2440',lash:INK,side:-1,closed,hurt,focus});
+ if(o.eye==='clock')eye(r,31,26+y,{iris:GOLD,irisDark:GOLD_DARK,lash:INK,side:1,closed,hurt,focus,clock:true});
+ blush(r,32+y);mouth(r,34+y,expression);
+ frontHair(r,o.eye,h,y);
+ if(o.eye==='patch')eyePatch(r,y);
+ accessory(r,o.band,y,walk);
+ return selout(r.pixels,INK);
 }
