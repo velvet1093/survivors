@@ -35,7 +35,7 @@ export function gokuFace(r,{y=0,stage=0,expression='neutral',blink=false,focused
  poly([[18,18+y],[38,18+y],[39,29+y],[37,34+y],[32,38+y],[25,38+y],[20,34+y],[18,29+y]],TONE);
  poly([[21,20+y],[35,20+y],[36,28+y],[34,32+y],[23,32+y],[21,28+y]],LIGHT);line(26,38+y,31,38+y,SHADE);
  const stern=focused||hurt||ult,browCol=stage===3?SHADE:stage>0?hairShade:INK,mouthDark='#7d3f3a';
- // Toriyama-style eyes: small outlined whites with a plain round pupil, no gloss.
+ // Toriyama-style eyes: a thin upper lid over a small white with a plain dot pupil.
  // Super Saiyan tints the pupil teal.
  const pupil=stage>0?'#2f8a86':'#141a26';
  // Thick brows angled down toward the nose; steeper when he fights.
@@ -49,8 +49,7 @@ export function gokuFace(r,{y=0,stage=0,expression='neutral',blink=false,focused
   const top=stern?28:27,rows=stern?2:3;
   rect(ex,top+1+y,4,rows,WHITE);
   rect(ex+1,top+1+y,2,2,pupil);
-  line(ex,top+y,ex+3,top+y,INK);for(let i=1;i<rows;i++){put(ex-1,top+i+y,INK);put(ex+4,top+i+y,INK);}
-  line(ex+1,top+rows+1+y,ex+2,top+rows+1+y,mix(INK,TONE,.55));
+  line(ex,top+y,ex+3,top+y,INK);
  }
  // Nose.
  put(28,31+y,SHADE);put(29,32+y,SHADE);
