@@ -63,36 +63,66 @@ function nami(r,{bob,blink}){
  layer(r,[[16,30],[17,17],[23,11],[33,11],[39,16],[40,30],[38,36],[37,24],[34,21],[31,24],[28,19],[25,23],[21,21],[19,27],[19,38]],H,{y});
  r.line(21,14+y,29,12+y,H[2]);r.line(32,13+y,37,17+y,H[2]);r.line(17,22+y,17,32+y,H[2]);r.line(28,19+y,25,23+y,H[0]);
 }
-// ---- Goblin Slayer: slit-visor helm, fur collar, steel plate over dark mail, sword and shield ----
+// ---- Goblin Slayer: faceted helm with brow ridge and slit grill, fur collar, segmented cuirass over mail ----
 function goblinSlayer(r,{bob,blink}){
- const y=-bob,S=['#5a606c','#9098a6','#cfd5de'],D=['#18181e','#2c2c34','#44444e'],B=['#4a2e1a','#76492a','#9a6a42'];
- // Legs: dark mail, steel knee cops and greaves, heavy boots.
- for(const x of [21,30]){r.rect(x,53,6,15,D[1]);r.rect(x+5,53,1,15,D[0]);layer(r,[[x,57],[x+6,57],[x+6,61],[x+3,63],[x,61]],['#7a7a84','#b8b8c2','#e0e0e8']);layer(r,[[x,63],[x+6,63],[x+6,68],[x,68]],S);r.line(x+1,64,x+1,67,S[2]);r.rect(x-1,68,8,4,'#24242a');r.rect(x-1,71,8,1,'#101014');r.rect(x,68,5,1,'#3a3a42');}
- // Torso: dark suit, steel cuirass with plated tassets, crossing leather straps and belt.
- layer(r,[[18,38],[38,38],[39,54],[17,54]],D,{y});
- layer(r,[[20,40],[36,40],[37,46],[33,50],[23,50],[19,46]],S,{y});r.line(28,41+y,28,49+y,S[0]);r.line(21,45+y,35,45+y,S[0]);r.line(22,41+y,26,41+y,S[2]);
- r.line(19,42+y,37,50+y,B[1],2);r.line(37,42+y,19,50+y,B[0],2);
- r.rect(18,51,20,2,B[1]);r.rect(18,51,20,1,B[2]);r.rect(25,50,6,4,S[1]);r.rect(26,51,4,2,S[0]);r.rect(19,49,4,4,'#a8865a');r.rect(19,49,4,1,'#c8a67a');
- // Pauldrons.
- for(const [x0,d]of [[11,1],[45,-1]])layer(r,[[x0,44],[x0+d*2,38],[x0+d*9,36],[x0+d*12,40],[x0+d*11,45]],S,{y});
- // Sword arm (viewer left): dark sleeve, banded steel bracer, blade pointing down.
- r.line(16,44+y,13,55+y,D[1],4);for(const yy of [48,51,54])r.rect(11,yy+y,6,2,S[1]);r.rect(11,57+y,5,3,'#222228');
- r.line(13,60+y,9,73,S[0],3);r.line(13,60+y,9,72,S[2]);r.line(14,60+y,10,72,S[1]);r.rect(10,58+y,7,2,'#c8c0a0');r.put(8,73,S[2]);
- // Shield arm (viewer right): round buckler with brass studs.
- r.line(40,44+y,43,54+y,D[1],4);
- layer(r,[[40,48],[45,45],[50,48],[52,55],[50,63],[45,66],[40,63],[38,55]],S,{y});r.line(41,50+y,40,61+y,S[2]);r.line(45,46+y,51,58+y,S[0]);
- for(const [x,yy]of [[45,48],[48,56],[45,63],[41,56]])r.rect(x,yy+y,2,2,'#c8b88a');
- // Fur collar around the neck.
- for(let x=15;x<=41;x+=2){const h=2+((x*7)%3);r.rect(x,34+y,2,h+3,x%4?'#e8e6e0':'#c8c4ba');r.put(x,37+h+y,'#a8a49a');}
- // Helm: rounded crown, ridge, slit visor and jutting chin guard.
- layer(r,[[16,30],[16,16],[20,9],[28,6],[36,9],[40,16],[40,30],[36,35],[20,35]],S,{y});
- r.line(18,16+y,22,10+y,S[2]);r.line(17,17+y,17,28+y,S[2]);r.line(28,7+y,28,15+y,S[0]);r.line(20,16+y,36,16+y,S[0]);
- r.rect(21,18+y,15,10,'#14141a');for(const x of [23,26,29,32,35])r.rect(x,18+y,1,10,S[1]);for(const x of [23,29])r.rect(x,18+y,1,10,S[2]);
- if(!blink){r.put(25,22+y,'#ff6a4a');r.put(31,22+y,'#ff6a4a');}
- layer(r,[[20,28],[36,28],[34,35],[28,38],[22,35]],S,{y});r.line(28,29+y,28,37+y,S[0]);
+ const y=-bob,S=['#5c626e','#959dab','#c9d0da','#eef2f6'],D=['#141418','#26262c','#3c3c46'],B=['#4a2c18','#7a4a2a','#a06a42'],TAN='#d8cca4';
+ // Legs: baggy dark trousers, chevron knee plates, steel greaves over pale pads, boots.
+ for(const [i,x]of [[0,20],[1,30]]){
+  r.rect(x,55,7,9,D[1]);r.rect(x+(i?6:0),55,1,9,D[0]);r.rect(x+(i?0:6),56,1,7,D[2]);
+  layer(r,[[x,58],[x+3,57],[x+7,58],[x+7,61],[x+3,62],[x,61]],[S[0],S[1],S[3]]);r.line(x+1,60,x+3,61,S[0]);r.line(x+3,61,x+6,60,S[0]);
+  r.rect(x+1,62,5,2,'#b8ae98');r.rect(x+1,62,5,1,'#e0d8c4');
+  layer(r,[[x,64],[x+7,64],[x+6,69],[x+1,69]],[S[0],S[1],S[3]]);r.line(x+1,65,x+1,68,S[3]);r.line(x+5,65,x+5,68,S[0]);
+  r.rect(x-1,69,9,3,D[1]);r.rect(x-1,71,9,1,D[0]);r.rect(x,69,5,1,D[2]);
+ }
+ // Torso: dark gambeson, chainmail belly, belt with pouch and two daggers.
+ layer(r,[[18,38],[38,38],[39,56],[17,56]],D,{y});
+ for(let yy=50;yy<54;yy++)for(let x=21+(yy%2);x<36;x+=2)r.put(x,yy+(yy<52?y:0),'#6a6e78');
+ r.rect(17,54,22,2,B[1]);r.rect(17,54,22,1,B[2]);r.rect(25,53,6,4,S[1]);r.rect(26,54,4,2,S[3]);r.line(25,56,30,56,S[0]);
+ layer(r,[[18,54],[23,54],[23,60],[18,60]],B);r.rect(18,55,5,1,B[0]);r.put(20,57,TAN);
+ for(const [x,d]of [[22,-1],[34,1]]){r.line(x,52+y,x+d*2,48+y,'#5a6aa0',2);r.put(x+d*2,47+y,'#8a9ad0');}
+ // Segmented, heart-shaped cuirass with crossing leather straps.
+ layer(r,[[19,40],[27,39],[28,41],[29,39],[37,40],[37,45],[33,49],[28,51],[23,49],[19,45]],[S[0],S[1],S[2]],{y});
+ r.poly(shift([[20,41],[27,40],[27,45],[20,44]],y),S[2]);r.line(21,41+y,25,40+y,S[3]);
+ r.line(28,42+y,28,50+y,S[0]);r.line(20,45+y,36,45+y,S[0]);r.line(23,48+y,33,48+y,S[0]);r.put(22,42+y,S[0]);r.put(34,42+y,S[0]);
+ r.line(20,38+y,22,44+y,B[1],2);r.line(36,38+y,34,44+y,B[1],2);r.line(19,49+y,37,49+y,B[1]);r.line(19,50+y,37,50+y,B[0]);
+ // Pauldrons: two stacked plates each side.
+ for(const [x0,d]of [[9,1],[47,-1]]){
+  layer(r,[[x0,45],[x0+d,40],[x0+d*5,37],[x0+d*11,38],[x0+d*12,43],[x0+d*10,46]],S,{y});
+  r.line(x0+d*2,41+y,x0+d*10,41+y,S[0]);r.line(x0+d*2,40+y,x0+d*9,39+y,S[3]);r.line(x0+d*1,44+y,x0+d*10,44+y,S[0]);
+ }
+ // Sword arm: dark sleeve, leather strap, segmented vambrace, pale-wrapped grip and a long blade.
+ r.line(14,45+y,12,56+y,D[1],5);r.line(13,45+y,11,55+y,D[2]);r.rect(10,47+y,6,2,B[1]);r.put(15,47+y,TAN);
+ for(const yy of [50,53])layer(r,[[9,yy],[16,yy-1],[16,yy+2],[9,yy+3]],S,{y,d:.6});
+ r.rect(9,56+y,6,3,D[1]);r.rect(9,58+y,6,2,'#e8dcc0');
+ r.line(11,60+y,5,74,S[0],3);r.line(11,60+y,5,73,S[3]);r.line(12,60+y,6,73,S[1]);r.put(4,74,S[2]);
+ // Shield arm and the round shield with its cross scars and tan studs.
+ r.line(42,45+y,44,55+y,D[1],5);r.rect(40,47+y,6,2,B[1]);r.put(45,47+y,S[3]);
+ layer(r,[[38,50],[42,46],[48,45],[53,49],[54,56],[52,63],[47,66],[41,64],[37,57]],S,{y});
+ r.poly(shift([[40,51],[43,47],[47,47],[44,52],[40,58]],y),S[3]);
+ r.line(41,49+y,51,62+y,S[0]);r.line(51,49+y,41,62+y,S[0]);
+ for(const [x,yy]of [[48,47],[52,54],[49,62],[41,60]]){r.rect(x,yy+y,2,2,TAN);r.put(x,yy+y,'#f4ecd0');}
+ // Fur collar: a lumpy ruff, bright on top and shadowed underneath.
+ const ruff=[[12,38],[13,35],[15,36],[16,33],[19,34],[21,31],[24,33],[28,32],[32,33],[35,31],[37,34],[40,33],[41,36],[44,35],[45,38],[43,40],[40,39],[37,41],[33,39],[28,41],[23,39],[19,41],[16,39],[13,40]];
+ r.poly(shift(ruff,y),'#bdb7ab');r.poly(inset(shift(ruff,y),1.2),'#ece8e0');
+ for(const [x,yy]of [[15,35],[20,33],[25,34],[31,34],[36,33],[41,35]]){r.put(x,yy+y,'#ffffff');r.put(x+1,yy+y,'#f8f6f0');}
+ for(const [x,yy]of [[17,38],[22,38],[27,39],[33,38],[38,38],[42,38]]){r.put(x,yy+y,'#a8a296');r.put(x+1,yy+1+y,'#c8c2b6');}
+ // Black cowl at the neck.
+ r.rect(23,33+y,10,4,D[0]);
+ // Helm: faceted dome, jutting brow ridge, slit grill, beaked chin plate.
+ layer(r,[[18,19],[19,11],[23,7],[33,7],[37,11],[38,19]],S,{y});
+ r.poly(shift([[20,18],[21,11],[24,8],[28,8],[28,18]],y),S[2]);r.line(28,8+y,28,18+y,S[0]);r.line(22,11+y,25,9+y,S[3]);
+ layer(r,[[15,18],[41,18],[40,22],[16,22]],[S[0],S[2],S[3]],{y,d:.6});r.line(16,18+y,40,18+y,S[3]);r.line(17,22+y,39,22+y,D[1]);
+ layer(r,[[18,22],[38,22],[37,30],[33,35],[28,37],[23,35],[19,30]],S,{y});
+ r.poly(shift([[19,23],[24,23],[24,33],[20,30]],y),S[2]);r.line(32,23+y,36,30+y,S[0]);
+ r.poly(shift([[22,23],[34,23],[33,30],[23,30]],y),D[0]);
+ for(const x of [24,27,30,33])r.line(x-(x<28?0:0),23+y,x,29+y,x===27?S[2]:S[1]);
+ if(!blink){r.put(25,26+y,'#b8402a');r.put(32,26+y,'#b8402a');}
+ layer(r,[[23,30],[33,30],[31,35],[28,38],[25,35]],[S[0],S[2],S[3]],{y,d:.6});r.line(28,31+y,28,37+y,S[0]);
  // Side boss and the branching red plume.
- r.rect(38,20+y,5,5,'#8a8470');r.rect(39,21+y,3,3,'#d8d0b0');r.put(40,22+y,'#8a8470');
- const P='#b0202e',PL='#e04452';r.line(42,21+y,47,15+y,P,2);r.line(46,16+y,52,13+y,P);r.line(47,15+y,49,8+y,P);r.line(49,9+y,53,6+y,P);r.line(50,13+y,54,15+y,P);r.line(48,11+y,45,6+y,P);r.line(43,20+y,47,15+y,PL);
+ r.rect(37,16+y,6,6,'#7a7460');r.rect(38,17+y,4,4,TAN);r.rect(39,18+y,2,2,'#9a9070');r.put(38,17+y,'#f4ecd0');
+ const P='#a01a2a',PL='#d83a4a';
+ r.line(42,17+y,47,12+y,P,2);r.line(47,12+y,53,10+y,P,2);r.line(47,12+y,48,5+y,P);r.line(48,6+y,52,3+y,P);r.line(50,11+y,55,13+y,P);r.line(48,8+y,45,4+y,P);r.line(52,10+y,53,6+y,P);
+ r.line(43,16+y,47,12+y,PL);r.line(48,11+y,52,10+y,PL);
 }
 // ---- Yumeko Jabami: hime-cut black hair to her knees, red blazer, houndstooth skirt ----
 function yumeko(r,{bob,blink}){
