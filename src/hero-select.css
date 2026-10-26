@@ -1,0 +1,96 @@
+/* Hero select: a roomy roster beside a sticky showcase of the chosen legend.
+   Desktop keeps both in view; tablets stack them; phones swipe a roster rail. */
+.shell .hero-select-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(400px,480px);gap:26px;align-items:start}
+.shell .roster-column{min-width:0}
+
+/* ---- Roster tiles ---- */
+.shell .hero-select-layout .roster{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:14px}
+.shell .hero-select-layout .roster .character{position:relative;display:flex;flex-direction:column;padding:0;overflow:hidden;border:1px solid #bbb0d324;border-radius:12px;background:#1b1a27;text-align:left}
+.shell .hero-select-layout .roster .character-stage{position:relative;display:block;height:176px;background:radial-gradient(ellipse at 50% 78%,color-mix(in srgb,var(--accent) 22%,transparent),transparent 62%),linear-gradient(180deg,#24223300,color-mix(in srgb,var(--accent) 6%,#1b1a27))}
+.shell .hero-select-layout .roster .portrait{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;height:auto;padding:0 0 10px;background:none}
+.shell .hero-select-layout .roster .portrait>svg{width:118px;height:160px;max-width:84%;image-rendering:pixelated;filter:drop-shadow(0 6px 0 #0d0d1633);transition:transform .2s}
+.shell .hero-select-layout .roster .portrait-halo{position:absolute;left:50%;bottom:6px;top:auto;width:112px;height:22px;transform:translateX(-50%);border:0;border-radius:50%;background:color-mix(in srgb,var(--accent) 22%,#0000);filter:blur(1px)}
+.shell .hero-select-layout .roster .character:hover .portrait>svg{transform:translateY(-3px) scale(1.03)}
+.shell .hero-select-layout .roster .character-number{position:absolute;top:10px;left:12px;font:700 13px 'Barlow Condensed',sans-serif;letter-spacing:.5px;color:color-mix(in srgb,var(--accent) 55%,#8a8098)}
+.shell .hero-select-layout .roster .hero-prestige-badge{position:absolute;top:30px;left:10px;z-index:1}
+.shell .hero-select-layout .roster .selection-indicator{position:absolute;top:9px;right:10px;z-index:1;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;border:1px solid #b7a9c64a;background:#1b1b29aa;font-size:13px;color:#26212e}
+.shell .hero-select-layout .roster .selected .selection-indicator{background:var(--accent);border-color:var(--accent)}
+.shell .hero-select-layout .roster .character:not(.selected) .selection-indicator{opacity:0}
+.shell .hero-select-layout .roster .character-meta{flex:1;display:flex;flex-direction:column;gap:3px;padding:11px 13px 13px;border-top:1px solid #ffffff0a;background:#191824}
+.shell .hero-select-layout .roster .character-meta small{font-size:8.5px;letter-spacing:.6px;line-height:1.35;color:#a99fb8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.shell .hero-select-layout .roster .character-meta strong{font:700 24px/1.05 'Barlow Condensed',sans-serif;letter-spacing:.4px;color:#f0eaf5;text-transform:uppercase}
+.shell .hero-select-layout .roster .character-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.shell .hero-select-layout .roster .character-tags>span{padding:2px 6px;border-radius:4px;font-size:8px;letter-spacing:.6px;line-height:1.5;color:#cfc4dc;background:#ffffff0d;border:0;margin:0}
+.shell .hero-select-layout .roster .character-tags .role{display:inline-block!important;color:color-mix(in srgb,var(--accent) 70%,#e8e0f0);background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.shell .hero-select-layout .roster .character.selected{border-color:var(--accent);box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 45%,transparent),0 10px 26px #0004}
+.shell .hero-select-layout .roster .character.selected .character-meta{background:linear-gradient(115deg,color-mix(in srgb,var(--accent) 12%,#1c1a28),#191824)}
+
+/* ---- Showcase ---- */
+.shell .hero-select-layout #character-profile{position:sticky;top:16px;margin-top:0;padding:0;max-height:calc(100vh - 32px);overflow:auto;scrollbar-width:thin}
+.shell .hero-showcase .hero-showcase-top{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;padding:0 0 18px;margin:0 0 4px;border-bottom:1px solid #b6a6ca25}
+.shell .hero-showcase .showcase-stage{position:relative;height:290px;overflow:hidden;border-radius:12px 12px 0 0;background:radial-gradient(ellipse at 50% 85%,color-mix(in srgb,var(--accent) 30%,transparent),transparent 58%),radial-gradient(circle at 50% 35%,color-mix(in srgb,var(--accent) 14%,transparent),transparent 60%),linear-gradient(180deg,#141320,color-mix(in srgb,var(--accent) 8%,#1d1b29))}
+.shell .hero-showcase .showcase-number{position:absolute;top:8px;right:16px;font:800 96px/1 'Barlow Condensed',sans-serif;color:color-mix(in srgb,var(--accent) 16%,transparent);letter-spacing:-2px}
+.shell .hero-showcase .showcase-floor{position:absolute;left:50%;bottom:22px;width:220px;height:30px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse,color-mix(in srgb,var(--accent) 35%,transparent),transparent 70%)}
+.shell .hero-showcase .showcase-glow{position:absolute;left:50%;top:46%;width:240px;height:240px;transform:translate(-50%,-50%);border-radius:50%;border:1px dashed color-mix(in srgb,var(--accent) 26%,transparent)}
+.shell .hero-showcase .showcase-portrait{position:absolute;left:50%;bottom:28px;width:auto;height:auto;transform:translateX(-50%);border:0;background:none;display:block}
+.shell .hero-showcase .showcase-portrait>svg{display:block;width:196px;height:266px;max-width:none;image-rendering:pixelated;filter:drop-shadow(0 8px 0 #0b0b1444);animation:showcase-idle 3.2s ease-in-out infinite}
+@keyframes showcase-idle{50%{transform:translateY(-5px)}}
+@media (prefers-reduced-motion:reduce){.shell .hero-showcase .showcase-portrait>svg{animation:none}}
+.shell .hero-showcase .profile-identity{padding:0 22px}
+.shell .hero-showcase .profile-identity h2{font-size:48px;margin:4px 0 4px;text-transform:uppercase;letter-spacing:.5px}
+.shell .hero-showcase .showcase-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.shell .hero-showcase .showcase-tags>span{padding:4px 9px;border-radius:5px;font-size:9px;letter-spacing:.8px;color:#ddd3e8;background:#ffffff0d;border:1px solid #ffffff12}
+.shell .hero-showcase .showcase-tags>span:first-child{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent);background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.shell .hero-showcase .showcase-tags .prestige-tag{color:#f2d27a;border-color:#f2d27a55}
+.shell .hero-showcase .hero-stats{display:grid;gap:9px;margin:0;padding:0 22px}
+.shell .hero-showcase .hero-stat{display:grid;grid-template-columns:118px 1fr;align-items:center;gap:12px}
+.shell .hero-showcase .hero-stat dt{font-size:9.5px;letter-spacing:.9px;color:#bdb2ca;display:flex;flex-direction:column;line-height:1.3}
+.shell .hero-showcase .hero-stat dt small{font-size:8px;letter-spacing:.5px;color:#8e839d}
+.shell .hero-showcase .hero-stat dd{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:0}
+.shell .hero-showcase .hero-stat dd i{height:9px;border-radius:2px;background:#ffffff12}
+.shell .hero-showcase .hero-stat dd i.on{background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 80%,#fff),var(--accent));box-shadow:0 0 8px color-mix(in srgb,var(--accent) 35%,transparent)}
+.shell .hero-showcase .profile-change{display:none;margin:0 22px}
+.shell .hero-showcase .profile-content{display:block;padding:18px 22px 22px}
+.shell .hero-showcase .profile-equipment{margin-top:18px}
+.shell .hero-showcase .profile-equipment .signature-pair{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.shell .hero-showcase .hero-summary>p{font-size:13px;line-height:1.8}
+.shell .hero-showcase .requip-profile .requip-forms{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (min-width:1101px){.shell .selection-dock{display:none!important}}
+
+/* ---- Tablet: showcase below the roster, side-by-side identity and stage ---- */
+@media (max-width:1100px){
+ .shell .hero-select-layout{grid-template-columns:1fr}
+ .shell .hero-select-layout #character-profile{position:static;max-height:none;overflow:visible}
+ .shell .hero-showcase .hero-showcase-top{grid-template-columns:300px minmax(0,1fr);grid-template-areas:"stage id" "stage stats" "stage change";column-gap:24px}
+ .shell .hero-showcase .showcase-stage{grid-area:stage;height:100%;min-height:300px;border-radius:12px 0 0 0}
+ .shell .hero-showcase .profile-identity{grid-area:id;padding:20px 22px 0 0}
+ .shell .hero-showcase .hero-stats{grid-area:stats;padding:0 22px 0 0}
+ .shell .hero-showcase .profile-change{grid-area:change;display:block;margin:0 22px 0 0;justify-self:start}
+ .shell .hero-showcase .profile-content{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(220px,.8fr);gap:24px}
+ .shell .hero-showcase .profile-equipment{margin-top:0}
+ .shell .hero-showcase .requip-profile .requip-forms{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+/* ---- Phone: swipeable roster rail, then the full showcase ---- */
+@media (max-width:760px){
+ .shell .hero-select-layout{gap:16px}
+ .shell .hero-select-layout .roster{display:flex;gap:10px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;padding:2px 2px 10px;margin:0 -2px;scrollbar-width:thin}
+ .shell .hero-select-layout .roster .character{flex:0 0 132px;scroll-snap-align:start}
+ .shell .hero-select-layout .roster .character[hidden]{display:none}
+ .shell .hero-select-layout .roster .character-stage{height:148px}
+ .shell .hero-select-layout .roster .portrait>svg{width:100px;height:136px}
+ .shell .hero-select-layout .roster .character-meta{padding:9px 10px 11px}
+ .shell .hero-select-layout .roster .character-meta strong{font-size:20px}
+ .shell .hero-showcase .hero-showcase-top{grid-template-columns:1fr;grid-template-areas:none}
+ .shell .hero-showcase .showcase-stage,.shell .hero-showcase .profile-identity,.shell .hero-showcase .hero-stats,.shell .hero-showcase .profile-change{grid-area:auto}
+ .shell .hero-showcase .showcase-stage{height:250px;min-height:0;border-radius:12px 12px 0 0}
+ .shell .hero-showcase .showcase-portrait>svg{width:166px;height:225px}
+ .shell .hero-showcase .showcase-number{font-size:72px}
+ .shell .hero-showcase .profile-identity{padding:0 16px}
+ .shell .hero-showcase .profile-identity h2{font-size:38px}
+ .shell .hero-showcase .hero-stats{padding:0 16px}
+ .shell .hero-showcase .hero-stat{grid-template-columns:104px 1fr}
+ .shell .hero-showcase .profile-change{margin:0 16px}
+ .shell .hero-showcase .profile-content{display:block;padding:16px}
+ .shell .hero-showcase .profile-equipment{margin-top:16px}
+ .shell .hero-showcase .requip-profile .requip-forms{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
