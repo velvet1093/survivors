@@ -8,6 +8,8 @@ import {enemyPixels} from './pixel-enemies.js';
 import {mapPreview} from './pixel-world.js';
 import {enemyMotion} from './enemy-animation.js';
 import {cardArt,battleScene,towerScene} from './spire-art.js';
+import {npcPixels} from './npc-art.js';
+import {npcFor,npcLine} from './spire-npcs.js';
 import {ULTIMATES} from './ultimates.js';
 import {cardDef,cardStats,cardText,cardIcon} from './spire-cards.js';
 import {ULT_CHARGE,PACTS,relicEffect,spireNode,reachable,enterSpireNode,liveFoes,canPlay,needsTarget,playCard,ultimateReady,useUltimate,endTurn,takeRewardCard,finishRewards,continueSpireAct,buyCard,buyRelic,removeCard,leaveSpireScreen,upgradable,restHeal,upgradeCard,forgeOptions,forgeFuse,forgeTemper,swearSpirePact,altarSpire,spireEventFor,resolveSpireEvent} from './spire.js';
@@ -74,6 +76,14 @@ function foeIdle(e){
  const motions=loop.map((t,i)=>{const m=enemyMotion({archetype:e.id,moving:false,enraged:e.enraged,facing:1},t);m.arm+=Math.sin(i/loop.length*Math.PI*2)*1.2;return m;});
  const value=strip(`e:${e.id}:${e.enraged?1:0}`,motions.map(m=>enemyPixels(e.id,m)),{height:84,offsets:motions.map(m=>Math.round(m.y||0))});
  return animated(value,loop.length*110,foeSprite(e));
+}
+// Room hosts breathe, blink once a loop and speak a line from spire-npcs.
+function npcBlock(run){
+ const npc=npcFor(run);if(!npc)return '';
+ const order=[0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,1],frames=order.map((bob,i)=>npcPixels(npc.id,{bob,blink:i===13}));
+ const art=animated(strip('npc:'+npc.id,frames),order.length*220,sprite('npc:'+npc.id,()=>npcPixels(npc.id)));
+ const fire=npc.id==='goblinslayer'?'<span class="snpc-fire" aria-hidden="true"><svg viewBox="0 0 20 20" shape-rendering="crispEdges"><g class="f1"><path d="M9 3h2v2h1v2h1v3h1v4H6v-4h1V7h1V5h1Z" fill="#ff7a2a"/><path d="M9 7h2v2h1v5H8V9h1Z" fill="#ffd84a"/></g><path d="M3 15h14v2H3Zm2 2h10v1H5Z" fill="#6a3a1a"/><path d="M4 15h4v1H4Zm8 0h4v1h-4Z" fill="#9a5a2a"/></svg></span>':'';
+ return `<div class="snpc" style="--npc:${npc.color}"><span class="snpc-art">${art}</span>${fire}<div class="snpc-talk"><span class="snpc-name">${esc(npc.name)}<small>${esc(npc.series)}</small></span><p class="snpc-line">${esc(npcLine(run,npc))}</p></div></div>`;
 }
 const foeSprite=e=>sprite(`e:${e.id}:${e.enraged?1:0}`,()=>enemyPixels(e.id,{enraged:e.enraged?1:0}));
 const hero=run=>CHARACTERS.find(c=>c.id===run.heroId)||CHARACTERS[0];
@@ -143,28 +153,28 @@ function rewardView(run){
 }
 function shopView(run){
  const s=run.shop;
- return `${topBar(run,'The merchant’s wares.')}<div class="spire-panel"><div class="scard-row shop">${s.cards.map((o,i)=>`<div class="soffer ${o.sold?'sold':''}">${cardHtml(o.id,{attrs:`data-buy="${i}" ${o.sold||run.gold<o.price?'disabled':''}`})}<b>${o.sold?'SOLD':'◉ '+o.price}</b></div>`).join('')}</div>
+ return `${topBar(run,'The merchant’s wares.')}<div class="spire-panel">${npcBlock(run)}<div class="scard-row shop">${s.cards.map((o,i)=>`<div class="soffer ${o.sold?'sold':''}">${cardHtml(o.id,{attrs:`data-buy="${i}" ${o.sold||run.gold<o.price?'disabled':''}`})}<b>${o.sold?'SOLD':'◉ '+o.price}</b></div>`).join('')}</div>
  <div class="ascent-shop">${s.relic?`<article class="ascent-offer ${s.relic.sold?'sold':''}" style="--item:#ffd66a"><span class="item-art">${trinketIcon(s.relic.id)}</span><div><small>RELIC</small><strong>${esc(relicName(s.relic.id))}</strong><p>${esc(relicEffect(s.relic.id).text)}</p></div><button id="spire-buy-relic" ${s.relic.sold||run.gold<s.relic.price?'disabled':''}>${s.relic.sold?'SOLD':'◉ '+s.relic.price}</button></article>`:''}
  <article class="ascent-offer ${s.removed?'sold':''}" style="--item:#ff9aaa"><span class="item-art">${cardArt('regret')}</span><div><small>SERVICE</small><strong>Card removal</strong><p>Remove one card from your deck for good.</p></div><button id="spire-remove" ${s.removed||run.gold<run.removeCost||run.deck.length<=5?'disabled':''}>${s.removed?'DONE':'◉ '+run.removeCost}</button></article></div>
  <div class="ascent-actions"><button class="primary" id="spire-leave">LEAVE THE SHOP</button></div></div>`;
 }
 function restView(run){
- return `${topBar(run,'A quiet campfire.')}<div class="spire-panel"><div class="ascent-choice-row"><button class="ascent-big" id="spire-rest"><span>♨</span><strong>REST</strong><small>Heal ${Math.round(run.maxHp*.3)} HP</small></button><button class="ascent-big" id="spire-smith" ${upgradable(run).length?'':'disabled'}><span>⚒</span><strong>SMITH</strong><small>Upgrade one card</small></button></div></div>`;
+ return `${topBar(run,'A quiet campfire.')}<div class="spire-panel">${npcBlock(run)}<div class="ascent-choice-row"><button class="ascent-big" id="spire-rest"><span>♨</span><strong>REST</strong><small>Heal ${Math.round(run.maxHp*.3)} HP</small></button><button class="ascent-big" id="spire-smith" ${upgradable(run).length?'':'disabled'}><span>⚒</span><strong>SMITH</strong><small>Upgrade one card</small></button></div></div>`;
 }
 function forgeView(run){
  const opts=forgeOptions(run);
- return `${topBar(run,'The soul forge burns.')}<div class="spire-panel"><p class="ascent-note">A fusion card replaces one copy of each of its ingredient cards. If any ingredient was upgraded, the fusion is too.</p>${opts.length?`<div class="sfuse-list">${opts.map(c=>`<div class="sfuse"><div class="sfuse-parts">${c.ingredients.map(id=>`<span title="${esc(cardDef(id).name)}">${icon(cardIcon(id))}<small>${esc(cardDef(id).name)}</small></span>`).join('<i>+</i>')}<i>→</i></div>${cardHtml(c.id,{attrs:`data-fuse="${c.id}"`})}</div>`).join('')}</div>`:'<p class="ascent-note"><b>No recipe is complete.</b> Add every ingredient card of a fusion recipe to your deck to fuse it here.</p>'}
+ return `${topBar(run,'The soul forge burns.')}<div class="spire-panel">${npcBlock(run)}<p class="ascent-note">A fusion card replaces one copy of each of its ingredient cards. If any ingredient was upgraded, the fusion is too.</p>${opts.length?`<div class="sfuse-list">${opts.map(c=>`<div class="sfuse"><div class="sfuse-parts">${c.ingredients.map(id=>`<span title="${esc(cardDef(id).name)}">${icon(cardIcon(id))}<small>${esc(cardDef(id).name)}</small></span>`).join('<i>+</i>')}<i>→</i></div>${cardHtml(c.id,{attrs:`data-fuse="${c.id}"`})}</div>`).join('')}</div>`:'<p class="ascent-note"><b>No recipe is complete.</b> Add every ingredient card of a fusion recipe to your deck to fuse it here.</p>'}
  <div class="ascent-choice-row"><button class="ascent-big" id="spire-temper" ${upgradable(run).length?'':'disabled'}><span>✦</span><strong>TEMPER</strong><small>Upgrade two random cards</small></button></div><div class="ascent-actions"><button class="secondary" id="spire-leave">LEAVE</button></div></div>`;
 }
 function shrineView(run){
- return `${topBar(run,'Swear a pact.')}<div class="spire-panel"><p class="ascent-note">A pact lasts for the rest of the climb. Its blessing and its curse are bound together.</p><div class="ascent-pacts-grid">${(run.event?.pacts||[]).map(id=>{const p=PACTS.find(x=>x.id===id);return `<button class="ascent-pact" data-pact="${id}"><strong>${esc(p.name)}</strong><span class="bless">✦ ${esc(p.blessing)}</span><span class="curse">✟ ${esc(p.curse)}</span></button>`;}).join('')}</div><div class="ascent-actions"><button class="secondary" id="spire-leave">REFUSE ALL PACTS</button></div></div>`;
+ return `${topBar(run,'Swear a pact.')}<div class="spire-panel">${npcBlock(run)}<p class="ascent-note">A pact lasts for the rest of the climb. Its blessing and its curse are bound together.</p><div class="ascent-pacts-grid">${(run.event?.pacts||[]).map(id=>{const p=PACTS.find(x=>x.id===id);return `<button class="ascent-pact" data-pact="${id}"><strong>${esc(p.name)}</strong><span class="bless">✦ ${esc(p.blessing)}</span><span class="curse">✟ ${esc(p.curse)}</span></button>`;}).join('')}</div><div class="ascent-actions"><button class="secondary" id="spire-leave">REFUSE ALL PACTS</button></div></div>`;
 }
 function altarView(run){
- return `${topBar(run,'The cursed altar hungers.')}<div class="spire-panel"><div class="ascent-choice-row"><button class="ascent-big" data-altar="blood" ${run.maxHp<=20?'disabled':''}><span>♥</span><strong>OFFER BLOOD</strong><small>Lose 8 max HP · choose a rare card</small></button><button class="ascent-big" data-altar="gold" ${run.gold<120?'disabled':''}><span>◉</span><strong>OFFER 120 GOLD</strong><small>Gain a relic</small></button></div><div class="ascent-actions"><button class="secondary" id="spire-leave">WALK AWAY</button></div></div>`;
+ return `${topBar(run,'The cursed altar hungers.')}<div class="spire-panel">${npcBlock(run)}<div class="ascent-choice-row"><button class="ascent-big" data-altar="blood" ${run.maxHp<=20?'disabled':''}><span>♥</span><strong>OFFER BLOOD</strong><small>Lose 8 max HP · choose a rare card</small></button><button class="ascent-big" data-altar="gold" ${run.gold<120?'disabled':''}><span>◉</span><strong>OFFER 120 GOLD</strong><small>Gain a relic</small></button></div><div class="ascent-actions"><button class="secondary" id="spire-leave">WALK AWAY</button></div></div>`;
 }
 function eventView(run){
  const ev=spireEventFor(run);
- return `${topBar(run,ev.title)}<div class="spire-panel"><p class="ascent-story">${esc(ev.text)}</p><div class="ascent-event-options">${ev.options.map(o=>`<button data-event="${o.id}" ${o.cost&&run.gold<o.cost?'disabled':''}>${esc(o.label)}${o.cost?` · ◉ ${o.cost}`:''}</button>`).join('')}</div></div>`;
+ return `${topBar(run,ev.title)}<div class="spire-panel">${npcBlock(run)}<p class="ascent-story">${esc(ev.text)}</p><div class="ascent-event-options">${ev.options.map(o=>`<button data-event="${o.id}" ${o.cost&&run.gold<o.cost?'disabled':''}>${esc(o.label)}${o.cost?` · ◉ ${o.cost}`:''}</button>`).join('')}</div></div>`;
 }
 function actClearView(run){
  return `${topBar(run,`Act ${run.act-1} conquered.`)}<div class="spire-panel"><p class="ascent-story">The guardian has fallen. You rest and recover 35% of your health. The climb continues, and the enemies above are stronger.</p><div class="ascent-actions"><button class="primary" id="spire-act">BEGIN ACT ${run.act} ${icon('arrow')}</button></div></div>`;

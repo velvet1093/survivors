@@ -148,6 +148,27 @@
 .spire-pile{width:min(860px,100%);max-height:calc(100vh - 24px);overflow:auto;text-align:left}
 .secondary.danger{border-color:#ff6a7a77;color:#ffb0b8}
 
+/* Room hosts */
+.snpc{display:flex;align-items:flex-end;gap:14px}
+.snpc-art{position:relative;isolation:isolate;flex:none;width:112px}
+.snpc-art::before{content:"";position:absolute;left:14%;right:14%;bottom:-2%;height:8%;border-radius:50%;background:radial-gradient(#000a,#0000 70%);z-index:-1}
+.snpc-art svg{width:100%;height:auto;display:block}
+.snpc-art .sanim img{filter:drop-shadow(0 4px 4px #0008)}
+.snpc-talk{position:relative;flex:1;margin-bottom:24px;padding:12px 16px;border-radius:14px;background:#14121ee6;border:1px solid color-mix(in srgb,var(--npc) 55%,#ffffff14);box-shadow:0 8px 22px #0006}
+.snpc-talk::before{content:"";position:absolute;left:-9px;bottom:16px;width:16px;height:16px;background:inherit;border-left:1px solid color-mix(in srgb,var(--npc) 55%,#ffffff14);border-bottom:1px solid color-mix(in srgb,var(--npc) 55%,#ffffff14);transform:rotate(45deg)}
+.snpc-name{display:flex;align-items:baseline;gap:8px;font-weight:800;font-size:15px;color:color-mix(in srgb,var(--npc) 55%,#ffffff)}
+.snpc-name small{font-size:9px;letter-spacing:1px;opacity:.75}
+.snpc-line{margin:4px 0 0;font-size:13px;line-height:1.5;color:#e8e2f2;animation:snpc-in .4s ease-out}
+@keyframes snpc-in{from{opacity:0;transform:translateY(4px)}}
+@media (max-width:700px){.snpc-art{width:84px}.snpc{gap:10px}.snpc-talk{padding:10px 12px;margin-bottom:16px}.snpc-line{font-size:12px}}
+@media (prefers-reduced-motion:reduce){.snpc-line{animation:none}}
+
+.snpc-fire{flex:none;width:52px;margin:0 -6px 4px -18px;filter:drop-shadow(0 0 10px #ff8a2a)}
+.snpc-fire svg{width:100%;height:auto;display:block}
+.snpc-fire .f1{transform-origin:50% 75%;animation:snpc-flame .5s steps(2) infinite alternate}
+@keyframes snpc-flame{to{transform:scale(1.12,.9)}}
+@media (prefers-reduced-motion:reduce){.snpc-fire .f1{animation:none}}
+
 /* Floating numbers */
 .sfloat{position:absolute;transform:translate(-50%,-50%);font-weight:900;font-size:22px;color:#fff;text-shadow:0 2px 0 #000,0 0 8px #000;animation:spire-float 1.2s ease-out forwards;white-space:nowrap}
 .sfloat.k-hit{color:#ff8a8a}.sfloat.k-block{color:#9fd4ff;font-size:17px}.sfloat.k-heal{color:#8fffb0}

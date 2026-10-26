@@ -90,3 +90,10 @@ test('a greedy bot climbs without ever getting stuck',()=>{
   assert.ok(r.over,'run finished');floors+=r.stats.floors;}
  assert.ok(floors/6>=6,'the bot climbs several floors on average');
 });
+test('every Ascent room and event host has pixel art and lines',async()=>{
+ const {npcFor,npcLine,NPCS}=await import('../src/spire-npcs.js'),{npcPixels,NPC_ART_IDS}=await import('../src/npc-art.js');
+ for(const id of Object.keys(NPCS)){assert.ok(NPC_ART_IDS.includes(id),id);const px=npcPixels(id);assert.equal(px.length,56*76);assert.ok(px.filter(Boolean).length>500,id);assert.notDeepEqual(npcPixels(id,{bob:1}),px);}
+ const r=run();for(const screen of ['shop','rest','forge','shrine','altar']){r.screen=screen;if(screen==='shop')r.shop=S.shopStock(r);const npc=npcFor(r);assert.ok(npc,screen);assert.ok(npc.lines.includes(npcLine(r,npc)));}
+ assert.equal(npcFor(r).id,'ryuk');r.screen='rest';assert.equal(npcFor(r).id,'goblinslayer');r.screen='shop';assert.equal(npcFor(r).id,'nami');
+ for(const ev of S.SPIRE_EVENTS){r.screen='event';r.event={id:ev.id};assert.equal(!!npcFor(r),ev.id!=='ambush',ev.id);}
+});
