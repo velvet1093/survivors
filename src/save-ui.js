@@ -26,7 +26,15 @@ export function showSaveManager(host,profile,storage,{onClose,onImport,beforeExp
  const refresh=()=>{const next=storageStatus(storage);host.querySelector('#local-save-label').textContent=savedLabel(next);host.querySelector('#local-save-time').textContent=next.cloud==='synced'?'Synced to your claude.ai account'+(next.cloudSyncedAt?' · '+dateLabel(next.cloudSyncedAt):'')+' · kept across game updates and devices.':next.persistent?(next.lastSavedAt?'Saved '+dateLabel(next.lastSavedAt):'Progress stays in this browser between sessions.'):'Export a backup to keep this session’s progress.';};
  const backupText=async()=>{await beforeExport?.();if(storage?.flush)await storage.flush();refresh();return JSON.stringify(createSaveBackup(profile,storage),null,2);};
  host.querySelector('#export-backup').onclick=async()=>{
-  try{const text=await backupText(),url=URL.createObjectURL(new Blob([text],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=BACKUP_FILENAME;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);say('Backup exported with your profile and saved run.');}catch{say('Could not download. Use Copy current backup below.',true);}
+  let text;try{text=await backupText();}catch{say('Could not prepare the backup. Use Copy current backup below.',true);return;}
+  // Inside the claude.ai viewer a plain download link is blocked, so ask the viewer to save it.
+  const downloads=await Promise.race([globalThis.claude?.use?.('downloads')??null,new Promise(resolve=>setTimeout(()=>resolve(null),3000))]).catch(()=>null);
+  if(downloads){
+   try{await downloads.save({filename:BACKUP_FILENAME,data:text});say('Backup exported with your profile and saved run.');}
+   catch(e){say(e?.code==='declined'?'Export cancelled. Your progress is still saved.':'Could not download. Use Copy current backup below.',e?.code!=='declined');}
+   return;
+  }
+  try{const url=URL.createObjectURL(new Blob([text],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=BACKUP_FILENAME;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);say('Backup exported with your profile and saved run.');}catch{say('Could not download. Use Copy current backup below.',true);}
  };
  const restore=async text=>{
   if(busy)return;busy=true;panel.setAttribute('aria-busy','true');
