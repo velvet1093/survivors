@@ -3,9 +3,11 @@ import {MAPS,CHARACTERS} from './game.js';
 import {ENEMIES,BOSSES} from './enemies.js';
 import {trinketFor,trinketIcon} from './trinkets.js';
 import {icon} from './icons.js';
-import {characterPixels,pixelsSvg} from './pixel-characters.js';
+import {characterPixels,pixelsSvg,pixelRuns} from './pixel-characters.js';
 import {enemyPixels} from './pixel-enemies.js';
 import {mapPreview} from './pixel-world.js';
+import {enemyMotion} from './enemy-animation.js';
+import {cardArt,battleScene,towerScene} from './spire-art.js';
 import {ULTIMATES} from './ultimates.js';
 import {cardDef,cardStats,cardText,cardIcon} from './spire-cards.js';
 import {ULT_CHARGE,PACTS,relicEffect,spireNode,reachable,enterSpireNode,liveFoes,canPlay,needsTarget,playCard,ultimateReady,useUltimate,endTurn,takeRewardCard,finishRewards,continueSpireAct,buyCard,buyRelic,removeCard,leaveSpireScreen,upgradable,restHeal,upgradeCard,forgeOptions,forgeFuse,forgeTemper,swearSpirePact,altarSpire,spireEventFor,resolveSpireEvent} from './spire.js';
@@ -46,6 +48,33 @@ const ui={selected:null,node:null,pile:null,lastFx:0,combatKey:null,menu:false,p
 const sprites=new Map();
 function sprite(key,make){if(!sprites.has(key))sprites.set(key,`<svg viewBox="0 0 56 76" shape-rendering="crispEdges" aria-hidden="true">${pixelsSvg(make())}</svg>`);return sprites.get(key);}
 const heroSprite=(run,attack=false)=>sprite(`h:${run.heroId}:${run.skin}:${attack}`,()=>characterPixels(run.heroId,{skin:run.skin,attack,frame:attack?1:0}));
+// Idle loops: every frame of a sprite drawn side by side into one strip, played with
+// CSS steps(). The delay follows a shared clock so a re-render never restarts a loop.
+const strips=new Map();
+function strip(key,frames,{height=76,offsets=[]}={}){
+ if(strips.has(key))return strips.get(key);
+ let url='';
+ try{const canvas=document.createElement('canvas');canvas.width=56*frames.length;canvas.height=height;const g=canvas.getContext('2d');
+  frames.forEach((pixels,i)=>{const dy=height-76+(offsets[i]||0);for(const run of pixelRuns(pixels)){g.fillStyle=run.color;g.fillRect(i*56+run.x,run.y+dy,run.width,1);}});url=canvas.toDataURL();}catch{url='';}
+ const value={url,n:frames.length,height};strips.set(key,value);return value;
+}
+function animated(value,ms,fallback){
+ if(!value.url)return fallback;
+ return `<span class="sanim" style="--n:${value.n};--dur:${ms}ms;--ar:56/${value.height};--delay:-${Math.round(performance.now()%ms)}ms"><img src="${value.url}" alt="" draggable="false"></span>`;
+}
+// Heroes breathe through their four idle frames and blink once per loop.
+function heroIdle(run){
+ const base={skin:run.skin,pose:run.heroId==='gojo'?'domain':''},order=[0,0,1,1,2,2,3,3,0,0,1,1,2,2,3,3];
+ const frames=order.map((frame,i)=>characterPixels(run.heroId,{...base,frame,blink:i===10}));
+ return animated(strip(`h:${run.heroId}:${run.skin}`,frames),4000,heroSprite(run));
+}
+// Enemies sway through their own animation curves, standing still, played forward then back.
+function foeIdle(e){
+ const ts=Array.from({length:10},(_,i)=>i*.1),loop=[...ts,...ts.slice(1,-1).reverse()];
+ const motions=loop.map((t,i)=>{const m=enemyMotion({archetype:e.id,moving:false,enraged:e.enraged,facing:1},t);m.arm+=Math.sin(i/loop.length*Math.PI*2)*1.2;return m;});
+ const value=strip(`e:${e.id}:${e.enraged?1:0}`,motions.map(m=>enemyPixels(e.id,m)),{height:84,offsets:motions.map(m=>Math.round(m.y||0))});
+ return animated(value,loop.length*110,foeSprite(e));
+}
 const foeSprite=e=>sprite(`e:${e.id}:${e.enraged?1:0}`,()=>enemyPixels(e.id,{enraged:e.enraged?1:0}));
 const hero=run=>CHARACTERS.find(c=>c.id===run.heroId)||CHARACTERS[0];
 const relicName=id=>trinketFor(id)?.name||id;
@@ -54,7 +83,7 @@ export function cardHtml(id,{up=false,attrs='',cls='',vars=''}={}){
  const c=cardStats(id,up);if(!c)return '';
  const type=c.type==='curse'?'CURSE':c.type.toUpperCase(),rarity=c.rarity==='starter'?'BASIC':c.rarity.toUpperCase();
  const text=cardText(id,up);
- return `<button type="button" class="scard t-${c.type} ${up?'up':''} ${text.length>58?'long':''} ${cls}" style="--rarity:${RARITY_COLOR[c.rarity]||'#ccc'};${vars}" ${attrs} aria-label="${esc(c.name)}${up?' plus':''}, ${c.cost==null?'unplayable':c.cost+' energy'}, ${type}. ${esc(cardText(id,up))}"><span class="scard-cost">${c.cost??'–'}</span><span class="scard-name">${esc(c.name)}${up?'+':''}</span><span class="scard-art">${icon(cardIcon(id))}</span><span class="scard-type">${type} · ${rarity}${c.fusion?' · FUSION':''}</span><span class="scard-text">${esc(cardText(id,up))}</span></button>`;
+ return `<button type="button" class="scard t-${c.type} ${up?'up':''} ${text.length>58?'long':''} ${cls}" style="--rarity:${RARITY_COLOR[c.rarity]||'#ccc'};${vars}" ${attrs} aria-label="${esc(c.name)}${up?' plus':''}, ${c.cost==null?'unplayable':c.cost+' energy'}, ${type}. ${esc(cardText(id,up))}"><span class="scard-cost">${c.cost??'–'}</span><span class="scard-name">${esc(c.name)}${up?'+':''}</span><span class="scard-art">${cardArt(id)||icon(cardIcon(id))}</span><span class="scard-type">${type} · ${rarity}${c.fusion?' · FUSION':''}</span><span class="scard-text">${esc(cardText(id,up))}</span></button>`;
 }
 function chips(statuses={},powers={}){
  return Object.entries({...statuses,...powers}).filter(([k,v])=>v>0&&STATUS_INFO[k]).map(([k,v])=>{const [label,color,text]=STATUS_INFO[k];return `<span class="schip" style="--chip:${color}" title="${esc(text)}">${label} ${v}</span>`;}).join('');
@@ -94,12 +123,11 @@ function mapView(run){
 function combatView(run){
  const c=run.combat,h=hero(run),ult=ULTIMATES[run.heroId],map=MAPS.find(m=>m.id===c.mapId)||MAPS[0],foes=c.enemies.filter(e=>e.hp>0);
  const sel=ui.selected!=null&&c.hand[ui.selected]?ui.selected:null,targeting=sel!=null&&needsTarget(c.hand[sel])&&foes.length>1;
- const backdrop=mapPreview(map).replace('<svg ','<svg preserveAspectRatio="xMidYMid slice" ');
- const enemies=foes.map(e=>{const big=e.boss||e.rift;return `<button type="button" class="sfoe ${big?'big':''} ${e.elite?'elite':''} ${e.enraged?'enraged':''} ${targeting?'targetable':''}" data-foe="${e.uid}" data-uid="${e.uid}" aria-label="${esc(e.name)}, ${e.hp} of ${e.maxHp} HP${e.block?', '+e.block+' block':''}">${intentHtml(e,c.player)}<span class="sfoe-art">${foeSprite(e)}</span><span class="sfoe-name">${e.elite?'★ ':''}${esc(e.name)}</span>${bar(e.hp,e.maxHp,e.block)}<span class="schips">${chips(e.statuses)}</span></button>`;}).join('');
+ const enemies=foes.map(e=>{const big=e.boss||e.rift;return `<button type="button" class="sfoe ${big?'big':''} ${e.elite?'elite':''} ${e.enraged?'enraged':''} ${targeting?'targetable':''}" data-foe="${e.uid}" data-uid="${e.uid}" aria-label="${esc(e.name)}, ${e.hp} of ${e.maxHp} HP${e.block?', '+e.block+' block':''}">${intentHtml(e,c.player)}<span class="sfoe-art">${foeIdle(e)}</span><span class="sfoe-name">${e.elite?'★ ':''}${esc(e.name)}</span>${bar(e.hp,e.maxHp,e.block)}<span class="schips">${chips(e.statuses)}</span></button>`;}).join('');
  const hand=c.hand.map((card,i)=>{const playable=canPlay(run,i);return cardHtml(card.id,{up:card.up,attrs:`data-hand="${i}"`,vars:`--i:${i};--n:${c.hand.length}`,cls:`${playable?'playable':'dim'} ${sel===i?'selected':''}`});}).join('');
  const ultReady=ultimateReady(run);
- return `${topBar(run,NODE_TYPES[c.type]?.name||'Battle')}<div class="spire-battle"><div class="spire-backdrop" aria-hidden="true">${backdrop}</div>
- <div class="spire-stage"><div class="shero" id="spire-hero" data-uid="player" style="--accent:${h.color}"><span class="shero-art">${heroSprite(run,ui.attacking)}</span>${bar(run.hp,run.maxHp,c.player.block)}<span class="schips">${chips(c.player.statuses,c.powers)}</span></div><div class="sfoes">${enemies}</div></div>
+ return `${topBar(run,NODE_TYPES[c.type]?.name||'Battle')}<div class="spire-battle">
+ <div class="spire-stage"><div class="shero" id="spire-hero" data-uid="player" style="--accent:${h.color}"><span class="shero-art">${ui.attacking?heroSprite(run,true):heroIdle(run)}</span>${bar(run.hp,run.maxHp,c.player.block)}<span class="schips">${chips(c.player.statuses,c.powers)}</span></div><div class="sfoes">${enemies}</div></div>
  <p class="spire-hint" aria-live="polite">${targeting?`Choose a target for <b>${esc(cardDef(c.hand[sel].id).name)}</b>.`:c.waves?'Another wave is coming after this one.':`Turn ${c.turn}`}</p>
  <div class="spire-controls"><div class="senergy" aria-label="${c.energy} of ${c.maxEnergy} energy"><b>${c.energy}</b><small>/ ${c.maxEnergy}</small></div><button type="button" class="spile" data-pile="draw" aria-label="Draw pile, ${c.draw.length} cards">DRAW<b>${c.draw.length}</b></button><div class="shand" role="group" aria-label="Your hand">${hand||'<span class="shand-empty">No cards in hand.</span>'}</div><button type="button" class="spile" data-pile="discard" aria-label="Discard pile, ${c.discard.length} cards">DISCARD<b>${c.discard.length}</b></button>${c.exhaust.length?`<button type="button" class="spile ex" data-pile="exhaust" aria-label="Exhausted, ${c.exhaust.length} cards">EXHAUST<b>${c.exhaust.length}</b></button>`:''}
  <button type="button" class="sult ${ultReady?'ready':''}" id="spire-ult" style="--ult:${ult?.color||h.color};--charge:${c.ult/ULT_CHARGE*100}%" ${ultReady?'':'disabled'} title="Deal ${10+run.act*6} damage to ALL enemies and gain ${8+run.act*2} Block. Charges as you play cards.">${icon('power')}<span>${esc(ult?.name||'Ultimate')}<small>${ultReady?'READY':c.ult+' / '+ULT_CHARGE+' CARDS'}</small></span></button><button type="button" class="primary send" id="spire-end">END TURN</button></div></div>`;
@@ -117,7 +145,7 @@ function shopView(run){
  const s=run.shop;
  return `${topBar(run,'The merchant’s wares.')}<div class="spire-panel"><div class="scard-row shop">${s.cards.map((o,i)=>`<div class="soffer ${o.sold?'sold':''}">${cardHtml(o.id,{attrs:`data-buy="${i}" ${o.sold||run.gold<o.price?'disabled':''}`})}<b>${o.sold?'SOLD':'◉ '+o.price}</b></div>`).join('')}</div>
  <div class="ascent-shop">${s.relic?`<article class="ascent-offer ${s.relic.sold?'sold':''}" style="--item:#ffd66a"><span class="item-art">${trinketIcon(s.relic.id)}</span><div><small>RELIC</small><strong>${esc(relicName(s.relic.id))}</strong><p>${esc(relicEffect(s.relic.id).text)}</p></div><button id="spire-buy-relic" ${s.relic.sold||run.gold<s.relic.price?'disabled':''}>${s.relic.sold?'SOLD':'◉ '+s.relic.price}</button></article>`:''}
- <article class="ascent-offer ${s.removed?'sold':''}" style="--item:#ff9aaa"><span class="item-art">${icon('regret')}</span><div><small>SERVICE</small><strong>Card removal</strong><p>Remove one card from your deck for good.</p></div><button id="spire-remove" ${s.removed||run.gold<run.removeCost||run.deck.length<=5?'disabled':''}>${s.removed?'DONE':'◉ '+run.removeCost}</button></article></div>
+ <article class="ascent-offer ${s.removed?'sold':''}" style="--item:#ff9aaa"><span class="item-art">${cardArt('regret')}</span><div><small>SERVICE</small><strong>Card removal</strong><p>Remove one card from your deck for good.</p></div><button id="spire-remove" ${s.removed||run.gold<run.removeCost||run.deck.length<=5?'disabled':''}>${s.removed?'DONE':'◉ '+run.removeCost}</button></article></div>
  <div class="ascent-actions"><button class="primary" id="spire-leave">LEAVE THE SHOP</button></div></div>`;
 }
 function restView(run){
@@ -170,12 +198,19 @@ function floats(root,run){
  });
 }
 
+// The backdrop sits outside the re-rendered body so its particles keep drifting.
+function setScene(root,run){
+ const layer=root.querySelector('.spire-scene'),map=run.combat&&MAPS.find(m=>m.id===run.combat.mapId),key=map?'map:'+map.id:'tower:'+run.act;
+ if(layer.dataset.key===key)return;layer.dataset.key=key;layer.className='spire-scene '+(map?'battle':'tower');
+ layer.innerHTML=map?battleScene(map,mapPreview(map)):towerScene(run.act);
+}
 // ---- Render ----
 export function showSpire(host,run,{onChange,onLobby,onAbandon,onOver,sound=()=>{}}){
- if(!host.querySelector('.spire-root'))host.innerHTML='<div class="spire-root"><div class="spire-body"></div><div class="spire-floats" aria-hidden="true"></div><div class="spire-overlay-host"></div></div>';
+ if(!host.querySelector('.spire-root'))host.innerHTML='<div class="spire-root"><div class="spire-scene" aria-hidden="true"></div><div class="spire-body"></div><div class="spire-floats" aria-hidden="true"></div><div class="spire-overlay-host"></div></div>';
  const root=host.querySelector('.spire-root'),body=root.querySelector('.spire-body'),over=root.querySelector('.spire-overlay-host');
  if(run.screen==='over'){host.innerHTML='';onOver();return;}
  const s=run.screen;
+ setScene(root,run);
  if(s!=='combat')ui.selected=null;
  body.className='spire-body spire-'+s;
  body.innerHTML=s==='map'?mapView(run):s==='combat'?combatView(run):s==='reward'?rewardView(run):s==='shop'?shopView(run):s==='rest'?restView(run):s==='forge'?forgeView(run):s==='shrine'?shrineView(run):s==='altar'?altarView(run):s==='event'?eventView(run):s==='actclear'?actClearView(run):'';
