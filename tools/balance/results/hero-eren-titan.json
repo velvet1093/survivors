@@ -1,0 +1,93 @@
+[
+ {
+  "id": "eren",
+  "dps": 173.6,
+  "kills": 348,
+  "level": 17,
+  "lateTakenPerMin": 222.60000000000002,
+  "ehp": 191.5,
+  "regenPerMin": 105.6,
+  "pressure": 0.6975,
+  "fusions": 0,
+  "rows": [
+   {
+    "dealt": 182798,
+    "kills": 569,
+    "level": 20,
+    "takenPerMin": 130.7,
+    "lateTakenPerMin": 177.3,
+    "ehp": 182,
+    "regenPerMin": 95.9,
+    "pressure": 0.638,
+    "bossShare": 0.38,
+    "ults": 1,
+    "fusions": 3
+   },
+   {
+    "dealt": 105009,
+    "kills": 288,
+    "level": 17,
+    "takenPerMin": 210.7,
+    "lateTakenPerMin": 300.2,
+    "ehp": 195,
+    "regenPerMin": 78,
+    "pressure": 1.1,
+    "bossShare": 0.43,
+    "ults": 1,
+    "fusions": 0
+   },
+   {
+    "dealt": 103300,
+    "kills": 346,
+    "level": 17,
+    "takenPerMin": 162.2,
+    "lateTakenPerMin": 207.3,
+    "ehp": 212,
+    "regenPerMin": 101.2,
+    "pressure": 0.663,
+    "bossShare": 0.53,
+    "ults": 1,
+    "fusions": 0
+   },
+   {
+    "dealt": 73799,
+    "kills": 350,
+    "level": 17,
+    "takenPerMin": 178.4,
+    "lateTakenPerMin": 237.9,
+    "ehp": 182,
+    "regenPerMin": 143.3,
+    "pressure": 0.732,
+    "bossShare": 0.62,
+    "ults": 1,
+    "fusions": 2
+   },
+   {
+    "dealt": 86980,
+    "kills": 255,
+    "level": 16,
+    "takenPerMin": 193.9,
+    "lateTakenPerMin": 277.2,
+    "ehp": 197,
+    "regenPerMin": 114,
+    "pressure": 0.892,
+    "bossShare": 0.49,
+    "ults": 1,
+    "fusions": 0
+   },
+   {
+    "dealt": 178116,
+    "kills": 520,
+    "level": 20,
+    "takenPerMin": 114.9,
+    "lateTakenPerMin": 131.7,
+    "ehp": 188,
+    "regenPerMin": 110,
+    "pressure": 0.441,
+    "bossShare": 0.51,
+    "ults": 1,
+    "fusions": 0
+   }
+  ]
+ }
+]

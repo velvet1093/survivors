@@ -1,0 +1,443 @@
+[
+ {
+  "id": "rasengan",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 13.3,
+  "kills": 46,
+  "takenPerMin": 104.8,
+  "xp": 1333401
+ },
+ {
+  "id": "wisteriapetals",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 51.1,
+  "kills": 101,
+  "takenPerMin": 113.5,
+  "xp": 2333465
+ },
+ {
+  "id": "chainsaw",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 12.6,
+  "kills": 38,
+  "takenPerMin": 84.5,
+  "xp": 1000057
+ },
+ {
+  "id": "chainsaw",
+  "owner": true,
+  "hero": "denji",
+  "dps": 14.6,
+  "kills": 47,
+  "takenPerMin": 150.3,
+  "xp": 1000071
+ },
+ {
+  "id": "quill",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 110.6,
+  "kills": 149,
+  "takenPerMin": 85.4,
+  "xp": 2333500
+ },
+ {
+  "id": "quill",
+  "owner": true,
+  "hero": "featherine",
+  "dps": 120.5,
+  "kills": 158,
+  "takenPerMin": 91.8,
+  "xp": 3333645
+ },
+ {
+  "id": "crimson",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 13.1,
+  "kills": 39,
+  "takenPerMin": 61.4,
+  "xp": 1333383
+ },
+ {
+  "id": "crimson",
+  "owner": true,
+  "hero": "diavolo",
+  "dps": 14.4,
+  "kills": 45,
+  "takenPerMin": 64.8,
+  "xp": 1333402
+ },
+ {
+  "id": "odmblades",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 11.8,
+  "kills": 40,
+  "takenPerMin": 131.1,
+  "xp": 1000053
+ },
+ {
+  "id": "odmblades",
+  "owner": true,
+  "hero": "eren",
+  "dps": 15.6,
+  "kills": 50,
+  "takenPerMin": 162.4,
+  "xp": 1000076
+ },
+ {
+  "id": "nue",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 23.3,
+  "kills": 76,
+  "takenPerMin": 280.1,
+  "xp": 1333422
+ },
+ {
+  "id": "nue",
+  "owner": true,
+  "hero": "megumi",
+  "dps": 23.4,
+  "kills": 76,
+  "takenPerMin": 290.3,
+  "xp": 1333429
+ },
+ {
+  "id": "shadows",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 40.5,
+  "kills": 59,
+  "takenPerMin": 267.9,
+  "xp": 1666767
+ },
+ {
+  "id": "shadows",
+  "owner": true,
+  "hero": "megumi",
+  "dps": 40,
+  "kills": 57,
+  "takenPerMin": 294.8,
+  "xp": 1333437
+ },
+ {
+  "id": "powerbeam",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 70.9,
+  "kills": 108,
+  "takenPerMin": 111.1,
+  "xp": 3000163
+ },
+ {
+  "id": "powerbeam",
+  "owner": true,
+  "hero": "samus",
+  "dps": 83.6,
+  "kills": 112,
+  "takenPerMin": 147.5,
+  "xp": 2666844
+ },
+ {
+  "id": "icelance",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 59.2,
+  "kills": 112,
+  "takenPerMin": 92.5,
+  "xp": 2666836
+ },
+ {
+  "id": "icelance",
+  "owner": true,
+  "hero": "esdeath",
+  "dps": 61.3,
+  "kills": 109,
+  "takenPerMin": 82.5,
+  "xp": 3000168
+ },
+ {
+  "id": "poison",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 53.1,
+  "kills": 90,
+  "takenPerMin": 99,
+  "xp": 2000115
+ },
+ {
+  "id": "ki",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 47.4,
+  "kills": 92,
+  "takenPerMin": 101.4,
+  "xp": 2333457
+ },
+ {
+  "id": "ki",
+  "owner": true,
+  "hero": "goku",
+  "dps": 55.5,
+  "kills": 99,
+  "takenPerMin": 136.5,
+  "xp": 2666802
+ },
+ {
+  "id": "shuriken",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 89.6,
+  "kills": 133,
+  "takenPerMin": 85,
+  "xp": 3000171
+ },
+ {
+  "id": "shuriken",
+  "owner": true,
+  "hero": "naruto",
+  "dps": 83,
+  "kills": 113,
+  "takenPerMin": 169.8,
+  "xp": 2666822
+ },
+ {
+  "id": "lightning",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 62.3,
+  "kills": 119,
+  "takenPerMin": 60.9,
+  "xp": 1333459
+ },
+ {
+  "id": "salvation",
+  "owner": false,
+  "hero": "madoka",
+  "dps": 283.8,
+  "kills": 359,
+  "takenPerMin": 21.3,
+  "xp": 4667116
+ },
+ {
+  "id": "dragonroar",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 57.3,
+  "kills": 89,
+  "takenPerMin": 125.1,
+  "xp": 2000106
+ },
+ {
+  "id": "berserkeredge",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 44,
+  "kills": 48,
+  "takenPerMin": 104.9,
+  "xp": 2000176
+ },
+ {
+  "id": "berserkeredge",
+  "owner": true,
+  "hero": "guts",
+  "dps": 45.7,
+  "kills": 56,
+  "takenPerMin": 66.4,
+  "xp": 2666857
+ },
+ {
+  "id": "heavensarsenal",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 98.2,
+  "kills": 119,
+  "takenPerMin": 114,
+  "xp": 2666816
+ },
+ {
+  "id": "heavensarsenal",
+  "owner": true,
+  "hero": "erza",
+  "dps": 28.9,
+  "kills": 59,
+  "takenPerMin": 106.3,
+  "xp": 2000090
+ },
+ {
+  "id": "rasenflash",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 67.8,
+  "kills": 98,
+  "takenPerMin": 111.8,
+  "xp": 2000118
+ },
+ {
+  "id": "rasenflash",
+  "owner": true,
+  "hero": "naruto",
+  "dps": 106.5,
+  "kills": 139,
+  "takenPerMin": 163,
+  "xp": 3333606
+ },
+ {
+  "id": "beelzebub",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 145.9,
+  "kills": 202,
+  "takenPerMin": 91.5,
+  "xp": 4333719
+ },
+ {
+  "id": "beelzebub",
+  "owner": true,
+  "hero": "rimuru",
+  "dps": 148.9,
+  "kills": 209,
+  "takenPerMin": 58.4,
+  "xp": 4667091
+ },
+ {
+  "id": "starcrusher",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 65.5,
+  "kills": 96,
+  "takenPerMin": 115.2,
+  "xp": 3333472
+ },
+ {
+  "id": "starcrusher",
+  "owner": true,
+  "hero": "yuki",
+  "dps": 61.3,
+  "kills": 85,
+  "takenPerMin": 81.1,
+  "xp": 3000183
+ },
+ {
+  "id": "titanquake",
+  "owner": false,
+  "hero": "eren",
+  "dps": 42.7,
+  "kills": 55,
+  "takenPerMin": 53.7,
+  "xp": 1666769
+ },
+ {
+  "id": "totality",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 47.9,
+  "kills": 61,
+  "takenPerMin": 200.5,
+  "xp": 1333513
+ },
+ {
+  "id": "totality",
+  "owner": true,
+  "hero": "megumi",
+  "dps": 47.9,
+  "kills": 61,
+  "takenPerMin": 197.8,
+  "xp": 1333515
+ },
+ {
+  "id": "plasmabeam",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 106.5,
+  "kills": 137,
+  "takenPerMin": 94.6,
+  "xp": 3666915
+ },
+ {
+  "id": "plasmabeam",
+  "owner": true,
+  "hero": "samus",
+  "dps": 117.8,
+  "kills": 143,
+  "takenPerMin": 85.4,
+  "xp": 3666972
+ },
+ {
+  "id": "icecrown",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 110.8,
+  "kills": 133,
+  "takenPerMin": 62.8,
+  "xp": 3333587
+ },
+ {
+  "id": "icecrown",
+  "owner": true,
+  "hero": "esdeath",
+  "dps": 110.7,
+  "kills": 132,
+  "takenPerMin": 76.8,
+  "xp": 3333588
+ },
+ {
+  "id": "elixir",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 125.9,
+  "kills": 165,
+  "takenPerMin": 103.6,
+  "xp": 3333610
+ },
+ {
+  "id": "kamehameha",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 44.5,
+  "kills": 67,
+  "takenPerMin": 123.4,
+  "xp": 2000099
+ },
+ {
+  "id": "kamehameha",
+  "owner": true,
+  "hero": "goku",
+  "dps": 45,
+  "kills": 63,
+  "takenPerMin": 106.9,
+  "xp": 2000152
+ },
+ {
+  "id": "rasen",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 118.4,
+  "kills": 161,
+  "takenPerMin": 71.1,
+  "xp": 4000315
+ },
+ {
+  "id": "rasen",
+  "owner": true,
+  "hero": "naruto",
+  "dps": 105.4,
+  "kills": 130,
+  "takenPerMin": 101.7,
+  "xp": 4333598
+ },
+ {
+  "id": "tempest",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 120.2,
+  "kills": 203,
+  "takenPerMin": 43.9,
+  "xp": 3333559
+ }
+]

@@ -122,3 +122,13 @@ test('Titan-only attacks and generic item versus owner mechanics are explicitly 
  assert.match(tierEntries('passives').find(entry=>entry.id==='greatsage').caution,/exclusive to Rimuru/);
  for(const entry of filterTierEntries('passives',{form:'evolved'}))assert.match([entry.caution,entry.bestWith].join(' '),/both max-rank ingredients|two maxed passives|both maxed passives|all five max-rank Soul Gems|all (?:four|five) maxed ingredients/);
 });
+
+test('every hero, weapon and passive placement carries measured balance numbers; ultimates are design-reviewed',()=>{
+ for(const category of ['characters','weapons','passives'])for(const entry of tierEntries(category)){
+  assert.ok(entry.measured,entry.id+' has measurements');assert.ok(entry.measured.label.length>3);
+  assert.ok(entry.measured.stats.length>=2&&entry.measured.stats.length<=4,entry.id+' shows two to four stats');
+  for(const [label,value]of entry.measured.stats){assert.ok(typeof label==='string'&&label.length>2);assert.ok(typeof value==='string'&&value.length>0);}
+ }
+ assert.ok(tierEntries('ultimates').every(entry=>!entry.measured));
+ assert.match(TIER_CATEGORIES.find(c=>c.id==='ultimates').criteria,/design review/);
+});

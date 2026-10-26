@@ -1,0 +1,94 @@
+[
+ {
+  "id": "erza",
+  "style": "close",
+  "dps": 433.7,
+  "kills": 730.5,
+  "level": 21.5,
+  "lateTakenPerMin": 451.2,
+  "ehp": 147.5,
+  "regenPerMin": 159.2,
+  "pressure": 1.5835,
+  "fusions": 1,
+  "rows": [
+   {
+    "dealt": 327826,
+    "kills": 940,
+    "level": 23,
+    "takenPerMin": 276.2,
+    "lateTakenPerMin": 376.2,
+    "ehp": 122,
+    "regenPerMin": 90,
+    "pressure": 1.774,
+    "bossShare": 0.33,
+    "ults": 8,
+    "fusions": 1
+   },
+   {
+    "dealt": 193376,
+    "kills": 520,
+    "level": 20,
+    "takenPerMin": 439.7,
+    "lateTakenPerMin": 495.5,
+    "ehp": 158,
+    "regenPerMin": 218.7,
+    "pressure": 1.317,
+    "bossShare": 0.31,
+    "ults": 6,
+    "fusions": 2
+   },
+   {
+    "dealt": 229375,
+    "kills": 663,
+    "level": 21,
+    "takenPerMin": 275,
+    "lateTakenPerMin": 401.7,
+    "ehp": 137,
+    "regenPerMin": 97.8,
+    "pressure": 1.707,
+    "bossShare": 0.38,
+    "ults": 7,
+    "fusions": 0
+   },
+   {
+    "dealt": 117230,
+    "kills": 455,
+    "level": 19,
+    "takenPerMin": 300.5,
+    "lateTakenPerMin": 406.9,
+    "ehp": 194,
+    "regenPerMin": 150.4,
+    "pressure": 1.182,
+    "bossShare": 0.5,
+    "ults": 7,
+    "fusions": 0
+   },
+   {
+    "dealt": 346078,
+    "kills": 815,
+    "level": 23,
+    "takenPerMin": 467.7,
+    "lateTakenPerMin": 645.1,
+    "ehp": 162,
+    "regenPerMin": 268.6,
+    "pressure": 1.497,
+    "bossShare": 0.33,
+    "ults": 8,
+    "fusions": 1
+   },
+   {
+    "dealt": 291056,
+    "kills": 798,
+    "level": 22,
+    "takenPerMin": 375.1,
+    "lateTakenPerMin": 501.9,
+    "ehp": 133,
+    "regenPerMin": 168,
+    "pressure": 1.67,
+    "bossShare": 0.3,
+    "ults": 6,
+    "fusions": 1
+   }
+  ]
+ }
+]

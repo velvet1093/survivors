@@ -1,0 +1,242 @@
+[
+ {
+  "id": "dragonslayer",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 56.9,
+  "kills": 91,
+  "takenPerMin": 227.8,
+  "xp": 3000158
+ },
+ {
+  "id": "dragonslayer",
+  "style": "close",
+  "owner": true,
+  "hero": "guts",
+  "dps": 69.1,
+  "kills": 103,
+  "takenPerMin": 140.7,
+  "xp": 3333494
+ },
+ {
+  "id": "blackflame",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 86.8,
+  "kills": 132,
+  "takenPerMin": 180.8,
+  "xp": 3333508
+ },
+ {
+  "id": "blackflame",
+  "style": "close",
+  "owner": true,
+  "hero": "rimuru",
+  "dps": 100.6,
+  "kills": 138,
+  "takenPerMin": 73.9,
+  "xp": 2000165
+ },
+ {
+  "id": "titanfists",
+  "style": "close",
+  "owner": false,
+  "hero": "eren",
+  "dps": 62.7,
+  "kills": 95,
+  "takenPerMin": 172.2,
+  "xp": 3000159
+ },
+ {
+  "id": "zoltraak",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 53.1,
+  "kills": 119,
+  "takenPerMin": 283.3,
+  "xp": 2000159
+ },
+ {
+  "id": "zoltraak",
+  "style": "close",
+  "owner": true,
+  "hero": "frieren",
+  "dps": 56.2,
+  "kills": 129,
+  "takenPerMin": 210.6,
+  "xp": 2333525
+ },
+ {
+  "id": "pallet",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 60.7,
+  "kills": 112,
+  "takenPerMin": 193.9,
+  "xp": 3000165
+ },
+ {
+  "id": "pallet",
+  "style": "close",
+  "owner": true,
+  "hero": "shinji",
+  "dps": 67.9,
+  "kills": 112,
+  "takenPerMin": 186.9,
+  "xp": 3000163
+ },
+ {
+  "id": "blue",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 85.9,
+  "kills": 102,
+  "takenPerMin": 178.5,
+  "xp": 3000198
+ },
+ {
+  "id": "blue",
+  "style": "close",
+  "owner": true,
+  "hero": "gojo",
+  "dps": 85.2,
+  "kills": 101,
+  "takenPerMin": 115.6,
+  "xp": 3666889
+ },
+ {
+  "id": "orbit",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 41.9,
+  "kills": 95,
+  "takenPerMin": 297.3,
+  "xp": 2000145
+ },
+ {
+  "id": "wisteriagarden",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 68.7,
+  "kills": 107,
+  "takenPerMin": 145.8,
+  "xp": 3000175
+ },
+ {
+  "id": "chimeragarden",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 116.2,
+  "kills": 154,
+  "takenPerMin": 162.2,
+  "xp": 4000342
+ },
+ {
+  "id": "chimeragarden",
+  "style": "close",
+  "owner": true,
+  "hero": "megumi",
+  "dps": 114.2,
+  "kills": 146,
+  "takenPerMin": 152.8,
+  "xp": 4000335
+ },
+ {
+  "id": "fatalforecast",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 107.8,
+  "kills": 141,
+  "takenPerMin": 156.7,
+  "xp": 4333686
+ },
+ {
+  "id": "fatalforecast",
+  "style": "close",
+  "owner": true,
+  "hero": "diavolo",
+  "dps": 115.1,
+  "kills": 148,
+  "takenPerMin": 55.5,
+  "xp": 4000319
+ },
+ {
+  "id": "stormnue",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 56.2,
+  "kills": 96,
+  "takenPerMin": 202.5,
+  "xp": 2000135
+ },
+ {
+  "id": "stormnue",
+  "style": "close",
+  "owner": true,
+  "hero": "megumi",
+  "dps": 55.7,
+  "kills": 96,
+  "takenPerMin": 201.2,
+  "xp": 2333464
+ },
+ {
+  "id": "zafkiel",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 138.5,
+  "kills": 192,
+  "takenPerMin": 110.2,
+  "xp": 5000326
+ },
+ {
+  "id": "zafkiel",
+  "style": "close",
+  "owner": true,
+  "hero": "kurumi",
+  "dps": 127.3,
+  "kills": 171,
+  "takenPerMin": 105.6,
+  "xp": 4000354
+ },
+ {
+  "id": "ultimate",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 181.3,
+  "kills": 244,
+  "takenPerMin": 68.6,
+  "xp": 5000430
+ },
+ {
+  "id": "ultimate",
+  "style": "close",
+  "owner": true,
+  "hero": "madoka",
+  "dps": 185.9,
+  "kills": 242,
+  "takenPerMin": 46.3,
+  "xp": 5000370
+ },
+ {
+  "id": "raijin",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 119.1,
+  "kills": 148,
+  "takenPerMin": 140.4,
+  "xp": 4666990
+ }
+]

@@ -1,0 +1,262 @@
+[
+ {
+  "id": "rasengan",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 43.5,
+  "kills": 91,
+  "takenPerMin": 213.9,
+  "xp": 2333478
+ },
+ {
+  "id": "chainsaw",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 69.6,
+  "kills": 107,
+  "takenPerMin": 178.5,
+  "xp": 3000178
+ },
+ {
+  "id": "chainsaw",
+  "style": "close",
+  "owner": true,
+  "hero": "denji",
+  "dps": 67,
+  "kills": 91,
+  "takenPerMin": 174.3,
+  "xp": 2666812
+ },
+ {
+  "id": "crimson",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 50.8,
+  "kills": 79,
+  "takenPerMin": 294,
+  "xp": 2000116
+ },
+ {
+  "id": "crimson",
+  "style": "close",
+  "owner": true,
+  "hero": "diavolo",
+  "dps": 62,
+  "kills": 97,
+  "takenPerMin": 144.5,
+  "xp": 2666823
+ },
+ {
+  "id": "nue",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 25.6,
+  "kills": 77,
+  "takenPerMin": 330.6,
+  "xp": 2000099
+ },
+ {
+  "id": "nue",
+  "style": "close",
+  "owner": true,
+  "hero": "megumi",
+  "dps": 25.7,
+  "kills": 76,
+  "takenPerMin": 329.8,
+  "xp": 2000096
+ },
+ {
+  "id": "powerbeam",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 78.2,
+  "kills": 109,
+  "takenPerMin": 191,
+  "xp": 2666842
+ },
+ {
+  "id": "powerbeam",
+  "style": "close",
+  "owner": true,
+  "hero": "samus",
+  "dps": 91.9,
+  "kills": 134,
+  "takenPerMin": 197.8,
+  "xp": 2333533
+ },
+ {
+  "id": "poison",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 55.7,
+  "kills": 91,
+  "takenPerMin": 229.6,
+  "xp": 3000145
+ },
+ {
+  "id": "shuriken",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 102.3,
+  "kills": 127,
+  "takenPerMin": 156,
+  "xp": 3333577
+ },
+ {
+  "id": "shuriken",
+  "style": "close",
+  "owner": true,
+  "hero": "naruto",
+  "dps": 100.8,
+  "kills": 128,
+  "takenPerMin": 168,
+  "xp": 4000285
+ },
+ {
+  "id": "salvation",
+  "style": "close",
+  "owner": false,
+  "hero": "madoka",
+  "dps": 282.7,
+  "kills": 366,
+  "takenPerMin": 15.4,
+  "xp": 5000448
+ },
+ {
+  "id": "berserkeredge",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 79.1,
+  "kills": 100,
+  "takenPerMin": 164.5,
+  "xp": 3333510
+ },
+ {
+  "id": "berserkeredge",
+  "style": "close",
+  "owner": true,
+  "hero": "guts",
+  "dps": 61.7,
+  "kills": 77,
+  "takenPerMin": 124.4,
+  "xp": 3333566
+ },
+ {
+  "id": "rasenflash",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 113.7,
+  "kills": 146,
+  "takenPerMin": 110.1,
+  "xp": 4000329
+ },
+ {
+  "id": "rasenflash",
+  "style": "close",
+  "owner": true,
+  "hero": "naruto",
+  "dps": 116.8,
+  "kills": 153,
+  "takenPerMin": 134.3,
+  "xp": 4000311
+ },
+ {
+  "id": "starcrusher",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 83.6,
+  "kills": 104,
+  "takenPerMin": 151.7,
+  "xp": 3000164
+ },
+ {
+  "id": "starcrusher",
+  "style": "close",
+  "owner": true,
+  "hero": "yuki",
+  "dps": 89.5,
+  "kills": 106,
+  "takenPerMin": 132.3,
+  "xp": 3333561
+ },
+ {
+  "id": "totality",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 71.7,
+  "kills": 84,
+  "takenPerMin": 209.8,
+  "xp": 3333571
+ },
+ {
+  "id": "totality",
+  "style": "close",
+  "owner": true,
+  "hero": "megumi",
+  "dps": 75.8,
+  "kills": 85,
+  "takenPerMin": 199,
+  "xp": 3333581
+ },
+ {
+  "id": "icecrown",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 131.8,
+  "kills": 167,
+  "takenPerMin": 128.9,
+  "xp": 3666978
+ },
+ {
+  "id": "icecrown",
+  "style": "close",
+  "owner": true,
+  "hero": "esdeath",
+  "dps": 132.5,
+  "kills": 167,
+  "takenPerMin": 125.3,
+  "xp": 4000329
+ },
+ {
+  "id": "kamehameha",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 69.2,
+  "kills": 104,
+  "takenPerMin": 217.2,
+  "xp": 2666815
+ },
+ {
+  "id": "kamehameha",
+  "style": "close",
+  "owner": true,
+  "hero": "goku",
+  "dps": 64.9,
+  "kills": 89,
+  "takenPerMin": 214.1,
+  "xp": 3000160
+ },
+ {
+  "id": "tempest",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 117.1,
+  "kills": 185,
+  "takenPerMin": 85.5,
+  "xp": 3000159
+ }
+]

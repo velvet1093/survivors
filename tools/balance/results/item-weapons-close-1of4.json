@@ -1,0 +1,262 @@
+[
+ {
+  "id": "dragonflame",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 35.6,
+  "kills": 84,
+  "takenPerMin": 179.5,
+  "xp": 2333473
+ },
+ {
+  "id": "requip",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 75.9,
+  "kills": 107,
+  "takenPerMin": 178.5,
+  "xp": 2666843
+ },
+ {
+  "id": "requip",
+  "style": "close",
+  "owner": true,
+  "hero": "erza",
+  "dps": 26.2,
+  "kills": 54,
+  "takenPerMin": 386.1,
+  "xp": 1000083
+ },
+ {
+  "id": "garuda",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 57.7,
+  "kills": 114,
+  "takenPerMin": 164.3,
+  "xp": 3000172
+ },
+ {
+  "id": "garuda",
+  "style": "close",
+  "owner": true,
+  "hero": "yuki",
+  "dps": 55.3,
+  "kills": 102,
+  "takenPerMin": 147.9,
+  "xp": 2666820
+ },
+ {
+  "id": "red",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 45,
+  "kills": 100,
+  "takenPerMin": 190.3,
+  "xp": 2666825
+ },
+ {
+  "id": "red",
+  "style": "close",
+  "owner": true,
+  "hero": "gojo",
+  "dps": 42.8,
+  "kills": 97,
+  "takenPerMin": 121.4,
+  "xp": 2666845
+ },
+ {
+  "id": "clockshot",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 101.6,
+  "kills": 125,
+  "takenPerMin": 168.4,
+  "xp": 3333515
+ },
+ {
+  "id": "clockshot",
+  "style": "close",
+  "owner": true,
+  "hero": "kurumi",
+  "dps": 91.4,
+  "kills": 108,
+  "takenPerMin": 214.7,
+  "xp": 3000188
+ },
+ {
+  "id": "rosebow",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 104.4,
+  "kills": 135,
+  "takenPerMin": 185.7,
+  "xp": 3000190
+ },
+ {
+  "id": "rosebow",
+  "style": "close",
+  "owner": true,
+  "hero": "madoka",
+  "dps": 105.1,
+  "kills": 135,
+  "takenPerMin": 169,
+  "xp": 3000195
+ },
+ {
+  "id": "kunai",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 75.2,
+  "kills": 117,
+  "takenPerMin": 229.5,
+  "xp": 3333513
+ },
+ {
+  "id": "raijinrasengan",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 75.6,
+  "kills": 104,
+  "takenPerMin": 182.1,
+  "xp": 3000155
+ },
+ {
+  "id": "chainsawoverdrive",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 68.4,
+  "kills": 90,
+  "takenPerMin": 170.9,
+  "xp": 3333576
+ },
+ {
+  "id": "chainsawoverdrive",
+  "style": "close",
+  "owner": true,
+  "hero": "denji",
+  "dps": 63.8,
+  "kills": 79,
+  "takenPerMin": 219.3,
+  "xp": 2666882
+ },
+ {
+  "id": "finalchapter",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 154.4,
+  "kills": 221,
+  "takenPerMin": 75.3,
+  "xp": 3000330
+ },
+ {
+  "id": "finalchapter",
+  "style": "close",
+  "owner": true,
+  "hero": "featherine",
+  "dps": 162.6,
+  "kills": 226,
+  "takenPerMin": 54,
+  "xp": 4000386
+ },
+ {
+  "id": "scoutassault",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 87.1,
+  "kills": 108,
+  "takenPerMin": 223.4,
+  "xp": 3333560
+ },
+ {
+  "id": "scoutassault",
+  "style": "close",
+  "owner": true,
+  "hero": "eren",
+  "dps": 94.9,
+  "kills": 107,
+  "takenPerMin": 213.1,
+  "xp": 3666914
+ },
+ {
+  "id": "ancientmagic",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 127.1,
+  "kills": 169,
+  "takenPerMin": 145.7,
+  "xp": 4000350
+ },
+ {
+  "id": "ancientmagic",
+  "style": "close",
+  "owner": true,
+  "hero": "frieren",
+  "dps": 126.6,
+  "kills": 169,
+  "takenPerMin": 146.2,
+  "xp": 3667027
+ },
+ {
+  "id": "positron",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 76.8,
+  "kills": 102,
+  "takenPerMin": 158.4,
+  "xp": 4000218
+ },
+ {
+  "id": "positron",
+  "style": "close",
+  "owner": true,
+  "hero": "shinji",
+  "dps": 83.8,
+  "kills": 100,
+  "takenPerMin": 150.6,
+  "xp": 2666806
+ },
+ {
+  "id": "purple",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 95.9,
+  "kills": 120,
+  "takenPerMin": 156.3,
+  "xp": 3666923
+ },
+ {
+  "id": "purple",
+  "style": "close",
+  "owner": true,
+  "hero": "gojo",
+  "dps": 91.7,
+  "kills": 107,
+  "takenPerMin": 113.9,
+  "xp": 3333558
+ },
+ {
+  "id": "galaxy",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 60.6,
+  "kills": 76,
+  "takenPerMin": 283.5,
+  "xp": 2666868
+ }
+]

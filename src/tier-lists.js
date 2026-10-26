@@ -3,27 +3,28 @@ import {ULTIMATES} from './ultimates.js';
 import {FRIEREN_BARRAGE} from './frieren-barrage.js';
 import {HERO_MECHANICS} from './hero-mechanics.js';
 import {CHARACTER_RANKINGS,ULTIMATE_RANKINGS,WEAPON_RANKINGS,PASSIVE_RANKINGS} from './tier-rankings.js';
+import {TIER_MEASUREMENTS} from './tier-measurements.js';
 
 export const TIERS=[
- {id:'S',label:'Exceptional',color:'#efacac',description:'Broad, dependable value with fewer conditions: strong coverage, safety or slot efficiency across many Survival builds.'},
- {id:'A',label:'Strong',color:'#e6c18d',description:'A strong choice with a meaningful gap: it may need positioning, time, a recipe or support to reach its best value.'},
- {id:'B',label:'Solid with support',color:'#b8d6a0',description:'Useful in the right build, but a coverage, recovery or reliability limit gives more flexible choices an advantage.'},
- {id:'C',label:'Specialist',color:'#9bbbdc',description:'A narrower role or lower stand-alone slot value. Its recipe or specific use can still make it the right pickup.'},
+ {id:'S',label:'Top pick',color:'#efacac',description:'Leads its category in the measured runs or offers unmatched control or safety. Strong in almost any build.'},
+ {id:'A',label:'Strong',color:'#e6c18d',description:'Clearly above average, with one real limitation: setup time, positioning, a recipe or a narrower role.'},
+ {id:'B',label:'Solid',color:'#b8d6a0',description:'Does its job, but a coverage, damage or safety gap means stronger options usually win the slot.'},
+ {id:'C',label:'Niche',color:'#9bbbdc',description:'Weak on its own. Take it for a specific recipe, owner bonus or build plan.'},
 ];
 export const TIER_CATEGORIES=[
- {id:'characters',label:'Characters',description:'The complete signature kit, unique mechanic and survival tools.',criteria:'Characters are compared by how reliably their own kit clears crowds, stays alive and reaches its stronger mechanics while moving through a normal run.'},
- {id:'weapons',label:'Weapons',description:'Base weapons and evolved attacks, assessed at their maximum rank.',criteria:'Weapons are compared by targeting reliability, crowd coverage, control and useful reach. A fusion is assessed after obtaining it; recipe investment is called out separately.'},
- {id:'passives',label:'Passive items',description:'Support items and passive fusions, assessed at their maximum rank.',criteria:'Passives are compared by what one of five support slots buys: broad damage or cooldown value, dependable survival, useful collection, and the strength of their matching recipes.'},
- {id:'ultimates',label:'Ultimates',description:'Primary and additional special abilities, assessed for damage, control and safety.',criteria:'Ultimates are compared by how much useful damage, control or safety an activation provides, including charge delay, duration, positioning, cooldown and projectile handling. Titan Shift is evaluated as a lasting form change. Frieren’s additional barrage has its own cooldown and is listed separately from her golem.'},
+ {id:'characters',label:'Characters',description:'The complete signature kit, unique mechanic and survival tools.',criteria:'Heroes are ranked from bot runs: six ten-minute Normal Survival runs per hero with natural levelling, HP refilled every tick so a run never ends early. Damage per second and kills measure clear speed; the share of the HP pool lost per minute in the second half measures how well the kit avoids or absorbs damage. Every hero is measured with both a kiting and a close-range bot and keeps the better result. Heroes are ranked on a composite of 60% damage and 40% survivability, each relative to the roster median.'},
+ {id:'weapons',label:'Weapons',description:'Base weapons and evolved attacks, assessed at their maximum rank.',criteria:'Weapons are ranked by damage per second when equipped alone at maximum rank on the same neutral hero for three minutes, with levels frozen. Every weapon is measured with both a kiting and a close-range bot and keeps its better result. Signature weapons are also measured on their owner. Fusions are measured after obtaining them; recipe cost is called out separately.'},
+ {id:'passives',label:'Passive items',description:'Support items and passive fusions, assessed at their maximum rank.',criteria:'Passives are ranked from the game’s own stat formulas: the gain in weapon offense, effective HP, ultimate uptime and movement from one slot. Composite fusions count once for the slot they occupy. Owner-only bonuses are described in the notes.'},
+ {id:'ultimates',label:'Ultimates',description:'Primary and additional special abilities, assessed for damage, control and safety.',criteria:'Ultimates are ranked by design review: how much control, damage or safety one activation provides, counting charge delay, duration, positioning and projectile handling. Titan Shift is judged as a lasting form change. Frieren’s additional barrage has its own cooldown and is listed separately from her golem.'},
 ];
-export const TIER_BASIS='Suggested tiers for Normal Survival with max-rank equipment, before mastery or prestige. Fusions are judged after acquisition. Skins share ranks; synergy and other modes can change priorities.';
+export const TIER_BASIS='Ranks are for Normal Survival with max-rank equipment, before mastery or prestige. Fusions are judged after acquisition. Skins share ranks. Measured numbers come from the balance tools in tools/balance and can be re-run after any balance change; synergy and other modes can change priorities.';
 const categoryFor=id=>TIER_CATEGORIES.some(category=>category.id===id)?id:'characters';
 const heroForOwner=owner=>CHARACTERS.find(hero=>hero.name===owner);
 const clean=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('en').trim();
 const compare=(a,b)=>TIERS.findIndex(t=>t.id===a.tier)-TIERS.findIndex(t=>t.id===b.tier)||a.name.localeCompare(b.name,'en')||a.id.localeCompare(b.id,'en');
 function heroEntry(hero,category){
  const ultimate=category==='ultimates',ability=ULTIMATES[hero.id],rating=(ultimate?ULTIMATE_RANKINGS:CHARACTER_RANKINGS)[hero.id];
- return {id:hero.id,category,name:ultimate?ability.name:hero.name,...rating,color:ultimate?ability.color:hero.color,kind:ultimate?'ultimate':'character',heroId:hero.id,evolved:false,owner:hero.name,series:hero.series,subtitle:ultimate?hero.name:hero.series,description:ultimate?ability.description:hero.description+' '+HERO_MECHANICS[hero.id].description};
+ return {id:hero.id,category,name:ultimate?ability.name:hero.name,...rating,color:ultimate?ability.color:hero.color,kind:ultimate?'ultimate':'character',heroId:hero.id,evolved:false,owner:hero.name,series:hero.series,subtitle:ultimate?hero.name:hero.series,description:ultimate?ability.description:hero.description+' '+HERO_MECHANICS[hero.id].description,measured:ultimate?null:TIER_MEASUREMENTS.characters[hero.id]||null};
 }
 export function tierUltimateAbility(entry){return entry.id==='frieren-barrage'?FRIEREN_BARRAGE:ULTIMATES[entry.heroId||entry.id];}
 function frierenBarrageEntry(){
@@ -38,7 +39,7 @@ function frierenBarrageEntry(){
 }
 function itemEntry(id,item,category,evolved=false){
  const kind=category==='weapons'?'weapon':'passive',rating=(kind==='weapon'?WEAPON_RANKINGS:PASSIVE_RANKINGS)[id],base=evolved?ITEMS[item.weapon||item.passive]:item,owner=base?.owner||'',hero=heroForOwner(owner);
- return {id,category,name:item.name,...rating,color:item.color,kind,heroId:hero?.id,evolved,owner,series:hero?.series||item.series||base?.series||'',subtitle:evolved?(kind==='weapon'?'EVOLVED WEAPON':'PASSIVE FUSION'):(owner||'SHARED ITEM'),description:item.description};
+ return {id,category,name:item.name,...rating,color:item.color,kind,heroId:hero?.id,evolved,owner,series:hero?.series||item.series||base?.series||'',subtitle:evolved?(kind==='weapon'?'EVOLVED WEAPON':'PASSIVE FUSION'):(owner||'SHARED ITEM'),description:item.description,measured:TIER_MEASUREMENTS[category][id]||null};
 }
 export function tierEntries(category='characters'){
  category=categoryFor(category);
