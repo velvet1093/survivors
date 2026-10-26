@@ -33,10 +33,6 @@ function wings(r,form,walk,y){
 // Erza's face from the references: sharp brown almond eyes under a thick upper lash,
 // a long bang that falls over her right eye, a faint confident smile at rest, a
 // fierce glare in a fight and gritted teeth when she goes all out.
-// Draft looks: A hides the covered eye completely, B lets it peek out under the bang,
-// C sweeps the bang aside so both eyes show.
-let faceLook='A';
-export function setErzaFaceLook(l){faceLook=l;}
 const IRIS='#8c5640',IRIS_DARK='#4b2b2c',LASH='#2a2230',LIP='#9e6a70';
 function face(r,{y,blink,expression,cast}){
  const {poly:P,rect:R,line:L,put}=r,hurt=expression==='hurt',ult=expression==='ultimate',focus=cast||expression==='focused'||ult;
@@ -56,26 +52,23 @@ function face(r,{y,blink,expression,cast}){
   if(focus)L(x,26+y,x+3,26+y,LASH);
  }
  // Mouth.
- if(ult||hurt){R(24,30+y,8,4,'#6a2a35');R(25,31+y,6,2,'#f6efe6');L(25,32+y,30,32+y,'#c9b8b0');if(hurt)R(25,30+y,6,1,SKIN_SHADE);}
+ if(ult){
+  // Battle cry: upper teeth across a wide top, tapering to a rounded open mouth.
+  L(25,30+y,30,30+y,'#6a2a35');L(25,31+y,30,31+y,'#f6efe6');put(24,31+y,'#6a2a35');put(31,31+y,'#6a2a35');
+  L(26,32+y,29,32+y,'#6a2a35');L(27,32+y,28,32+y,'#b65a63');L(27,33+y,28,33+y,'#6a2a35');
+ }else if(hurt){
+  // Pained grimace: clenched teeth, corners pulled down.
+  L(26,31+y,29,31+y,'#f6efe6');L(26,32+y,29,32+y,'#7e4a52');put(25,32+y,'#7e4a52');put(30,32+y,'#7e4a52');put(24,33+y,'#7e4a52');put(31,33+y,'#7e4a52');
+ }
  else if(focus){L(26,32+y,30,32+y,'#7e4a52');}
- else if(faceLook==='C'){L(26,32+y,29,32+y,LIP);put(30,31+y,LIP);put(31,31+y,SKIN_SHADE);}
- else if(faceLook==='B'){L(27,32+y,29,32+y,LIP);}
  else{put(26,31+y,LIP);L(27,32+y,29,32+y,LIP);put(30,31+y,LIP);}
 }
 // The signature bang across her right eye, painted over the fringe.
 function eyeLock(r,y){
  const {poly:P,line:L}=r;
- if(faceLook==='A'){
-  P([[19,14+y],[26,13+y],[27,16+y],[26,24+y],[24,31+y],[20,34+y],[18,31+y],[19,23+y]],RED_DARK);
-  P([[20,15+y],[25,14+y],[26,17+y],[25,24+y],[23,30+y],[21,32+y],[19,30+y],[20,22+y]],RED);
-  L(23,16+y,21,29+y,RED_MID);L(24,16+y,23,23+y,RED_LIGHT);
- }else if(faceLook==='B'){
-  P([[19,14+y],[27,13+y],[27,17+y],[25,23+y],[22,28+y],[19,30+y],[18,26+y]],RED_DARK);
-  P([[20,15+y],[26,14+y],[26,17+y],[24,22+y],[21,26+y],[19,27+y]],RED);
-  L(23,16+y,20,25+y,RED_MID);L(24,16+y,22,21+y,RED_LIGHT);
- }else{
-  P([[18,14+y],[23,13+y],[21,22+y],[18,32+y],[16,30+y]],RED_DARK);P([[19,15+y],[22,14+y],[20,22+y],[18,29+y],[17,28+y]],RED);L(20,16+y,18,27+y,RED_LIGHT);
- }
+ P([[19,14+y],[26,13+y],[27,16+y],[26,24+y],[24,31+y],[20,34+y],[18,31+y],[19,23+y]],RED_DARK);
+ P([[20,15+y],[25,14+y],[26,17+y],[25,24+y],[23,30+y],[21,32+y],[19,30+y],[20,22+y]],RED);
+ L(23,16+y,21,29+y,RED_MID);L(24,16+y,23,23+y,RED_LIGHT);
 }
 function hairFront(r,y,walk){
  const {poly:P,line:L}=r;
