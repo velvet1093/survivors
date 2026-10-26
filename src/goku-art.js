@@ -33,30 +33,40 @@ export function gokuFace(r,{y=0,stage=0,expression='neutral',blink=false,focused
  poly([[18,24+y],[14,23+y],[14,30+y],[18,32+y]],TONE);poly([[38,24+y],[42,23+y],[42,30+y],[38,32+y]],TONE);rect(15,25+y,2,3,SHADE);rect(40,25+y,2,3,SHADE);
  rect(24,35+y,9,5,SHADE);
  poly([[18,18+y],[38,18+y],[39,29+y],[37,34+y],[32,38+y],[25,38+y],[20,34+y],[18,29+y]],TONE);
- line(26,38+y,31,38+y,SHADE);
- poly([[21,20+y],[35,20+y],[36,28+y],[34,32+y],[23,32+y],[21,28+y]],LIGHT);
- // Heavy angled brows (none at SS3), slanting toward the nose.
- const browCol=stage===3?SHADE:stage>0?hairShade:INK,slant=focused||hurt||ult?2:1;
- line(20,25+y,25,24+slant+y,browCol);line(31,24+slant+y,36,25+y,browCol);
- if(stage!==3&&slant>1){put(24,25+y,browCol);put(32,25+y,browCol);}
- // Sharp anime eyes: thick upper lid with a flicked outer corner, small dark iris.
- const iris=stage>0?'#3f9691':'#1d2433',irisLight=stage>0?'#8fe0d0':'#5a6a86';
+ poly([[21,20+y],[35,20+y],[36,28+y],[34,32+y],[23,32+y],[21,28+y]],LIGHT);line(26,38+y,31,38+y,SHADE);
+ const stern=focused||hurt||ult,browCol=stage===3?SHADE:stage>0?hairShade:INK;
+ const iris=stage>0?'#3f9691':null;
+ // Brows: raised and cheerful at rest; driven down toward the nose in a fight.
+ if(stern){line(19,23+y,25,26+y,browCol);line(19,24+y,24,26+y,browCol);line(31,26+y,37,23+y,browCol);line(32,26+y,37,24+y,browCol);}
+ else for(const [x,d]of [[20,1],[36,-1]]){put(x,25+y,browCol);for(let i=1;i<5;i++)put(x+d*i,24+y,browCol);put(x+d*2,23+y,browCol);put(x+d*3,23+y,browCol);}
  for(const [x,side]of [[20,-1],[31,1]]){
-  const outer=side<0?x:x+5,inner=side<0?x+5:x;
-  if(blink||hurt){line(x,29+y,x+5,29+y,INK);if(hurt){line(x+1,28+y,x+4,30+y,INK);}else put(outer,28+y,INK);continue;}
-  const h=focused?2:3,top=28+y;
-  rect(x+1,top,4,h,WHITE);
-  rect(x+(side<0?3:1),top,2,h,iris);put(x+(side<0?3:1),top,irisLight);
-  line(x,top-1,x+5,top-1,INK);put(outer,top,INK);put(inner,top-1+(focused?1:0),INK);
-  if(focused)line(x+1,top,x+4,top,mix(INK,TONE,.35));
-  line(x+2,top+h,x+4,top+h,SHADE);
+  const outer=side<0?x:x+5;
+  if(hurt){line(x+1,27+y,x+4,29+y,INK);line(x+1,31+y,x+4,29+y,INK);continue;}
+  if(blink){line(x+1,29+y,x+4,29+y,INK);put(x,28+y,INK);put(x+5,28+y,INK);continue;}
+  if(stern){
+   // Narrowed fighting stare: two rows of white under a hard, flat lid.
+   rect(x+1,28+y,4,2,WHITE);rect(x+2,28+y,2,2,iris||'#1d2433');if(iris)put(x+2,28+y,'#1d2433');
+   line(x,27+y,x+5,27+y,INK);put(outer,28+y,INK);line(x+1,30+y,x+4,30+y,SHADE);
+  }else{
+   // Big round eyes with small dark pupils, as in his cheerful look.
+   const ex=side<0?x:x+1;
+   rect(ex,27+y,5,4,WHITE);
+   rect(ex+2,28+y,2,2,iris||'#1d2433');if(iris){put(ex+2,29+y,'#1d2433');put(ex+3,28+y,'#bff2e6');}
+   line(ex,26+y,ex+4,26+y,INK);put(ex-1,27+y,INK);put(ex+5,27+y,INK);
+   line(ex+1,31+y,ex+3,31+y,SHADE);
+  }
  }
- // Nose shadow, then the mouth: his easy grin, a set jaw, gritted teeth or a ki shout.
- put(28,31+y,SHADE);put(28,32+y,SHADE);
- if(hurt){rect(25,34+y,7,2,WHITE);line(25,34+y,31,34+y,'#925d58');put(28,35+y,'#925d58');line(24,35+y,24,36+y,'#925d58');line(32,35+y,32,36+y,'#925d58');}
- else if(ult){rect(25,33+y,7,4,'#7d3f3a');rect(25,33+y,7,1,WHITE);rect(27,35+y,3,2,'#c96a62');}
- else if(focused){line(25,35+y,31,35+y,'#8a554c');put(24,36+y,'#8a554c');}
- else{rect(25,34+y,7,2,'#98654f');rect(26,34+y,5,1,WHITE);rect(27,35+y,3,1,'#e0927d');put(24,33+y,'#98654f');put(32,33+y,'#98654f');}
+ // Small nose and cheek lines.
+ put(28,31+y,SHADE);put(29,32+y,SHADE);
+ // Mouth: the wide toothy grin, a set frown, gritted teeth or a ki shout.
+ if(hurt){rect(24,34+y,9,3,'#7d3f3a');rect(25,34+y,7,2,WHITE);line(25,35+y,31,35+y,'#c9a89a');for(const x of [26,28,30])put(x,34+y,'#c9a89a');}
+ else if(ult){poly([[24,33+y],[33,33+y],[32,38+y],[25,38+y]],'#7d3f3a');rect(25,33+y,8,1,WHITE);rect(27,36+y,4,2,'#c96a62');}
+ else if(focused){line(25,35+y,31,35+y,'#8a554c');put(24,36+y,'#8a554c');put(32,36+y,'#8a554c');}
+ else{
+  // Upper teeth flashing in a wide grin, corners curling up.
+  rect(25,34+y,7,1,WHITE);rect(26,35+y,5,1,'#7d3f3a');put(28,36+y,'#b9675e');
+  put(24,34+y,'#7d3f3a');put(32,34+y,'#7d3f3a');put(23,33+y,SHADE);put(33,33+y,SHADE);put(28,34+y,'#e6d9cc');
+ }
 }
 // Bangs over the forehead: an M-shaped hairline with Goku's long forelock hanging
 // between the eyes, two shorter locks either side.
@@ -76,20 +86,49 @@ export function gokuHairFront(r,{y=0,stage=0}={}){
 // The reference's cheerful face and broad sleeveless gi are kept in compact,
 // stepped clusters; one forelock sits between the eyes instead of masking them.
 export function gokuPixels({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='default',form=0}={}){
- frame=((frame%4)+4)%4;const r=raster(),{rect:R,poly:P,line:L}=r,stage=form||(skin==='supersaiyan'?1:0),[hair,hairShade,hairLight]=stage===4?GOKU_HAIR.blue:stage>0?GOKU_HAIR.gold:GOKU_HAIR.base,walk=moving?[0,2,0,-2][frame]:0,y=moving?-(frame%2):0,gi='#f1a14e',giShade='#ba6135',giLight='#ffd084',blue='#294b79',blueShade='#1e3153',blueLight='#6283a2',red='#bd5b5b',gather=pose==='gather',throwing=pose==='throw',cast=attack||throwing,focused=cast||['focused','ultimate'].includes(expression),hurt=expression==='hurt';
+ frame=((frame%4)+4)%4;const r=raster(),{rect:R,poly:P,line:L,put}=r,stage=form||(skin==='supersaiyan'?1:0),[hair,hairShade,hairLight]=stage===4?GOKU_HAIR.blue:stage>0?GOKU_HAIR.gold:GOKU_HAIR.base,walk=moving?[0,2,0,-2][frame]:0,y=moving?-(frame%2):0,gi='#f1a14e',giShade='#ba6135',giLight='#ffd084',blue='#294b79',blueShade='#1e3153',blueLight='#6283a2',red='#bd5b5b',gather=pose==='gather',throwing=pose==='throw',cast=attack||throwing,focused=cast||['focused','ultimate'].includes(expression),hurt=expression==='hurt';
  gokuHairBack(r,{y,stage});
- // Baggy orange trousers with tapered ankles, blue boots and red piping.
- for(const [x,d]of [[18,-walk],[31,walk]]){
-  P([[x,50],[x+9,50],[x+10+d,57],[x+7+d,65],[x+d,65],[x-2+d,58]],giShade);P([[x+1,51],[x+7,51],[x+7+d,58],[x+4+d,63],[x+1+d,62],[x-1+d,57]],gi);L(x+2,53,x+3+d,57,giLight);L(x+7,54,x+4+d,61,giShade);L(x+d,61,x+4+d,63,giLight);
-  P([[x+d,64],[x+7+d,64],[x+7+d,68],[x+10+d,71],[x-2+d,71],[x-1+d,67]],blueShade);R(x+d,65,6,4,blue);L(x+1+d,65,x+1+d,69,red);L(x+d,69,x+7+d,70,red);R(x+d-1,71,10,1,'#bec9c7');R(x+2+d,64,4,1,'#e0bd7c');
+ const rope='#d9b27a',boot='#2f4f8a',bootShade='#1e3153',bootLight='#5679b4';
+ // Boots: deep blue with red piping and a rope tie at the ankle.
+ for(const [x,d]of [[19,-walk],[30,walk]]){
+  P([[x-1+d,61],[x+7+d,61],[x+7+d,68],[x+9+d,71],[x-2+d,71],[x-1+d,68]],bootShade);R(x+d,62,6,7,boot);R(x+1+d,62,1,6,bootLight);
+  L(x+5+d,62,x+5+d,69,red);R(x-1+d,61,8,1,red);R(x-1+d,66,8,1,rope);put(x+7+d,67,rope);
+  R(x-2+d,70,11,1,red);R(x-2+d,71,11,1,'#141c2e');
  }
- // Wide shoulders and bare upper arms, with a small blue undershirt at the V.
- P([[18,37+y],[23,35+y],[34,35+y],[40,38+y],[39,47],[35,53],[20,53],[16,45]],giShade);P([[19,38+y],[24,36+y],[28,42],[32,36+y],[38,39+y],[36,48],[32,52],[21,51],[18,44]],gi);P([[20,38+y],[24,37+y],[27,43],[23,49],[20,48],[18,42]],giLight);P([[32,37+y],[37,40+y],[34,48],[29,51],[26,47]],giShade);P([[24,35+y],[33,35+y],[29,43]],blueShade);P([[26,36+y],[32,36+y],[29,40]],blue);P([[25,34+y],[32,34+y],[30,37+y],[27,37+y]],TONE);L(23,38+y,27,43,giShade);L(27,43,24,48,giLight);
- R(20,50,16,4,blueShade);R(21,50,13,2,blue);R(25,51,6,1,blueLight);P([[31,51],[35,52],[38,61],[34,60]],blue);P([[32,53],[34,53],[35,60],[33,59]],blueLight);P([[30,51],[33,53],[31,57],[29,55]],blueShade);
- // The chest badge stays small enough to read as cloth, with a dark glyph.
- R(32,41+y,6,6,'#f2e1bc');R(33,42+y,4,4,INK);R(34,42+y,1,4,'#f2e1bc');R(33,43+y,4,1,'#f2e1bc');
- const lx=gather?7:cast?35:13,ly=gather?16:cast?42:49,rx=gather?48:cast?48:43,ry=gather?16:throwing?33:cast?40:48;
- L(17,40+y,lx,ly-3,SHADE,7);L(38,40+y,rx,ry-3,TONE,7);L(18,40+y,lx+1,ly-4,TONE,4);L(39,40+y,rx+1,ry-4,LIGHT,4);L(16,41+y,lx,ly-5,LIGHT,2);L(38,41+y,rx,ry-5,SHADE,1);R(lx-1,ly-3,6,4,blue);R(rx-1,ry-3,6,4,blue);R(lx-1,ly,6,5,TONE);R(rx-1,ry,6,5,LIGHT);R(lx,ly+1,3,1,LIGHT);R(rx,ry+3,4,1,SHADE);R(16,37+y,4,3,gi);R(38,37+y,3,3,giLight);
+ // Baggy trousers that balloon over the knees and gather into the boot tops.
+ for(const [x,d,side]of [[18,-walk,-1],[31,walk,1]]){
+  P([[x,49],[x+8,49],[x+9+d+(side>0?2:0),55],[x+8+d,61],[x+d,62],[x-2+d-(side<0?2:0),56]],giShade);
+  P([[x+1,50],[x+7,50],[x+8+d+(side>0?1:0),55],[x+7+d,60],[x+1+d,61],[x-1+d-(side<0?1:0),56]],gi);
+  L(x+2,52,x+1+d,57,giLight);L(x+6,52,x+7+d,58,giShade);L(x+d,60,x+7+d,60,giShade);L(x+2+d,58,x+5+d,59,giLight);
+ }
+ // Blue undershirt: short sleeves at the shoulders and a deep V at the chest.
+ P([[16,37+y],[22,35+y],[34,35+y],[40,37+y],[41,42+y],[37,43+y],[19,43+y],[15,42+y]],blueShade);
+ P([[17,37+y],[22,36+y],[34,36+y],[39,37+y],[40,41+y],[37,42+y],[19,42+y],[16,41+y]],blue);L(18,38+y,21,37+y,blueLight);L(35,37+y,38,38+y,blueLight);
+ // Orange gi top crossing left over right, with a tunic hem over the trousers.
+ P([[19,37+y],[24,36+y],[29,47],[33,36+y],[37,37+y],[38,46],[37,54],[19,54],[18,46]],giShade);
+ P([[20,38+y],[24,37+y],[29,46],[32,37+y],[36,38+y],[37,46],[36,53],[20,53],[19,46]],gi);
+ P([[20,38+y],[23,37+y],[27,44],[24,51],[21,50],[19,44]],giLight);L(24,37+y,29,47,giShade);L(32,37+y,29,46,'#d07a3b');
+ P([[25,36+y],[32,36+y],[29,44]],blue);L(26,36+y,29,42,blueLight);P([[26,35+y],[31,35+y],[30,37+y],[27,37+y]],TONE);
+ L(22,52,35,52,giShade);L(23,46,24,52,giShade);
+ // Kanji badge: white circle with a dark glyph on the viewer-right chest.
+ R(32,41+y,5,5,'#f6eee0');R(33,40+y,3,1,'#f6eee0');R(33,46+y,3,1,'#f6eee0');R(31,42+y,1,3,'#f6eee0');R(37,42+y,1,3,'#f6eee0');
+ R(33,42+y,3,1,INK);L(34,42+y,34,45+y,INK);R(33,44+y,3,1,INK);put(35,45+y,INK);
+ // Blue sash knotted at the front with two tails hanging past the hem.
+ R(19,47,19,3,blueShade);R(19,47,19,2,blue);L(20,47,37,47,blueLight);
+ R(25,46,5,5,blueShade);R(26,46,3,4,blue);put(27,47,blueLight);
+ P([[25,50],[28,50],[27,59],[24,58]],blueShade);P([[25,50],[27,50],[26,58],[25,57]],blue);
+ P([[28,50],[31,50],[32,61],[29,60]],blueShade);P([[28,50],[30,50],[31,60],[29,59]],blue);L(29,51,30,59,blueLight);
+ // Muscular bare arms with blue wristbands. Idle: fists planted on the hips.
+ const arm=(x0,y0,x1,y1,lit)=>{L(x0,y0,x1,y1,SHADE,5);L(x0,y0,x1,y1,lit?LIGHT:TONE,3);L(x0,y0-1,x1,y1-1,lit?'#fff0d8':LIGHT);};
+ const fist=(x,yy,lit)=>{R(x-2,yy-3,5,3,blue);R(x-2,yy-3,5,1,blueLight);R(x-2,yy,5,4,lit?LIGHT:TONE);R(x-1,yy+3,3,1,SHADE);L(x-2,yy+1,x+2,yy+1,SHADE);};
+ if(gather){arm(16,40+y,9,24,false);arm(9,24,7,17,false);arm(40,40+y,47,24,true);arm(47,24,48,17,true);fist(7,16,false);fist(48,16,true);}
+ else{
+  // Viewer-left arm: hand on hip, or guarding in front of the chest while casting.
+  if(cast){arm(16,40+y,22,47,false);fist(29,45,false);}else{arm(16,40+y,11,45,false);arm(11,45,17,48,false);fist(18,49,false);}
+  if(throwing){arm(40,40+y,47,36,true);arm(47,36,48,30,true);fist(48,31,true);}
+  else if(cast){arm(40,40+y,48,41,true);fist(49,41,true);}
+  else{arm(40,40+y,45,45,true);arm(45,45,39,48,true);fist(38,49,true);}
+ }
  gokuFace(r,{y,stage,expression,blink,focused});
  gokuHairFront(r,{y,stage});
  return outline(r.pixels,INK);
