@@ -1,0 +1,10 @@
+/* Decorative item quality: a coloured frame, a small badge and a glow that grows with tier. */
+.rarity-badge{display:inline-block;width:max-content;margin:2px 0;padding:1px 6px;border-radius:4px;font-size:8.5px;font-weight:700;letter-spacing:1px;line-height:14px;color:var(--rarity);border:1px solid color-mix(in srgb,var(--rarity) 60%,transparent);background:color-mix(in srgb,var(--rarity) 14%,transparent);text-shadow:0 0 6px color-mix(in srgb,var(--rarity) 45%,transparent)}
+.upgrade[data-rarity],.chest-offer[data-rarity],.recipe[data-rarity],.codex-item[data-rarity]{border-color:color-mix(in srgb,var(--rarity) 55%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rarity) 22%,transparent)}
+.upgrade[data-rarity="epic"],.chest-offer[data-rarity="epic"]{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rarity) 35%,transparent),0 0 14px color-mix(in srgb,var(--rarity) 18%,transparent)}
+.upgrade[data-rarity="legendary"],.chest-offer[data-rarity="legendary"]{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rarity) 45%,transparent),0 0 20px color-mix(in srgb,var(--rarity) 26%,transparent)}
+.upgrade[data-rarity="mythic"],.chest-offer[data-rarity="mythic"]{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rarity) 55%,transparent),0 0 26px color-mix(in srgb,var(--rarity) 34%,transparent);animation:mythic-glow 2.4s ease-in-out infinite}
+@keyframes mythic-glow{50%{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rarity) 75%,transparent),0 0 34px color-mix(in srgb,var(--rarity) 48%,transparent)}}
+@media (prefers-reduced-motion:reduce){.upgrade[data-rarity="mythic"],.chest-offer[data-rarity="mythic"]{animation:none}}
+.inventory-slot[data-rarity]{box-shadow:inset 0 -2px 0 var(--rarity)}
+.chest-offer .rarity-badge,.upgrade .rarity-badge{align-self:center}

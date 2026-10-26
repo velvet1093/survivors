@@ -150,6 +150,21 @@ export function refineTrinket(g){
  if(!canChoose(g))return false;
  const state=g.trinkets,id=state.pending.itemId,rank=trinketRefinement(g,id);
  if(!has(g,id)||rank>=trinketMaxRefinement(id))return false;
+ return applyRefinement(g,id,rank);
+}
+// Any other ordinary trinket can be melted into an equipped one to refine it.
+// Dragon Balls refine only with Dragon Balls, and event items never take part.
+export function canRefineWith(g,targetId,fodderId){
+ return !!(targetId&&fodderId&&targetId!==fodderId&&trinketFor(targetId)&&trinketFor(fodderId)&&targetId!=='dragonmarble'&&fodderId!=='dragonmarble'&&!isEventTrigger(targetId)&&!isEventTrigger(fodderId)&&has(g,targetId)&&trinketRefinement(g,targetId)<trinketMaxRefinement(targetId));
+}
+export function refineTrinketWith(g,slot){
+ if(!canChoose(g)||!Number.isInteger(slot)||slot<0||slot>=TRINKET_SLOTS)return false;
+ const state=g.trinkets,target=state.equipped[slot];
+ if(!canRefineWith(g,target,state.pending.itemId))return false;
+ return applyRefinement(g,target,trinketRefinement(g,target));
+}
+function applyRefinement(g,id,rank){
+ const state=g.trinkets;
  state.refinements??={};state.refinements[id]=rank+1;state.pending=null;
  if(id==='beckoningbell')state.bellKills=Math.min(state.bellKills,trinketEffect(id,rank+1).kills-1);
  if(id==='memorybookmark')state.reading=Math.min(state.reading,trinketEffect(id,rank+1).interval);

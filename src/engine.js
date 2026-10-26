@@ -11,7 +11,7 @@ import {beginRiftTrial,updateRiftTrial,riftTrialActive} from './rift-trials.js';
 import {queueBossDeaths,updateBossDeaths,bossDeathPending} from './boss-death.js';
 import {updateFrierenGolem} from './frieren-golem.js';
 import {newTrinkets,trinketBonus,rollEnemyTrinket,trinketEnemyDefeated,trinketUltimateUsed,updateTrinkets,collectNearbyTrinket,useEventTrinket} from './trinkets.js';
-import {BOSS_DAMAGE_REDUCTION,difficultyFor} from './difficulty.js';
+import {BOSS_DAMAGE_REDUCTION,difficultyFor,SURGE_MINUTE} from './difficulty.js';
 import {initializeBossRush,advanceBossRush,defeatedRushBoss,rushPhaseDamage} from './boss-rush.js';
 import {newGaruda,updateGaruda,castGaruda,updateGarudaShot} from './garuda.js';
 import {castBlackFlame,updateBlackFlame} from './rimuru.js';
@@ -264,6 +264,8 @@ export function updateRun(g,dt,input={x:0,y:0}){
   if(advanceBossRush(g,dt,{spawn:spawnEnemy,queueIntro:queueBossIntro}))return;
   const p=g.p;p.hurtTimer=Math.max(0,(p.hurtTimer||0)-dt);p.attackTimer=Math.max(0,(p.attackTimer||0)-dt);g.haste=Math.max(0,g.haste-dt);g.magnetPulse=Math.max(0,g.magnetPulse-dt);g.dashCD=Math.max(0,g.dashCD-dt);g.time+=dt;g.spawn-=dt;g.special=Math.max(0,g.special-dt);g.secondarySpecial=Math.max(0,(g.secondarySpecial||0)-dt);g.invuln=Math.max(0,g.invuln-dt);g.hurtFlash=Math.max(0,g.hurtFlash-dt);g.freeze=Math.max(0,g.freeze-dt);g.clones=Math.max(0,g.clones-dt);g.shake=Math.max(0,g.shake-dt*22);g.toastTime=Math.max(0,g.toastTime-dt);
   updateTrinkets(g,dt);updateHeroMechanic(g,dt);
+  // Announced once any other message has finished, so neither hides the other.
+  if(!g.surgeAnnounced&&g.time>=SURGE_MINUTE*60&&g.mode!=='bossrush'&&!(g.toastTime>0)){g.surgeAnnounced=true;g.toast='MINUTE '+SURGE_MINUTE+' · THE RIFT SURGES · ENEMIES GROW FAR STRONGER EVERY MINUTE';g.toastTime=4.5;g.shake=Math.max(g.shake||0,6);}
   updateStatuses(p,dt,(amount)=>hitPlayer(g,amount,{dot:true}));if(g.status==='over')return;
   const playerMods=statusModifiers(p);
   p.hp=Math.min(p.maxHp,p.hp+p.regen*dt);
