@@ -339,13 +339,13 @@ export function characterPixels(id,{frame=0,moving=false,pose='',attack=false,ex
   if(id==='kurumi'){const result=kurumiPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='diavolo'){const result=diavoloPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='yuki'){const result=yukiPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
+  if(id==='featherine'){const result=featherinePixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id!=='shinji'){const beach=beachOutfitPixels(id,skinId,{frame,moving,pose,attack,expression,blink,form})||cuteSwimPixels(id,skinId,{frame,moving,pose,attack,expression,blink,form});if(beach){dataCache.set(key,beach);return beach;}}
   if(skinId==='swimsuit'&&id!=='shinji'){const swimming=swimsuitPixels(id,{frame,moving,pose,attack,expression,blink,form});if(swimming){dataCache.set(key,swimming);return swimming;}}
   if(skinId==='pajamas'&&id!=='shinji'){const pajamas=pajamaPixels(id,{frame,moving,pose,attack,expression,blink,form});if(pajamas){dataCache.set(key,pajamas);return pajamas;}}
   if(id==='erza'){const result=erzaPixels({frame,moving,pose,attack,expression,blink,skin:skinId,form});dataCache.set(key,result);return result;}
   if(skinId==='casual'&&id!=='shinji'){const casual=casualPixels(id,{frame,moving,pose,attack,expression,blink,form});if(casual){dataCache.set(key,casual);return casual;}}
   const reference=referenceOutfitPixels(id,{frame,moving,pose,attack,expression,blink,skin:skinId});if(reference){dataCache.set(key,reference);return reference;}
-  if(id==='featherine'){const result=featherinePixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='goku'){const result=gokuPixels({frame,moving,pose,attack,expression,blink,skin:skinId,form});dataCache.set(key,result);return result;}
   if(id==='rimuru'){const result=rimuruPixels({frame,moving,pose,attack,expression,blink,skin:skinId,form});dataCache.set(key,result);return result;}
   if(id==='eren'){const result=erenFrame({frame,moving,pose,attack,expression,blink,skin:skinId,form,evolved});dataCache.set(key,result);return result;}

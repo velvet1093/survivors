@@ -31,13 +31,14 @@ function backHair(r,y,walk){
  for(const x of [19,37])line(x,40,x+walk*.4,58,C.hairShade);
 }
 function horns(r,y){
- // Slim silver crescents lying almost flat: they leave the crown, sweep outward past
- // the hair and hook down at the tips, like a broken halo.
+ // Bracket-shaped silver crescents framing her head: each emerges from behind the hair
+ // above the temple, bulges outward beside the eyes and curls back in to a point by
+ // the cheek, in front of the side locks.
  const {poly,line,put}=r;
  for(const s of [-1,1]){const p=(dx,yy)=>[28+s*dx,yy+y];
-  poly([p(6,13),p(10,10),p(15,10),p(19,11),p(22,14),p(23,18),p(21,20),p(20,16),p(17,13),p(12,12),p(8,14)],C.hornDark);
-  poly([p(7,12),p(10,11),p(15,11),p(19,12),p(21,15),p(22,18),p(21,19),p(19,15),p(16,13),p(11,13),p(8,13)],C.hornShade);
-  line(...p(9,11),...p(16,11),C.horn);line(...p(17,11),...p(20,13),C.horn);line(...p(21,14),...p(22,17),C.horn);put(...p(13,11),'#ffffff');
+  poly([p(11,13),p(15,14),p(18,18),p(19,23),p(18,28),p(15,32),p(11,35),p(14,31),p(16,27),p(16,23),p(15,19),p(12,15)],C.hornDark);
+  poly([p(12,14),p(15,15),p(17,19),p(18,23),p(17,28),p(14,32),p(12,34),p(14,30),p(15,27),p(15,23),p(14,19),p(12,16)],C.hornShade);
+  line(...p(13,14),...p(16,17),C.horn);line(...p(17,19),...p(17,26),C.horn);line(...p(16,28),...p(14,31),C.horn);put(...p(17,21),'#ffffff');
  }
 }
 function frontHair(r,y){
@@ -176,23 +177,130 @@ function mikoPose(r,y,walk,{attack,ultimate}){
  featheredEnd(r,44+walk,27+y,1);
  const raise=ultimate||!attack;
  // Viewer-left hand raised, index finger up, with the fragment floating above it.
- if(ultimate){limb(r,20,41+y,13,28+y,{width:3});limb(r,36,41+y,43,28+y,{width:3});mikoSleeve(r,19,38+y,14,-1);mikoSleeve(r,37,38+y,14,1);fragment(r,13,16+y,true);fragment(r,43,16+y,true);return 'book';}
- if(raise){limb(r,20,41+y,11,31+y,{width:3});r.line(11,29+y,11,27+y,SKIN.base);fragment(r,11,16+y+(walk?1:0));}
- else{limb(r,20,41+y,10,38+y,{width:3});fragment(r,6,31+y,true);r.line(8,35+y,4,35+y,C.fragmentLight);}
- limb(r,36,41+y,41,52,{width:3});
+ if(ultimate){limb(r,20,41+y,13,28+y,{color:SKIN.base,light:SKIN.light,width:3});limb(r,36,41+y,43,28+y,{color:SKIN.base,light:SKIN.light,width:3});mikoSleeve(r,19,38+y,14,-1);mikoSleeve(r,37,38+y,14,1);fragment(r,7,14+y,true);fragment(r,49,14+y,true);return 'book';}
+ if(raise){limb(r,20,41+y,7,33+y,{color:SKIN.base,light:SKIN.light,width:3});r.line(7,31+y,7,29+y,SKIN.base);fragment(r,7,18+y+(walk?1:0));}
+ else{limb(r,20,41+y,10,38+y,{color:SKIN.base,light:SKIN.light,width:3});fragment(r,6,31+y,true);r.line(8,35+y,4,35+y,C.fragmentLight);}
+ limb(r,36,41+y,41,52,{color:SKIN.base,light:SKIN.light,width:3});
  mikoSleeve(r,19,38+y,18,-1);mikoSleeve(r,37,38+y,20,1);
 }
+// ---- Other skins ----
+function legs(r,walk,{color=SKIN.base,light=SKIN.light,top=56,shoe,shoeLight,strap}){
+ for(const [i,x]of [22,30].entries()){const d=i?walk:-walk;
+  r.rect(x+d,top,5,67-top,color);r.rect(x+d+1,top+1,1,64-top,light);
+  r.rect(x+d-1,67,7,4,shoe);r.rect(x+d,67,4,1,shoeLight||mix(shoe,'#ffffff',.3));r.rect(x+d-1,70,7,1,mix(shoe,'#000000',.45));if(strap)r.rect(x+d,68,5,1,strap);}
+}
+function sleeveArms(r,y,{color,light,cuff,bare},{attack,ultimate}){
+ // Long sleeves (or bare arms) with a quill on attack and both arms raised for the Author.
+ const o=bare?{color:SKIN.base,light:SKIN.light,width:3}:{color,light,width:4};
+ const arm=(x0,y0,x1,y1)=>{limb(r,x0,y0,x1,y1,o);if(cuff&&!bare)r.rect(x1-1,y1+1,5,2,cuff);};
+ if(ultimate){arm(20,41+y,14,30+y);arm(36,41+y,42,30+y);return 'book';}
+ arm(20,41+y,16,52);
+ if(attack){arm(36,41+y,45,40+y);quill(r,47,42+y);}else arm(36,41+y,40,52);
+}
+function tome(r,x,y){
+ // A closed violet storybook with gold corners, carried at her side.
+ r.rect(x,y,7,9,'#4a2e6e');r.rect(x+1,y,6,8,'#7a52a8');r.rect(x+1,y+1,1,7,'#a07fcf');r.rect(x+3,y+3,3,3,C.sash);r.put(x+4,y+4,C.cord);r.rect(x+6,y,1,9,'#f1e8d6');
+}
+function stoleAccent(r,y){
+ // Her green stole worn as a narrow scarf, medal pinned at the knot.
+ r.rect(22,38+y,12,2,C.stoleShade);r.rect(23,38+y,10,1,C.stole);r.line(31,39+y,32,48,C.stoleShade,2);r.line(31,39+y,31,47,C.stole);medal(r,24,39+y);
+}
+function bunHair(r,y){
+ // Hair pinned up for the bath: blunt fringe and side locks, a bun with a gold kanzashi.
+ const {poly,line,rect}=r;
+ poly([[22,9+y],[25,3+y],[31,3+y],[34,9+y],[31,12+y],[25,12+y]],C.hairShade);poly([[23,9+y],[25,4+y],[31,4+y],[33,9+y],[30,11+y],[26,11+y]],C.hair);line(25,6+y,30,5+y,C.hairLight);
+ line(33,4+y,40,1+y,C.sash);rect(39,0+y,3,2,'#e07ab0');rect(18,9+y,3,3,'#f0b3c4');
+ frontHair(r,y);
+}
+const LOOKS={
+ casual:{
+  // Reading Room: cream cardigan over a lavender blouse, long plum pleated skirt,
+  // dark tights and loafers, a storybook under her arm.
+  garment(r,y,w){
+   legs(r,w,{color:'#3b3048',light:'#5a4c6a',top:60,shoe:'#5a3a2c',strap:'#8a6a4c'});
+   r.poly([[20,48],[36,48],[41+w,64],[15+w,64]],'#4f2f55');r.poly([[21,48],[35,48],[39+w,63],[17+w,63]],'#71467a');
+   for(const a of [-6,-2,2,6])r.line(28+a,49,28+a*1.6+w,62,'#4f2f55');r.line(17+w,63,39+w,63,'#9a6aa2');
+   r.poly([[20,39+y],[36,39+y],[37,50],[19,50]],'#cdbfa4');r.poly([[21,40+y],[35,40+y],[36,49],[20,49]],'#ece0c6');
+   r.poly([[25,40+y],[31,40+y],[30,49],[26,49]],'#c9b5e6');r.poly([[25,40+y],[28,43+y],[31,40+y]],'#ffffff');
+   for(const yy of [43,46])r.put(28,yy,'#8a6a4c');for(let yy=41;yy<49;yy+=2){r.put(21,yy,'#d9ccb0');r.put(34,yy,'#d9ccb0');}
+   return {sleeve:{color:'#ece0c6',light:'#fff7e2',cuff:'#cdbfa4'},after(r,y,state){if(!state.attack&&!state.ultimate)tome(r,12,49);},accent:true};
+  }},
+ pajamas:{
+  // The Final Bedtime Story: long lilac nightgown with frilled hem and gold stars,
+  // a green shawl over the shoulders and a storybook hugged to her chest.
+  garment(r,y,w){
+   legs(r,w,{top:66,shoe:'#f4e4ee',shoeLight:'#ffffff',strap:'#e7a3c0'});
+   r.poly([[20,40+y],[36,40+y],[40,52],[44+w,66],[12+w,66],[16,52]],'#9a86c6');r.poly([[21,41+y],[35,41+y],[39,52],[42+w,65],[14+w,65],[17,52]],'#c4b4e6');
+   for(let x=13+w;x<44+w;x+=3){r.rect(x,65,2,2,'#fbeefa');r.put(x+2,66,'#d9c8ee');}
+   for(const a of [-6,0,6])r.line(28+a*.6,48,28+a*1.6+w,63,'#e0d6f4');
+   for(const [x,yy]of [[19,56],[33,52],[26,61],[37,60]]){r.rect(x+w,yy,2,2,C.sash);r.put(x+w-1,yy,C.sash);r.put(x+w,yy-1,C.sash);}
+   r.rect(22,40+y,12,2,'#fbeefa');
+   // Shawl draped over both shoulders.
+   r.poly([[18,39+y],[38,39+y],[37,45],[30,48],[26,48],[19,45]],C.stoleShade);r.poly([[19,40+y],[37,40+y],[36,44],[30,47],[26,47],[20,44]],C.stole);r.line(21,41+y,35,41+y,C.stoleLight);
+   return {sleeve:{color:'#c4b4e6',light:'#e0d6f4',cuff:'#fbeefa'},after(r,y,state){if(!state.attack&&!state.ultimate)tome(r,24,44+y);}};
+  }},
+ swimsuit:{
+  // Witch of the Summer Sea: violet one-piece with a white sailor collar, sheer pink
+  // pareo knotted at the hip, sandals, and a pink paper parasol over the shoulder.
+  garment(r,y,w){
+   legs(r,w,{top:52,shoe:'#c9a77a',shoeLight:'#e9d2a8',strap:C.cord});
+   r.poly([[21,40+y],[35,40+y],[35,53],[31,55],[25,55],[21,53]],'#5d3f86');r.poly([[22,41+y],[34,41+y],[34,52],[30,54],[26,54],[22,52]],'#8462b4');r.line(23,42+y,23,51,'#a98bd6');
+   r.poly([[21,40+y],[35,40+y],[32,44+y],[28,46+y],[24,44+y]],'#ffffff');r.line(22,41+y,28,45+y,'#7fa8d8');r.line(34,41+y,28,45+y,'#7fa8d8');r.rect(27,45+y,2,2,C.cord);
+   // Pareo: translucent pink wrap falling from the viewer-right hip.
+   r.poly([[22,51],[36,50],[40+w,64],[30+w,62],[24,57]],mix('#f0b3c4','#ffffff',.25));r.poly([[30,52],[36,50],[38+w,60],[33+w,59]],'#f0b3c4');r.rect(34,50,3,3,C.stole);
+   return {sleeve:{bare:true},after(r,y,state){if(state.attack||state.ultimate)return;
+    // Wagasa parasol resting on the viewer-left shoulder.
+    r.line(18,50,10,22,'#7a4a2e');r.poly([[1,24],[8,15],[16,13],[22,18],[19,22],[10,24]],'#c06a8c');r.poly([[3,23],[9,16],[16,15],[20,18],[17,21],[10,22]],'#f0b3c4');
+    for(const x of [8,12,16])r.line(10,22,x,15,'#c06a8c');r.put(12,14,'#ffffff');}};
+  }},
+ lotusswim:{
+  // Moonlit Lotus: indigo halter top, high-waisted pink lotus-petal skirt, gold moon
+  // armlets and a lotus blossom in her hair.
+  garment(r,y,w){
+   legs(r,w,{top:56,shoe:'#e9d2a8',shoeLight:'#fff0c8',strap:C.sash});
+   r.rect(22,48,12,4,SKIN.base);
+   r.poly([[22,40+y],[34,40+y],[33,47],[23,47]],'#2e2a62');r.poly([[23,41+y],[33,41+y],[32,46],[24,46]],'#4a438e');r.line(25,40+y,28,37+y,'#2e2a62');r.line(31,40+y,28,37+y,'#2e2a62');r.put(28,44+y,C.sash);
+   for(const [x,tip]of [[18,60],[22,62],[26,63],[30,63],[34,62],[38,60]])r.poly([[x,51],[x+4,51],[x+2+w*.5,tip]],x%8===2?'#d87ea4':'#f4b4cc');
+   r.rect(20,51,16,2,'#2e2a62');r.put(28,51,C.sash);
+   return {sleeve:{bare:true},after(r,y,state){for(const x of [15,40])r.rect(x,45+y,3,2,C.sash);},flower:true};
+  }},
+ bathsuit:{
+  hair:'bun',
+  // Theatergoing Bath Yukata: pink yukata with white blossoms, magenta obi, geta,
+  // and a folding fan in hand.
+  garment(r,y,w){
+   for(const [i,x]of [22,30].entries()){const d=i?w:-w;r.rect(x+d,64,5,3,SKIN.base);r.rect(x+d-1,67,7,2,'#8a5a3a');r.rect(x+d,69,1,2,'#5a3a2a');r.rect(x+d+4,69,1,2,'#5a3a2a');r.rect(x+d+1,66,3,1,C.cord);}
+   r.poly([[20,39+y],[36,39+y],[38,52],[38+w,66],[18+w,66],[18,52]],C.gownShade);r.poly([[21,40+y],[35,40+y],[37,52],[37+w,65],[19+w,65],[19,52]],C.gown);
+   r.line(24,49,22+w,65,C.gownShade);r.poly([[22,40+y],[28,47+y],[34,40+y],[32,40+y],[28,44+y],[24,40+y]],'#ffffff');
+   for(const [x,yy]of [[22,55],[33,52],[27,61],[35,62]]){r.rect(x+w,yy,3,3,'#ffffff');r.put(x+w+1,yy+1,C.sash);}
+   r.rect(19,46,18,5,C.obiShade);r.rect(20,46,16,4,C.obi);r.line(20,48,35,48,C.cord);r.rect(26,47,4,3,mix(C.obi,'#ffffff',.3));
+   return {sleeve:{color:C.gown,light:C.gownLight,cuff:'#ffffff'},after(r,y,state){if(state.attack||state.ultimate)return;
+    // Folding fan held open at her side.
+    r.poly([[40,52],[36,44],[40,42],[44,42],[47,45]],'#f6f3ee');for(const x of [38,41,44])r.line(41,52,x,43,C.obi);r.rect(40,52,2,2,'#7a4a2e');}};
+  }},
+};
+function outfit(r,y,walk,look,state){
+ const g=look.garment(r,y,walk);
+ const extra=sleeveArms(r,y,g.sleeve,state);
+ g.after?.(r,y,state);
+ if(g.accent)stoleAccent(r,y);
+ return {extra,flower:g.flower};
+}
+function lotusFlower(r,y){for(const [dx,dy]of [[0,-2],[-2,0],[2,0],[-1,-1],[1,-1]])r.rect(13+dx,14+y+dy,2,2,'#f4b4cc');r.put(14,15+y,C.sash);}
+const look_hair=skin=>LOOKS[skin]?.hair;
 export function featherinePixels({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='default'}={}){
  const ultimate=!!pose;if(ultimate&&expression!=='hurt')expression='ultimate';
  const r=canvas(),{walk,y}=motion({frame,moving}),shrine=skin==='shrine';
- backHair(r,y,walk);
- horns(r,y);
- let extra;
- if(shrine){hakama(r,y,walk);stoleFront(r,y,walk,{bottom:60});extra=mikoPose(r,y,walk,{attack,ultimate});}
+ if(look_hair(skin)!=='bun')backHair(r,y,walk);
+ let extra,flower=false;const look=LOOKS[skin]||{};
+ if(LOOKS[skin]){const o=outfit(r,y,walk,look,{attack,ultimate});extra=o.extra;flower=o.flower;}
+ else if(shrine){hakama(r,y,walk);stoleFront(r,y,walk,{bottom:60});extra=mikoPose(r,y,walk,{attack,ultimate});}
  else{gown(r,y,walk);stoleFront(r,y,walk);extra=witchPose(r,y,{attack,ultimate});}
  head(r,y);
  face(r,y,expression,blink);
- frontHair(r,y);
+ if(look.hair==='bun')bunHair(r,y);else frontHair(r,y);
+ horns(r,y);
+ if(flower)lotusFlower(r,y);
  if(extra==='book')book(r,28,1+y);
  return selout(r.pixels,INK);
 }
