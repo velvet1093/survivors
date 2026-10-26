@@ -4,7 +4,7 @@ import {CHARACTERS,ITEMS,FUSIONS,fusionIngredients} from '../src/game.js';
 import {createRun,updateRun} from '../src/engine.js';
 import {enemyPressure,riftSurge,SURGE_MINUTE} from '../src/difficulty.js';
 import {TRINKETS,isEventTrigger,chooseTrinket,canRefineWith,refineTrinketWith,trinketRefinement,trinketMaxRefinement} from '../src/trinkets.js';
-import {RARITIES,rarityFor,rarityBadge} from '../src/rarity.js';
+import {RARITIES,FUSION_RARITY,rarityFor,rarityBadge} from '../src/rarity.js';
 import {recipeStatus} from '../src/recipe-index.js';
 import {setItemLevel} from '../src/training.js';
 import {createTrainingRun} from '../src/engine.js';
@@ -33,7 +33,9 @@ test('any other ordinary trinket can be melted into an equipped one; Dragon Ball
 test('every item and fusion has a decorative rarity that changes no stats',()=>{
  assert.deepEqual(RARITIES.map(r=>r.id),['common','rare','epic','legendary','mythic']);
  for(const id of [...Object.keys(ITEMS),...FUSIONS.map(f=>f.id)]){const r=rarityFor(id);assert.ok(r,id);assert.match(rarityBadge(id),new RegExp(r.name.toUpperCase()));}
- assert.equal(rarityFor('magnet').id,'common');assert.equal(rarityFor('quintet').id,'mythic');assert.equal(rarityFor('ki').id,'epic');assert.equal(rarityFor('kamehameha').id,'legendary');
+ for(const [id,item]of Object.entries(ITEMS))if(!item.fusionOnly)assert.equal(rarityFor(id).id,'common',id+' is a basic item');
+ for(const f of FUSIONS){assert.ok(FUSION_RARITY[f.id],f.id+' has a hand-picked rarity');assert.notEqual(rarityFor(f.id).id,'common',f.id);}
+ assert.equal(rarityFor('quintet').id,'mythic');assert.equal(rarityFor('salvation').id,'mythic');assert.equal(rarityFor('kamehameha').id,'legendary');assert.equal(rarityFor('rasen').id,'epic');assert.equal(rarityFor('galaxy').id,'rare');
  assert.equal(rarityFor('heal'),null);
  for(const r of RARITIES)assert.ok(Object.keys(ITEMS).some(id=>rarityFor(id).id===r.id)||FUSIONS.some(f=>rarityFor(f.id).id===r.id),r.id+' is used');
 });

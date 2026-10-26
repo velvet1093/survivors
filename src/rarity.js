@@ -1,4 +1,4 @@
-import {ITEMS,FUSIONS,fusionIngredients} from './game.js';
+import {ITEMS,FUSIONS} from './game.js';
 // Decorative quality tiers for items and fusions. They only change how an item is
 // framed and labelled; no stat, drop chance or offer weighting reads them.
 export const RARITIES=[
@@ -9,15 +9,25 @@ export const RARITIES=[
  {id:'mythic',name:'Mythic',color:'#f26c8e'},
 ];
 const byId=Object.fromEntries(RARITIES.map(r=>[r.id,r]));
-// The basic shared pool every hero can roll.
-const BASIC=new Set(['magnet','scroll','power','kunai','lightning','orbit']);
+// Every ordinary item is Common. Fusions are graded by hand on how hard they are to
+// assemble (maxed ingredients, multi-stage chains, form locks) and how strong they are.
+export const FUSION_RARITY={
+ // Four or five maxed items in one slot, or a second evolution built on them.
+ sageregalia:'mythic',chozosuit:'mythic',witcharchive:'mythic',quintet:'mythic',salvation:'mythic',purple:'mythic',chimeragarden:'mythic',
+ // Signature finishers and three-item weapon fusions.
+ rasenflash:'legendary',kamehameha:'legendary',heavensarsenal:'legendary',berserkeredge:'legendary',chainsawoverdrive:'legendary',ultimate:'legendary',beelzebub:'legendary',positron:'legendary',fatalforecast:'legendary',zafkiel:'legendary',titanquake:'legendary',
+ // Solid weapon evolutions.
+ raijinrasengan:'epic',dragonroar:'epic',wisteriagarden:'epic',scoutassault:'epic',starcrusher:'epic',stormnue:'epic',totality:'epic',ancientmagic:'epic',plasmabeam:'epic',icecrown:'epic',finalchapter:'epic',rasen:'epic',tempest:'epic',
+ // Stat-only passive fusions and evolutions from shared basic items.
+ purifiedsoul:'rare',sagecodex:'rare',panaceapouch:'rare',adaptivebarrier:'rare',elixir:'rare',raijin:'rare',galaxy:'rare',
+};
 export function rarityFor(id){
  const f=FUSIONS.find(f=>f.id===id);
- if(f)return byId[f.resultItem||f.requiresEvolution||fusionIngredients(f).length>=3?'mythic':'legendary'];
+ if(f)return byId[FUSION_RARITY[f.id]||'epic'];
  const item=ITEMS[id];if(!item)return null;
- if(item.fusionOnly)return byId.mythic;
- if(item.owner)return byId[item.type==='weapon'?'epic':'rare'];
- return byId[BASIC.has(id)?'common':'rare'];
+ // A fusion-only result item shares the rarity of the fusion that creates it.
+ if(item.fusionOnly){const maker=FUSIONS.find(f=>f.resultItem===id);return byId[FUSION_RARITY[maker?.id]||'mythic'];}
+ return byId.common;
 }
 export function rarityBadge(id){const r=rarityFor(id);return r?`<span class="rarity-badge rarity-${r.id}" style="--rarity:${r.color}">${r.name.toUpperCase()}</span>`:'';}
 export function rarityAttrs(id){const r=rarityFor(id);return r?`data-rarity="${r.id}" style="--rarity:${r.color};`:'style="';}
