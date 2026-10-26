@@ -19,8 +19,9 @@ import {esdeathPixels} from './esdeath-art.js';
 import {frierenPixels} from './frieren-art.js';
 import {megumiPixels} from './megumi-art.js';
 import {erenPixels} from './eren-art.js';
+import {samusPixels} from './samus-art.js';
 // Heroes redrawn on the shared hero builder route here before the legacy outfit modules.
-const REDRAWN={goku:gokuPixels,gojo:gojoPixels,naruto:narutoPixels,madoka:madokaPixels,maomao:maomaoPixels,esdeath:esdeathPixels,frieren:frierenPixels,megumi:megumiPixels,eren:erenPixels};
+const REDRAWN={goku:gokuPixels,gojo:gojoPixels,naruto:narutoPixels,madoka:madokaPixels,maomao:maomaoPixels,esdeath:esdeathPixels,frieren:frierenPixels,megumi:megumiPixels,eren:erenPixels,samus:samusPixels,rimuru:rimuruPixels,featherine:featherinePixels};
 import {rimuruPixels} from './rimuru-art.js';
 import {diavoloPixels} from './diavolo-art.js';
 import {yukiPixels} from './yuki-art.js';
