@@ -1,7 +1,7 @@
 // Keep the historical keys stable across game builds. The database is a second
 // local copy, not an account or a service, and shares the browser's origin rules.
 import {connectCloud,readCloudRecord,writeCloudRecord} from './cloud-save.js';
-export const SAVE_STORAGE_KEYS=['anime-survivors-progress-v1','anime-survivors-run-v1','anime-best'];
+export const SAVE_STORAGE_KEYS=['anime-survivors-progress-v1','anime-survivors-run-v1','anime-best','anime-survivors-spire-v1'];
 export const SAVE_DATABASE='anime-survivors-local-saves-v1';
 const META_KEY='anime-survivors-save-meta-v1';
 const BACKUP_SUFFIX='.backup';

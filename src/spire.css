@@ -1,0 +1,152 @@
+/* Turn-based Ascent: deckbuilder battle screen, map and rooms. */
+.mode-card.spire-mode{--mode:#ffc45a}
+.spire-root{position:fixed;inset:0;z-index:40;overflow:hidden;background:radial-gradient(ellipse at 50% -10%,#3a2a4a 0%,#14121d 55%,#0d0c14);color:#f3eefc}
+.spire-body{position:absolute;inset:0;display:flex;flex-direction:column;overflow:auto}
+.spire-floats{position:absolute;inset:0;pointer-events:none;z-index:5}
+.spire-overlay-host{position:relative;z-index:8}
+.spire-overlay{position:fixed;inset:0;z-index:8;padding:12px}
+.spire-top{position:relative;z-index:2;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 12px;background:linear-gradient(180deg,#0d0c14ee,#0d0c1499);border-bottom:1px solid #ffffff14}
+.spire-hero-mini{display:grid;place-items:center;width:40px;height:40px;border-radius:9px;background:color-mix(in srgb,var(--accent) 22%,#1a1826);overflow:hidden}
+.spire-hero-mini svg{width:34px;height:46px;margin-top:10px}
+.spire-top-main{flex:1 1 140px;min-width:0;display:flex;flex-direction:column}
+.spire-top-main strong{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spire-top .eyebrow{font-size:9px}
+.spire-pill{padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid #ffffff22;background:#ffffff0d;color:inherit;white-space:nowrap}
+.spire-pill.hp{color:#ff9aaa;border-color:#ff9aaa44}
+.spire-pill.gold{color:#ffd66a;border-color:#ffd66a55}
+.spire-pill.deck{cursor:pointer;min-height:32px}
+.spire-relics{flex-basis:100%;display:flex;flex-wrap:wrap;gap:4px}
+.srelic{display:grid;place-items:center;width:28px;height:28px;border-radius:7px;background:#ffd66a12;border:1px solid #ffd66a40}
+.srelic svg{width:22px;height:22px}
+.spact{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;color:#e6a6ff;border:1px solid #e6a6ff55}
+.spire-panel{width:min(900px,100%);margin:0 auto;padding:12px 16px 24px;display:flex;flex-direction:column;gap:12px}
+.spire-panel .ascent-map-wrap{height:min(60vh,600px)}
+
+/* Battle */
+.spire-battle{position:relative;flex:1;display:flex;flex-direction:column;min-height:0}
+.spire-backdrop{position:absolute;inset:0;opacity:.38;filter:saturate(.8)}
+.spire-backdrop svg{width:100%;height:100%;display:block}
+.spire-backdrop::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0d0c1400 30%,#0d0c14 92%)}
+.spire-stage{position:relative;flex:1;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:12px 16px 4px;min-height:220px}
+.shero,.sfoe{display:flex;flex-direction:column;align-items:center;gap:4px;width:clamp(96px,22vw,150px)}
+.shero-art,.sfoe-art{display:block;width:100%}
+.shero-art svg,.sfoe-art svg{width:100%;height:auto;display:block;image-rendering:pixelated;filter:drop-shadow(0 6px 6px #0008)}
+.shero-art{transform:scaleX(1);transition:transform .15s}
+.sfoes{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:flex-end;gap:8px}
+.sfoe{position:relative;padding:4px;border-radius:12px;border:2px solid transparent;background:none;color:inherit;cursor:default}
+.sfoe-art svg{transform:scaleX(-1)}
+.sfoe:hover:not(.targetable),.sfoe:focus:not(.targetable){border-color:transparent}
+.sfoe.big{width:clamp(130px,30vw,210px)}
+.sfoe.elite .sfoe-name{color:#ffb08a}
+.sfoe.enraged .sfoe-art svg{filter:drop-shadow(0 0 8px #ff4a5a) drop-shadow(0 6px 6px #0008)}
+.sfoe.targetable{cursor:pointer;border-color:#ffd66a88;background:#ffd66a12;animation:spire-target 1s ease-in-out infinite}
+@keyframes spire-target{50%{border-color:#ffd66a}}
+.sfoe-name{font-size:11px;font-weight:700;text-align:center;line-height:1.2}
+.sintent{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;min-height:22px;font-size:12px}
+.sintent b{padding:2px 7px;border-radius:999px;background:#0d0c14cc;border:1px solid currentColor;white-space:nowrap}
+.i-atk{color:#ff7a7a}.i-def{color:#8ec8ff}.i-buf{color:#ffb15a}.i-deb{color:#c9a6ff}
+.sintent.stunned{color:#ffe36a;font-weight:700}
+.sbar{position:relative;width:100%;height:16px;border-radius:5px;background:#2a1820;border:1px solid #00000088;overflow:hidden}
+.sbar i{position:absolute;inset:0 auto 0 0;background:linear-gradient(180deg,#ff6a7a,#c23a4c);transition:width .25s}
+.sbar span{position:relative;display:flex;justify-content:center;gap:6px;font-size:10px;font-weight:700;line-height:15px;text-shadow:0 1px 0 #000}
+.sblock{color:#9fd4ff}
+.schips{display:flex;flex-wrap:wrap;justify-content:center;gap:3px;min-height:18px}
+.schip{font-size:9px;font-weight:700;padding:2px 5px;border-radius:5px;color:var(--chip);border:1px solid color-mix(in srgb,var(--chip) 60%,transparent);background:#0d0c14cc}
+.shake{animation:spire-shake .32s}
+@keyframes spire-shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.spire-stage.enemy-turn .sfoe-art{animation:spire-lunge .3s}
+@keyframes spire-lunge{50%{transform:translateX(-14px)}}
+.spire-stage.ending .sfoes{opacity:.35;transition:opacity .6s}
+.spire-hint{position:relative;margin:0;text-align:center;font-size:12px;opacity:.85;min-height:18px}
+.spire-hint b{color:#ffd66a}
+.spire-controls{position:relative;display:grid;grid-template-columns:auto auto 1fr auto auto;grid-template-areas:"energy draw hand discard ult" "energy draw hand discard end";align-items:center;gap:8px;padding:8px 12px max(10px,env(safe-area-inset-bottom))}
+.senergy{grid-area:energy;display:flex;align-items:baseline;justify-content:center;width:60px;height:60px;padding-top:12px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#ffe9a0,#f2a43a 55%,#a8561c);border:2px solid #fff4;box-shadow:0 0 16px #f2a43a88;color:#2a1608}
+.senergy b{font-size:24px}
+.senergy small{font-size:11px;font-weight:700}
+.spile{grid-area:draw;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:52px;min-height:52px;padding:6px;border-radius:9px;border:1px solid #ffffff22;background:#ffffff0a;color:inherit;font-size:9px;letter-spacing:.5px}
+.spile b{font-size:16px}
+.spile[data-pile="discard"]{grid-area:discard}
+.spile.ex{display:none}
+.shand{grid-area:hand;display:flex;justify-content:center;align-items:flex-end;min-height:176px;padding:16px 8px 6px;overflow-x:auto;overflow-y:visible;scrollbar-width:thin}
+.shand .scard{flex:none;margin:0 -6px;transform:rotate(calc((var(--i) - (var(--n) - 1) / 2) * 2deg))}
+.shand .scard.playable:hover,.shand .scard.playable:focus-visible{z-index:2;transform:translateY(-14px) scale(1.06)}
+.shand .scard.selected{z-index:3;transform:translateY(-22px) scale(1.08);box-shadow:0 0 0 3px #ffd66a,0 10px 24px #000a}
+.shand .scard.dim{filter:saturate(.45) brightness(.72)}
+.shand-empty{font-size:12px;opacity:.6;align-self:center}
+.sult{grid-area:ult;display:flex;align-items:center;gap:6px;min-height:44px;padding:6px 10px;border-radius:10px;border:1px solid color-mix(in srgb,var(--ult) 55%,transparent);background:linear-gradient(90deg,color-mix(in srgb,var(--ult) 35%,transparent) var(--charge),#ffffff08 var(--charge));color:inherit;font-size:11px;font-weight:700;text-align:left;max-width:170px}
+.sult svg{width:24px;height:24px;flex:none}
+.sult small{display:block;font-size:9px;opacity:.8}
+.sult.ready{box-shadow:0 0 16px var(--ult);animation:spire-target 1s infinite}
+.sult:disabled{cursor:default}
+.send{grid-area:end;min-height:48px}
+
+/* Cards */
+.scard{--type:#d76a6a;position:relative;width:112px;height:156px;padding:6px 7px 7px;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:10px;border:2px solid color-mix(in srgb,var(--type) 70%,#000);background:linear-gradient(180deg,color-mix(in srgb,var(--type) 30%,#1e1a2a),#16131f 60%);color:#f6f0ff;text-align:center;cursor:pointer;box-shadow:0 6px 14px #0009;transition:transform .14s,filter .14s,box-shadow .14s;font:inherit}
+.scard.t-skill{--type:#5a9ad7}.scard.t-power{--type:#e2b04a}.scard.t-curse{--type:#8a4ab4}
+.scard.up{border-color:#9dff9a}
+.scard-cost{position:absolute;left:-7px;top:-7px;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#ffe9a0,#f2a43a 60%,#a8561c);color:#2a1608;font-weight:800;font-size:14px;border:2px solid #0d0c14}
+.scard-name{font-size:11px;font-weight:800;line-height:1.15;min-height:26px;display:flex;align-items:center;justify-content:center;padding:0 10px}
+.scard.up .scard-name{color:#b6ffb2}
+.scard-art{display:grid;place-items:center;width:100%;height:44px;border-radius:6px;background:#0d0c1488;border:1px solid color-mix(in srgb,var(--rarity) 45%,transparent)}
+.scard-art svg{width:38px;height:38px}
+.scard-type{font-size:7.5px;letter-spacing:.6px;color:var(--rarity);font-weight:700}
+.scard-text{font-size:9.5px;line-height:1.3;opacity:.92;overflow:hidden}
+.scard.big{width:150px;height:208px}
+.scard.big .scard-name{font-size:13px}.scard.big .scard-art{height:64px}.scard.big .scard-art svg{width:54px;height:54px}.scard.big .scard-type{font-size:9px}.scard.big .scard-text{font-size:11.5px}
+.scard.long .scard-text{font-size:8.4px;line-height:1.22}
+.scard.big.long .scard-text{font-size:10.5px}
+.scard.static{cursor:default}
+.scard:disabled{cursor:default;filter:saturate(.5) brightness(.7)}
+.scard-row{display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
+.scard-row .scard:hover:not(:disabled){transform:translateY(-6px)}
+.scard-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));justify-items:center;gap:12px;max-height:68vh;overflow:auto;padding:10px 4px}
+.soffer{display:flex;flex-direction:column;align-items:center;gap:6px}
+.soffer b{color:#ffd66a;font-size:13px}
+.soffer.sold{opacity:.4}
+.sreward-loot{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.srelic-big{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;border:1px solid #ffd66a44;background:#ffd66a0d}
+.srelic-big svg{width:38px;height:38px}
+.srelic-big small{font-size:9px;letter-spacing:.6px;color:#ffd66a}
+.srelic-big p{margin:2px 0 0;font-size:12px;opacity:.85}
+.sfuse-list{display:flex;flex-wrap:wrap;justify-content:center;gap:16px}
+.sfuse{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px;border-radius:12px;background:#ffffff08;border:1px solid #ffc45a33}
+.sfuse-parts{display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:center}
+.sfuse-parts span{display:flex;flex-direction:column;align-items:center;width:58px}
+.sfuse-parts svg{width:30px;height:30px}
+.sfuse-parts small{font-size:8px;text-align:center;opacity:.8}
+.sfuse-parts i{font-style:normal;opacity:.6}
+.spire-pile{width:min(860px,100%);max-height:calc(100vh - 24px);overflow:auto;text-align:left}
+.secondary.danger{border-color:#ff6a7a77;color:#ffb0b8}
+
+/* Floating numbers */
+.sfloat{position:absolute;transform:translate(-50%,-50%);font-weight:900;font-size:22px;color:#fff;text-shadow:0 2px 0 #000,0 0 8px #000;animation:spire-float 1.2s ease-out forwards;white-space:nowrap}
+.sfloat.k-hit{color:#ff8a8a}.sfloat.k-block{color:#9fd4ff;font-size:17px}.sfloat.k-heal{color:#8fffb0}
+.sfloat.k-phase,.sfloat.k-wave,.sfloat.k-ultimate{color:#ffd66a;font-size:26px}
+.sfloat.k-poison{color:#8fdc5a;font-size:15px}.sfloat.k-bleed{color:#ff5a6a;font-size:15px}.sfloat.k-burn{color:#ff9a3a;font-size:15px}
+.sfloat.k-weak,.sfloat.k-vulnerable,.sfloat.k-stun,.sfloat.k-stunned{color:#e6c6ff;font-size:14px}
+@keyframes spire-float{0%{opacity:0;transform:translate(-50%,-30%) scale(.7)}15%{opacity:1;transform:translate(-50%,-60%) scale(1.15)}100%{opacity:0;transform:translate(-50%,-160%) scale(1)}}
+@media (prefers-reduced-motion:reduce){.sfloat{animation-duration:.01s}.shake,.spire-stage.enemy-turn .sfoe-art,.sfoe.targetable,.sult.ready{animation:none}}
+
+/* Phone */
+@media (max-width:700px){
+ .spire-top{padding:6px 10px;gap:5px}
+ .spire-top-main{flex:1 1 90px}
+ .spire-top .eyebrow{font-size:7px;letter-spacing:1px}
+ .spire-pill{padding:5px 7px;font-size:11px}
+ .spire-hero-mini{width:34px;height:34px}
+ .spire-top .icon-button{width:32px;height:32px}
+ .spire-top-main strong{font-size:14px}
+ .spire-stage{padding:8px 10px 0;min-height:180px;gap:6px}
+ .shero{width:82px}
+ .sfoe{width:88px}.sfoe.big{width:130px}
+ .sfoes{gap:2px}
+ .spire-controls{grid-template-columns:auto auto auto 1fr;grid-template-areas:"hand hand hand hand" "energy draw discard ult" "energy draw discard end";padding:4px 10px max(8px,env(safe-area-inset-bottom));gap:6px}
+ .senergy{width:54px;height:54px;padding-top:10px}
+ .shand{justify-content:flex-start;min-height:148px;padding:14px 8px 0 14px}
+ .shand .scard{margin:0 -3px;width:98px;height:138px}
+ .shand .scard .scard-art{height:36px}.shand .scard .scard-art svg{width:30px;height:30px}
+ .shand .scard .scard-text{font-size:8.6px}
+ .sult{max-width:none}
+ .scard.big{width:128px;height:184px}
+ .scard-row{gap:10px}
+}
