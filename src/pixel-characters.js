@@ -7,6 +7,7 @@ import {pajamaPixels} from './pajama-art.js';
 import {erzaPixels} from './erza-art.js';
 import {casualPixels} from './casual-art.js';
 import {featherinePixels} from './featherine-art.js';
+import {esdeathPixels} from './esdeath-art.js';
 import {referenceOutfitPixels} from './character-reference-skins.js';
 import {kurumiPixels} from './kurumi-art.js';
 import {variaSuitPixels} from './samus-art.js';
@@ -340,6 +341,7 @@ export function characterPixels(id,{frame=0,moving=false,pose='',attack=false,ex
   if(id==='diavolo'){const result=diavoloPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='yuki'){const result=yukiPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='erza'){const result=erzaPixels({frame,moving,pose,attack,expression,blink,skin:skinId,form});dataCache.set(key,result);return result;}
+  if(id==='esdeath'){const result=esdeathPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='featherine'){const result=featherinePixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id!=='shinji'){const beach=beachOutfitPixels(id,skinId,{frame,moving,pose,attack,expression,blink,form})||cuteSwimPixels(id,skinId,{frame,moving,pose,attack,expression,blink,form});if(beach){dataCache.set(key,beach);return beach;}}
   if(skinId==='swimsuit'&&id!=='shinji'){const swimming=swimsuitPixels(id,{frame,moving,pose,attack,expression,blink,form});if(swimming){dataCache.set(key,swimming);return swimming;}}
