@@ -177,6 +177,8 @@ export function refreshStats(p) {
   p.damage=(1+rank('power')*.12+rank('soulgem')*.06+rank('demonextract')*.04+rank('grimoire')*.05+rank('talisman')*.05+rank('masscore')*.06+rank('epitaph')*.06+rank('greatsage')*.05+rank('memoryfragment')*.05+rank('heartkreuz')*.04+rank('bloodengine')*.04+rank('manacrystal')*.03+rank('redgem')*.04+rank('sagecloak')*.03+rank('truthseal')*.04)*(1+(m.damage||0));
   p.maxShield=(p.id==='eren'&&p.erenForm==='titan'?45:0)+rank('soulgem')*10+rank('atfield')*11+rank('heartkreuz')*7+(m.shield||0)+(barrier?20:0);p.damageReduction=rank('atfield')*.04+rank('energytank')*.035+rank('brand')*.03+rank('sagecloak')*.02+rank('variasuit')*.02;p.shieldRecharge=barrier?7:rank('atfield')?9:p.id==='eren'&&p.erenForm==='titan'?8:10;
   if(purified)p.shieldRecharge=Math.min(p.shieldRecharge,8);
+  // Ascent pacts and events: lasting multipliers (regeneration adds) for the run.
+  if(p.ascentMods){const a=p.ascentMods;p.damage*=a.damage||1;p.maxHp*=a.maxHp||1;p.move*=a.move||1;p.cooldown*=a.cooldown||1;p.magnet*=a.magnet||1;p.regen+=a.regen||0;}
   if(p.shenronBlessing===true){p.maxHp*=1.2;p.damage*=1.2;p.move*=1.1;p.regen+=1;}
   p.shield=Math.min(p.shield,p.maxShield);
   p.hp=Math.min(p.hp,p.maxHp);

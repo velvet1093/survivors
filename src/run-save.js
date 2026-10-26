@@ -23,6 +23,7 @@ import {CHARACTERS,MAPS,ITEMS,FUSIONS,MAX_SLOTS,forbiddenItem,inactiveFormWeapon
 import {createRun} from './engine.js';
 import {skinFor} from './skins.js';
 import {restoreTraining} from './training.js';
+import {restoreAscent} from './ascent.js';
 import {ensureWorld} from './world.js';
 export const RUN_SAVE_KEY='anime-survivors-run-v1';
 const encode=(key,value)=>value instanceof Set?{$set:[...value]}:value instanceof Map?{$map:[...value]}:value===Infinity?{$infinity:true}:value;
@@ -57,8 +58,9 @@ function restoreQuintetProgress(g){
  for(const chest of g.chests||[])if(Array.isArray(chest.rewardOffers))chest.rewardOffers=adaptOffers(chest.rewardOffers);
 }
 function restoreRunMode(g,character){
- g.mode=['hardcore','bossrush','training'].includes(g.mode)?g.mode:'survival';
+ g.mode=['hardcore','bossrush','training','ascent'].includes(g.mode)?g.mode:'survival';
  if(g.mode==='training')restoreTraining(g);else delete g.training;
+ if(g.mode==='ascent')restoreAscent(g);else delete g.ascent;
  if(g.mode!=='hardcore'){delete g.p.hardcore;delete g.p.signatureWeapons;delete g.p.signaturePassives;return;}
  initializeHardcore(g,character);const allowed=new Set(signatureWeaponIds(character)),passives=new Set(signaturePassiveIds(character));let removed=false;
  // Older Hardcore runs allowed other supports. Recover the hero's own maxed
@@ -116,7 +118,7 @@ function parseRun(raw){
   g.secondarySpecialMax=Number.isFinite(r.secondarySpecialMax)&&r.secondarySpecialMax>0?r.secondarySpecialMax:75;
   g.secondarySpecial=Number.isFinite(r.secondarySpecial)?Math.max(0,Math.min(g.secondarySpecialMax,r.secondarySpecial)):0;
   restoreShenron(g);restoreRifts(g);restoreRiftTrial(g);restoreWorldEvents(g);syncGutsArmor(g);syncDenjiForm(g);clearOrphanRiftSummons(g);restoreBossDeaths(g);restorePersistentSummons(g);restoreFrierenGolem(g);restoreFriendlyDeaths(g);
-  const pending=g.status==='paused'?(g.resumeStatus||'playing'):g.status;if(!['playing','upgrade','fusion','chest','rush-draft','rush-loadout','rush-fusion','trinket','wish','rift'].includes(pending))return null;
+  const pending=g.status==='paused'?(g.resumeStatus||'playing'):g.status;if(!['playing','upgrade','fusion','chest','rush-draft','rush-loadout','rush-fusion','trinket','wish','rift','ascent'].includes(pending))return null;
   g.resumeStatus=pending;g.status='paused';g.p.moving=false;g.invuln=Math.max(.8,g.invuln||0);ensureWorld(g);return g;
  }catch{return null;}
 }

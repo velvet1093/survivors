@@ -10,7 +10,7 @@ import {MIMIC_DEF,mimicAttack} from './rift-mimic.js';
 import {RIFT_SUPERBOSSES,riftSuperbossAttack} from './rift-superbosses.js';
 import {updateBossUltimate} from './boss-ultimates.js';
 import {transformBoss} from './boss-transform.js';
-import {encounterPressure,strengthenEnemy} from './difficulty.js';
+import {encounterPressure,strengthenEnemy,pressureTime} from './difficulty.js';
 import {ANIME_ENEMIES,ANIME_BOSSES,animeAttack} from './anime-enemies.js';
 import {statusModifiers} from './status.js';
 import {navigateEnemy} from './world.js';
@@ -149,7 +149,7 @@ function createHazard(g,data){if(g.hazards.length<45)g.hazards.push({age:0,delay
 function summon(g,e,id,n){if(g.mode==='bossrush')return;for(let i=0;i<n&&g.enemies.length<210;i++){const a=Math.PI*2*i/n,s=makeEnemy(g,id);s.x=e.x+Math.cos(a)*60;s.y=e.y+Math.sin(a)*60;s.ownerId=e.id;g.enemies.push(s);}}
 export function updateEnemyAI(g,e,dt){
  const hazard=(g,data)=>createHazard(g,{source:e.archetype,sourceId:e.id,sourceX:e.x,sourceY:e.y,...data});
- strengthenEnemy(e,g.time,g.difficulty,g.mode==='bossrush'?g.rush?.round||1:0);
+ strengthenEnemy(e,pressureTime(g),g.difficulty,g.mode==='bossrush'?g.rush?.round||1:0);
  if(g.ultimate?.type==='esdeath'&&Math.hypot(e.x-g.ultimate.x,e.y-g.ultimate.y)<g.ultimate.r){e.moving=false;return;}
   if(g.ultimate?.type==='kurumi'&&Math.hypot(e.x-g.ultimate.x,e.y-g.ultimate.y)<g.ultimate.r)dt*=e.boss?.7:.35;
   const frozenClock=g.freeze>0&&Math.hypot(e.x-(g.ultimate?.x??g.p.x),e.y-(g.ultimate?.y??g.p.y))<(g.voidRadius||650);const clockDt=frozenClock?dt*.05:dt;for(const key of ['armorTime','balanceTimer','compassTimer','regenWindow'])e[key]=Math.max(0,(e[key]||0)-clockDt);

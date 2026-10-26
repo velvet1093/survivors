@@ -1,0 +1,81 @@
+/* Ascent: tower map, rooms and rewards. */
+.mode-card.ascent-mode{--mode:#ff8a6a}
+.ascent-backdrop{padding:12px}
+.ascent-screen{width:min(860px,100%);max-height:calc(100vh - 24px);display:flex;flex-direction:column;gap:12px;text-align:left;overflow:auto}
+.ascent-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.ascent-head h2{margin:4px 0 0;font-size:32px;line-height:1.05}
+.ascent-stats{display:flex;gap:8px;flex-wrap:wrap}
+.ascent-stats>span{padding:6px 11px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.5px;border:1px solid #ffffff22;background:#ffffff0d}
+.ascent-gold{color:#ffd66a;border-color:#ffd66a55!important}
+.ascent-hp{color:#ff9aaa;border-color:#ff9aaa44!important}
+.ascent-loadout{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.ascent-item{position:relative;display:grid;place-items:center;width:34px;height:34px;border-radius:7px;background:#ffffff0a;border:1px solid color-mix(in srgb,var(--rarity) 50%,transparent)}
+.ascent-item svg{width:26px;height:26px}
+.ascent-item small{position:absolute;right:2px;bottom:0;font-size:8px;font-weight:700}
+.ascent-pacts b{color:#e6a6ff;margin-left:4px}
+.ascent-map-wrap{position:relative;height:min(58vh,560px);overflow-y:auto;border-radius:12px;border:1px solid #ffffff14;background:radial-gradient(ellipse at 50% 0%,#ff6a7a1a,transparent 55%),linear-gradient(180deg,#151321,#1c1a2a 60%,#14131e)}
+.ascent-map{position:relative;width:100%;min-width:300px}
+.ascent-lines{position:absolute;inset:0}
+.ascent-lines line{stroke:#ffffff26;stroke-width:2;stroke-dasharray:4 5}
+.ascent-lines line.walked{stroke:#ffd66a;stroke-dasharray:none;stroke-width:3}
+.ascent-node{position:absolute;transform:translate(-50%,-50%);width:38px;height:38px;padding:0;border-radius:50%;display:grid;place-items:center;border:2px solid color-mix(in srgb,var(--node) 55%,#0000);background:#1a1826;color:var(--node);font-size:17px;line-height:1;opacity:.5;cursor:default}
+.ascent-node.boss{width:58px;height:58px;font-size:27px;opacity:.75}
+.ascent-node.visited{opacity:.85;background:color-mix(in srgb,var(--node) 20%,#1a1826)}
+.ascent-node.current{opacity:1;box-shadow:0 0 0 3px #ffd66a,0 0 18px #ffd66a77}
+.ascent-node.reachable{opacity:1;cursor:pointer;border-color:var(--node);box-shadow:0 0 14px color-mix(in srgb,var(--node) 60%,transparent);animation:ascent-pulse 1.6s ease-in-out infinite}
+.ascent-node.selected{background:color-mix(in srgb,var(--node) 35%,#1a1826);transform:translate(-50%,-50%) scale(1.18)}
+@keyframes ascent-pulse{50%{box-shadow:0 0 24px color-mix(in srgb,var(--node) 85%,transparent)}}
+@media (prefers-reduced-motion:reduce){.ascent-node.reachable{animation:none}}
+.ascent-floor-label{position:absolute;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:2px;color:#ff8a96}
+.ascent-node-info{display:flex;align-items:center;gap:12px;min-height:58px;padding:10px 12px;border-radius:10px;background:#ffffff08;border:1px solid #ffffff14}
+.ascent-node-info p{margin:2px 0 0;font-size:12px;opacity:.8}
+.ascent-node-info .primary{margin-left:auto;min-height:44px;white-space:nowrap}
+.ascent-info-glyph{display:grid;place-items:center;flex:none;width:42px;height:42px;border-radius:50%;border:2px solid var(--node);color:var(--node);font-size:20px}
+.ascent-legend summary{cursor:pointer;font-size:10px;letter-spacing:1px;opacity:.75}
+.ascent-legend>div{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:8px;font-size:11px}
+.ascent-legend i{font-style:normal;color:var(--node);margin-right:4px}
+.ascent-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.ascent-actions button{min-height:44px}
+.ascent-note{margin:0;font-size:12px;opacity:.85}
+.ascent-note b{color:#ffd66a}
+.ascent-story{margin:0;font-size:14px;line-height:1.7;opacity:.9}
+.ascent-shop{display:flex;flex-direction:column;gap:8px}
+.ascent-offer{display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;padding:10px;border-radius:10px;border:1px solid color-mix(in srgb,var(--rarity,#ffffff) 30%,#ffffff10);background:color-mix(in srgb,var(--item) 7%,#ffffff05)}
+.ascent-offer.sold{opacity:.45}
+.ascent-offer .item-art svg{width:40px;height:40px}
+.ascent-offer small{display:block;font-size:9px;letter-spacing:.6px;opacity:.7}
+.ascent-offer strong{font-size:15px}
+.ascent-offer p{margin:2px 0 0;font-size:11px;opacity:.75;line-height:1.45}
+.ascent-offer button{min-width:84px;min-height:42px;border-radius:8px;border:1px solid #ffd66a66;background:#ffd66a1c;color:#ffe9a8;font-weight:700}
+.ascent-offer button:disabled{opacity:.5}
+.ascent-sub{margin:4px 0 0;font-size:11px;letter-spacing:1px;opacity:.75}
+.ascent-train{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.ascent-train button{display:flex;gap:10px;align-items:center;text-align:left;padding:8px 10px;min-height:52px;border-radius:9px;border:1px solid color-mix(in srgb,var(--item) 40%,transparent);background:color-mix(in srgb,var(--item) 8%,transparent);color:inherit}
+.ascent-train svg{width:32px;height:32px;flex:none}
+.ascent-train small{display:block;font-size:10px;opacity:.75}
+.ascent-choice-row{display:flex;gap:10px;flex-wrap:wrap}
+.ascent-big{flex:1 1 220px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:16px;border-radius:12px;border:1px solid #ffffff26;background:#ffffff0a;color:inherit}
+.ascent-big span{font-size:28px}
+.ascent-big small{opacity:.75}
+.ascent-big:disabled{opacity:.45}
+.ascent-pacts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.ascent-pact{display:flex;flex-direction:column;gap:6px;text-align:left;padding:14px;border-radius:12px;border:1px solid #e6a6ff55;background:#e6a6ff12;color:inherit}
+.ascent-pact strong{font-size:16px}
+.ascent-pact .bless{color:#a8f0c0;font-size:12px}
+.ascent-pact .curse{color:#ff9aaa;font-size:12px}
+.ascent-event-options{display:flex;flex-direction:column;gap:8px}
+.ascent-event-options button{min-height:48px;padding:10px 14px;text-align:left;border-radius:10px;border:1px solid #9fb4ff55;background:#9fb4ff12;color:inherit;font-size:13px}
+.ascent-event-options button:disabled{opacity:.45}
+.ascent-cards .upgrade{min-height:0}
+@media (max-width:640px){
+ .ascent-screen{padding:14px}
+ .ascent-head h2{font-size:24px}
+ .ascent-map-wrap{height:52vh}
+ .ascent-node{width:34px;height:34px;font-size:15px}
+ .ascent-node.boss{width:50px;height:50px}
+ .ascent-node-info{flex-direction:column;align-items:stretch;text-align:left}
+ .ascent-info-glyph{align-self:flex-start}
+ .ascent-node-info .primary{width:100%;margin-left:0}
+ .ascent-offer{grid-template-columns:40px 1fr}
+ .ascent-offer button{grid-column:1/-1;width:100%}
+}

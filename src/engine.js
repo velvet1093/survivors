@@ -39,6 +39,7 @@ import {createWorld,ensureWorld,updateWorld,moveBody,PLAYER_RADIUS,pointCollider
 import {startUltimate,updateUltimate} from './ultimates.js';
 import {bowPose} from './bow.js';
 import {initializeTraining,trainingNatural,updateTraining} from './training.js';
+import {initializeAscent,updateAscent,gemGold} from './ascent.js';
 const TAU=Math.PI*2;
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 export function createRun(character,mapIndex=0,profile=null){
@@ -46,6 +47,7 @@ export function createRun(character,mapIndex=0,profile=null){
 }
 export function createBossRushRun(character,mapIndex=0,profile=null){const g=initializeBossRush(createRun(character,mapIndex,profile));ensureWorld(g);return g;}
 export function createTrainingRun(character,mapIndex=0,profile=null){const g=initializeTraining(createRun(character,mapIndex,profile));ensureWorld(g);return g;}
+export function createAscentRun(character,mapIndex=0,profile=null){const g=initializeAscent(createRun(character,mapIndex,profile));ensureWorld(g);return g;}
 export function createHardcoreRun(character,mapIndex=0,profile=null){return initializeHardcore(createRun(character,mapIndex,profile),character);}
 function clearOutgoing(g){
  g.shots=[];g.fields=[];g.crimsonEchoes=[];g.effects=[];
@@ -276,7 +278,7 @@ export function updateRun(g,dt,input={x:0,y:0}){
   if(g.dash){const step=Math.min(dt,g.dash.duration-g.dash.age);moveBody(g,p,g.dash.x*950*step,g.dash.y*950*step,PLAYER_RADIUS,{push:true});p.moving=true;p.facing=g.dash.x<0?-1:1;g.dash.age+=dt;if(g.dash.age>=g.dash.duration)g.dash=null;}else if(p.moving){const speed=p.move*trinketBonus(g).move*heroMoveBonus(g)*playerMods.speed*(g.ultimate?.type==='shinji'?1.15:1)*(g.haste>0?1.25:1)*(g.ultimate?.type==='goku'&&g.ultimate.age<1.2?.55:1);moveBody(g,p,input.x/Math.max(1,len)*speed*dt,input.y/Math.max(1,len)*speed*dt,PLAYER_RADIUS,{push:true});if(Math.abs(input.x)>.05)p.facing=Math.sign(input.x);g.walkDust-=dt;if(g.walkDust<=0){burst(g,p.x,p.y+16,g.map.color,1,15);g.walkDust=.1;}}
   heroMovement(g,dt,Math.hypot(p.x-oldPosition.x,p.y-oldPosition.y));
   updatePet(g,dt);updateGaruda(g,dt);
-  const natural=trainingNatural(g);
+  const natural=trainingNatural(g)&&g.mode!=='ascent';
   if(natural)updateWorldEvents(g,dt,worldEventAPI(g));
   if(g.status!=='playing'||g.bossIntro)return;
   if((natural||g.rifts?.portal)&&!eventCombatActive(g))updateRifts(g,dt,{blocked:(x,y,r)=>pointCollider(g,x,y,r)},g.chestRandom||Math.random);
@@ -284,6 +286,7 @@ export function updateRun(g,dt,input={x:0,y:0}){
   const riftActive=riftCombatActive(g);
   g.waveSpawnDelay=Math.max(.3,1.1-g.time*.002)/difficultyFor(g.difficulty).spawnRate;
   updateTraining(g);
+  if(g.mode==='ascent'&&updateAscent(g,dt,{spawn:spawnEnemy,queueIntro:queueBossIntro})&&g.status!=='playing')return;
   if(natural&&!riftActive&&!eventCombatActive(g)&&updateWaves(g,dt,{spawn:spawnEnemy,queueIntro:queueBossIntro,pendingDeath:bossDeathPending}))return;
   if(g.bossIntro)return;
   updateSummons(g,dt,{damage:damageEnemy,burst});
@@ -372,7 +375,7 @@ export function updateRun(g,dt,input={x:0,y:0}){
   }
   g.fields=g.fields.filter(f=>f.life>0);loot(g);if(g.status==='over')return;
   for(const gem of g.gems){const d=distance(gem,p);if(d<p.magnet*trinketBonus(g).magnet||gem.attracted){gem.attracted=true;const step=Math.min(d,480*dt);gem.x+=(p.x-gem.x)/(d||1)*step;gem.y+=(p.y-gem.y)/(d||1)*step;}
-    if(d<23){gem.collected=true;heroXp(g,gem.value);if(g.mode!=='bossrush'&&grantXp(p,gem.value)){g.status='upgrade';burst(g,p.x,p.y,'#d2b6ff',28);break;}}}
+    if(d<23){gem.collected=true;heroXp(g,gem.value);if(g.mode==='ascent'){gemGold(g,gem.value);continue;}if(g.mode!=='bossrush'&&grantXp(p,gem.value)){g.status='upgrade';burst(g,p.x,p.y,'#d2b6ff',28);break;}}}
   g.gems=g.gems.filter(gem=>!gem.collected);
   if(g.status==='playing')for(const chest of g.chests)if(!chest.mimicLocked&&distance(chest,p)<32){
     if(tryChestMimic(g,chest,{spawn:spawnEnemy},g.chestRandom||Math.random)){burst(g,chest.x,chest.y,'#cba5e8',35);g.checkpointRequested=true;break;}

@@ -17,7 +17,9 @@ export function enemyPressure(time,difficulty='normal',rushRound=0){
  const minute=Math.max(0,Math.floor(time/60)),d=difficultyFor(difficulty),round=Math.max(0,rushRound-1),surge=riftSurge(minute);
  return {minute,hp:(1+.18*minute+.018*minute*minute)*surge.hp*d.hp,damage:(1+.09*minute)*surge.damage*d.damage*(rushRound?1.25+Math.min(.75,round*.025):1),speed:(1+Math.min(.75,.035*minute))*surge.speed*d.speed*(rushRound?1.05+Math.min(.2,round*.008):1),attackRate:(1+Math.min(.8,.04*minute))*surge.attackRate*d.attackRate*(rushRound?1.15+Math.min(.45,round*.018):1),projectileSpeed:(1+Math.min(.55,.025*minute))*surge.projectileSpeed*d.projectileSpeed*(rushRound?1.08+Math.min(.2,round*.008):1)};
 }
-export const encounterPressure=g=>enemyPressure(g.time,g.difficulty,g.mode==='bossrush'?g.rush?.round||1:0);
+// Ascent measures enemy strength by how far the player has climbed, not by the clock.
+export const pressureTime=g=>g.mode==='ascent'&&Number.isFinite(g.ascent?.pressureTime)?g.ascent.pressureTime:g.time;
+export const encounterPressure=g=>enemyPressure(pressureTime(g),g.difficulty,g.mode==='bossrush'?g.rush?.round||1:0);
 export function strengthenEnemy(e,time,difficulty='normal',rushRound=0){
  if(e.hp<=0)return;
  const id=difficultyFor(difficulty).id,now=enemyPressure(time,id,rushRound),old=enemyPressure((e.pressureMinute??now.minute)*60,e.pressureDifficulty||'normal',e.pressureRushRound||0);
