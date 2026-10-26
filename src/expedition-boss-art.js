@@ -401,6 +401,50 @@ function milimBase(m,{r,walk,arm,tail,attack}){
  milimHair(r,0);
  return selout(r.pixels,INK);
 }
+// Dragon armour form, from the reference: loose, messy hair with spikes all over the
+// crown and long wavy streams blowing out to both sides; the red horn rising from her
+// forehead; narrowed, self-satisfied eyes under angled brows, pink cheek marks and a
+// small closed smirk.
+function dragonHairBack(r,tail){
+ const {poly:P,line:L,put}=r,c=ML;
+ for(const s of [-1,1]){const p=(x,y)=>[28+s*x,y],t=tail*s;
+  P([p(11,13),p(18,18),p(24,25),p(26+t*.5,33),p(26+t,42),p(23+t,50),p(20+t,51),p(22+t,46),p(22+t,40),p(21,33),p(17,27),p(12,22)],c.hairDeep);
+  P([p(12,15),p(18,20),p(23,26),p(25+t*.5,33),p(25+t,41),p(23+t,47),p(23+t,40),p(22,33),p(18,27),p(13,21)],c.hairShade);
+  P([p(13,16),p(18,21),p(22,27),p(24+t*.5,33),p(24+t,39),p(23,33),p(19,27),p(14,20)],c.hair);
+  L(...p(15,18),...p(23,28),c.hairLight);
+  // The curl at each tip.
+  put(...p(21+t,50),c.hairShade);put(...p(20+t,49),c.hairDeep);
+ }
+}
+function dragonHairFront(r){
+ const {poly:P,line:L,put}=r,c=ML;
+ P([[15,31],[14,24],[11,21],[15,17],[11,12],[17,11],[16,6],[22,7],[23,2],[27,6],[33,2],[34,7],[40,6],[39,11],[45,12],[41,17],[45,21],[42,24],[41,31],[39,25],[37,21],[35,25],[33,21],[31,24],[29,20],[27,24],[25,20],[23,24],[21,21],[19,26],[17,23]],c.hairShade);
+ P([[16,27],[16,22],[14,20],[17,17],[14,13],[18,13],[18,9],[22,10],[24,5],[27,9],[32,5],[33,10],[38,9],[38,13],[42,14],[39,17],[42,20],[40,23],[40,27],[38,22],[36,19],[34,23],[32,19],[30,22],[29,18],[27,22],[25,18],[23,22],[21,19],[19,23],[17,21]],c.hair);
+ L(19,13,24,10,c.hairLight);L(31,10,36,12,c.hairLight);L(17,18,20,16,c.hairLight);L(25,7,26,9,c.hairLight);L(33,6,33,9,c.hairLight);
+ for(const x of [22,34])L(x,13,x,18,c.hairShade);
+ // Thin locks either side of the face.
+ for(const [x,s]of [[17,-1],[39,1]]){P([[x,20],[x+s*2,20],[x+s*3,32],[x+s,37],[x-s,30]],c.hairShade);L(x,22,x+s,33,c.hair);}
+ // The horn: red, sharp, rising out of the fringe with a slight lean.
+ P([[27,19],[29,8],[31,4],[31,11],[30,19]],c.horn);L(28,17,29,10,'#8a1424');L(30,7,30,16,'#ff7a86');put(31,5,'#ffb0b8');
+}
+function dragonFace(r){
+ const {rect:R,line:L,put}=r,c=ML,sk=c.skin,lash='#2a1a2a';
+ facePlate(r,0,sk);
+ for(const [x,side]of [[21,-1],[31,1]]){
+  // Upper lid slants down toward the nose: a narrowed, cocky look.
+  const outer=side<0?x-1:x+4,inner=side<0?x+3:x;
+  R(x,27,4,2,'#fbfaff');R(x+(side<0?1:0),27,3,2,c.iris);R(x+(side<0?1:0),27,3,1,c.irisDark);put(x+(side<0?2:1),28,'#163e78');put(x+(side<0?1:2),27,'#ffffff');
+  L(Math.min(outer,inner),26,Math.max(outer,inner),26,lash);put(outer,25,lash);put(inner,27,lash);
+  L(x,29,x+3,29,mix(lash,sk.base,.6));
+ }
+ // Brows angled down toward the centre.
+ L(20,22,24,24,c.hairDeep);L(32,24,36,22,c.hairDeep);
+ // Pink cheek marks under the eyes.
+ for(const x of [20,34]){put(x,31,'#e8828a');put(x+1,30,'#e8828a');put(x+2,31,'#f0a0a6');}
+ // Closed smirk, one corner lifted.
+ L(26,34,29,34,'#8a3a4a');put(30,33,'#8a3a4a');put(25,33,mix('#8a3a4a',sk.base,.5));put(28,35,mix('#c8506a',sk.base,.6));
+ put(28,31,sk.shade);
+}
 function milimArmor(m,{r,walk,arm,tail,attack}){
  const {poly:P,rect:R,line:L,put}=r,c=ML,sk=c.skin,flap=arm;
  // Bat wings spread wide behind her.
@@ -409,7 +453,7 @@ function milimArmor(m,{r,walk,arm,tail,attack}){
   P([p(9,32),p(15,10-flap),p(21,4-flap),p(26,6-flap),p(27,18),p(27,30),p(24,27),p(21,34),p(17,30),p(13,36)],c.wing);
   L(...p(9,31),...p(22,2-flap),c.wingBone,2);for(const [x,y]of [[27,6],[27,18],[27,30],[21,34]])L(...p(10,31),...p(x,y-(y<20?flap:0)),c.wingBone);
  }
- milimTails(r,tail,{wild:true});
+ dragonHairBack(r,tail);
  // Red-lined cape flaring from the hips.
  P([[17,45],[39,45],[50+tail,60],[48+tail,66],[40,62],[28,64],[16,62],[8+tail,66],[6+tail,60]],c.cape);P([[19,48],[37,48],[47+tail,60],[44+tail,63],[38,60],[28,62],[18,60],[12+tail,63],[9+tail,60]],c.capeIn);L(20,50,11+tail,61,'#d8404c');
  // Red thigh-highs and armoured purple boots with gold plates.
@@ -428,8 +472,8 @@ function milimArmor(m,{r,walk,arm,tail,attack}){
  L(17,38,14-arm*.3,49,c.blackShade,5);L(17,38,15-arm*.3,48,c.black,3);R(12-arm*.3,44,5,5,c.armor);L(12-arm*.3,44,16-arm*.3,44,c.armorLight);R(13-arm*.3,49,4,4,sk.base);
  if(attack){L(39,38,46,28,c.blackShade,5);L(39,38,46,29,c.black,3);R(43,29,5,5,c.armor);R(45,23,5,5,'#ff9ab8');R(46,24,3,3,'#ffffff');for(const [x,y]of [[51,18],[43,18],[53,27]])sparkle(r,x,y,1,'#ffb0c8');}
  else{L(39,38,41+arm*.3,47,c.blackShade,5);L(39,38,40+arm*.3,46,c.black,3);R(38+arm*.3,42,5,5,c.armor);L(38+arm*.3,42,42+arm*.3,42,c.armorLight);R(38+arm*.3,47,4,4,sk.base);}
- milimFace(r,0,{smug:true});
- milimHair(r,0,{tails:false,horn:true});
+ dragonFace(r);
+ dragonHairFront(r);
  return selout(r.pixels,INK);
 }
 function milim(m){const f=frame(m);return f.enraged?milimArmor(m,f):milimBase(m,f);}
