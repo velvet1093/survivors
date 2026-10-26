@@ -35,39 +35,51 @@ export function gokuFace(r,{y=0,stage=0,expression='neutral',blink=false,focused
  poly([[18,18+y],[38,18+y],[39,29+y],[37,34+y],[32,38+y],[25,38+y],[20,34+y],[18,29+y]],TONE);
  poly([[21,20+y],[35,20+y],[36,28+y],[34,32+y],[23,32+y],[21,28+y]],LIGHT);line(26,38+y,31,38+y,SHADE);
  const stern=focused||hurt||ult,browCol=stage===3?SHADE:stage>0?hairShade:INK;
- const iris=stage>0?'#3f9691':null;
- // Brows: raised and cheerful at rest; driven down toward the nose in a fight.
- if(stern){line(19,23+y,25,26+y,browCol);line(19,24+y,24,26+y,browCol);line(31,26+y,37,23+y,browCol);line(32,26+y,37,24+y,browCol);}
- else for(const [x,d]of [[20,1],[36,-1]]){put(x,25+y,browCol);for(let i=1;i<5;i++)put(x+d*i,24+y,browCol);put(x+d*2,23+y,browCol);put(x+d*3,23+y,browCol);}
+ const iris=stage>0?'#3f9691':'#1d2433',irisMid=stage>0?'#2a6f6c':'#2f3a52',shine=stage>0?'#d8fff4':'#ffffff',lip='#98654f',mouthDark='#7d3f3a';
+ const look=faceLook;
+ // Brows. A: steady and level. B: lifted, friendly arches. C: straight, one cocked up.
+ // All three drive down toward the nose when he fights.
+ const browPx=(pts)=>{if(stage===3)return;for(const [x,yy]of pts){put(x,yy+y,browCol);put(56-x-1,yy+y,browCol);}};
+ if(stern)browPx([[19,24],[20,24],[21,24],[22,25],[23,25],[24,26],[20,23],[21,23],[22,24]]);
+ else if(look==='A')browPx([[19,25],[20,24],[21,24],[22,24],[23,24],[24,24],[20,25],[21,25]]);
+ else if(look==='B')browPx([[19,25],[20,24],[21,23],[22,23],[23,23],[24,24],[20,25]]);
+ else{for(const [x,yy]of [[19,24],[20,24],[21,24],[22,24],[23,25],[24,25]])put(x,yy+y,browCol);for(const [x,yy]of [[31,24],[32,23],[33,23],[34,23],[35,23],[36,24]])put(x,yy+y,browCol);}
  for(const [x,side]of [[20,-1],[31,1]]){
-  const outer=side<0?x:x+5;
-  if(hurt){line(x+1,27+y,x+4,29+y,INK);line(x+1,31+y,x+4,29+y,INK);continue;}
-  if(blink){line(x+1,29+y,x+4,29+y,INK);put(x,28+y,INK);put(x+5,28+y,INK);continue;}
-  if(stern){
-   // Narrowed fighting stare: two rows of white under a hard, flat lid.
-   rect(x+1,28+y,4,2,WHITE);rect(x+2,28+y,2,2,iris||'#1d2433');if(iris)put(x+2,28+y,'#1d2433');
-   line(x,27+y,x+5,27+y,INK);put(outer,28+y,INK);line(x+1,30+y,x+4,30+y,SHADE);
+  const ex=side<0?x:x+1,outer=side<0?ex-1:ex+5;
+  if(hurt){line(ex,27+y,ex+4,29+y,INK);line(ex,31+y,ex+4,29+y,INK);continue;}
+  if(blink){line(ex,29+y,ex+4,29+y,INK);put(outer,28+y,INK);line(ex+1,30+y,ex+3,30+y,mix(INK,TONE,.5));continue;}
+  if(stern||look==='C'){
+   // Narrowed eye: flat heavy lid over a big dark iris.
+   rect(ex,28+y,5,3,WHITE);rect(ex+1,28+y,3,3,iris);rect(ex+2,29+y,1,2,irisMid);put(ex+(side<0?1:3),28+y,shine);
+   line(ex-1,27+y,ex+5,27+y,INK);put(outer,28+y,INK);if(stern)line(ex,28+y,ex+1,28+y,INK);
+  }else if(look==='A'){
+   // Almond eye: thick upper lid with an outer flick, iris fills most of the eye.
+   rect(ex,28+y,5,3,WHITE);rect(ex+1,27+y,3,4,iris);rect(ex+2,29+y,1,2,irisMid);put(ex+(side<0?1:3),28+y,shine);
+   line(ex-1,27+y,ex+5,27+y,INK);line(ex,26+y,ex+4,26+y,INK);put(outer,28+y,INK);line(ex+1,31+y,ex+3,31+y,SHADE);
   }else{
-   // Big round eyes with small dark pupils, as in his cheerful look.
-   const ex=side<0?x:x+1;
-   rect(ex,27+y,5,4,WHITE);
-   rect(ex+2,28+y,2,2,iris||'#1d2433');if(iris){put(ex+2,29+y,'#1d2433');put(ex+3,28+y,'#bff2e6');}
-   line(ex,26+y,ex+4,26+y,INK);put(ex-1,27+y,INK);put(ex+5,27+y,INK);
-   line(ex+1,31+y,ex+3,31+y,SHADE);
+   // Round eye: tall glossy iris with two highlights.
+   rect(ex,27+y,5,4,WHITE);rect(ex+1,27+y,3,4,iris);rect(ex+2,29+y,2,2,irisMid);put(ex+(side<0?1:3),27+y,shine);put(ex+(side<0?1:3),28+y,shine);put(ex+(side<0?3:1),30+y,mix(shine,iris,.4));
+   line(ex,26+y,ex+4,26+y,INK);put(ex-1,27+y,INK);put(ex+5,27+y,INK);put(outer,28+y,INK);line(ex+1,31+y,ex+3,31+y,SHADE);
   }
  }
- // Small nose and cheek lines.
+ // Nose.
  put(28,31+y,SHADE);put(29,32+y,SHADE);
- // Mouth: the wide toothy grin, a set frown, gritted teeth or a ki shout.
- if(hurt){rect(24,34+y,9,3,'#7d3f3a');rect(25,34+y,7,2,WHITE);line(25,35+y,31,35+y,'#c9a89a');for(const x of [26,28,30])put(x,34+y,'#c9a89a');}
- else if(ult){poly([[24,33+y],[33,33+y],[32,38+y],[25,38+y]],'#7d3f3a');rect(25,33+y,8,1,WHITE);rect(27,36+y,4,2,'#c96a62');}
- else if(focused){line(25,35+y,31,35+y,'#8a554c');put(24,36+y,'#8a554c');put(32,36+y,'#8a554c');}
- else{
-  // Upper teeth flashing in a wide grin, corners curling up.
-  rect(25,34+y,7,1,WHITE);rect(26,35+y,5,1,'#7d3f3a');put(28,36+y,'#b9675e');
-  put(24,34+y,'#7d3f3a');put(32,34+y,'#7d3f3a');put(23,33+y,SHADE);put(33,33+y,SHADE);put(28,34+y,'#e6d9cc');
+ if(hurt){rect(25,34+y,7,2,WHITE);line(25,34+y,31,34+y,'#925d58');put(28,35+y,'#925d58');put(24,35+y,'#925d58');put(32,35+y,'#925d58');}
+ else if(ult){poly([[25,33+y],[32,33+y],[31,37+y],[26,37+y]],mouthDark);rect(26,33+y,6,1,WHITE);rect(27,35+y,4,2,'#c96a62');}
+ else if(focused){line(26,35+y,30,35+y,'#8a554c');}
+ else if(look==='A'){
+  // Gentle closed smile.
+  put(25,34+y,lip);line(26,35+y,30,35+y,lip);put(31,34+y,lip);put(28,36+y,mix(lip,TONE,.6));
+ }else if(look==='B'){
+  // Small open happy mouth: top teeth, dark inside, a hint of tongue.
+  rect(25,34+y,7,1,mouthDark);rect(26,34+y,5,1,WHITE);rect(26,35+y,5,1,mouthDark);rect(27,35+y,3,1,'#c96a62');rect(27,36+y,3,1,mouthDark);
+ }else{
+  // Lopsided smirk rising to his left.
+  line(25,35+y,29,35+y,lip);put(30,34+y,lip);put(31,33+y,lip);put(24,35+y,mix(lip,TONE,.5));put(30,35+y,mix(lip,TONE,.5));
  }
 }
+let faceLook='B';
+export function setGokuFaceLook(l){faceLook=l;}
 // Bangs over the forehead: an M-shaped hairline with Goku's long forelock hanging
 // between the eyes, two shorter locks either side.
 const BANGS={
