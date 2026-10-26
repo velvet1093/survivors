@@ -66,6 +66,10 @@ function face(r,{y,blink,expression,cast}){
 // The signature bang across her right eye, painted over the fringe.
 function eyeLock(r,y){
  const {poly:P,line:L}=r;
+ // Full fringe down to the lashes: no forehead shows, as in the references.
+ P([[19,12+y],[37,12+y],[38,22+y],[36,24+y],[34,22+y],[32,24+y],[30,22+y],[28,24+y],[26,22+y],[22,23+y],[20,22+y]],RED_DARK);
+ P([[20,12+y],[36,12+y],[37,21+y],[36,23+y],[34,21+y],[32,23+y],[30,21+y],[28,23+y],[26,21+y],[22,22+y],[20,21+y]],RED);
+ for(const x of [29,33])L(x,14+y,x,21+y,RED_MID);L(31,13+y,35,14+y,RED_LIGHT);
  P([[19,14+y],[26,13+y],[27,16+y],[26,24+y],[24,31+y],[20,34+y],[18,31+y],[19,23+y]],RED_DARK);
  P([[20,15+y],[25,14+y],[26,17+y],[25,24+y],[23,30+y],[21,32+y],[19,30+y],[20,22+y]],RED);
  L(23,16+y,21,29+y,RED_MID);L(24,16+y,23,23+y,RED_LIGHT);
