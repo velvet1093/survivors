@@ -205,7 +205,7 @@ export function prestigeCharacter(profile,id){
 }
 export function newProfile(){return {version:1,coins:0,bestKills:0,selection:{character:'goku',map:'garden',mode:'survival',difficulty:'normal'},pet:'none',audio:{muted:false,music:.35,sfx:.6},ui:{hidden:false},skins:{},general:{},characters:Object.fromEntries(Object.keys(CHARACTER_TREES).map(id=>[id,{xp:0,totalXp:0,skills:{}}])),credited:{}};}
 export function sanitizeProfile(value){
-  const p=newProfile();if(!value||typeof value!=='object')return p;p.coins=nonnegative(value.coins);p.bestKills=nonnegative(value.bestKills);if(CHARACTERS.some(c=>c.id===value.selection?.character))p.selection.character=value.selection.character;if(MAPS.some(m=>m.id===value.selection?.map))p.selection.map=value.selection.map;if(['survival','hardcore','bossrush'].includes(value.selection?.mode))p.selection.mode=value.selection.mode;p.pet=petFor(value.pet).id;for(const id of Object.keys(SKINS))if(value.skins?.[id])p.skins[id]=skinFor(id,value.skins[id]).id;
+  const p=newProfile();if(!value||typeof value!=='object')return p;p.coins=nonnegative(value.coins);p.bestKills=nonnegative(value.bestKills);if(CHARACTERS.some(c=>c.id===value.selection?.character))p.selection.character=value.selection.character;if(MAPS.some(m=>m.id===value.selection?.map))p.selection.map=value.selection.map;if(['survival','hardcore','bossrush','training'].includes(value.selection?.mode))p.selection.mode=value.selection.mode;p.pet=petFor(value.pet).id;for(const id of Object.keys(SKINS))if(value.skins?.[id])p.skins[id]=skinFor(id,value.skins[id]).id;
   if(['easy','normal','hard','nightmare'].includes(value.selection?.difficulty))p.selection.difficulty=value.selection.difficulty;
   p.audio={muted:value.audio?.muted===true,music:Number.isFinite(value.audio?.music)?Math.max(0,Math.min(1,value.audio.music)):.35,sfx:Number.isFinite(value.audio?.sfx)?Math.max(0,Math.min(1,value.audio.sfx)):.6};p.ui={hidden:value.ui?.hidden===true};
   for(const n of GENERAL_TREE)p.general[n.id]=Math.min(n.max,nonnegative(value.general?.[n.id]));
@@ -228,6 +228,8 @@ export function progressionBonuses(p,character){
   return result;
 }
 export function creditRun(profile,g){
+  // Training runs are a sandbox: they never pay out coins, mastery or records.
+  if(g.mode==='training')return {coins:0,xp:0};
   const old=profile.credited[g.runId]||{coins:0,xp:0},coins=Math.max(0,Math.floor(g.money)-old.coins),xp=Math.max(0,Math.floor(g.characterXp)-old.xp),c=profile.characters[g.p.id];
   if(!c)return {coins:0,xp:0};profile.coins+=coins;c.xp+=xp;c.totalXp+=xp;profile.bestKills=Math.max(profile.bestKills||0,g.kills);profile.credited[g.runId]={coins:Math.max(old.coins,Math.floor(g.money)),xp:Math.max(old.xp,Math.floor(g.characterXp))};
   const ids=Object.keys(profile.credited);if(ids.length>32)delete profile.credited[ids[0]];return {coins,xp};

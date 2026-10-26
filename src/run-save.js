@@ -22,6 +22,7 @@ import {SOUL_GEM_IDS} from './soul-gem-data.js';
 import {CHARACTERS,MAPS,ITEMS,FUSIONS,MAX_SLOTS,forbiddenItem,inactiveFormWeapon,hardcoreFusionAllowed,fusionBase,fusionType,fusionReady} from './game.js';
 import {createRun} from './engine.js';
 import {skinFor} from './skins.js';
+import {restoreTraining} from './training.js';
 import {ensureWorld} from './world.js';
 export const RUN_SAVE_KEY='anime-survivors-run-v1';
 const encode=(key,value)=>value instanceof Set?{$set:[...value]}:value instanceof Map?{$map:[...value]}:value===Infinity?{$infinity:true}:value;
@@ -56,7 +57,8 @@ function restoreQuintetProgress(g){
  for(const chest of g.chests||[])if(Array.isArray(chest.rewardOffers))chest.rewardOffers=adaptOffers(chest.rewardOffers);
 }
 function restoreRunMode(g,character){
- g.mode=['hardcore','bossrush'].includes(g.mode)?g.mode:'survival';
+ g.mode=['hardcore','bossrush','training'].includes(g.mode)?g.mode:'survival';
+ if(g.mode==='training')restoreTraining(g);else delete g.training;
  if(g.mode!=='hardcore'){delete g.p.hardcore;delete g.p.signatureWeapons;delete g.p.signaturePassives;return;}
  initializeHardcore(g,character);const allowed=new Set(signatureWeaponIds(character)),passives=new Set(signaturePassiveIds(character));let removed=false;
  // Older Hardcore runs allowed other supports. Recover the hero's own maxed

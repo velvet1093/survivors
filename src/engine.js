@@ -38,12 +38,14 @@ import {makeEnemy,pickEnemy,pickBoss,updateEnemyAI} from './enemies.js';
 import {createWorld,ensureWorld,updateWorld,moveBody,PLAYER_RADIUS,pointCollider,onWater,damageProp,damagePropsInRadius,segmentDistance,separateEnemies} from './world.js';
 import {startUltimate,updateUltimate} from './ultimates.js';
 import {bowPose} from './bow.js';
+import {initializeTraining,trainingNatural,updateTraining} from './training.js';
 const TAU=Math.PI*2;
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 export function createRun(character,mapIndex=0,profile=null){
   const g={mode:'survival',difficulty:difficultyFor(profile?.selection?.difficulty).id,runId:Date.now().toString(36)+Math.random().toString(36).slice(2),characterXp:0,pet:{id:petFor(profile?.pet).id,x:-35,y:5,age:0},mechanic:newHeroMechanic(character.id),p:{...createPlayer(character,progressionBonuses(profile,character.id)),skin:skinFor(character.id,profile?.skins?.[character.id]).id,displayName:skinFor(character.id,profile?.skins?.[character.id]).pilot||character.name,unitName:skinFor(character.id,profile?.skins?.[character.id]).unit||''},map:MAPS[mapIndex],status:'playing',bossIntro:null,bossIntroQueue:[],dash:null,dashCD:0,lastMove:{x:1,y:0},world:createWorld(),pickups:[],money:0,broken:0,pickupsCollected:0,haste:0,magnetPulse:0,ultimate:null,ultimateSerial:0,cloneUnits:[],summons:[],time:0,kills:0,enemies:[],shots:[],fields:[],effects:[],particles:[],numbers:[],gems:[],chests:[],spawn:.2,eliteAt:35,special:0,secondarySpecial:0,secondarySpecialMax:75,invuln:0,hurtFlash:0,boss:false,nextBossWave:5,bossKills:0,wave:1,enemyShots:[],hazards:[],crimsonEchoes:[],rewards:[],chestIndex:0,chestVersion:2,zoom:.9,targetZoom:.9,shake:0,freeze:0,clones:0,cloneAttack:0,walkDust:0,toast:'',toastTime:0,won:false,view:{w:1200,h:800},id:0};g.waveState=newWaveState();if(character.id==='erza')g.p.erzaForm=g.mechanic.form;g.garuda=newGaruda(g);g.trinkets=newTrinkets();g.rifts=newRifts();g.events=newWorldEvents();return g;
 }
 export function createBossRushRun(character,mapIndex=0,profile=null){const g=initializeBossRush(createRun(character,mapIndex,profile));ensureWorld(g);return g;}
+export function createTrainingRun(character,mapIndex=0,profile=null){const g=initializeTraining(createRun(character,mapIndex,profile));ensureWorld(g);return g;}
 export function createHardcoreRun(character,mapIndex=0,profile=null){return initializeHardcore(createRun(character,mapIndex,profile),character);}
 function clearOutgoing(g){
  g.shots=[];g.fields=[];g.crimsonEchoes=[];g.effects=[];
@@ -69,7 +71,7 @@ export function spawnEnemy(g,boss=false,elite=false,archetype){
   const e=makeEnemy(g,id,boss,elite);e.waveIndex=g.wave;g.enemies.push(e);return e;
 }
 export function hitPlayer(g,damage,{dot=false}={}){
-  if(g.bossIntro||g.ultimate?.type==='diavolo'||g.dash||g.p.hp<=0||(!dot&&g.invuln>0)||damage<=0)return false;
+  if(g.training?.god||g.bossIntro||g.ultimate?.type==='diavolo'||g.dash||g.p.hp<=0||(!dot&&g.invuln>0)||damage<=0)return false;
   if(g.ultimate?.type==='maomao'||g.ultimate?.type==='shinji')damage*=.65;
   const p=g.p;damage*=heroResistance(g)*statusModifiers(p).damageTaken*(1-(p.damageReduction||0));const dodged=!dot&&Math.random()<p.dodge;if(!dot)g.invuln=dodged?.3:.65;
   if(dodged){g.numbers.push({x:p.x,y:p.y-40,amount:'DODGE',life:.6,color:'#94efcc'});return false;}
@@ -272,13 +274,15 @@ export function updateRun(g,dt,input={x:0,y:0}){
   if(g.dash){const step=Math.min(dt,g.dash.duration-g.dash.age);moveBody(g,p,g.dash.x*950*step,g.dash.y*950*step,PLAYER_RADIUS,{push:true});p.moving=true;p.facing=g.dash.x<0?-1:1;g.dash.age+=dt;if(g.dash.age>=g.dash.duration)g.dash=null;}else if(p.moving){const speed=p.move*trinketBonus(g).move*heroMoveBonus(g)*playerMods.speed*(g.ultimate?.type==='shinji'?1.15:1)*(g.haste>0?1.25:1)*(g.ultimate?.type==='goku'&&g.ultimate.age<1.2?.55:1);moveBody(g,p,input.x/Math.max(1,len)*speed*dt,input.y/Math.max(1,len)*speed*dt,PLAYER_RADIUS,{push:true});if(Math.abs(input.x)>.05)p.facing=Math.sign(input.x);g.walkDust-=dt;if(g.walkDust<=0){burst(g,p.x,p.y+16,g.map.color,1,15);g.walkDust=.1;}}
   heroMovement(g,dt,Math.hypot(p.x-oldPosition.x,p.y-oldPosition.y));
   updatePet(g,dt);updateGaruda(g,dt);
-  updateWorldEvents(g,dt,worldEventAPI(g));
+  const natural=trainingNatural(g);
+  if(natural)updateWorldEvents(g,dt,worldEventAPI(g));
   if(g.status!=='playing'||g.bossIntro)return;
-  if(!eventCombatActive(g))updateRifts(g,dt,{blocked:(x,y,r)=>pointCollider(g,x,y,r)},g.chestRandom||Math.random);
+  if(natural&&!eventCombatActive(g))updateRifts(g,dt,{blocked:(x,y,r)=>pointCollider(g,x,y,r)},g.chestRandom||Math.random);
   if(g.status!=='playing')return;
   const riftActive=riftCombatActive(g);
   g.waveSpawnDelay=Math.max(.3,1.1-g.time*.002)/difficultyFor(g.difficulty).spawnRate;
-  if(!riftActive&&!eventCombatActive(g)&&updateWaves(g,dt,{spawn:spawnEnemy,queueIntro:queueBossIntro,pendingDeath:bossDeathPending}))return;
+  updateTraining(g);
+  if(natural&&!riftActive&&!eventCombatActive(g)&&updateWaves(g,dt,{spawn:spawnEnemy,queueIntro:queueBossIntro,pendingDeath:bossDeathPending}))return;
   if(g.bossIntro)return;
   updateSummons(g,dt,{damage:damageEnemy,burst});
   if(g.ultimate?.type!=='frieren')updateFrierenGolem(g,dt,{damage:(g,e,v,color)=>damageEnemy(g,e,v*(1+(g.p.meta.ultimateDamage||0)),color),burst});
