@@ -1,4 +1,5 @@
 import {raster,outline} from './pixel-characters.js';
+import {mix} from './hero-kit.js';
 
 const INK='#30323f',RED='#b34250',RED_DARK='#672b40',RED_MID='#d45a5e',RED_LIGHT='#f28a78',SKIN='#edc3a5',SKIN_LIGHT='#ffe0bf',SKIN_SHADE='#b8877d';
 const SILVER='#a9bdcd',SILVER_SHADE='#5e748e',SILVER_LIGHT='#e7f0e6',BLUE='#536a9b',BLUE_DARK='#303d65',GOLD='#d8b56a';
@@ -29,16 +30,52 @@ function wings(r,form,walk,y){
   }
  }
 }
+// Erza's face from the references: sharp brown almond eyes under a thick upper lash,
+// a long bang that falls over her right eye, a faint confident smile at rest, a
+// fierce glare in a fight and gritted teeth when she goes all out.
+// Draft looks: A hides the covered eye completely, B lets it peek out under the bang,
+// C sweeps the bang aside so both eyes show.
+let faceLook='A';
+export function setErzaFaceLook(l){faceLook=l;}
+const IRIS='#8c5640',IRIS_DARK='#4b2b2c',LASH='#2a2230',LIP='#9e6a70';
 function face(r,{y,blink,expression,cast}){
- const {poly:P,rect:R,line:L}=r,closed=blink||expression==='hurt';
+ const {poly:P,rect:R,line:L,put}=r,hurt=expression==='hurt',ult=expression==='ultimate',focus=cast||expression==='focused'||ult;
  P([[19,19+y],[24,14+y],[33,15+y],[37,21+y],[36,29+y],[31,34+y],[25,34+y],[20,30+y],[18,25+y]],SKIN_SHADE);
  P([[21,20+y],[25,17+y],[32,17+y],[35,22+y],[34,29+y],[30,32+y],[25,31+y],[21,27+y]],SKIN_LIGHT);
  R(18,24+y,3,4,SKIN);R(35,24+y,3,4,SKIN);
- for(const x of [21,31]){
-  L(x,25+y,x+3,24+y,INK);if(closed){L(x,27+y,x+3,27+y,INK);continue;}
-  R(x,26+y,4,3,'#fff1d9');R(x+1,26+y,2,3,'#8b6562');R(x+1,27+y,1,2,'#383546');R(x+1,26+y,1,1,'#fff6dc');if(cast||expression==='focused')R(x,26+y,4,1,INK);
+ for(const [x,side]of [[21,-1],[31,1]]){
+  const outer=side<0?x-1:x+4;
+  // Brows only show when she glares; they angle hard toward the nose.
+  if(focus||hurt){L(side<0?x:x+1,23+y,side<0?x+3:x+4,23+y,LASH);put(side<0?x+3:x,24+y,LASH);}
+  if(hurt){L(x,25+y,x+3,26+y,LASH);L(x,27+y,x+3,26+y,LASH);continue;}
+  if(blink){L(x,27+y,x+3,27+y,LASH);put(outer,26+y,LASH);continue;}
+  // Thick upper lash with a flicked outer corner.
+  L(x,25+y,x+3,25+y,LASH);put(outer,26+y,LASH);L(side<0?x-1:x+2,24+y,side<0?x+1:x+4,24+y,LASH);
+  const rows=focus?2:3,top=focus?27:26;
+  R(x,top+y,4,rows,'#fff1d9');R(x+1,top+y,2,rows,IRIS);R(x+1,top+y,2,1,IRIS_DARK);put(x+(side<0?2:1),top+1+y,'#f3d3b6');
+  if(focus)L(x,26+y,x+3,26+y,LASH);
  }
- L(26,31+y,29,31+y,'#9e6a70');if(expression==='hurt')R(27,32+y,2,1,'#b9787a');
+ // Mouth.
+ if(ult||hurt){R(24,30+y,8,4,'#6a2a35');R(25,31+y,6,2,'#f6efe6');L(25,32+y,30,32+y,'#c9b8b0');if(hurt)R(25,30+y,6,1,SKIN_SHADE);}
+ else if(focus){L(26,32+y,30,32+y,'#7e4a52');}
+ else if(faceLook==='C'){L(26,32+y,29,32+y,LIP);put(30,31+y,LIP);put(31,31+y,SKIN_SHADE);}
+ else if(faceLook==='B'){L(27,32+y,29,32+y,LIP);}
+ else{put(26,31+y,LIP);L(27,32+y,29,32+y,LIP);put(30,31+y,LIP);}
+}
+// The signature bang across her right eye, painted over the fringe.
+function eyeLock(r,y){
+ const {poly:P,line:L}=r;
+ if(faceLook==='A'){
+  P([[19,14+y],[26,13+y],[27,16+y],[26,24+y],[24,31+y],[20,34+y],[18,31+y],[19,23+y]],RED_DARK);
+  P([[20,15+y],[25,14+y],[26,17+y],[25,24+y],[23,30+y],[21,32+y],[19,30+y],[20,22+y]],RED);
+  L(23,16+y,21,29+y,RED_MID);L(24,16+y,23,23+y,RED_LIGHT);
+ }else if(faceLook==='B'){
+  P([[19,14+y],[27,13+y],[27,17+y],[25,23+y],[22,28+y],[19,30+y],[18,26+y]],RED_DARK);
+  P([[20,15+y],[26,14+y],[26,17+y],[24,22+y],[21,26+y],[19,27+y]],RED);
+  L(23,16+y,20,25+y,RED_MID);L(24,16+y,22,21+y,RED_LIGHT);
+ }else{
+  P([[18,14+y],[23,13+y],[21,22+y],[18,32+y],[16,30+y]],RED_DARK);P([[19,15+y],[22,14+y],[20,22+y],[18,29+y],[17,28+y]],RED);L(20,16+y,18,27+y,RED_LIGHT);
+ }
 }
 function hairFront(r,y,walk){
  const {poly:P,line:L}=r;
@@ -62,16 +99,16 @@ const NAVY='#2c3a63',NAVY_SHADE='#1a2342',NAVY_LIGHT='#4f62a0',PLATE='#e9eef3',P
 const BLACK='#26252f',BLACK_SHADE='#131218',BLACK_LIGHT='#4b4a5a',GRAY='#9a99a8',LINING='#d4d4dc';
 const TASSET='#5b6f8e',TASSET_SHADE='#34435d',TASSET_LIGHT='#8fa4c0',GEM='#6fa8e8';
 // Heaven's Wheel: a fan of long blade feathers from each shoulder blade.
-function bladeWings(r,y,walk){
+function bladeWings(r,y,walk,pal={shade:'#9fb0c4',fill:'#f2f6f9',line:'#56688a'}){
  const {poly:P,line:L}=r;
  for(const s of [-1,1]){
   const px=28+s*7,py=37+y;
   for(const [deg,len]of [[-40,17],[-24,20],[-9,21],[5,20],[19,18],[33,15]]){
    const a=deg*Math.PI/180,dx=Math.cos(a)*s,dy=Math.sin(a)+walk*.01,ex=px+dx*len,ey=py+dy*len,nx=-dy*2.6,ny=dx*2.6;
    const mx=px+dx*len*.55,my=py+dy*len*.55;
-   P([[px+nx*.6,py+ny*.6],[mx+nx,my+ny],[ex,ey],[mx-nx*.8,my-ny*.8],[px-nx*.6,py-ny*.6]],'#9fb0c4');
-   P([[px+nx*.4,py+ny*.4],[mx+nx*.7,my+ny*.7],[ex-dx,ey-dy],[mx,my]],'#f2f6f9');
-   L(px+dx*len*.45,py+dy*len*.45,px+dx*len*.85,py+dy*len*.85,'#56688a');
+   P([[px+nx*.6,py+ny*.6],[mx+nx,my+ny],[ex,ey],[mx-nx*.8,my-ny*.8],[px-nx*.6,py-ny*.6]],pal.shade);
+   P([[px+nx*.4,py+ny*.4],[mx+nx*.7,my+ny*.7],[ex-dx,ey-dy],[mx,my]],pal.fill);
+   L(px+dx*len*.45,py+dy*len*.45,px+dx*len*.85,py+dy*len*.85,pal.line);
   }
  }
 }
@@ -113,10 +150,69 @@ function wingCrown(r,y){
  const {poly:P,rect:R}=r;
  for(const s of [-1,1]){const p=(x,yy)=>[28+s*x,yy+y];P([p(10,20),p(14,15),p(16,16),p(12,21)],'#9fb0c4');P([p(11,19),p(14,16),p(15,17),p(12,20)],'#f2f6f9');P([p(10,17),p(13,13),p(14,14),p(11,18)],'#9fb0c4');P([p(11,16),p(13,14),p(13,15),p(11,17)],'#f2f6f9');R(...p(10,19),1,1,GEM);}
 }
+// ---- Outfit skins: each keeps her armour's gear (wings, dark wings or shields) ----
+const STRAW='#e0384a',STRAW_LEAF='#5aa04a';
+function berry(r,x,y){r.rect(x,y,2,2,STRAW);r.put(x,y-1,STRAW_LEAF);r.put(x+1,y+1,'#ffd6d6');}
+function bareLeg(r,x,d,{top=50,shoe='#c9a77a',strap=STRAW}={}){r.rect(x,top,5,67-top,SKIN);r.rect(x+1,top+1,2,65-top,SKIN_LIGHT);r.rect(x-1+d,67,7,3,shoe);r.rect(x+d,67,5,1,strap);r.rect(x-1+d,70,7,1,mix(shoe,'#000000',.4));}
+function pleats(r,walk,top=48){
+ const {poly:P,line:L}=r;
+ P([[21,top],[35,top],[40+walk*.3,top+10],[35,top+13],[30,top+11],[25,top+13],[16+walk*.3,top+10]],BLUE_DARK);
+ P([[22,top+1],[34,top+1],[38+walk*.3,top+9],[34,top+11],[29,top+9],[25,top+11],[18+walk*.3,top+9]],BLUE);
+ for(const [x,dx]of [[22,-2],[26,-1],[30,1],[34,2]]){L(x,top+2,x+dx+walk*.3,top+10,'#3d517f');L(x+1,top+2,x+1+dx+walk*.3,top+9,'#7e92c2');}
+}
+const OUTFITS={
+ casual:{
+  // Fairy Tail Day Off: white blouse with a blue ribbon, navy pleats, belt and boots.
+  sleeve:{color:'#f3f1ea',shade:'#b9bcc4',cuff:'#dfe3ea'},
+  legs(r,x,d){r.rect(x,53,5,6,SKIN);r.rect(x+1,54,2,4,SKIN_LIGHT);r.poly([[x-1,58],[x+6,58],[x+6+d,68],[x+3+d,70],[x-2+d,69]],'#3a2f3a');r.rect(x-1,58,7,2,'#5a4858');r.line(x+1,61,x+1+d,67,'#6e5a6c');r.rect(x-3+d,69,10,2,'#241c24');},
+  body(r,y,walk){const {poly:P,rect:R,line:L}=r;pleats(r,walk);
+   P([[20,34+y],[25,32+y],[32,32+y],[37,34+y],[36,47],[20,47]],'#b9bcc4');P([[21,34+y],[25,33+y],[32,33+y],[36,35+y],[35,46],[21,46]],'#f3f1ea');
+   P([[24,33+y],[28,36+y],[32,33+y],[31,35+y],[28,38+y],[25,35+y]],'#ffffff');
+   P([[26,36+y],[28,38+y],[30,36+y],[30,40+y],[28,39+y],[26,40+y]],'#3a5aa8');R(27,37+y,2,2,'#5a7ed0');
+   for(const yy of [41,44])R(28,yy,1,1,'#9aa2ae');R(20,46,17,2,'#6e4b3e');R(27,46,3,2,GOLD);},
+  after(r,y){r.poly([[19,38+y],[21,36+y],[23,37+y],[21,40+y],[20,40+y]],'#3f74c8');}},
+ pajamas:{
+  // Strawberry Knight Pajamas: pink set printed with strawberries, a slice of cake in hand.
+  sleeve:{color:'#f3a7bb',shade:'#c56c86',cuff:'#ffffff'},
+  legs(r,x,d){r.poly([[x-1,48],[x+6,48],[x+6+d,66],[x-1+d,66]],'#c56c86');r.rect(x,49,5,17,'#f3a7bb');berry(r,x+1+d,58);r.rect(x-2+d,66,9,4,'#f6e2e8');r.rect(x-1+d,65,3,2,STRAW);r.rect(x-2+d,69,9,1,'#c9b0b8');},
+  body(r,y){const {poly:P,rect:R,line:L}=r;
+   P([[20,34+y],[25,32+y],[32,32+y],[37,34+y],[38,50],[18,50]],'#c56c86');P([[21,34+y],[25,33+y],[32,33+y],[36,35+y],[37,49],[19,49]],'#f3a7bb');
+   P([[24,33+y],[28,37+y],[32,33+y],[31,35+y],[28,39+y],[25,35+y]],'#ffffff');L(28,39+y,28,48,'#ffffff');
+   for(const [x,yy]of [[22,42],[33,40],[24,47],[32,46]])berry(r,x,yy);R(19,48,19,2,'#ffffff');R(27,49,1,3,'#ffffff');R(29,49,1,3,'#ffffff');},
+  prop(r,x,y){const {rect:R,put}=r;R(x-3,y+2,8,1,'#ffffff');R(x-2,y-3,6,5,'#fff3e0');R(x-2,y-1,6,1,'#f6b4c4');R(x-2,y-3,6,1,'#ffffff');R(x,y-5,2,2,STRAW);put(x,y-6,STRAW_LEAF);}},
+ swimsuit:{
+  // Strawberry Shore Knight: red one-piece dotted like a strawberry, frilled hips.
+  legs(r,x,d){bareLeg(r,x,d);},
+  body(r,y){const {poly:P,rect:R,line:L}=r;
+   R(21,34+y,15,5,SKIN);R(22,35+y,13,3,SKIN_LIGHT);
+   P([[21,38+y],[35,38+y],[36,46],[34,51],[22,51],[20,46]],'#8e2433');P([[22,38+y],[34,38+y],[35,46],[33,50],[23,50],[21,46]],STRAW);
+   for(const [x,yy]of [[24,42],[30,41],[27,46],[33,45],[23,48]])R(x,yy,1,1,'#ffe2d6');
+   L(23,35+y,23,38+y,STRAW);L(33,35+y,33,38+y,STRAW);for(let x=20;x<37;x+=2){R(x,50,2,2,'#ffffff');}R(27,38+y,3,2,STRAW_LEAF);},
+  after(r,y){berry(r,36,14+y);r.rect(36,14+y,3,3,STRAW);r.put(37,13+y,STRAW_LEAF);}},
+ bikini:{
+  // Strawberry Bikini: dotted red bikini with a sheer white sarong at the hip.
+  legs(r,x,d){bareLeg(r,x,d,{top:48});},
+  body(r,y,walk){const {poly:P,rect:R,line:L}=r;
+   R(21,34+y,15,15,SKIN);R(22,35+y,13,13,SKIN_LIGHT);R(28,45,1,1,SKIN_SHADE);
+   for(const x of [22,29]){P([[x,38+y],[x+5,38+y],[x+4,42+y],[x+1,42+y]],STRAW);R(x+2,39+y,1,1,'#ffe2d6');}L(24,35+y,24,38+y,STRAW);L(32,35+y,32,38+y,STRAW);
+   P([[21,48],[35,48],[34,51],[22,51]],STRAW);R(25,49,1,1,'#ffe2d6');R(31,49,1,1,'#ffe2d6');
+   P([[26,49],[36,48],[40+walk,63],[29+walk,61]],'#f4eef0');P([[30,51],[36,49],[38+walk,60],[33+walk,59]],'#ffffff');R(34,47,3,3,STRAW);},
+  after(r,y){r.rect(36,14+y,3,3,STRAW);r.put(37,13+y,STRAW_LEAF);}},
+ bathsuit:{
+  // Fairy Tail Bathrobe: fluffy white robe, blue sash and guild mark, a bottle of milk.
+  sleeve:{color:'#f4f4f0',shade:'#c9ccd4',cuff:'#dfe3ea'},
+  legs(r,x,d){r.rect(x,60,5,7,SKIN);r.rect(x+1,61,2,5,SKIN_LIGHT);r.rect(x-1+d,67,7,3,'#ffffff');r.rect(x-1+d,67,7,1,'#3f74c8');r.rect(x-1+d,70,7,1,'#9aa2ae');},
+  body(r,y,walk){const {poly:P,rect:R,line:L}=r;
+   P([[19,34+y],[25,32+y],[32,32+y],[38,34+y],[40+walk*.3,62],[16+walk*.3,62]],'#c9ccd4');P([[20,34+y],[25,33+y],[32,33+y],[37,35+y],[38+walk*.3,61],[18+walk*.3,61]],'#f4f4f0');
+   P([[23,33+y],[28,40+y],[33,33+y],[31,33+y],[28,37+y],[25,33+y]],SKIN);L(23,33+y,28,40+y,'#dfe3ea');L(33,33+y,28,40+y,'#c9ccd4');
+   for(const [x,yy]of [[21,52],[33,55],[25,58]])R(x,yy,2,1,'#e6e8ee');R(18,46,21,3,'#3f74c8');R(26,46,4,4,'#5a8ee0');L(27,49,26,53,'#3f74c8');L(29,49,30,53,'#3f74c8');
+   P([[32,39+y],[34,37+y],[36,38+y],[34,41+y],[33,41+y]],'#3f74c8');},
+  prop(r,x,y){const {rect:R}=r;R(x,y-5,3,7,'#ffffff');R(x,y-6,3,1,'#5a9ad6');R(x,y-2,3,2,'#5a9ad6');R(x+1,y-4,1,2,'#e6f0ff');}},
+};
 export function erzaPixels({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='default',form=3,erzaForm}={}){
  frame=((frame%4)+4)%4;form=formIndex(erzaForm??form);
- const r=raster(),{poly:P,rect:R,line:L}=r,walk=moving?[0,1.5,0,-1.5][frame]:0,y=moving?-(frame%2):0,casual=skin==='casual',ultimate=pose==='nakagami'||pose==='chariot',requip=pose==='requip',cast=attack||ultimate||requip;
- const armored=!casual;
+ const r=raster(),{poly:P,rect:R,line:L}=r,walk=moving?[0,1.5,0,-1.5][frame]:0,y=moving?-(frame%2):0,look=OUTFITS[skin],dressed=!!look,casual=dressed,ultimate=pose==='nakagami'||pose==='chariot',requip=pose==='requip',cast=attack||ultimate||requip;
+ const armored=!dressed;
  // Rear hair (Black Wing ties it up into a ponytail instead).
  if(armored&&form===1){P([[18,20+y],[22,11+y],[32,10+y],[37,17+y],[38,32],[19,32]],RED_DARK);ponytail(r,y,walk);}
  else{
@@ -125,9 +221,10 @@ export function erzaPixels({frame=0,moving=false,pose='',attack=false,expression
   L(18,31,16-walk*.5,48,RED_MID);L(37,28,39+walk*.5,48,RED_LIGHT);L(20,37,19-walk*.3,49,'#d96b65');
  }
  if(armored){if(form===0)bladeWings(r,y,walk);else if(form===1)blackCoat(r,walk);else if(form===2)backShields(r,y);}
+ else{if(form===0)bladeWings(r,y,walk);else if(form===1)bladeWings(r,y,walk,{shade:'#1d1c25',fill:'#4b4a5a',line:'#9a99a8'});else if(form===2)backShields(r,y);}
  // Legs and footwear.
  for(const [x,d]of [[21,-walk],[30,walk]]){
-  if(casual){R(x,53,5,9,SKIN);R(x+1,55,3,5,SKIN_LIGHT);P([[x,60],[x+5,60],[x+5+d,68],[x+3+d,70],[x-2+d,69]],'#413b49');L(x+1,62,x+1+d,67,'#746173');R(x-3+d,69,10,2,'#292d3c');R(x-2+d,68,7,1,'#a3949d');}
+  if(dressed)look.legs(r,x,d);
   else if(form===3){
    // Bare knees above black knee-high boots with folded cuffs.
    R(x,53,5,7,SKIN);R(x+1,54,2,5,SKIN_LIGHT);
@@ -146,12 +243,8 @@ export function erzaPixels({frame=0,moving=false,pose='',attack=false,expression
    P([[x-2,57],[x+6,56],[x+7,61],[x+3,63],[x-1,61]],NAVY);P([[x-3,55],[x-1,57],[x-1,60]],NAVY_LIGHT);R(x-2+d,68,10,3,PLATE);R(x-2+d,70,10,1,PLATE_DARK);
   }
  }
- if(casual){
-  // Everyday Fairy Tail outfit: fitted white collared shirt, blue pleats and boots.
-  P([[20,35+y],[25,33+y],[32,33+y],[37,36+y],[36,46],[33,49],[22,49],[19,43]],'#a4adb7');
-  P([[22,35+y],[26,34+y],[31,34+y],[35,37+y],[34,46],[23,47],[21,41]],'#ececdf');
-  P([[25,34+y],[28,38+y],[31,34+y],[32,36+y],[28,41],[23,36+y]],'#fff9e9');L(28,41,28,46,'#bcc8ca');R(29,42,1,1,'#7f8da1');R(29,45,1,1,'#7f8da1');
-  P([[22,47],[34,47],[38+walk*.3,55],[35,58],[29,56],[23,58],[18+walk*.3,55]],BLUE_DARK);P([[23,49],[33,49],[35+walk*.3,55],[31,56],[27,54],[22,56],[20+walk*.3,54]],BLUE);L(23,50,22+walk*.3,55,'#a4afd0');L(28,50,28,54,'#a4afd0');L(32,50,33+walk*.3,55,'#8497bf');L(22,47,34,47,'#816357',2);R(27,47,4,2,GOLD);
+ if(dressed){
+  look.body(r,y,walk);
  }else if(form===3){
   // Heart Kreuz: navy pleated skirt, brown belt, silver cuirass with the dark cross.
   P([[21,48],[35,48],[40+walk*.3,58],[35,61],[30,59],[25,61],[16+walk*.3,58]],BLUE_DARK);
@@ -205,6 +298,7 @@ export function erzaPixels({frame=0,moving=false,pose='',attack=false,expression
    if(form===1)for(const t of [.35,.7])R(Math.round(sx+(hx-sx)*t)-2,Math.round(sy+(hy-sy)*t),5,1,GRAY);
    if(form===3){L(sx-2,sy+2,ex,ey,'#2c2f3d',2);}
   }
+  if(dressed&&look.sleeve){const o=look.sleeve,ex=Math.round(sx+(hx-sx)*.85),ey=Math.round(sy+(hy-sy)*.85);L(sx,sy,ex,ey,o.shade,6);L(sx,sy,ex,ey-1,o.color,4);R(ex-2,ey,5,2,o.cuff);}
   R(hx-1,hy-1,4,4,fists?NAVY:form===1&&armored?BLACK:SKIN_LIGHT);
  }
  // Weapons.
@@ -222,13 +316,12 @@ export function erzaPixels({frame=0,moving=false,pose='',attack=false,expression
   P([[26,48],[31,48],[30,66],[28,70],[27,66]],SILVER_SHADE);P([[27,48],[30,48],[29,66],[28,68]],SILVER_LIGHT);L(28,49,28,66,'#ffffff');
  }else{
   if(cast)sword(r,rx,ry-3,51,13,{});
+  else if(dressed&&look.prop)look.prop(r,rx,ry);
   else sword(r,rx+1,ry+2,51,67,{});
   if(armored&&form===0)sword(r,lx-1,ly+2,5,66);
-  if(casual&&form===2){P([[10,38],[17,36],[20,40],[19,48],[15,52],[9,47]],'#6685a0');L(14,39,14,48,GOLD,2);L(10,43,18,42,GOLD);}
-  if(casual&&form===1){P([[34,35],[37,33],[42,36],[40,40],[36,39]],'#353448');L(37,35,40,36,'#a49ab6');}
  }
- R(25,30+y,7,5,SKIN);R(26,31+y,4,3,SKIN_LIGHT);face(r,{y,blink,expression,cast});hairFront(r,y,walk);
- if(casual){P([[19,38+y],[21,36+y],[23,37+y],[21,40+y],[20,40+y]],'#6796b3');}
+ R(25,30+y,7,5,SKIN);R(26,31+y,4,3,SKIN_LIGHT);face(r,{y,blink,expression,cast});hairFront(r,y,walk);eyeLock(r,y);
+ if(dressed){look.after?.(r,y);}
  else if(form===0)wingCrown(r,y);
  else if(form===2)helmet(r,y);
  // Shoulder armour.
