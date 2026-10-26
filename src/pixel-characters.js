@@ -11,6 +11,10 @@ import {referenceOutfitPixels} from './character-reference-skins.js';
 import {kurumiPixels} from './kurumi-art.js';
 import {variaSuitPixels} from './samus-art.js';
 import {gokuPixels} from './goku-art.js';
+import {gojoPixels} from './gojo-art.js';
+import {narutoPixels} from './naruto-art.js';
+// Heroes redrawn on the shared hero builder route here before the legacy outfit modules.
+const REDRAWN={goku:gokuPixels,gojo:gojoPixels,naruto:narutoPixels};
 import {rimuruPixels} from './rimuru-art.js';
 import {diavoloPixels} from './diavolo-art.js';
 import {yukiPixels} from './yuki-art.js';
@@ -336,6 +340,7 @@ export function characterPixels(id,{frame=0,moving=false,pose='',attack=false,ex
   frame=((frame%4)+4)%4;const key=[id,frame,moving,pose,attack,expression,blink,skinId,form,evolved].join(':');if(dataCache.has(key))return dataCache.get(key);
   if(id==='denji'){const result=denjiPixels({frame,moving,pose,attack,expression,blink,skin:skinId,form});dataCache.set(key,result);return result;}
   if(id==='guts'){const result=gutsPixels({frame,moving,pose,attack,expression,blink,skin:skinId,form});dataCache.set(key,result);return result;}
+  if(REDRAWN[id]){const result=REDRAWN[id]({frame,moving,pose,attack,expression,blink,skin:skinId,form,evolved});dataCache.set(key,result);return result;}
   if(id==='kurumi'){const result=kurumiPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='diavolo'){const result=diavoloPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='yuki'){const result=yukiPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
