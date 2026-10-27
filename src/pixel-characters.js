@@ -2,6 +2,7 @@ import {denjiPixels} from './denji-art.js';
 import {shiraoriPixels} from './shiraori-art.js';
 import {megumiPixels} from './megumi-art.js';
 import {erenPixels} from './eren-art.js';
+import {maomaoPixels} from './maomao-art.js';
 import {evaPixels,EVA_UNITS} from './eva-art.js';
 import {pilotSuitPixels} from './eva-pilot-art.js';
 import {beachOutfitPixels} from './beach-outfit-art.js';
@@ -51,47 +52,6 @@ export function raster(){
   return {pixels,put,rect,poly,line};
 }
 export function outline(pixels,ink){const result=[...pixels];for(let y=0;y<SPRITE_HEIGHT;y++)for(let x=0;x<SPRITE_WIDTH;x++)if(pixels[y*SPRITE_WIDTH+x])for(const [dx,dy] of [[-1,0],[1,0],[0,-1],[0,1]]){const xx=x+dx,yy=y+dy;if(xx>=0&&xx<SPRITE_WIDTH&&yy>=0&&yy<SPRITE_HEIGHT&&!pixels[yy*SPRITE_WIDTH+xx])result[yy*SPRITE_WIDTH+xx]=ink;}return result;}
-// Maomao's reference outfit: high tied bun, straight fringe, bead braids,
-// crossed jade lapels, lined bell sleeves, burgundy skirt and teal slippers.
-function maomaoFrame({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false}){
-  const r=raster(),{rect,poly,line}=r,p=CHARACTER_PALETTES.maomao;
-  const walk=moving?[0,1,0,-1][frame]:0,bob=moving?frame%2:0,y=-bob,skin='#ffe0c1',shadow='#dfaf97',skirt='#863d61',fold='#5b304b',hem='#b35b78';
-  // High bun and back hair, followed by independently swinging braids.
-  poly([[30,16+y],[31,8+y],[36,5+y],[42,7+y],[44,13+y],[41,21+y]],p.hairDark);
-  poly([[33,13+y],[34,8+y],[39,7+y],[42,11+y],[40,16+y]],p.hair);rect(35,8+y,5,1,p.hairLight);
-  poly([[17,20+y],[39,20+y],[40,35+y],[36,44],[31,41],[23,42],[17,37+y]],p.hairDark);
-  // Separate slippers peek beneath a long swinging skirt.
-  rect(21-walk,66,5,4,p.hair);rect(31+walk,66,5,4,p.hair);rect(20-walk,69,7,2,p.hairDark);rect(30+walk,69,7,2,p.hairDark);
-  poly([[20,51],[35,51],[38+walk,60],[40+walk,67],[36,69],[29,68],[22,69],[16+walk,67],[18+walk,59]],fold);
-  poly([[22,51],[34,51],[35+walk,60],[38+walk,67],[33,67],[29,65],[24,68],[19+walk,66]],skirt);
-  poly([[24,53],[26,53],[24+walk,65],[21+walk,67]],hem);poly([[32,54],[34,56],[36+walk,66],[33,64]],'#9a496a');line(29,55,28+walk,66,fold);
-  // Bell sleeves have a yellow-green lining and a dark jade underside.
-  const raised=attack||pose==='brew',handY=raised?43:51;
-  poly([[19,39+y],[14,41+y],[10,51+walk],[12,55+walk],[20,54],[23,46]],p.shade);
-  poly([[17,41+y],[14,43],[12,50+walk],[16,53+walk],[21,51],[21,43]],p.coat);
-  poly([[11,51+walk],[16,53+walk],[21,51],[20,55],[13,56+walk]],'#aeb676');line(14,51+walk,19,52+walk,'#d8d498',1);
-  poly([[35,39+y],[40,41+y],[44,handY+1],[42,handY+6],[34,handY+6],[32,45]],p.shade);
-  poly([[36,41+y],[39,42+y],[42,handY],[40,handY+3],[35,handY+3]],p.coat);rect(35,handY+3,7,2,'#bdc087');
-  // Short wrap blouse over the skirt, with the broad diagonal lapel in the reference.
-  poly([[20,39+y],[24,38+y],[32,38+y],[36,40+y],[36,51],[34,55],[20,55],[19,48]],p.coat);
-  rect(21,45,2,8,p.light);rect(34,45,2,9,p.shade);rect(23,53,10,2,'#609678');
-  poly([[23,38+y],[28,42+y],[33,38+y],[35,40+y],[29,47],[22,41+y]],'#eef1d7');
-  poly([[23,40+y],[28,44+y],[33,40+y],[35,42+y],[28,51],[23,49],[29,43+y]],'#3c8d78');line(25,42+y,28,45+y,'#96d1ad');
-  if(!raised){rect(18,50+walk,5,3,skin);rect(23,50+walk,6,3,skin);rect(22,49+walk,3,1,shadow);line(24,52+walk,28,52+walk,shadow);}
-  else{rect(38,handY,4,3,skin);rect(18,49,5,3,skin);rect(39,handY-7,5,8,'#cde6d9');rect(40,handY-8,3,2,'#b68d60');rect(40,handY-3,3,3,'#8dba69');rect(40,handY-6,1,2,'#f1ffde');}
-  // Compact face with violet eyes, a flat fringe, and clear cheeks.
-  poly([[18,22+y],[37,22+y],[38,31+y],[34,37+y],[29,39+y],[23,37+y],[18,33+y]],shadow);
-  poly([[19,23+y],[36,23+y],[36,32+y],[32,37+y],[25,37+y],[20,33+y]],skin);
-  for(const x of [21,31]){rect(x,28+y,5,1,p.hairDark);rect(x,29+y,4,4,'#fff6e9');rect(x+1,29+y,2,4,'#7771b9');rect(x+1,29+y,1,1,'#fffbf0');rect(x+1,32+y,2,1,'#aba3dd');}
-  rect(27,36+y,3,1,'#ac7776');
-  poly([[16,32+y],[14,26+y],[15,18+y],[19,12+y],[27,10+y],[35,12+y],[40,18+y],[40,30+y],[37,34+y],[36,24+y],[20,24+y],[19,32+y]],p.hairDark);
-  poly([[17,27+y],[16,19+y],[20,14+y],[27,12+y],[34,14+y],[38,19+y],[38,27+y],[35,23+y],[21,23+y],[18,28+y]],p.hair);
-  rect(19,20+y,17,3,p.hair);for(const x of [20,24,28,32])line(x,16+y,x-1,23+y,p.hairLight);rect(21,14+y,11,1,'#4d786f');
-  for(const [x,sway] of [[18,walk],[37,-walk]]){line(x,34+y,x+sway,43,p.hairDark,2);rect(x+sway,38,2,2,'#cb8b96');rect(x+sway,43,2,4,p.hair);rect(x+sway-1,46,3,2,'#a8c9a6');rect(x+sway,48,1,2,p.hairDark);}
-  // Gold hairpin and blue-green ribbon above the bun.
-  line(31,10+y,43,5+y,'#d9c37b');poly([[32,7+y],[29,4+y],[34,5+y],[37,8+y]],'#95c8b0');rect(34,7+y,2,2,'#e9cf87');
-  paintFace(r,'maomao',{y,expression,blink});return outline(r.pixels,p.ink);
-}
 export function pilotPixels({expression='neutral',blink=false,skin='default',frame=0,moving=false,attack=false,pose=''}={}){
  const swimming=pilotSwimPixels({skin,expression,blink,frame,moving,attack,pose});if(swimming)return swimming;
  if(skin==='swimsuit')return swimsuitPixels('shinji',{expression,blink});
@@ -258,26 +218,6 @@ function goddessFrame({frame=0,moving=false,pose='',attack=false,expression='neu
  return outline(r.pixels,'#66516b');
 }
 
-function springCourtFrame({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false}){
- const r=raster(),{rect,poly,line}=r,p=CHARACTER_PALETTES.maomao,walk=moving?[0,1,0,-1][frame]:0,y=moving?-frame%2:0,pink='#d78da8',pinkDark='#a85f82',pinkLight='#f3b8ca',blue='#a8d7dc',blueDark='#649ba9',green='#a7c986',ink='#3e384c';
- // Full burgundy skirt, pale blue underskirt and green trailing waist ribbons.
- rect(20-walk,67,7,4,'#4c777c');rect(30+walk,67,7,4,'#4c777c');
- poly([[20,49],[35,49],[39+walk,62],[41+walk,68],[35,70],[28,69],[21,70],[15+walk,68]],blueDark);poly([[19,61],[38,61],[39+walk,67],[34,69],[28,67],[22,69],[17+walk,67]],blue);
- poly([[21,48],[34,48],[37+walk,58],[39+walk,64],[33,65],[28,63],[22,65],[17+walk,64],[19+walk,55]],'#863d61');poly([[23,50],[26,50],[24+walk,61],[21+walk,63]],'#b26688');poly([[32,50],[34,51],[36+walk,62],[33,61]],'#67344f');line(29,52,28,61,'#542e49');
- // Oversized pink sleeves, white crossed collar and a blue shoulder wrap.
- const raised=attack||pose==='brew',yy=raised?43:51;
- poly([[19,38+y],[13,40],[8,49],[10,55],[18,55],[23,46]],pinkDark);poly([[16,40],[12,43],[10,49],[12,53],[18,52],[21,43]],pink);line(13,44,12,49,pinkLight);poly([[35,38+y],[42,40],[47,yy+2],[44,yy+7],[35,yy+6],[32,45]],pinkDark);poly([[37,41],[41,42],[44,yy+2],[41,yy+5],[36,yy+4]],pink);line(40,43,42,yy+2,pinkLight);
- poly([[21,38+y],[25,37+y],[32,37+y],[36,39+y],[35,49],[31,53],[21,51]],pink);poly([[24,37+y],[28,41],[32,37+y],[34,40],[28,47],[22,41]],'#f3eee1');poly([[24,39+y],[28,43],[31,39+y],[33,41],[28,48],[24,45]],'#496b6c');rect(21,48,14,4,green);rect(22,48,12,1,'#d6dfb6');
- poly([[26,50],[29,51],[25+walk,63],[22+walk,67],[23+walk,57]],green);poly([[30,50],[32,51],[35-walk,60],[34-walk,65],[31,57]],'#bedb99');line(24,55,23+walk,62,'#d6e8b4');
- poly([[14,39],[19,37],[23,40],[20,43],[14,43],[9,49],[10,44]],blue);poly([[37,39],[41,39],[44,44],[40,46],[36,43]],blue);poly([[12,49],[14,52],[14+walk,60],[8+walk,65],[12+walk,57]],blue);poly([[41,47],[44,46],[48-walk,57],[44-walk,65],[42,62],[45-walk,55]],blue);line(44,50,46-walk,57,'#d5ece7');
- rect(17,50,4,3,'#ffe2c6');rect(39,yy+2,4,3,'#ffe2c6');if(raised){rect(40,yy-5,5,8,'#d5ebde');rect(41,yy-7,3,3,'#cfb289');rect(41,yy-1,3,3,'#83b38b');}
- // High double buns and side locks reproduce the supplied outfit's hairstyle.
- poly([[17,20+y],[38,20+y],[39,35],[35,40],[22,40],[16,34]],p.hairDark);for(const [x,yy]of [[17,12],[37,9]]){poly([[x-4,yy-2+y],[x+2,yy-4+y],[x+5,yy+1+y],[x+3,yy+6+y],[x-3,yy+5+y]],p.hairDark);rect(x-2,yy+y,5,4,p.hair);rect(x-2,yy+y,3,1,p.hairLight);rect(x-2,yy+5+y,4,1,'#dabf88');}
- poly([[18,22+y],[37,22+y],[38,31+y],[34,37+y],[28,39+y],[21,36+y],[17,29+y]],'#ffe2c6');paintFace(r,'maomao',{y,expression,blink});
- poly([[16,30+y],[14,23+y],[17,16+y],[25,12+y],[34,13+y],[40,18+y],[41,30+y],[37,34+y],[36,24+y],[21,25+y],[19,34+y]],p.hairDark);poly([[17,25+y],[17,19+y],[22,15+y],[31,15+y],[37,18+y],[38,26+y],[35,23+y],[22,24+y],[19,28+y]],p.hair);for(const x of [21,25,29,33])line(x,17+y,x-1,24+y,p.hairLight);line(18,30+y,18,37,p.hair,2);line(38,29+y,37,37,p.hair,2);
- return outline(r.pixels,ink);
-}
-
 function referenceSkinFrame(id,look,{frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false}){
  const r=raster(),{rect,poly,line}=r,walk=moving?[0,1,0,-1][frame]:0,y=moving?-frame%2:0,skin='#ffe2c6',ink='#2b2b40',female=look==='female',dancer=look==='dancer',hair=female?'#d6dfed':dancer?'#28473f':'#292632',hairDark=female?'#939ebc':dancer?'#152f34':'#171d29',hairLight=female?'#f5f5ff':dancer?'#54726a':'#5f4c5b';
  // All three reference skins use loose, long hair with separate walking sway.
@@ -358,11 +298,10 @@ export function characterPixels(id,{frame=0,moving=false,pose='',attack=false,ex
   if(id==='samus'&&['zerosuit','stealth'].includes(skinId)&&pose!=='bomb'){const result=zeroSuitFrame({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='frieren'){const result=frierenFrame({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='samus'){const result=tintPixels(variaSuitPixels({frame,moving,pose,attack,expression,blink}),skinFor(id,skinId));dataCache.set(key,result);return result;}
-  if((id==='maomao'&&skinId==='dancer')||(id==='gojo'&&skinId==='female')){const result=referenceSkinFrame(id,skinId,{frame,moving,pose,attack,expression,blink});dataCache.set(key,result);return result;}
+  if(id==='gojo'&&skinId==='female'){const result=referenceSkinFrame(id,skinId,{frame,moving,pose,attack,expression,blink});dataCache.set(key,result);return result;}
   if(id==='madoka'&&skinId==='goddess'){const result=goddessFrame({frame,moving,pose,attack,expression,blink});dataCache.set(key,result);return result;}
   if(id==='esdeath'){const result=tintPixels(esdeathFrame({frame,moving,pose,attack,expression,blink}),skinFor(id,skinId));dataCache.set(key,result);return result;}
-  if(id==='maomao'&&skinId==='spring'){const result=springCourtFrame({frame,moving,pose,attack,expression,blink});dataCache.set(key,result);return result;}
-  if(id==='maomao'){const result=tintPixels(maomaoFrame({frame,moving,pose,attack,expression,blink}),skinFor(id,skinId));dataCache.set(key,result);return result;}
+  if(id==='maomao'){const result=maomaoPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='shinji'){const result=evaFrame({frame,moving,pose,attack,expression,blink,skin:skinFor(id,skinId),evolved});dataCache.set(key,result);return result;}
   const p=CHARACTER_PALETTES[id],r=raster(),{rect,poly,line}=r;
   const madoka=id==='madoka',walk=moving?[0,1,0,-1][frame]:0,bob=moving?(frame%2):0;

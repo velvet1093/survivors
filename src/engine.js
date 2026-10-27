@@ -341,7 +341,7 @@ export function updateRun(g,dt,input={x:0,y:0}){
     if(updateGarudaShot(g,s,dt,{damage:damageEnemy,burst}))continue;
     s.age+=dt;s.life-=dt;
     if(s.delay&&s.age<s.delay)continue;
-    if(s.type==='poison'){s.x+=s.vx*dt;s.y+=s.vy*dt;if(s.age>=.55){s.life=0;g.fields.push({kind:'poison',x:s.tx,y:s.ty,life:s.duration,max:s.duration,r:s.cloudRadius,id:++g.id,damage:s.damage,poisonPower:s.poisonPower,fused:s.fused,tick:0,age:0,color:s.color});burst(g,s.tx,s.ty,s.color,12);}continue;}
+    if(s.type==='poison'){s.x+=s.vx*dt;s.y+=s.vy*dt;if(s.age>=.55){s.life=0;g.fields.push({kind:'poison',x:s.tx,y:s.ty,life:s.duration,max:s.duration,r:s.cloudRadius,id:++g.id,damage:s.damage,poisonPower:s.poisonPower,fused:s.fused,tick:0,age:0,color:s.color});burst(g,s.tx,s.ty,s.color,6);effect(g,'vial-shatter',{x:s.tx,y:s.ty,r:s.cloudRadius,fused:s.fused,life:.4,max:.4});}continue;}
     if(s.charge&&s.age<s.charge){if(s.type==='ki'){s.x=p.x+Math.cos(p.aimAngle||0)*16;s.y=p.y-23;}continue;}
     if(s.wave){const angle=Math.atan2(s.vy,s.vx),step=Math.sin(s.age*18)*s.wave*180*dt;s.x-=Math.sin(angle)*step;s.y+=Math.cos(angle)*step;}
     if(s.fused&&s.type==='shuriken'&&s.age>1.05){const a=Math.atan2(p.y-s.y,p.x-s.x);s.vx=Math.cos(a)*460;s.vy=Math.sin(a)*460;}

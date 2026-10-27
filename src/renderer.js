@@ -36,6 +36,7 @@ import {drawHeroMechanic} from './mechanic-art.js';
 import {drawPlayerProjectile} from './projectiles.js';
 import {enemyAura,hazardEmblem} from './anime-art.js';
 import {drawEvaEffect,drawEvaAura} from './eva-effects.js';
+import {drawMaomaoEffect} from './maomao-effects.js';
 import {drawGem,drawUnitStatuses,drawCombatField} from './combat-art.js';
 import {terrain,propSprite} from './pixel-world.js';
 import {drawHero,drawEnemy} from './sprites.js';
@@ -91,7 +92,7 @@ function drawWorldLoot(c,g){
 }
 function drawEffects(c,g){
   for(const e of g.effects){const progress=1-e.life/e.max;c.save();c.globalAlpha=Math.min(1,e.life/e.max*2);
-    if(drawSalvationEffect(c,e,progress,!!g.p.reducedMotion)||drawPairedEffect(c,e,progress,!!g.p.reducedMotion)||drawKurumiClockEffect(c,e,progress,!!g.p.reducedMotion)||drawGutsSlash(c,e,progress,!!g.p.reducedMotion)||drawDenjiSlash(c,e,progress,!!g.p.reducedMotion)||drawMegumiEffect(c,e,progress,!!g.p.reducedMotion)||drawEvaEffect(c,e,progress,!!g.p.reducedMotion)){c.restore();continue;}
+    if(drawSalvationEffect(c,e,progress,!!g.p.reducedMotion)||drawPairedEffect(c,e,progress,!!g.p.reducedMotion)||drawKurumiClockEffect(c,e,progress,!!g.p.reducedMotion)||drawGutsSlash(c,e,progress,!!g.p.reducedMotion)||drawDenjiSlash(c,e,progress,!!g.p.reducedMotion)||drawMegumiEffect(c,e,progress,!!g.p.reducedMotion)||drawEvaEffect(c,e,progress,!!g.p.reducedMotion)||drawMaomaoEffect(c,e,progress,!!g.p.reducedMotion)){c.restore();continue;}
     if(drawErzaEffect(c,e,progress,!!g.p.reducedMotion)){c.restore();continue;}
     if(e.type==='crimson-strike'){drawCrimsonStrike(c,e,progress,!!g.p.reducedMotion);c.restore();continue;}
     if(e.type==='thunder-blast'){c.strokeStyle='#e9c889';c.lineWidth=3;c.beginPath();c.arc(e.x,e.y,e.r*(.25+progress*.75),0,TAU);c.stroke();for(let i=0;i<7;i++){const a=i*2.399,r=e.r*(.3+progress*.6);path(c,[[e.x+Math.cos(a)*r*.3,e.y+Math.sin(a)*r*.3],[e.x+Math.cos(a+.15)*r*.7,e.y+Math.sin(a+.15)*r*.7],[e.x+Math.cos(a)*r,e.y+Math.sin(a)*r]],'#ffedc3',2);}}

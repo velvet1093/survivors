@@ -7,6 +7,7 @@ import {drawPurple} from './combat-art.js';
 import {drawHollowPurpleProjectile} from './hollow-purple-art.js';
 import {drawShadowGarden,drawRasenFlash} from './multi-fusion-art.js';
 import {drawPalletRound,drawLonginus} from './eva-effects.js';
+import {drawPoisonVial} from './maomao-effects.js';
 import {drawPairedProjectile} from './paired-attack-art.js';
 const TAU=Math.PI*2;
 const line=(c,points,color,width)=>{c.strokeStyle=color;c.lineWidth=width;c.lineCap='round';c.lineJoin='round';c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();};
@@ -30,7 +31,7 @@ export function drawPlayerProjectile(c,s,{zoom=1,area=1,reducedMotion=false}={})
   c.rotate(angle);drawGarudaProjectile(c,s,reducedMotion);
  }else if(s.type==='blue'){if(s.fused)drawHollowPurpleProjectile(c,s,reducedMotion);else drawPurple(c,s,reducedMotion);}
  else if(s.type==='poison'){
-  if(!reducedMotion)c.rotate(Math.sin(s.age*6)*.7);poly(c,[[-6,-6],[-4,-9],[4,-9],[6,-6],[6,7],[-6,7]],'#d8f7e6');c.fillStyle=s.fused?'#ba91da':'#78cf84';c.fillRect(-4,-1,8,6);c.fillStyle='#d7b17c';c.fillRect(-4,-11,8,4);c.fillStyle='#fff9d5';c.fillRect(-3,-6,2,5);disc(c,1,2,2,'#f8ebaa');
+  if(!reducedMotion)c.rotate(Math.sin(s.age*6)*.7);drawPoisonVial(c,s,reducedMotion);
  }else if(s.type==='shuriken'){
   c.rotate(reducedMotion?0:s.age*17);const r=Math.max(12,s.r);poly(c,[[0,-r],[4,-4],[r,0],[4,4],[0,r],[-4,4],[-r,0],[-4,-4]],s.fused?'#b2ffe5':'#b8e8e7');line(c,[[0,-r+3],[0,0],[r-3,0]],'#f4fff3',2);disc(c,0,0,3,'#437c7d');
  }else{

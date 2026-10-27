@@ -1,3 +1,4 @@
+import {drawPoisonPool} from './maomao-effects.js';
 import {activeStatuses} from './status.js';
 import {gemTier} from './xp.js';
 const TAU=Math.PI*2;
@@ -29,14 +30,7 @@ export function drawUnitStatuses(c,unit,time,reduced=false,isPlayer=false){
 }
 export function drawCombatField(c,f,reduced=false){
  const age=reduced?.5:f.age,fade=Math.min(1,f.life/.6),r=f.r,enter=Math.min(1,f.age/.14);c.save();c.globalAlpha=fade*enter;
- if(f.kind==='poison'){
-   const fused=f.fused,pale=fused?'#e0c5f2':'#d8ecaa',edge=fused?'#bc9ed3':'#a5ce77';
-   c.fillStyle=fused?'#76608355':'#5d915c66';c.beginPath();c.arc(f.x,f.y,r,0,TAU);c.fill();ring(c,f.x,f.y,r,edge+'bb',2);ring(c,f.x,f.y,r-4,edge+'44');
-   for(let i=0;i<14;i++){const a=i*2.399+age*.16,d=r*(.15+((i*7)%13)/16),x=f.x+Math.cos(a)*d,y=f.y+Math.sin(a)*d,phase=(age*.45+i*.17)%1;ring(c,Math.round(x),Math.round(y-phase*7),2+phase*3,edge+(phase<.6?'99':'44'));if(i%3===0)dot(c,x-2,y+3,3,1,pale+'77');}
-   // A central poison mark and short fading fumes make the pool readable at any zoom.
-   c.save();c.translate(Math.round(f.x-4),Math.round(f.y-4));c.scale(1.3,1.3);statusGlyph(c,'poison',0,0,pale+'aa');c.restore();
-   for(let i=0;i<8;i++){const a=i*TAU/8;dot(c,f.x+Math.cos(a)*(r-7),f.y+Math.sin(a)*(r-7),2,2,pale+'aa');}
-   if(f.panacea){ring(c,f.x,f.y,r-10,'#eee5ad66',1);}
+ if(f.kind==='poison'){c.restore();drawPoisonPool(c,f,reduced);return;
  }else{
    const core=8+Math.sin(age*9)*1.2;c.fillStyle='#142a4a77';c.beginPath();c.arc(f.x,f.y,r,0,TAU);c.fill();ring(c,f.x,f.y,r,'#8fcbf666',1);ring(c,f.x,f.y,r*.7,'#5c99e455',2);
    for(let i=0;i<22;i++){const t=(age*.85+i/22)%1,a=i*2.399+age*1.5,d=core+(r-core)*(1-t),x=f.x+Math.cos(a)*d,y=f.y+Math.sin(a)*d;dot(c,x,y,2,2,i%3?'#8ed5f3':'#e9f7ff');if(i%3===0){c.strokeStyle='#5c9fe788';c.beginPath();c.arc(f.x,f.y,d,a-.5,a);c.stroke();}}
