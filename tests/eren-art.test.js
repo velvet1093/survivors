@@ -8,3 +8,9 @@ test('Eren’s four outfits are distinct, keep their Titan form, and animate',()
  // The infiltrator leans on a wooden crutch that reaches the ground.
  const inf=characterPixels('eren',{skin:'infiltrator'});assert.ok([69,70,71].some(y=>inf.slice(y*56,y*56+16).includes('#8a6440')));
 });
+test('Eren’s items and ultimate use his own pixel icons',async()=>{
+ const {icon,SPECIAL_ICONS}=await import('../src/icons.js'),{EREN_ICON_IDS}=await import('../src/eren-icons.js');
+ assert.equal(SPECIAL_ICONS.eren,'titanshift');
+ for(const id of EREN_ICON_IDS)assert.match(icon(id),new RegExp('data-pixel-icon="'+id+'"'));
+ assert.equal(new Set(EREN_ICON_IDS.map(id=>icon(id))).size,EREN_ICON_IDS.length);
+});
