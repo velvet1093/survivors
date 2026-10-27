@@ -1,12 +1,5 @@
 // Native 56 × 76 sprite clusters. Faces use small, quiet eyes rather than large white blocks.
-function face(r,{y=0,iris='#6bada5',blink=false,expression='neutral',covered=false}={}){
- const {rect,line}=r,ink='#303541',closed=blink||expression==='hurt',focus=['focused','ultimate'].includes(expression);
- for(const x of covered?[32]:[21,32]){
-  if(closed){line(x,29+y,x+3,29+y,ink);if(expression==='hurt')rect(x+1,30+y,2,1,ink);}
-  else{rect(x,27+y,4,1,ink);rect(x,28+y,4,4,'#eee8d5');rect(x+1,28+y,2,4,iris);rect(x+1,29+y,1,3,'#35484b');rect(x+1,28+y,1,1,'#fff5e4');if(focus)rect(x===21?x:x+3,28+y,1,1,ink);}
- }
- rect(27,34+y,4,1,'#996f68');if(expression==='hurt')rect(28,35+y,2,1,'#bb8880');
-}
+// Eren's Titan forms; his human outfits are drawn in eren-art.js.
 export function redrawEren(r,{frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='default',form=0,evolved=''}={}){
  const {rect,poly,line}=r,ink='#283239',walk=moving?[0,2,0,-2][frame]:0,y=moving?-(frame%2):0,cast=attack||pose==='shift',tone='#e7c5a6',lit='#f4d9b8',shade='#b98e77',hair='#443c36',hairShade='#292c2c',hairLight='#73604b';
  if(form){
@@ -21,29 +14,6 @@ export function redrawEren(r,{frame=0,moving=false,pose='',attack=false,expressi
   poly([[17,25+y],[16,17+y],[20,10+y],[28,7+y],[37,12+y],[40,23+y],[36,29+y],[34,20+y],[30,16+y],[26,22+y],[23,18+y],[20,27+y]],hair);poly([[20,19+y],[22,13+y],[28,10+y],[35,14+y],[36,19+y],[30,13+y],[25,17+y],[22,16+y]],hairLight);line(18,28+y,17,35+y,'#65513e',2);line(37,27+y,38,35+y,'#65513e',2);
   for(const xx of [22,32]){line(xx,24+y,xx+3,25+y,ink);rect(xx+1,26+y,3,2,'#97dba4');rect(xx+2,26+y,1,1,'#f0f4bf');}poly([[23,30+y],[28,31+y],[34,30+y],[33,34+y],[27,35+y],[23,33+y]],'#684b43');for(const xx of [24,27,30,32])rect(xx,31+y,2,2,'#ecdbb4');rect(27,35+y,4,1,'#e0b18c');for(const [xx,yy,w,h]of [[lx-3,ly-2,9,9],[rx-3,ry-2,9,9],[19-walk,57,6,9],[33+walk,57,6,9],[23,34,5,4],[31,34,5,4]]){poly([[xx,yy+2],[xx+3,yy],[xx+w,yy+1],[xx+w-1,yy+h],[xx+1,yy+h]],'#658e9a');poly([[xx+2,yy+2],[xx+4,yy+1],[xx+w-2,yy+2],[xx+w-2,yy+h-1],[xx+2,yy+h-2]],'#a9d1d0');line(xx+3,yy+2,xx+3,yy+h-2,'#edf1d4');}return r.pixels;
  }
- const adult=skin==='yeagerist',hobo=skin==='infiltrator',cloak=skin==='cloak';
- if(cloak){poly([[18,34],[26,32],[35,34],[39,46],[43+walk,62],[32,60],[26,64],[13-walk,60],[17,47]],'#2c4a43');poly([[19,36],[27,36],[35,36],[39,57],[30,58],[26,61],[17,57]],'#557560');line(17,46,15-walk,57,'#799074',2);line(35,45,38+walk,57,'#1e3837',2);}
- if(hobo)poly([[15,18+y],[21,10+y],[33,9+y],[40,18+y],[42,44],[36,49],[31,39],[20,43],[13,46]],hairShade);
- if(adult||hobo){const coat=hobo?'#c1b298':'#3c4144',dark=hobo?'#8e8776':'#242f32',light=hobo?'#dfcfb0':'#5e6260';
-  poly([[17,37],[23,34],[34,35],[39,40],[40,53],[44+walk,65],[34,64],[28,57],[23,65],[12-walk,63],[16,51]],dark);
-  for(const [x,d]of [[21,-walk],[31,walk]]){rect(x+d,53,5,14,'#3a403a');rect(x+d+1,56,2,8,'#55584a');rect(x+d-2,67,8,hobo&&x===31?2:4,'#262d2c');if(hobo&&x===31){line(x+d-1,64,x+d+5,66,'#a6a18c',2);rect(x+d,68,4,2,tone);}}
-  poly([[23,37],[32,37],[35,47],[33,54],[22,54],[21,47]],hobo?'#e6dcc5':'#bab6a8');poly([[24,36],[28,39],[32,36],[31,43],[25,43]],shade);line(25,38,27,43,'#77786e');line(31,38,29,43,'#77786e');for(const yy of [40,43])line(26,yy,30,yy+1,'#5a5d55');rect(22,53,13,2,'#54564d');rect(27,53,3,2,'#b0a187');
-  poly([[17,37],[23,35],[25,38],[21,45],[24,48],[21,62],[15-walk,61],[17,49]],coat);poly([[33,35],[37,38],[38,51],[41+walk,62],[34,62],[32,46],[35,40],[31,38]],coat);line(18,41,17-walk,58,light);line(36,43,38+walk,59,light);line(18,41,cast?11:14,cast?45:52,coat,5);line(38,41,cast?45:41,cast?43:52,coat,5);rect(cast?9:12,cast?45:51,5,4,tone);rect(cast?44:40,cast?43:51,5,4,lit);
-  if(hobo){rect(38,44,6,4,'#64716b');rect(39,45,4,1,'#a5aaa0');line(44,54,45,71,'#746044',3);line(45,54,46,70,'#baa07a');rect(42,52,5,2,'#91774e');}
- }else{
-  for(const [x,d]of [[21,-walk],[31,walk]]){rect(x+d,52,5,13,'#d2ceba');rect(x+d,55,5,2,'#625d50');line(x+d+1,57,x+d+4,61,'#706750');rect(x+d-1,62,7,8,'#514b40');rect(x+d,63,2,6,'#8e7e61');rect(x+d-2,69,9,2,'#303631');}
-  poly([[19,37],[24,35],[32,35],[37,38],[37,51],[34,56],[21,56],[18,48]],'#886846');rect(24,38,9,15,'#e8dfc7');poly([[24,37],[28,40],[32,36],[31,44],[26,44]],'#f6edd4');rect(27,41,3,6,'#c1bcab');poly([[19,38],[23,37],[23,48],[20,51],[18,48]],'#b29466');poly([[34,37],[38,40],[37,50],[33,48]],'#bc9d6e');rect(19,47,4,2,'#d9bd8a');rect(34,47,3,2,'#d9bd8a');line(24,44,32,52,'#5f5b4b',2);line(32,44,24,52,'#5f5b4b',2);rect(19,52,18,3,'#5c5b50');rect(27,52,3,2,'#c7ba8e');
-  line(18,40,cast?11:14,cast?43:52,'#ad8b5d',5);line(38,40,cast?45:41,cast?41:52,'#b99b6b',5);rect(cast?9:12,cast?43:51,5,4,tone);rect(cast?44:40,cast?41:51,5,4,lit);rect(15,51,6,10,'#5f7676');rect(36,51,6,10,'#6a7e7b');rect(16,52,2,7,'#b5c6bc');rect(37,52,2,7,'#c9d5c9');
-  if(cloak){poly([[19,35],[27,37],[36,35],[38,41],[30,44],[26,41],[19,43],[16,40]],'#63856b');rect(27,38,2,2,'#d1c79c');}
- }
- // Blades remain readable in every human outfit, including the walking-stick skin.
- if(evolved==='thunderspears'){for(const [sx,sy]of [[cast?11:14,cast?45:53],[cast?46:43,cast?42:53]]){line(sx,sy,sx+2,sy-21,'#4d7066',4);line(sx+1,sy-2,sx+3,sy-18,'#9cbba0',2);poly([[sx,sy-20],[sx+3,sy-28],[sx+5,sy-19]],'#d2dfcc');rect(sx-2,sy-5,7,2,'#c8ab6f');}}
- else if(!hobo||cast){line(cast?11:14,cast?44:54,cast?4:5,cast?25:67,'#8eb0ba',3);line(cast?12:15,cast?44:54,cast?5:6,cast?25:66,'#e1ece0');line(cast?46:43,cast?42:54,cast?52:52,cast?21:66,'#a4c3c5',3);line(cast?47:44,cast?42:54,cast?53:53,cast?22:65,'#f0f2da');}
- poly([[18,20+y],[22,15+y],[34,15+y],[39,22+y],[37,31+y],[32,37+y],[25,37+y],[20,33+y],[17,27+y]],shade);poly([[20,21+y],[24,17+y],[33,18+y],[37,23+y],[35,32+y],[31,36+y],[25,35+y],[20,30+y]],tone);poly([[22,23+y],[34,23+y],[35,28+y],[31,33+y],[24,32+y],[21,28+y]],lit);
- if(adult){poly([[17,25+y],[15,19+y],[17,13+y],[24,9+y],[33,10+y],[38,15+y],[39,24+y],[36,29+y],[34,20+y],[30,16+y],[23,19+y],[19,18+y],[20,28+y]],hair);poly([[34,11+y],[40,11+y],[43,15+y],[40,20+y],[36,19+y]],hairShade);poly([[36,12+y],[40,13+y],[41,16+y],[37,17+y]],hair);line(19,16+y,25,11+y,hairLight,2);line(26,11+y,34,15+y,hairLight);line(22,19+y,29,16+y,'#574b3e');}
- else if(hobo){poly([[16,26+y],[15,17+y],[20,11+y],[28,9+y],[35,12+y],[40,20+y],[40,41],[35,44],[34,22+y],[29,16+y],[24,23+y],[20,26+y],[19,43],[14,44]],hair);poly([[18,20+y],[20,15+y],[28,12+y],[33,15+y],[29,14+y],[23,19+y]],hairLight);line(16,28+y,16,39,'#6e5b46');line(38,28+y,37,40,'#695844');}
- else{poly([[17,28+y],[15,22+y],[15,16+y],[20,10+y],[28,8+y],[35,11+y],[40,17+y],[40,24+y],[36,29+y],[34,21+y],[31,17+y],[26,24+y],[24,18+y],[20,24+y],[20,31+y]],hairShade);poly([[17,22+y],[18,16+y],[22,12+y],[28,10+y],[34,13+y],[37,19+y],[33,17+y],[30,14+y],[25,20+y],[24,15+y],[20,20+y]],hair);line(20,15+y,25,12+y,hairLight,2);line(29,12+y,34,15+y,hairLight);}
- face(r,{y:y-1,expression,blink,covered:hobo});if(!hobo){line(21,25+y,24,25+y,'#665141');line(32,25+y,35,25+y,'#665141');if(!adult){poly([[18,18+y],[22,17+y],[26,21+y],[28,25+y],[31,19+y],[35,20+y],[37,25+y],[33,24+y],[30,23+y],[28,27+y],[24,23+y],[21,26+y],[18,25+y]],hair);poly([[19,18+y],[23,18+y],[25,23+y],[25,26+y],[22,22+y],[21,26+y]],hair);poly([[29,15+y],[33,18+y],[35,25+y],[32,22+y],[31,25+y]],hair);}else{poly([[18,17+y],[26,15+y],[33,17+y],[36,21+y],[36,24+y],[32,21+y],[29,20+y],[25,23+y],[22,22+y],[20,25+y]],hair);line(21,18+y,26,16+y,hairLight);}}if(hobo){poly([[20,21+y],[28,20+y],[29,31+y],[21,32+y]],'#dcdcc9');line(20,24+y,28,23+y,'#f2efdc');line(21,28+y,28,27+y,'#aaa99b');line(21,19+y,35,18+y,'#d5d5c4',2);rect(25,36+y,1,1,'#827463');rect(28,37+y,3,1,'#827463');rect(33,35+y,1,1,'#827463');}
  return r.pixels;
 }
 export function redrawFrieren(r,{frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='default'}={}){

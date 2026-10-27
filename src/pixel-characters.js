@@ -1,6 +1,7 @@
 import {denjiPixels} from './denji-art.js';
 import {shiraoriPixels} from './shiraori-art.js';
 import {megumiPixels} from './megumi-art.js';
+import {erenPixels} from './eren-art.js';
 import {beachOutfitPixels} from './beach-outfit-art.js';
 import {cuteSwimPixels} from './cute-swim-art.js';
 import {pilotSwimPixels,paintPilotEvaSwim} from './pilot-swim-art.js';
@@ -314,7 +315,8 @@ function zeroSuitFrame({frame=0,moving=false,pose='',attack=false,expression='ne
  poly([[18,21+y],[23,16+y],[33,17+y],[39,23+y],[37,32+y],[32,37+y],[23,36+y],[18,29+y]],tone);paintFace(r,'samus',{y,expression,blink});poly([[16,27+y],[15,19+y],[20,12+y],[31,10+y],[38,16+y],[40,23+y],[36,28+y],[33,20+y],[29,23+y],[25,19+y],[21,26+y],[19,32+y]],hairDark);poly([[17,23+y],[19,17+y],[25,13+y],[31,13+y],[36,18+y],[37,22+y],[33,18+y],[29,21+y],[25,17+y],[21,23+y],[18,28+y]],hair);line(23,14+y,31,14+y,'#fff0af');poly([[20,19+y],[25,17+y],[29,20+y],[33,18+y],[36,23+y],[33,26+y],[30,23+y],[27,27+y],[25,23+y],[22,26+y]],hair);return outline(r.pixels,ink);
 }
 
-function erenFrame(options){const r=raster();redrawEren(r,options);return outline(r.pixels,'#29333f');}
+// Titan forms keep the shared redesign; the human outfits come from eren-art.
+function erenFrame(options){if(!options.form)return erenPixels(options);const r=raster();redrawEren(r,options);return outline(r.pixels,'#29333f');}
 function fusionSuitFrame({frame=0,moving=false,pose='',attack=false,expression='neutral'}){
  const r=raster(),{rect,poly,line}=r,ink='#273e55',cyan='#3b9cbd',cyanDark='#23607d',cyanLight='#83d7e2',gold='#d5b94d',goldLight='#f4dc7b',goldDark='#8a8144',pink='#c34b83',pinkDark='#783a67',pinkLight='#ee89b2',green='#4c8064',walk=moving?[0,2,0,-2][frame]:0,y=moving?-frame%2:0;
  if(pose==='bomb'){poly([[15,63],[13,53],[19,45],[29,42],[39,48],[43,57],[39,66],[30,70],[20,68]],cyanDark);poly([[18,61],[16,54],[21,48],[29,46],[36,50],[39,57],[35,64],[29,67],[22,65]],cyan);line(24,47,26,67,gold,3);line(33,48,32,65,goldLight,2);rect(25,54,8,5,pink);rect(27,55,4,3,cyanLight);return outline(r.pixels,ink);}
