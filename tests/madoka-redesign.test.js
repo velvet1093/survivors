@@ -9,7 +9,7 @@ test('every Madoka outfit has its own design and animates',()=>{
  assert.equal(new Set(ids.map(skin=>JSON.stringify(characterPixels('madoka',{skin})))).size,ids.length);
  for(const skin of ids){const idle=characterPixels('madoka',{skin});for(const o of [{attack:true},{pose:'ascend'},{blink:true},{moving:true,frame:1}])assert.notDeepEqual(characterPixels('madoka',{skin,...o}),idle,skin+' '+JSON.stringify(o));}
  // Pink eyes everywhere except the golden-eyed goddess.
- assert.ok(characterPixels('madoka').includes('#e0508a'));assert.ok(characterPixels('madoka',{skin:'goddess'}).includes('#f0c040'));
+ assert.ok(characterPixels('madoka').includes('#f06a9a'));assert.ok(characterPixels('madoka',{skin:'goddess'}).includes('#f0c040'));
 });
 test('Madoka’s weapon and ultimate use the new icons and light effects',()=>{
  assert.equal(SPECIAL_ICONS.madoka,'lawofcycles');for(const id of MADOKA_ICON_IDS)assert.match(icon(id),new RegExp('data-pixel-icon="'+id+'"'));
