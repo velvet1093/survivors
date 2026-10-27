@@ -1,3 +1,4 @@
+import {drawLawOfCycles} from './madoka-effects.js';
 import {drawUnlimitedVoid} from './gojo-effects.js';
 import {drawPanaceaAura} from './maomao-effects.js';
 import {drawDenjiUltimate} from './denji-effects.js';
@@ -32,9 +33,7 @@ export function ultimateUnder(c,g){
   else if(u.type==='gojo'){drawUnlimitedVoid(c,u,!!g.p.reducedMotion);
   }else if(u.type==='maomao'){drawPanaceaAura(c,g);
   }else if(u.type==='goku'&&u.age<1.8){c.globalAlpha=.2;c.strokeStyle='#c4f4ff';c.lineWidth=1;c.setLineDash([4,14]);c.beginPath();c.ellipse(u.tx,u.ty,u.r*Math.min(1,u.age),u.r*Math.min(1,u.age),0,0,TAU);c.stroke();}
-  else if(u.type==='madoka'){
-    c.strokeStyle='#ffcee577';c.lineWidth=1;c.setLineDash([2,14]);c.beginPath();c.arc(g.p.x,g.p.y,140+Math.sin(u.age*2)*6,0,TAU);c.stroke();c.setLineDash([]);
-    for(let i=0;i<6;i++){const a=i*TAU/6+u.age*.25,x=g.p.x+Math.cos(a)*135,y=g.p.y+Math.sin(a)*135;star(c,x,y,6,'#ffefcd');}
+  else if(u.type==='madoka'){drawLawOfCycles(c,g,'under');
   }
 
   c.restore();
@@ -52,9 +51,7 @@ export function ultimateOver(c,g){
     const grad=c.createRadialGradient(x-r*.3,y-r*.3,1,x,y,r);grad.addColorStop(0,'#fffdf1');grad.addColorStop(.45,'#d7faff');grad.addColorStop(.8,'#8ddef8');grad.addColorStop(1,'#47a8dc');c.fillStyle=grad;c.beginPath();c.arc(x,y,r,0,TAU);c.fill();
     for(let i=0;i<3;i++){c.strokeStyle='#e5fdff99';c.lineWidth=1.3;c.beginPath();c.ellipse(x,y,r*(.9-i*.13),r*.28,u.age*2+i*1.1,0,TAU);c.stroke();}
     if(u.age<1.2)for(let i=0;i<12;i++){const a=i*TAU/12+u.age*2,rr=65+((1-u.age*.7+i*.12)%1)*80;star(c,x+Math.cos(a)*rr,y+Math.sin(a)*rr*.5,2.3,'#d8f7ff');}
-  }else if(u.type==='madoka'){
-    for(let i=0;i<22;i++){const a=i*2.399+u.age*.2,r=80+((i*17)%110);star(c,g.p.x+Math.cos(a)*r,g.p.y-70+Math.sin(a)*r*.5,2+Math.sin(u.age*4+i),'#ffe2f1bb');}
-    c.strokeStyle='#ffdaedaa';c.lineWidth=1;c.beginPath();c.ellipse(g.p.x,g.p.y-72,18,5,-.1,0,TAU);c.stroke();
+  }else if(u.type==='madoka'){drawLawOfCycles(c,g,'over');
   }
   c.restore();
 }

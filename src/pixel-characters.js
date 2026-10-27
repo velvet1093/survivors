@@ -4,6 +4,7 @@ import {megumiPixels} from './megumi-art.js';
 import {erenPixels} from './eren-art.js';
 import {maomaoPixels} from './maomao-art.js';
 import {gojoPixels} from './gojo-art.js';
+import {madokaPixels} from './madoka-art.js';
 import {evaPixels,EVA_UNITS} from './eva-art.js';
 import {pilotSuitPixels} from './eva-pilot-art.js';
 import {beachOutfitPixels} from './beach-outfit-art.js';
@@ -199,26 +200,6 @@ function esdeathFrame({frame=0,moving=false,pose='',attack=false,expression='neu
  poly([[14,17+y],[17,11+y],[25,7+y],[32,8+y],[40,13+y],[41,18+y],[36,20+y],[18,20+y]],p.shade);poly([[16,16+y],[19,12+y],[26,9+y],[32,10+y],[38,14+y],[39,17+y]],p.coat);line(17,15+y,26,10+y,p.light);line(26,10+y,38,15+y,p.light);rect(15,17+y,25,3,deep);line(17,18+y,38,18+y,'#b5c6d6');poly([[19,20+y],[38,19+y],[35,22+y],[29,24+y],[21,23+y]],navy);line(22,22+y,34,22+y,'#93a9b9');rect(26,13+y,5,5,navy);rect(28,12+y,1,7,'#b8cbd2');rect(25,15+y,7,1,'#b8cbd2');rect(27,14+y,3,3,'#3c526b');
  return outline(r.pixels,p.ink);
 }
-function goddessFrame({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false}){
- const r=raster(),{rect,poly,line}=r,p=CHARACTER_PALETTES.madoka,step=moving?[0,1,0,-1][frame]:0,y=moving?-frame%2:0,white='#fff6f1',shade='#cdbed7';
- // Wings, knee-length pink hair, and a star-lined white dress: a distinct skin.
- for(const side of [-1,1]){const x=side<0?17:38;for(let i=0;i<4;i++){poly([[x,36],[x+side*(10+i*2),25+i*5],[x+side*(8+i*2),38+i*3],[x,45]],i%2?white:'#e4d9e9');}}
- poly([[17,18+y],[39,18+y],[42,41],[46-step,61],[37,57],[33,37],[22,39],[18+step,58],[10+step,62],[14,40]],p.hairDark);
- poly([[16,22+y],[21,25+y],[20,45],[14+step,58],[13+step,57]],'#efbfd3');poly([[36,23+y],[40,21+y],[39,41],[44-step,57],[39,55],[35,38]],'#efbfd3');line(16,34,14+step,53,'#ffdeea');line(38,31,41-step,51,'#ffdeea');
- rect(23-step,56,4,13,white);rect(30+step,56,4,13,white);rect(23-step,66,4,4,shade);rect(30+step,66,4,4,shade);rect(23-step,69,4,2,white);rect(30+step,69,4,2,white);
- poly([[22,44],[34,44],[39,53],[44+step,60],[36,59],[32,61],[27,59],[23,62],[18,59],[12+step,61],[17,53]],'#463a65');
- for(const [x,yy] of [[20,54],[25,57],[32,55],[36,58],[17,59]])rect(x,yy,1,1,'#f7d6ef');
- poly([[22,41],[34,41],[35,48],[41+step,56],[38,59],[33,57],[29,59],[24,57],[19,59],[15+step,57],[21,48]],white);
- poly([[27,45],[29,45],[28,56],[25,55]],'#e6dce8');poly([[33,47],[35,49],[38,56],[35,55]],shade);line(20,55,18,57,shade);line(23,42,27,47,'#e9c4cf');
- poly([[23,37+y],[28,42],[33,37+y],[35,41],[31,49],[26,49],[21,42]],white);poly([[25,38+y],[28,42],[31,38+y],[29,45],[27,45]],'#f0d1a6');rect(27,41,2,3,'#eab47c');
- const armY=attack?43:49;line(21,40,16,48,white,3);line(34,40,41,armY,white,3);rect(14,47,4,3,'#ffe2c6');rect(40,armY,4,3,'#ffe2c6');
- poly([[18,21+y],[37,21+y],[38,31+y],[34,37+y],[28,39+y],[21,36+y],[17,29+y]],'#ffe2c6');paintFace(r,'madoka',{y,expression,blink});if(!blink&&expression!=='hurt')for(const x of [22,32]){rect(x,29+y,2,4,'#c0a359');rect(x,29+y,1,1,'#fff6d9');}
- poly([[15,29+y],[14,20+y],[18,13+y],[26,10+y],[34,11+y],[41,17+y],[41,30+y],[38,32+y],[35,24+y],[32,21+y],[29,27+y],[25,22+y],[21,27+y],[19,24+y],[18,33+y]],'#c48fae');
- poly([[16,24+y],[17,18+y],[22,13+y],[31,13+y],[38,17+y],[39,26+y],[35,21+y],[32,18+y],[29,23+y],[25,18+y],[22,24+y],[19,20+y]],'#f1c2d5');line(21,14+y,33,14+y,'#ffe5ea');
- for(const x of [14,40]){poly([[x,18+y],[x-4,10+y],[x+3,13+y],[x+3,19+y]],white);poly([[x,18+y],[x+6,12+y],[x+5,20+y],[x+1,22+y]],'#e3d1e1');rect(x,18+y,3,3,'#f7efe7');}
- return outline(r.pixels,'#66516b');
-}
-
 function frierenFrame(options){const r=raster();redrawFrieren(r,options);return outline(r.pixels,'#29333f');}
 
 function zeroSuitFrame({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='zerosuit'}){
@@ -257,6 +238,7 @@ export function characterPixels(id,{frame=0,moving=false,pose='',attack=false,ex
   if(id==='featherine'){const result=featherinePixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='maomao'){const result=maomaoPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='gojo'){const result=gojoPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
+  if(id==='madoka'){const result=madokaPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id!=='shinji'){const beach=beachOutfitPixels(id,skinId,{frame,moving,pose,attack,expression,blink,form})||cuteSwimPixels(id,skinId,{frame,moving,pose,attack,expression,blink,form});if(beach){dataCache.set(key,beach);return beach;}}
   if(skinId==='swimsuit'&&id!=='shinji'){const swimming=swimsuitPixels(id,{frame,moving,pose,attack,expression,blink,form});if(swimming){dataCache.set(key,swimming);return swimming;}}
   if(skinId==='pajamas'&&id!=='shinji'){const pajamas=pajamaPixels(id,{frame,moving,pose,attack,expression,blink,form});if(pajamas){dataCache.set(key,pajamas);return pajamas;}}
@@ -270,7 +252,6 @@ export function characterPixels(id,{frame=0,moving=false,pose='',attack=false,ex
   if(id==='samus'&&['zerosuit','stealth'].includes(skinId)&&pose!=='bomb'){const result=zeroSuitFrame({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='frieren'){const result=frierenFrame({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='samus'){const result=tintPixels(variaSuitPixels({frame,moving,pose,attack,expression,blink}),skinFor(id,skinId));dataCache.set(key,result);return result;}
-  if(id==='madoka'&&skinId==='goddess'){const result=goddessFrame({frame,moving,pose,attack,expression,blink});dataCache.set(key,result);return result;}
   if(id==='esdeath'){const result=tintPixels(esdeathFrame({frame,moving,pose,attack,expression,blink}),skinFor(id,skinId));dataCache.set(key,result);return result;}
   if(id==='shinji'){const result=evaFrame({frame,moving,pose,attack,expression,blink,skin:skinFor(id,skinId),evolved});dataCache.set(key,result);return result;}
   const p=CHARACTER_PALETTES[id],r=raster(),{rect,poly,line}=r;

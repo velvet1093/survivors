@@ -20,7 +20,7 @@ export const SKINS={
  goku:[base('Orange Gi'),{id:'supersaiyan',name:'Super Saiyan',replace:{'#182331':'#ecd064','#101520':'#ab7d32','#354459':'#fff1a3'}}],
  gojo:[base('High Collar'),{id:'female',name:'Female Gojo'},{id:'unsealed',name:'Unsealed'}],
  naruto:[base('Leaf Ninja'),{id:'sage',name:'Sage Cloak',replace:{'#ee9848':'#c36556','#b76837':'#7c4551','#ffca74':'#edb18a'}},{id:'hokage',name:'Seventh Hokage'}],
- madoka:[base('Magical Girl'),{id:'goddess',name:'Ultimate Madoka',replace:{'#eea4c0':'#f1e8e8','#bd668f':'#b3a3c8','#ffdfed':'#ffffff','#efa4c1':'#f1bfd5'}},{id:'school',name:'Mitakihara School Uniform'}],
+ madoka:[base('Magical Girl'),{id:'goddess',name:'Ultimate Madoka'},{id:'school',name:'Mitakihara School Uniform'}],
  maomao:[base('Apothecary'),{id:'dancer',name:'Crimson Dancer'},{id:'spring',name:'Spring Court'},{id:'palace',name:'Palace Attire'}],
  shinji:[{id:'default',name:'Shinji / EVA-01',pilot:'Shinji',unit:'EVA-01',armor:'#5c3c8a',shade:'#2e1f48',light:'#8a64ba',neon:'#72c844',hair:'#3a2a1e',suit:'#e4efec'},
  {id:'asuka',name:'Asuka / EVA-02',pilot:'Asuka',unit:'EVA-02',armor:'#b8321f',shade:'#5c1712',light:'#e45a3a',neon:'#e49a1c',hair:'#d0602a',suit:'#d0302a'},

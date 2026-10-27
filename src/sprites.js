@@ -1,5 +1,6 @@
 import {drawAtFieldShield} from './eva-effects.js';
 import {drawCastOrb} from './gojo-effects.js';
+import {drawLawWings} from './madoka-effects.js';
 import {hasStatus} from './status.js';
 import {faceState} from './expressions.js';
 import {enemyPixels} from './pixel-enemies.js';
@@ -27,8 +28,7 @@ export function drawHero(c,p,x,y,time,alpha=1,scale=1){
   c.save();c.globalAlpha=alpha;c.imageSmoothingEnabled=false;
   oval(c,x,y+2,10*scale,3*scale,'#05091555');
   if(p.id==='madoka'&&p.pose==='ascend'){
-    c.save();c.translate(x,y-25*scale);c.scale(native,native);const flap=Math.floor(Math.sin(time*4)*2);
-    for(const side of [-1,1])for(let i=0;i<6;i++){c.fillStyle=i%2?'#ffe5f3':'#fff6e5';c.fillRect(side>0?7+i*4:-12-i*4,-5+i*2+flap,6,16-i);c.fillStyle='#d9bad8';c.fillRect(side>0?7+i*4:-12-i*4,9+i+flap,6,2);}c.restore();
+    drawLawWings(c,x,y-30*native,native*1.5,time,!!p.reducedMotion);
   }
   c.save();c.translate(Math.round(x),Math.round(y));c.scale(facing,1);c.drawImage(heroFrame(p,time),-HERO_FOOT.x*native,-HERO_FOOT.y*native,SPRITE_WIDTH*native,SPRITE_HEIGHT*native);c.restore();
   if(p.id==='gojo'&&['blue','red'].includes(p.castKind)&&(p.attackTimer||0)>0)drawCastOrb(c,x+facing*20*native,y-38*native,p.castKind,scale,time);

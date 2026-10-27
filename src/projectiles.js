@@ -9,6 +9,7 @@ import {drawShadowGarden,drawRasenFlash} from './multi-fusion-art.js';
 import {drawPalletRound,drawLonginus} from './eva-effects.js';
 import {drawPoisonVial} from './maomao-effects.js';
 import {drawRedOrb} from './gojo-effects.js';
+import {drawRoseArrow} from './madoka-effects.js';
 import {drawPairedProjectile} from './paired-attack-art.js';
 const TAU=Math.PI*2;
 const line=(c,points,color,width)=>{c.strokeStyle=color;c.lineWidth=width;c.lineCap='round';c.lineJoin='round';c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();};
@@ -46,7 +47,7 @@ export function drawPlayerProjectile(c,s,{zoom=1,area=1,reducedMotion=false}={})
   else if(s.type==='zoltraak'){trail('#c2e7d7',30);poly(c,[[20,0],[3,-4],[-5,0],[3,4]],'#f0f4cd');}
   else if(s.type==='pallet')drawPalletRound(c,s,reducedMotion);
   else if(s.type==='icelance'){trail('#6bc6ed',23);poly(c,[[22,0],[-3,-6],[-13,0],[-3,6]],'#b2eafa');line(c,[[-10,0],[19,0]],'#f5fffc',2);line(c,[[-3,-4],[5,0],[-3,4]],'#64aed7',1);}
-  else if(s.type==='rosebow'){trail('#f391c7',34);poly(c,[[21,0],[7,-7],[10,0],[7,7]],'#fff1c5');poly(c,[[-24,0],[-15,-6],[-10,0],[-15,6]],'#ffd8ec');disc(c,7,0,3,'#ee8ebd');}
+  else if(s.type==='rosebow')drawRoseArrow(c,s,reducedMotion);
   else{trail('#d2c3e9',26);poly(c,[[17,0],[0,-5],[-9,0],[0,5]],s.fused?'#ffe9ae':'#e7edfa');line(c,[[0,0],[13,0]],'#fff8ed',2);}
  }
  c.restore();
