@@ -34,7 +34,8 @@ import {drawSummon} from './summon-art.js';
 import {drawPet} from './pets.js';
 import {drawHeroMechanic} from './mechanic-art.js';
 import {drawPlayerProjectile} from './projectiles.js';
-import {enemyAura,hazardEmblem,evaEffects,drawEvaStrike} from './anime-art.js';
+import {enemyAura,hazardEmblem} from './anime-art.js';
+import {drawEvaEffect,drawEvaAura} from './eva-effects.js';
 import {drawGem,drawUnitStatuses,drawCombatField} from './combat-art.js';
 import {terrain,propSprite} from './pixel-world.js';
 import {drawHero,drawEnemy} from './sprites.js';
@@ -90,7 +91,7 @@ function drawWorldLoot(c,g){
 }
 function drawEffects(c,g){
   for(const e of g.effects){const progress=1-e.life/e.max;c.save();c.globalAlpha=Math.min(1,e.life/e.max*2);
-    if(drawSalvationEffect(c,e,progress,!!g.p.reducedMotion)||drawPairedEffect(c,e,progress,!!g.p.reducedMotion)||drawKurumiClockEffect(c,e,progress,!!g.p.reducedMotion)||drawGutsSlash(c,e,progress,!!g.p.reducedMotion)||drawDenjiSlash(c,e,progress,!!g.p.reducedMotion)||drawMegumiEffect(c,e,progress,!!g.p.reducedMotion)){c.restore();continue;}
+    if(drawSalvationEffect(c,e,progress,!!g.p.reducedMotion)||drawPairedEffect(c,e,progress,!!g.p.reducedMotion)||drawKurumiClockEffect(c,e,progress,!!g.p.reducedMotion)||drawGutsSlash(c,e,progress,!!g.p.reducedMotion)||drawDenjiSlash(c,e,progress,!!g.p.reducedMotion)||drawMegumiEffect(c,e,progress,!!g.p.reducedMotion)||drawEvaEffect(c,e,progress,!!g.p.reducedMotion)){c.restore();continue;}
     if(drawErzaEffect(c,e,progress,!!g.p.reducedMotion)){c.restore();continue;}
     if(e.type==='crimson-strike'){drawCrimsonStrike(c,e,progress,!!g.p.reducedMotion);c.restore();continue;}
     if(e.type==='thunder-blast'){c.strokeStyle='#e9c889';c.lineWidth=3;c.beginPath();c.arc(e.x,e.y,e.r*(.25+progress*.75),0,TAU);c.stroke();for(let i=0;i<7;i++){const a=i*2.399,r=e.r*(.3+progress*.6);path(c,[[e.x+Math.cos(a)*r*.3,e.y+Math.sin(a)*r*.3],[e.x+Math.cos(a+.15)*r*.7,e.y+Math.sin(a+.15)*r*.7],[e.x+Math.cos(a)*r,e.y+Math.sin(a)*r]],'#ffedc3',2);}}
@@ -101,7 +102,6 @@ function drawEffects(c,g){
     else if(e.type==='powerbomb'){const r=e.r*Math.min(1,progress*1.3);c.strokeStyle='#f9e5ae';c.lineWidth=7*(1-progress)+1;c.beginPath();c.arc(e.x,e.y,r,0,TAU);c.stroke();c.fillStyle='#eac87c12';c.fill();}
     else if(e.type==='clock-mark'||e.type==='clock-muzzle'){const r=e.r*(.5+progress*.5);c.strokeStyle=e.color;c.lineWidth=1;c.beginPath();c.arc(e.x,e.y,r,0,TAU);c.stroke();for(let i=0;i<12;i++){const a=i*TAU/12;path(c,[[e.x+Math.cos(a)*r*.85,e.y+Math.sin(a)*r*.85],[e.x+Math.cos(a)*r,e.y+Math.sin(a)*r]],e.color,1);}path(c,[[e.x,e.y-r*.6],[e.x,e.y],[e.x+r*.45,e.y]],'#f6dfb9',2);}
     else if(e.type==='frost-burst'){const r=e.r*(.2+progress*.8);c.strokeStyle='#cceafa';c.lineWidth=2;c.beginPath();c.arc(e.x,e.y,r,0,TAU);c.stroke();for(let i=0;i<12;i++){const a=i*TAU/12,x=e.x+Math.cos(a)*r,y=e.y+Math.sin(a)*r;path(c,[[x-3,y+6],[x,y-6],[x+3,y+6]],'#d3edf7',2);}}
-    else if(e.type==='eva-claw'||e.type==='at-burst'){drawEvaStrike(c,e,progress);}
     else if(e.type==='positron'){c.lineCap='square';path(c,[[e.x,e.y],[e.tx,e.ty]],'#d9c7a533',e.width*3);path(c,[[e.x,e.y],[e.tx,e.ty]],'#efd79c',e.width);path(c,[[e.x,e.y],[e.tx,e.ty]],'#fff9df',3);}
     else if(e.type==='blue-cast'){path(c,[[e.x,e.y],[e.tx,e.ty]],'#88ceff33',2);for(let i=0;i<4;i++){const t=(progress+i/4)%1;ellipse(c,e.x+(e.tx-e.x)*t,e.y+(e.ty-e.y)*t,2,2,'#b4e9ff');}}
     else if(e.type==='convergence'){drawHollowPurpleConvergence(c,e,progress,g.p.reducedMotion);}
@@ -141,7 +141,7 @@ export function drawScene(canvas,g,reducedMotion=false){
   for(const e of g.enemies)drawRiftAttack(c,e,reducedMotion);
   drawHazards(c,g);drawEnemyCircleFx(c,g,reducedMotion);
   drawFrierenGolemEffects(c,g,'under');
-  ultimateUnder(c,g);drawErzaUltimate(c,g);drawErzaBarrier(c,g);evaEffects(c,g,'under');for(const e of g.enemies){enemyAura(c,e,g.time,reducedMotion);drawRiftBossAura(c,e,g.time,reducedMotion);}if(g.magnetPulse>0){c.save();c.globalAlpha=g.magnetPulse;c.strokeStyle='#bdf0d7';c.lineWidth=2;c.beginPath();c.arc(p.x,p.y,40+(1-g.magnetPulse)*550,0,TAU);c.stroke();c.restore();}
+  ultimateUnder(c,g);drawErzaUltimate(c,g);drawErzaBarrier(c,g);drawEvaAura(c,g,'under');for(const e of g.enemies){enemyAura(c,e,g.time,reducedMotion);drawRiftBossAura(c,e,g.time,reducedMotion);}if(g.magnetPulse>0){c.save();c.globalAlpha=g.magnetPulse;c.strokeStyle='#bdf0d7';c.lineWidth=2;c.beginPath();c.arc(p.x,p.y,40+(1-g.magnetPulse)*550,0,TAU);c.stroke();c.restore();}
   drawHeroMechanic(c,g,reducedMotion);
   const heroLook={...p,form:p.id==='erza'?(p.erzaForm||0):g.mechanic.id==='goku'?g.mechanic.stage:(p.form||0),pose:g.mechanic.id==='shinji'&&g.mechanic.active>0?'berserk':p.pose};
   const actors=[...(g.golem?.hp>0?[{...g.golem,kind:'frierenGolem'}]:[]),...(garudaCompanionVisible(g)?[{...g.garuda,kind:'garuda'}]:[]),...(g.summons||[]).map(s=>({...s,summonKind:s.kind,kind:'summon'})),...(g.pet?.id!=='none'&&g.pet?[{...g.pet,kind:'pet'}]:[]),...g.world.active.filter(o=>o.hp>0),...g.enemies.filter(e=>e.hp>0).map(e=>({...e,kind:'enemy'})),...g.cloneUnits.map(e=>({...e,kind:'clone'})),...(g.ultimate?.shadows||[]).map(e=>({...e,kind:'shadow'})),...(!g.playerDeath&&p.hp>0?[{x:p.x,y:p.y,kind:'hero'}]:[])].sort((a,b)=>a.y-b.y);
@@ -152,7 +152,7 @@ export function drawScene(canvas,g,reducedMotion=false){
     c.strokeStyle='#96d9ff16';c.beginPath();c.arc(p.x,p.y,r,0,TAU);c.stroke();for(let i=0;i<n;i++){const a=g.time*2.6+i*TAU/n,x=p.x+Math.cos(a)*r,y=p.y+Math.sin(a)*r;ellipse(c,x,y,13,13,'#89cfff22');ellipse(c,x,y,7,7,'#8dcfff');ellipse(c,x-1,y-1,3,3,'#e2f5ff');}}
   for(const s of g.shots)if(garudaShotVisible(g,s)){if(s.type==='requip-sword')drawErzaSword(c,s,{zoom:g.zoom,reducedMotion});else drawPlayerProjectile(c,s,{zoom:g.zoom,area:p.area,reducedMotion});}
   drawWorldLoot(c,g);drawTrinketDrops(c,g,reducedMotion);drawTrinketCosmetics(c,g,reducedMotion);
-  ultimateOver(c,g);evaEffects(c,g,'over');
+  ultimateOver(c,g);drawEvaAura(c,g,'over');
   drawEnemyCircleFx(c,g,reducedMotion,'caster');
   for(const e of g.enemies){if(!drawGraveyardAttack(c,e,reducedMotion)&&!drawExpeditionAttack(c,e,reducedMotion))drawWorldEventAttack(c,e,reducedMotion);drawDevilAttack(c,e,reducedMotion);drawBerserkBossAttack(c,e,reducedMotion);drawMotherBrainAttack(c,e,reducedMotion);drawBossUltimate(c,e,reducedMotion);}
   drawHostileShots(c,g);

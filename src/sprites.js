@@ -1,3 +1,4 @@
+import {drawAtFieldShield} from './eva-effects.js';
 import {hasStatus} from './status.js';
 import {faceState} from './expressions.js';
 import {enemyPixels} from './pixel-enemies.js';
@@ -32,7 +33,7 @@ export function drawHero(c,p,x,y,time,alpha=1,scale=1){
   if(p.id==='gojo'&&['blue','red'].includes(p.castKind)&&(p.attackTimer||0)>0){const x1=x+facing*12*scale,y1=y-30*scale;oval(c,x1,y1,6*scale,6*scale,p.castKind==='red'?'#f5899f66':'#80d1f544');oval(c,x1,y1,3*scale,3*scale,p.castKind==='red'?'#ffd4d4':'#b6e8ff');}
   if(p.id==='madoka')drawBow(c,p,x,y,scale);
   if(p.id==='naruto'&&p.clone&&(p.attackTimer||0)>.1){oval(c,x+facing*13,y-21,8,8,'#83d7f055');oval(c,x+facing*13,y-21,4,4,'#c5f5ff');}
-  if(p.shield>0){if(p.passives?.atfield){c.strokeStyle='#ecd49b99';c.lineWidth=1;c.beginPath();for(let i=0;i<=8;i++){const a=i*TAU/8+Math.PI/8,x1=x+Math.cos(a)*25*scale,y1=y-26*scale+Math.sin(a)*30*scale;i?c.lineTo(x1,y1):c.moveTo(x1,y1);}c.stroke();}else{c.strokeStyle='#f9bfe565';c.lineWidth=1;c.beginPath();c.ellipse(x,y-25,21*scale,29*scale,0,0,TAU);c.stroke();}}
+  if(p.shield>0){if(p.passives?.atfield)drawAtFieldShield(c,x,y,scale,time,!!p.reducedMotion);else{c.strokeStyle='#f9bfe565';c.lineWidth=1;c.beginPath();c.ellipse(x,y-25,21*scale,29*scale,0,0,TAU);c.stroke();}}
   c.restore();
 }
 

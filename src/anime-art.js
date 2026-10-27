@@ -15,14 +15,3 @@ export function hazardEmblem(c,h,progress){
    c.fillStyle='#f9e6b077';c.fillRect(x-1,y-9,3,18);c.fillRect(x-8,y-3,17,3);
  }
 }
-export function evaEffects(c,g,layer='under'){
- const u=g.ultimate;if(u?.type!=='shinji')return;const p=g.p,age=p.reducedMotion?0:u.age;
- if(layer==='under'){
-   const r=90+Math.sin(age*4)*3;polygon(c,p.x,p.y,r,8,'#e5d6a288',2,Math.PI/8);polygon(c,p.x,p.y,r+8,8,'#b0df9e55',1,Math.PI/8);for(let i=0;i<8;i++){const a=i*TAU/8+Math.PI/8;c.fillStyle='#b9dc9a66';c.fillRect(Math.round(p.x+Math.cos(a)*r),Math.round(p.y+Math.sin(a)*r),3,3);}
- }else{for(let i=0;i<8;i++){const a=i*2.399,phase=(age*.8+i/8)%1;c.fillStyle=i%2?'#b5dc8daa':'#ccb0ec88';c.fillRect(Math.round(p.x+Math.cos(a)*(18+phase*12)),Math.round(p.y-10-phase*70),2,5);}}
-}
-export function drawEvaStrike(c,e,progress){
- if(e.type==='eva-claw'){
-   c.save();c.translate(e.x,e.y);c.rotate(e.angle||0);c.strokeStyle='#dcf1b5';c.lineWidth=3;for(let i=-1;i<=1;i++){c.beginPath();c.arc(12+i*9,i*14,Math.max(1,e.r*(.2+progress*.8)), -.65,.65);c.stroke();}c.restore();
- }else if(e.type==='at-burst')polygon(c,e.x,e.y,e.r*(.1+progress*.9),8,'#e9dca7',3,Math.PI/8);
-}

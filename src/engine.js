@@ -153,6 +153,7 @@ export function castWeapon(g,id,target){
   }else if(id==='icelance'){const n=(fused?7:2+Math.floor(rank/2))+(id===p.weapon?(p.meta.projectiles||0):0),yy=p.y-22,aim=Math.atan2(target.y-yy,target.x-p.x);for(let i=0;i<n;i++){const aa=aim+(i-(n-1)/2)*.13,q=shoot(g,id,p.x,yy,aa,17*power,rank,fused);q.vx=Math.cos(aa)*430;q.vy=Math.sin(aa)*430;q.r=6;q.pierce=1+Math.floor(rank/2)+(fused?3:0);q.color='#bde7f6';}}else if(id==='pallet'){
     const y=p.y-24,aim=Math.atan2(target.y-y,target.x-p.x);
     const n=3+(id===p.weapon?(p.meta.projectiles||0):0);for(let i=0;i<n;i++){const aa=aim+(i-(n-1)/2)*.025,s=shoot(g,id,p.x+Math.cos(aim)*13,y,aa,12*power,rank,false);s.vx=Math.cos(aa)*650;s.vy=Math.sin(aa)*650;s.delay=i*.075;s.r=4;s.life=1.5;s.pierce=1+Math.floor(rank/2);s.color='#e8d7ad';}
+    effect(g,'pallet-muzzle',{x:p.x+Math.cos(aim)*22,y:y+Math.sin(aim)*22,angle:aim,life:.16,max:.16});
   }else if(id==='ki'){
     const yy=p.y-23,aim=Math.atan2(target.y-yy,target.x-p.x),n=fused?1:1+(rank>=3?1:0);for(let i=0;i<n;i++){const aa=aim+(i-(n-1)/2)*.09,q=shoot(g,'ki',p.x,yy,aa,(fused?48:28)*power,rank,fused);q.charge=fused?.45:.22;q.life=fused?2:1.45;q.vx=Math.cos(aa)*(fused?850:650);q.vy=Math.sin(aa)*(fused?850:650);q.r=fused?14:9+rank;q.pierce=fused?99:3+rank;q.color=fused?'#8ce7ff':'#aadfff';}
     effect(g,'ki-charge',{x:p.x,y:yy,r:fused?24:15,color:'#c0edff',life:.25,max:.25});

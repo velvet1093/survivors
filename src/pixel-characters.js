@@ -2,6 +2,8 @@ import {denjiPixels} from './denji-art.js';
 import {shiraoriPixels} from './shiraori-art.js';
 import {megumiPixels} from './megumi-art.js';
 import {erenPixels} from './eren-art.js';
+import {evaPixels,EVA_UNITS} from './eva-art.js';
+import {pilotSuitPixels} from './eva-pilot-art.js';
 import {beachOutfitPixels} from './beach-outfit-art.js';
 import {cuteSwimPixels} from './cute-swim-art.js';
 import {pilotSwimPixels,paintPilotEvaSwim} from './pilot-swim-art.js';
@@ -95,6 +97,7 @@ export function pilotPixels({expression='neutral',blink=false,skin='default',fra
  if(skin==='swimsuit')return swimsuitPixels('shinji',{expression,blink});
  if(skin==='casual')return casualPixels('shinji',{expression,blink});
  if(skin==='pajamas')return pajamaPixels('shinji',{expression,blink});
+ if(EVA_UNITS[skinFor('shinji',skin).id])return pilotSuitPixels(skinFor('shinji',skin).id,{expression,blink});
  const r=raster(),{rect,poly,line}=r,look=skinFor('shinji',skin),id=look.id,ink='#253042',suit=look.suit,shade={default:'#9eafb7',asuka:'#8f3c49',rei:'#a4bbc4',mari:'#914f7e'}[id],light={default:'#f8f5e6',asuka:'#f08c6e',rei:'#fff7e9',mari:'#eeb2c7'}[id],hair=look.hair,hairDark={default:'#18232f',asuka:'#78463d',rei:'#648fa9',mari:'#443445'}[id],hairLight={default:'#526171',asuka:'#e3a25e',rei:'#d1e3e5',mari:'#aa7b6b'}[id],skinTone='#ffe2c6';
  // Each pilot has a different hair silhouette, not just a palette swap.
  if(id==='asuka'){for(const side of [-1,1]){const x=side<0?15:39;poly([[x-3,18],[x+2,19],[x+5,41],[x+2,49],[x-2,46],[x-3,34]],hairDark);poly([[x-2,21],[x+1,23],[x+3,40],[x+1,45],[x-1,37]],hair);line(x,25,x+1,41,hairLight);}}
@@ -126,6 +129,8 @@ export function pilotPixels({expression='neutral',blink=false,skin='default',fra
  return outline(r.pixels,ink);
 }
 function evaFrame({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin:look=skinFor('shinji'),evolved=''}){
+ // The four canonical units have their own art; themed outfit units keep these overlays.
+ if(EVA_UNITS[look.id])return evaPixels({unit:look.id,frame,moving,pose,attack,expression,blink,evolved});
  const r=raster(),{rect,poly,line}=r,p={...CHARACTER_PALETTES.shinji,coat:look.armor,shade:look.shade,light:look.light},step=moving?[0,2,0,-2][frame]:0,bob=moving?frame%2:0,berserk=pose==='berserk',unitId=look.evaBase||look.id;
  // Long articulated legs, neon knee plates and pointed armor boots.
  for(const [x,s] of [[20,-step],[31,step]]){rect(x+s,51,6,15,p.shade);rect(x+s,52,5,7,p.coat);rect(x+s,56,5,2,'#b4d976');rect(x+s,60,4,6,'#253442');poly([[x+s,65],[x+s+5,65],[x+s+7,69],[x+s-2,70]],p.coat);rect(x+s,68,6,2,'#42666b');}

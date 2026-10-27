@@ -9,8 +9,8 @@ const SKIN='#ffe2c6',SKIN_SHADOW='#d7ac96',INK='#293347';
 function blossom(r,x,y,petal,center){r.rect(x-2,y,5,2,petal);r.rect(x,y-2,2,5,petal);r.rect(x,y,2,2,center);}
 function hairBack(r,base,walk,bob){
  const {poly:P,line:L,rect:R}=r;
- if(base==='asuka')for(const side of [-1,1]){const x=side<0?15:39,sway=walk*side*.4;P([[x-3,18-bob],[x+2,19-bob],[x+5+sway,42],[x+2+sway,50],[x-2+sway,47],[x-3,34]],'#78463d');P([[x-2,21-bob],[x+1,23-bob],[x+3+sway,41],[x+1+sway,46],[x-1,37]],'#bd7547');L(x,25-bob,x+1+sway,42,'#e3a25e');}
- if(base==='mari')for(const [x,side]of [[16,-1],[39,1]]){const sway=walk*side*.3;L(x,24-bob,x-1+sway,49,'#443445',4);for(const yy of [31,36,41,46]){R(x-2+sway,yy,3,3,'#73504c');R(x+sway,yy+1,2,2,'#aa7b6b');}R(x-2+sway,49,4,2,'#cb7e9c');P([[x-1+sway,50],[x+2+sway,50],[x+2+sway,55],[x-2+sway,54]],'#73504c');}
+ if(base==='asuka')for(const side of [-1,1]){const x=side<0?15:39,sway=walk*side*.4;P([[x-3,18-bob],[x+2,19-bob],[x+5+sway,42],[x+2+sway,50],[x-2+sway,47],[x-3,34]],'#8a3a14');P([[x-2,21-bob],[x+1,23-bob],[x+3+sway,41],[x+1+sway,46],[x-1,37]],'#d0602a');L(x,25-bob,x+1+sway,42,'#f09a52');}
+ if(base==='mari')for(const [x,side]of [[16,-1],[39,1]]){const sway=walk*side*.3;L(x,24-bob,x-1+sway,49,'#4a2a20',4);for(const yy of [31,36,41,46]){R(x-2+sway,yy,3,3,'#7a4a36');R(x+sway,yy+1,2,2,'#a8705a');}R(x-2+sway,49,4,2,'#cb7e9c');P([[x-1+sway,50],[x+2+sway,50],[x+2+sway,55],[x-2+sway,54]],'#7a4a36');}
 }
 export function pilotSwimPixels({skin,frame=0,moving=false,attack=false,pose='',expression='neutral',blink=false}={}){
  const look=byId.get(skin);if(!look)return null;
