@@ -3,7 +3,7 @@ import {summonPixels} from './summon-art.js';
 import {frierenGolemPixels} from './frieren-golem-art.js';
 
 const TAU=Math.PI*2,clamp=n=>Math.max(0,Math.min(1,n)),smooth=n=>{const p=clamp(n);return p*p*(3-2*p);},frames=new Map();
-const colorFor=kind=>kind==='mahoraga'?'#e3d5a4':kind==='frierenGolem'?'#c9b38b':kind==='nue'?'#c4c8eb':kind==='clone'?'#d9e9dd':kind==='shadow'?'#ceb7db':'#b9c9da';
+const colorFor=kind=>kind==='queentaratect'||kind==='spiderling'||kind==='archtaratect'?'#e9dff0':kind==='mahoraga'?'#e3d5a4':kind==='frierenGolem'?'#c9b38b':kind==='nue'?'#c4c8eb':kind==='clone'?'#d9e9dd':kind==='shadow'?'#ceb7db':'#b9c9da';
 
 export function friendlyDeathPixels(death){
  const hero=death.hero,unit=death.unit||{},key=hero?[hero.id,hero.skin,hero.form,hero.pose,death.kind].join(':'):[death.kind,!!unit.fused].join(':');

@@ -140,10 +140,10 @@ export const ULTIMATE_RANKINGS={
   caution:'It compresses for two seconds before the hole opens, leaving you exposed, and bosses resist its pull.',
   bestWith:'Start the charge before the crowd reaches you, then fight inside Maximum Mass while the hole keeps feeding Garuda targets.'}),
  shiraori:entry('A',{
-  reason:'The Queen Taratect fights beside Shiraori for ten seconds, stomping every enemy around it, poisoning and slowing them, and arriving with a fresh brood of spiderlings.',
-  comparison:'Strong, reliable area control around the hero that also refills the brood, though it lasts a fixed time instead of staying until defeated like Mahoraga.',
-  caution:'The Queen stays close to Shiraori, so it does little against enemies attacking from range, and it does not block shots.',
-  bestWith:'Call it when a crowd closes in or a boss arrives, and pair it with mastery that extends its duration and damage.'}),
+  reason:'The Queen Taratect stays on the field with its own HP until defeated, stomping, poisoning and slowing every enemy around it, and arrives with a fresh brood of spiderlings.',
+  comparison:'Like Mahoraga it keeps working long after the button press and grows with your level; its stomps hit whole crowds where Mahoraga cuts a few targets harder.',
+  caution:'The Queen pays for the enemies and shots it draws with its HP; recasting heals it fully but does not move it, and it does little against ranged attackers far from Shiraori.',
+  bestWith:'Summon it early so it soaks pressure through the wave, recast to heal it before it falls, and take the mastery nodes for its HP and damage.'}),
  megumi:entry('A',{
   reason:'Mahoraga stays until defeated, slashes nearby enemies, intercepts shots and adapts to grow stronger and tougher.',
   comparison:'A persistent bodyguard keeps working long after the button press, which is excellent value per cooldown. It is less of an instant rescue than a domain.',

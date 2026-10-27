@@ -1,7 +1,7 @@
 const positive=value=>Number.isFinite(value)&&value>0;
 const finite=(value,fallback=0)=>Number.isFinite(value)?value:fallback;
 const copy=value=>typeof structuredClone==='function'?structuredClone(value):JSON.parse(JSON.stringify(value));
-const summonKinds=new Set(['mahoraga','frierenGolem','whiteDog','blackDog','nue','clone','shadow']);
+const summonKinds=new Set(['mahoraga','frierenGolem','whiteDog','blackDog','nue','clone','shadow','spiderling','archtaratect','queentaratect']);
 
 // Corpse visuals keep their own immutable snapshot. Removing a combat entity or
 // summoning its replacement cannot move, heal or duplicate the departure.
@@ -11,8 +11,8 @@ export function queueSummonDeath(g,s,{kind=s?.kind,hero=null,reason='defeated'}=
  const existing=g.summonDeaths.find(d=>d.entityId===s.id&&d.kind===kind);
  if(existing){s.deathQueued=true;return existing;}
  s.deathQueued=true;
- const quiet=!!g.p?.reducedMotion,departing=['whiteDog','blackDog','nue','clone','shadow'].includes(kind);
- const death={entityId:s.id,kind,reason,age:0,duration:quiet?.25:kind==='frierenGolem'?1.25:kind==='mahoraga'?1.2:.7,
+ const quiet=!!g.p?.reducedMotion,departing=['whiteDog','blackDog','nue','clone','shadow','spiderling','archtaratect'].includes(kind);
+ const death={entityId:s.id,kind,reason,age:0,duration:quiet?.25:kind==='frierenGolem'?1.25:kind==='mahoraga'||kind==='queentaratect'?1.2:.7,
   x:finite(s.x),y:finite(s.y),time:finite(g.time),quiet,
   unit:copy({...s,attackAnim:0,moving:false,beam:null,slam:null}),
   ...(hero?{hero:copy({...hero,moving:false,pose:'',attackTimer:0,shield:0,clone:kind==='clone'})}:{}),departing};

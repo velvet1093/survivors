@@ -4,9 +4,9 @@ import {damagePropsInRadius} from './world.js';
 // Shiraori's spiders are temporary companions that share the summons update loop.
 // Spiderlings dart in and bite with poison; the evolved Arch Taratects spread that
 // poison to nearby enemies and web them; the ultimate's Queen Taratect stomps and
-// spits webs around the hero for ten seconds.
+// spits webs around the hero as a lasting guardian until it is defeated.
 export const SPIDER_KINDS=['spiderling','archtaratect','queentaratect'];
-export const SHIRAORI_ULTIMATE={name:'Queen Taratect',duration:10,color:'#e9dff0',description:'Call the Queen Taratect for ten seconds. The colossal spider stays near Shiraori, stomps every enemy around it, poisons and slows them with spat webs, and hatches a fresh brood of spiderlings when it arrives.'};
+export const SHIRAORI_ULTIMATE={name:'Queen Taratect',duration:2,color:'#e9dff0',description:'Call one Queen Taratect with its own HP. It remains until defeated, stays near Shiraori, stomps every enemy around it, poisons and slows them with spat webs, and draws enemies and shots away from her at the cost of its HP. It arrives with a fresh brood of spiderlings and grows stronger with your level. Recasting fully heals the same living Queen.'};
 // Two spiderlings at rank 1, one more at ranks 2 and 4; Shiraori adds one per Parallel
 // Minds rank and per Larger Clutch mastery rank.
 export function broodCount(p,rank){return 2+(rank>=2?1:0)+(rank>=4?1:0)+(p.id==='shiraori'?(p.passives.parallelminds||0)+(p.meta.projectiles||0):0);}
@@ -23,16 +23,8 @@ export function summonBrood(g,rank,power,fused=false,boost={}){
  g.effects.push({type:'nova',x:p.x,y:p.y,r:46,color:fused?'#f0e6f4':'#d9cde4',life:.35,max:.35});
  return count;
 }
-export function summonQueen(g){
- g.summons??=[];const p=g.p,u=g.ultimate,life=u?.duration||SHIRAORI_ULTIMATE.duration;
- let s=g.summons.find(s=>s.kind==='queentaratect');
- if(!s){s={id:++g.id,kind:'queentaratect',x:p.x+60,y:p.y-8,age:0,attackCD:.4,adaptation:0};g.summons.push(s);}
- const damage=28*p.damage*(1+(p.meta.ultimateDamage||0));Object.assign(s,{life,baseDamage:damage,damage,fused:false,rank:1});
- // The Queen arrives with a fresh brood of spiderlings at the hero's Spider Brood rank.
- summonBrood(g,p.weapons.spiderbrood||1,p.damage,!!p.fusions.spiderbrood,{duration:1});
- return s;
-}
-export function startShiraoriUltimate(g){g.p.pose='summon';g.ultimate.name=SHIRAORI_ULTIMATE.name;summonQueen(g);}
+// The Queen arrives with a fresh brood of spiderlings at the hero's Spider Brood rank.
+export function startShiraoriUltimate(g,summonQueen){g.p.pose='summon';g.ultimate.name=SHIRAORI_ULTIMATE.name;summonQueen(g);const p=g.p;summonBrood(g,p.weapons.spiderbrood||1,p.damage,!!p.fusions.spiderbrood,{duration:1});}
 // Movement tuning for each spider kind, read by the shared summon loop.
 export const spiderTuning=kind=>kind==='queentaratect'?{r:26,speed:170,chase:70,reach:150,cooldown:1.1}:kind==='archtaratect'?{r:9,speed:320,chase:18,reach:44,cooldown:.6}:{r:7,speed:340,chase:16,reach:38,cooldown:.7};
 export function spiderAttack(g,s,target,targets,{damage,burst,onBite}){

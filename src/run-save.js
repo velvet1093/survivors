@@ -78,7 +78,7 @@ function restoreRunMode(g,character){
  const shotWeapon={'requip-sword':'requip',longinus:'pallet',thunderspear:'odmblades',chimeragarden:'shadows',rasenflash:'shuriken',missile:'powerbeam',supermissile:'powerbeam'};
  g.shots=g.shots.filter(shot=>allowed.has(shot.sourceWeapon||shotWeapon[shot.type]||shot.type));
  g.fields=g.fields.filter(field=>allowed.has(field.sourceWeapon||field.kind));
- g.summons=(g.summons||[]).filter(s=>s.kind==='mahoraga'?character.id==='megumi':allowed.has(s.kind==='nue'?'nue':'shadows'));
+ g.summons=(g.summons||[]).filter(s=>s.kind==='mahoraga'?character.id==='megumi':s.kind==='queentaratect'?character.id==='shiraori':['spiderling','archtaratect'].includes(s.kind)?allowed.has('spiderbrood'):allowed.has(s.kind==='nue'?'nue':'shadows'));
  if(!allowed.has('crimson'))g.crimsonEchoes=[];
  // A forged or migrated mixed loadout must not retain foreign attacks in flight.
  if(removed){g.shots=[];g.fields=[];g.summons=[];g.crimsonEchoes=[];g.effects=[];if(g.garuda){g.garuda.inFlight=false;g.garuda.flightId=null;}refreshStats(g.p);}

@@ -51,11 +51,18 @@ test('Arch Taratect Brood evolves the spiders into poison-spreading, web-slowing
  sim(g,1.5);assert.ok(hasStatus(b,'poison')||hasStatus(b,'slow'),'poison spreads to enemies near the prey');
 });
 
-test('the Queen Taratect ultimate summons a stomping queen and a fresh brood, then leaves when it ends',()=>{
+test('the Queen Taratect is a lasting guardian with level-scaled HP and damage that only leaves when defeated',()=>{
  const g=quiet(),e=target(g,70);assert.ok(useSpecial(g));
- const queen=g.summons.find(s=>s.kind==='queentaratect');assert.ok(queen);assert.equal(queen.life,g.ultimate.duration);assert.ok(brood(g).length>=3);
+ const queen=g.summons.find(s=>s.kind==='queentaratect');assert.ok(queen);assert.equal(queen.life,Infinity);assert.ok(queen.hp>0&&queen.hp===queen.maxHp);assert.ok(brood(g).length>=3);
  sim(g,2);assert.ok(e.hp<10000);assert.ok(hasStatus(e,'slow')||hasStatus(e,'poison'));
- sim(g,10);assert.equal(g.summons.some(s=>s.kind==='queentaratect'),false);
+ sim(g,20);assert.equal(g.ultimate,null);assert.ok(g.summons.some(s=>s.kind==='queentaratect'),'the Queen outlasts the ultimate');
+ // Using the ultimate never runs Madoka's Law of Cycles.
+ assert.notEqual(g.p.pose,'ascend');assert.ok(!g.shots.some(s=>s.type==='rosebow'));
+ // Level growth scales the living Queen's health and stomp damage.
+ const hp=queen.maxHp,dmg=queen.damage;g.p.level=21;sim(g,.1);assert.ok(queen.maxHp>hp);assert.ok(queen.damage>dmg);
+ // Recasting heals the same Queen; it only leaves once its HP is gone.
+ queen.hp=10;g.special=0;assert.ok(useSpecial(g));assert.equal(g.summons.filter(s=>s.kind==='queentaratect').length,1);assert.equal(queen.hp,queen.maxHp);
+ queen.hp=0;sim(g,.1);assert.equal(g.summons.some(s=>s.kind==='queentaratect'),false);
 });
 
 test('a run with spiders on the field saves and resumes',()=>{

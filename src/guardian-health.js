@@ -6,7 +6,7 @@ const levelSteps=g=>Math.max(0,Math.floor(Number.isFinite(g.p.level)?g.p.level:1
 // Level growth stays linear beyond the early game. Rank, gear and mastery still
 // apply independently; these factors are derived from the owner, never stacked.
 export const summonLevelPower=g=>1+levelSteps(g)*.025;
-export const guardianMaxHp=(g,kind)=>Math.round((kind==='mahoraga'?480:380)*(1+levelSteps(g)*.03)*(1+(g.p.meta?.summonDuration||0)*.3)*(1+(g.p.meta?.ultimateDuration||0)*.1));
+export const guardianMaxHp=(g,kind)=>Math.round((kind==='mahoraga'?480:kind==='queentaratect'?440:380)*(1+levelSteps(g)*.03)*(1+(g.p.meta?.summonDuration||0)*.3)*(1+(g.p.meta?.ultimateDuration||0)*.1));
 export function ensureGuardianHealth(g,s,kind=s.kind){
  const limit=guardianMaxHp(g,kind),previous=s.maxHp;
  // Updating a level or migrating a checkpoint keeps its health percentage. A
@@ -19,15 +19,15 @@ export function ensureGuardianHealth(g,s,kind=s.kind){
 export function guardianTarget(g,e,currentTarget=g.p){
  if(e.boss)return currentTarget;
  let best=currentTarget,d=Math.hypot(e.x-best.x,e.y-best.y);
- for(const s of [g.golem,...(g.summons||[]).filter(s=>s.kind==='mahoraga')])if(s&&s.hp>0){const range=Math.hypot(e.x-s.x,e.y-s.y);if(range<260&&range<d){best=s;d=range;}}
+ for(const s of [g.golem,...(g.summons||[]).filter(s=>s.kind==='mahoraga'||s.kind==='queentaratect')])if(s&&s.hp>0){const range=Math.hypot(e.x-s.x,e.y-s.y);if(range<260&&range<d){best=s;d=range;}}
  return best;
 }
 export function hurtGuardian(g,s,amount,{burst,adapt=false}={}){
  if(!(s.hp>0)||!(amount>0))return false;
- const resistance=s.kind==='mahoraga'?Math.min(.55,(s.adaptation||0)*.12):.15;
+ const resistance=s.kind==='mahoraga'?Math.min(.55,(s.adaptation||0)*.12):s.kind==='queentaratect'?.2:.15;
  s.hp=Math.max(0,s.hp-amount*(1-resistance));s.hit=.14;
  if(adapt&&s.kind==='mahoraga'&&s.wheelCD<=0){s.adaptation=Math.min(4,(s.adaptation||0)+1);s.wheelCD=.55;burst?.(g,s.x,s.y-45,'#eddb9b',7,45);}
- if(s.hp<=0){queueSummonDeath(g,s);burst?.(g,s.x,s.y-25,s.kind==='mahoraga'?'#dce3c8':'#c7ae87',20,85);g.toast=s.kind==='mahoraga'?'MAHORAGA HAS FALLEN':'THE STONE GUARDIAN HAS FALLEN';g.toastTime=3;g.checkpointRequested=true;}
+ if(s.hp<=0){queueSummonDeath(g,s);burst?.(g,s.x,s.y-25,s.kind==='mahoraga'?'#dce3c8':s.kind==='queentaratect'?'#e9dff0':'#c7ae87',20,85);g.toast=s.kind==='mahoraga'?'MAHORAGA HAS FALLEN':s.kind==='queentaratect'?'THE QUEEN TARATECT HAS FALLEN':'THE STONE GUARDIAN HAS FALLEN';g.toastTime=3;g.checkpointRequested=true;}
  return true;
 }
 // Damage is attached to the physical guardian. It never silently drains its
@@ -35,7 +35,7 @@ export function hurtGuardian(g,s,amount,{burst,adapt=false}={}){
 export function updateGuardianHealth(g,s,dt,{burst}={}){
  if(!(s.hp>0))return;
  s.contactCD=Math.max(0,(s.contactCD||0)-dt);s.hit=Math.max(0,(s.hit||0)-dt);
- const radius=s.kind==='mahoraga'?34:29;
+ const radius=s.kind==='mahoraga'?34:s.kind==='queentaratect'?40:29;
  for(const q of g.enemyShots||[])if(q.life>0&&Math.hypot(q.x-s.x,q.y-s.y)<radius+(q.r||0)){
   if(g.ultimate?.type==='esdeath'&&Math.hypot(q.x-g.ultimate.x,q.y-g.ultimate.y)<g.ultimate.r)continue;
   q.life=0;hurtGuardian(g,s,q.damage||0,{burst,adapt:true});if(s.hp<=0)return;
@@ -54,7 +54,7 @@ export function updateGuardianHealth(g,s,dt,{burst}={}){
 }
 export function drawGuardianHealth(c,s,label,color='#a9d8b5',width=42,height=4){
  if(!(s?.hp>0)||!(s.maxHp>0))return;
- const x=Math.round(s.x-width/2),y=Math.round(s.y-(s.kind==='mahoraga'?77:97));
+ const x=Math.round(s.x-width/2),y=Math.round(s.y-(s.kind==='mahoraga'?77:s.kind==='queentaratect'?92:97));
  c.save();c.fillStyle='#101622e8';c.fillRect(x-2,y-2,width+4,height+4);c.fillStyle='#354348';c.fillRect(x,y,width,height);c.fillStyle=color;c.fillRect(x,y,Math.max(0,width*s.hp/s.maxHp),height);
  c.font='600 7px "DM Sans",sans-serif';c.textAlign='center';c.fillStyle='#f1e7d2';c.fillText(label+' '+Math.ceil(s.hp)+' / '+Math.ceil(s.maxHp),s.x,y-5);c.restore();
 }

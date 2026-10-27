@@ -10,7 +10,7 @@ import {crimsonStrike} from './diavolo.js';
 import {SHIRAORI_ULTIMATE,startShiraoriUltimate} from './shiraori.js';
 import {toggleErenForm} from './eren.js';
 import {nearbyCompanionTargets,recallCompanion,companionLeash} from './companion-ai.js';
-import {summonMahoraga} from './summons.js';
+import {summonMahoraga,summonQueen} from './summons.js';
 import {applyStatus,clearStatuses,hasStatus} from './status.js';
 import {damagePropsInRadius,moveBody} from './world.js';
 const TAU=Math.PI*2;
@@ -53,7 +53,7 @@ export function startUltimate(g){
     let target=null;for(const e of g.enemies)if(e.hp>0&&(!target||Math.hypot(e.x-p.x,e.y-p.y)<Math.hypot(target.x-p.x,target.y-p.y)))target=e;
     const dx=target?target.x-p.x:p.facing*250,dy=target?target.y-p.y:0,d=Math.hypot(dx,dy)||1,length=Math.min(380,Math.max(140,d));g.ultimate.tx=p.x+dx/d*length;g.ultimate.ty=p.y+dy/d*length;
   }else if(p.id==='megumi'){p.pose='summon';summonMahoraga(g);}
-  else if(p.id==='shiraori'){startShiraoriUltimate(g);}
+  else if(p.id==='shiraori'){startShiraoriUltimate(g,summonQueen);}
   else if(p.id==='frieren'){startFrierenGolem(g);}
   else if(p.id==='samus'){p.pose='bomb';clearStatuses(p);}
   else if(p.id==='kurumi'){p.pose='clock';g.ultimate.shadows=Array.from({length:3},(_,i)=>({id:-100-i,x:p.x+Math.cos(i*TAU/3-Math.PI/2)*95,y:p.y+Math.sin(i*TAU/3-Math.PI/2)*95,aimAngle:0,attackTimer:0}));}
@@ -89,7 +89,7 @@ export function updateUltimate(g,dt,{damage,burst,shoot}){
       for(const e of g.enemies)if(Math.hypot(e.x-u.tx,e.y-u.ty)<u.r+e.r){damage(g,e,340*p.damage,'#b8f1ff');knock(g,e,u.tx,u.ty,420);}
       damagePropsInRadius(g,u.tx,u.ty,u.r,300,240);burst(g,u.tx,u.ty,'#b5edff',90,380);
     }
-  }else if(u.type==='megumi'){p.pose='summon';}
+  }else if(u.type==='megumi'||u.type==='shiraori'){p.pose='summon';}
   else if(u.type==='frieren'){
     updateFrierenGolem(g,dt,{damage,burst});
   }else if(u.type==='samus'){

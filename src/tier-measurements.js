@@ -405,19 +405,19 @@ export const TIER_MEASUREMENTS={
    "stats": [
     [
      "Damage / sec",
-     "837"
+     "850"
     ],
     [
      "Kills",
-     "625"
+     "636"
     ],
     [
      "Level reached",
-     "22"
+     "21"
     ],
     [
      "HP pool lost / min",
-     "334%"
+     "420%"
     ]
    ]
   }
