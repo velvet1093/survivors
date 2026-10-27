@@ -1,4 +1,5 @@
 import {drawAtFieldShield} from './eva-effects.js';
+import {drawCastOrb} from './gojo-effects.js';
 import {hasStatus} from './status.js';
 import {faceState} from './expressions.js';
 import {enemyPixels} from './pixel-enemies.js';
@@ -30,7 +31,7 @@ export function drawHero(c,p,x,y,time,alpha=1,scale=1){
     for(const side of [-1,1])for(let i=0;i<6;i++){c.fillStyle=i%2?'#ffe5f3':'#fff6e5';c.fillRect(side>0?7+i*4:-12-i*4,-5+i*2+flap,6,16-i);c.fillStyle='#d9bad8';c.fillRect(side>0?7+i*4:-12-i*4,9+i+flap,6,2);}c.restore();
   }
   c.save();c.translate(Math.round(x),Math.round(y));c.scale(facing,1);c.drawImage(heroFrame(p,time),-HERO_FOOT.x*native,-HERO_FOOT.y*native,SPRITE_WIDTH*native,SPRITE_HEIGHT*native);c.restore();
-  if(p.id==='gojo'&&['blue','red'].includes(p.castKind)&&(p.attackTimer||0)>0){const x1=x+facing*12*scale,y1=y-30*scale;oval(c,x1,y1,6*scale,6*scale,p.castKind==='red'?'#f5899f66':'#80d1f544');oval(c,x1,y1,3*scale,3*scale,p.castKind==='red'?'#ffd4d4':'#b6e8ff');}
+  if(p.id==='gojo'&&['blue','red'].includes(p.castKind)&&(p.attackTimer||0)>0)drawCastOrb(c,x+facing*20*native,y-38*native,p.castKind,scale,time);
   if(p.id==='madoka')drawBow(c,p,x,y,scale);
   if(p.id==='naruto'&&p.clone&&(p.attackTimer||0)>.1){oval(c,x+facing*13,y-21,8,8,'#83d7f055');oval(c,x+facing*13,y-21,4,4,'#c5f5ff');}
   if(p.shield>0){if(p.passives?.atfield)drawAtFieldShield(c,x,y,scale,time,!!p.reducedMotion);else{c.strokeStyle='#f9bfe565';c.lineWidth=1;c.beginPath();c.ellipse(x,y-25,21*scale,29*scale,0,0,TAU);c.stroke();}}

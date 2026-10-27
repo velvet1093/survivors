@@ -1,3 +1,4 @@
+import {drawUnlimitedVoid} from './gojo-effects.js';
 import {drawPanaceaAura} from './maomao-effects.js';
 import {drawDenjiUltimate} from './denji-effects.js';
 import {drawGluttony} from './rimuru-art-effects.js';
@@ -28,15 +29,7 @@ export function ultimateUnder(c,g){
     const numerals=['XII','I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];for(let i=0;i<12;i++){const a=i*TAU/12-Math.PI/2;c.fillStyle='#f4cba4bb';c.fillText(numerals[i],u.x+Math.cos(a)*r*.81,u.y+Math.sin(a)*r*.81);}
     for(const [length,angle] of [[.68,u.age*.7-Math.PI/2],[.44,u.age*.07]]){c.strokeStyle='#ebc08d99';c.beginPath();c.moveTo(u.x,u.y);c.lineTo(u.x+Math.cos(angle)*r*length,u.y+Math.sin(angle)*r*length);c.stroke();}oval(c,u.x,u.y,5,5,'#e5b784');
   }else if(u.type==='esdeath'){const r=u.r*Math.min(1,u.age/.25);c.fillStyle='#6399bc33';c.beginPath();c.arc(u.x,u.y,r,0,TAU);c.fill();c.strokeStyle='#c4e8f2aa';c.lineWidth=2;c.stroke();for(let i=0;i<12;i++){const a=i*TAU/12,x=u.x+Math.cos(a)*r,y=u.y+Math.sin(a)*r;c.strokeStyle='#ddf2f4aa';c.beginPath();c.moveTo(x,y);c.lineTo(u.x+Math.cos(a+.04)*r*.9,u.y+Math.sin(a+.04)*r*.9);c.lineTo(u.x+Math.cos(a-.04)*r*.9,u.y+Math.sin(a-.04)*r*.9);c.stroke();}for(let i=0;i<24;i++){const a=i*2.399,rr=r*Math.sqrt((i+.5)/24);c.fillStyle='#d3edf3aa';c.fillRect(Math.round(u.x+Math.cos(a)*rr),Math.round(u.y+Math.sin(a)*rr),2,2);}}
-  else if(u.type==='gojo'){
-    const r=u.r*Math.min(1,u.age/.45),grad=c.createRadialGradient(u.x,u.y,10,u.x,u.y,r);grad.addColorStop(0,'#10102cb8');grad.addColorStop(.8,'#171b3aaf');grad.addColorStop(1,'#b3a0ed19');c.fillStyle=grad;c.beginPath();c.arc(u.x,u.y,r,0,TAU);c.fill();
-    for(let i=0;i<3;i++){c.strokeStyle=['#cdb6ff99','#8796de88','#f0b4e566'][i];c.lineWidth=i===0?2:1;c.setLineDash(i===1?[6,16]:[]);c.beginPath();c.arc(u.x,u.y,r*(1-i*.12),u.age*.2,TAU+u.age*.2);c.stroke();}c.setLineDash([]);
-    for(let i=0;i<44;i++){const a=i*2.399+u.age*.04,rr=r*Math.sqrt((i+.5)/44);oval(c,u.x+Math.cos(a)*rr,u.y+Math.sin(a)*rr,1.2,1.2,i%3?'#b9baf0':'#fff1ff');}
-    // Infinity's event horizon and streams of broken white information.
-    c.save();c.beginPath();c.arc(u.x,u.y,Math.max(1,r-3),0,TAU);c.clip();
-    for(let i=0;i<30;i++){const a=i*2.399+u.age*.025,rr=r*((i/30+u.age*.12)%1),x=u.x+Math.cos(a)*rr,y=u.y+Math.sin(a)*rr;c.fillStyle=i%4?'#a9bde566':'#f4e4ffbb';c.fillRect(Math.round(x),Math.round(y),2+i%3,1);}
-    c.strokeStyle='#dce3f166';c.lineWidth=1;for(let i=1;i<5;i++){c.beginPath();c.ellipse(u.x,u.y,r*.92,r*i/5,0,0,TAU);c.stroke();}c.restore();
-    c.strokeStyle='#c5c8f955';c.lineWidth=1;for(let i=0;i<8;i++){const a=i*TAU/8+u.age*.06;c.beginPath();c.moveTo(u.x+Math.cos(a)*r*.2,u.y+Math.sin(a)*r*.2);c.lineTo(u.x+Math.cos(a)*r*.94,u.y+Math.sin(a)*r*.94);c.stroke();}
+  else if(u.type==='gojo'){drawUnlimitedVoid(c,u,!!g.p.reducedMotion);
   }else if(u.type==='maomao'){drawPanaceaAura(c,g);
   }else if(u.type==='goku'&&u.age<1.8){c.globalAlpha=.2;c.strokeStyle='#c4f4ff';c.lineWidth=1;c.setLineDash([4,14]);c.beginPath();c.ellipse(u.tx,u.ty,u.r*Math.min(1,u.age),u.r*Math.min(1,u.age),0,0,TAU);c.stroke();}
   else if(u.type==='madoka'){

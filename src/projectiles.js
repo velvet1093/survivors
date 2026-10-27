@@ -8,6 +8,7 @@ import {drawHollowPurpleProjectile} from './hollow-purple-art.js';
 import {drawShadowGarden,drawRasenFlash} from './multi-fusion-art.js';
 import {drawPalletRound,drawLonginus} from './eva-effects.js';
 import {drawPoisonVial} from './maomao-effects.js';
+import {drawRedOrb} from './gojo-effects.js';
 import {drawPairedProjectile} from './paired-attack-art.js';
 const TAU=Math.PI*2;
 const line=(c,points,color,width)=>{c.strokeStyle=color;c.lineWidth=width;c.lineCap='round';c.lineJoin='round';c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();};
@@ -39,7 +40,7 @@ export function drawPlayerProjectile(c,s,{zoom=1,area=1,reducedMotion=false}={})
   if(s.type==='longinus')drawLonginus(c,s,reducedMotion);
   else if(s.type==='thunderspear'){if(s.stuck){disc(c,0,0,5,'#e7b365');}else{trail('#edbd72',18);poly(c,[[-12,-4],[6,-4],[17,0],[6,4],[-12,4]],'#7e9c89');poly(c,[[5,-4],[17,0],[5,4]],'#c2d1ca');line(c,[[-8,-2],[4,-2]],'#d6e0b7',2);line(c,[[-8,-5],[-14,-7]],'#b89b6b',2);line(c,[[-8,5],[-14,7]],'#b89b6b',2);}}
   else if(s.type==='ki'){const charging=s.age<s.charge;if(charging){disc(c,0,0,8+(s.age/s.charge)*7,'#b9e9ff');disc(c,-2,-2,4,'#fff9e0');}else{trail('#92d5fc',s.fused?60:32);c.strokeStyle='#253d5b';c.lineWidth=s.fused?10:7;c.beginPath();c.arc(1,0,s.fused?19:12,-1.1,1.1);c.stroke();c.strokeStyle='#bceeff';c.lineWidth=s.fused?6:4;c.stroke();disc(c,6,0,s.fused?8:4,'#fff8df');}}
-  else if(s.type==='red'){disc(c,0,0,8,'#ed829b');disc(c,0,0,3,'#fff2df');c.strokeStyle='#ffb8bc';c.lineWidth=2;c.beginPath();c.arc(0,0,12,s.age*8,s.age*8+4);c.stroke();}
+  else if(s.type==='red')drawRedOrb(c,s,reducedMotion);
   else if(s.type==='missile'||s.type==='supermissile'){trail(s.color,22);poly(c,[[-8,-4],[7,-4],[14,0],[7,4],[-8,4]],s.type==='supermissile'?'#a6d5a3':'#e6d9cb');poly(c,[[5,-4],[14,0],[5,4]],s.type==='supermissile'?'#6ca489':'#d1777b');poly(c,[[-8,-4],[-12,-8],[-10,0],[-12,8],[-8,4]],'#8e9da4');}
   else if(s.type==='powerbeam'){trail(s.color,s.charged?24:16);disc(c,3,0,s.charged?8:4,s.beamStage>=2?'#dbf7fc':s.fused?'#b9f5d6':'#ffe0a1');disc(c,5,-1,s.charged?3:1.5,'#fffae0');}
   else if(s.type==='zoltraak'){trail('#c2e7d7',30);poly(c,[[20,0],[3,-4],[-5,0],[3,4]],'#f0f4cd');}

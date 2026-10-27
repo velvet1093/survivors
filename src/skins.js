@@ -18,7 +18,7 @@ export const SKINS={
  frieren:[base('Elven Mage'),{id:'maid',name:'Maid Frieren'}],
  samus:[base('Varia Suit'),{id:'zerosuit',name:'Zero Suit'},{id:'stealth',name:'Zero Suit · Stealth'},{id:'fusion',name:'Fusion Suit',replace:{'#d9954f':'#579fc4','#8c573d':'#345680','#f1c67a':'#a8dfed','#ac5854':'#4479a8','#e2a450':'#dda95b'}},{id:'gravity',name:'Gravity Suit',replace:{'#d9954f':'#9d74bf','#8c573d':'#5c477b','#f1c67a':'#d4b1e2','#e2a450':'#a681c5'}}],
  goku:[base('Orange Gi'),{id:'supersaiyan',name:'Super Saiyan',replace:{'#182331':'#ecd064','#101520':'#ab7d32','#354459':'#fff1a3'}}],
- gojo:[base('High Collar'),{id:'female',name:'Female Gojo'},{id:'unsealed',name:'Unsealed',replace:{'#272739':'#ede8e0','#18192b':'#9c9aa9','#4d4d6a':'#ffffff'}}],
+ gojo:[base('High Collar'),{id:'female',name:'Female Gojo'},{id:'unsealed',name:'Unsealed'}],
  naruto:[base('Leaf Ninja'),{id:'sage',name:'Sage Cloak',replace:{'#ee9848':'#c36556','#b76837':'#7c4551','#ffca74':'#edb18a'}},{id:'hokage',name:'Seventh Hokage'}],
  madoka:[base('Magical Girl'),{id:'goddess',name:'Ultimate Madoka',replace:{'#eea4c0':'#f1e8e8','#bd668f':'#b3a3c8','#ffdfed':'#ffffff','#efa4c1':'#f1bfd5'}},{id:'school',name:'Mitakihara School Uniform'}],
  maomao:[base('Apothecary'),{id:'dancer',name:'Crimson Dancer'},{id:'spring',name:'Spring Court'},{id:'palace',name:'Palace Attire'}],

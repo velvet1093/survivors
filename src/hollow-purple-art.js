@@ -51,17 +51,3 @@ export function drawHollowPurpleImpact(c,e,progress,reduced=false){
  for(let i=0;i<10;i++){const a=i*2.399+(reduced?0:.25),d=r*(.62+(i%3)*.13);path(c,[[Math.cos(a)*d*.8,Math.sin(a)*d*.8],[Math.cos(a+.04)*d,Math.sin(a+.04)*d]],i%2?'#deb5f0':'#f4d7e9',1.5);}
  c.restore();
 }
-
-let iconCache;
-export function hollowPurpleItemPixels(id){
- if(id!=='purple')return null;if(iconCache)return iconCache;
- const p=Array(32*32).fill(null),put=(x,y,color)=>{x=Math.round(x);y=Math.round(y);if(x>=0&&x<32&&y>=0&&y<32)p[y*32+x]=color;},R=(x,y,w,h,color)=>{for(let yy=Math.round(y);yy<Math.round(y+h);yy++)for(let xx=Math.round(x);xx<Math.round(x+w);xx++)put(xx,yy,color);},L=(x,y,tx,ty,color,w=1)=>{const n=Math.max(Math.abs(tx-x),Math.abs(ty-y),1);for(let i=0;i<=n;i++)R(x+(tx-x)*i/n,y+(ty-y)*i/n,w,w,color);},O=(x,y,rx,ry,color)=>{for(let yy=0;yy<32;yy++)for(let xx=0;xx<32;xx++)if(((xx+.5-x)/rx)**2+((yy+.5-y)/ry)**2<=1)put(xx,yy,color);};
- L(2,10,8,9,INK,5);L(7,9,16,14,INK,5);L(2,10,8,9,'#83c7eb',3);L(8,10,16,15,'#9bdaf0',2);
- L(2,25,9,24,INK,5);L(8,24,17,19,INK,5);L(2,25,9,24,'#e578a5',3);L(8,24,17,19,'#f4b6cf',2);
- O(20,16,11,11,INK);O(20,16,9,9,'#67418e');O(19,15,8,8,'#9864c6');O(18,13,5,5,'#bc8adf');O(21,17,5,5,'#b17ed9');
- L(17,8,23,8,'#dab3ef');L(26,12,27,17,'#dfb6ef');L(15,21,20,24,'#e5b8ef');
- O(20,16,3.4,3.4,'#e3baf3');O(19,15,1.8,1.8,'#fff2e8');L(14,16,25,16,'#f4dcec');
- L(12,6,10,3,'#ba91db',2);L(28,24,31,27,'#dbb2ed');R(6,15,2,2,'#e7bfdc');R(27,3,2,2,'#e6c9f1');
- const out=[...p];for(let y=0;y<32;y++)for(let x=0;x<32;x++)if(p[y*32+x])for(const [dx,dy]of [[-1,0],[1,0],[0,-1],[0,1]]){const xx=x+dx,yy=y+dy;if(xx>=0&&xx<32&&yy>=0&&yy<32&&!p[yy*32+xx])out[yy*32+xx]=INK;}
- iconCache=out;return out;
-}

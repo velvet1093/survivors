@@ -1,4 +1,5 @@
 import {drawPoisonPool} from './maomao-effects.js';
+import {drawBlueVortex} from './gojo-effects.js';
 import {activeStatuses} from './status.js';
 import {gemTier} from './xp.js';
 const TAU=Math.PI*2;
@@ -31,10 +32,7 @@ export function drawUnitStatuses(c,unit,time,reduced=false,isPlayer=false){
 export function drawCombatField(c,f,reduced=false){
  const age=reduced?.5:f.age,fade=Math.min(1,f.life/.6),r=f.r,enter=Math.min(1,f.age/.14);c.save();c.globalAlpha=fade*enter;
  if(f.kind==='poison'){c.restore();drawPoisonPool(c,f,reduced);return;
- }else{
-   const core=8+Math.sin(age*9)*1.2;c.fillStyle='#142a4a77';c.beginPath();c.arc(f.x,f.y,r,0,TAU);c.fill();ring(c,f.x,f.y,r,'#8fcbf666',1);ring(c,f.x,f.y,r*.7,'#5c99e455',2);
-   for(let i=0;i<22;i++){const t=(age*.85+i/22)%1,a=i*2.399+age*1.5,d=core+(r-core)*(1-t),x=f.x+Math.cos(a)*d,y=f.y+Math.sin(a)*d;dot(c,x,y,2,2,i%3?'#8ed5f3':'#e9f7ff');if(i%3===0){c.strokeStyle='#5c9fe788';c.beginPath();c.arc(f.x,f.y,d,a-.5,a);c.stroke();}}
-   c.fillStyle='#0a142b';c.beginPath();c.arc(f.x,f.y,core,0,TAU);c.fill();ring(c,f.x,f.y,core+2,'#c1f4ff',2);ring(c,f.x,f.y,core+5,'#64aaf2aa',2);
+ }else{c.restore();drawBlueVortex(c,f,reduced);return;
  }
  c.restore();
 }

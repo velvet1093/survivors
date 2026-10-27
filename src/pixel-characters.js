@@ -3,6 +3,7 @@ import {shiraoriPixels} from './shiraori-art.js';
 import {megumiPixels} from './megumi-art.js';
 import {erenPixels} from './eren-art.js';
 import {maomaoPixels} from './maomao-art.js';
+import {gojoPixels} from './gojo-art.js';
 import {evaPixels,EVA_UNITS} from './eva-art.js';
 import {pilotSuitPixels} from './eva-pilot-art.js';
 import {beachOutfitPixels} from './beach-outfit-art.js';
@@ -218,37 +219,6 @@ function goddessFrame({frame=0,moving=false,pose='',attack=false,expression='neu
  return outline(r.pixels,'#66516b');
 }
 
-function referenceSkinFrame(id,look,{frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false}){
- const r=raster(),{rect,poly,line}=r,walk=moving?[0,1,0,-1][frame]:0,y=moving?-frame%2:0,skin='#ffe2c6',ink='#2b2b40',female=look==='female',dancer=look==='dancer',hair=female?'#d6dfed':dancer?'#28473f':'#292632',hairDark=female?'#939ebc':dancer?'#152f34':'#171d29',hairLight=female?'#f5f5ff':dancer?'#54726a':'#5f4c5b';
- // All three reference skins use loose, long hair with separate walking sway.
- poly([[16,17+y],[39,17+y],[43,35],[47-walk,58],[40,61],[36,43],[21,43],[16+walk,61],[9+walk,57],[13,36]],hairDark);poly([[16,24],[21,26],[20,44],[13+walk,56],[14,37]],hair);poly([[35,25],[40,23],[39,40],[45-walk,55],[39,54]],hair);line(17,30,14+walk,50,hairLight);line(39,31,42-walk,49,hairLight);
- if(female){
-  rect(21-walk,55,5,11,skin);rect(30+walk,55,5,11,skin);rect(20-walk,64,7,6,'#26364f');rect(30+walk,64,7,6,'#26364f');rect(21-walk,64,5,1,'#8594ad');rect(31+walk,64,5,1,'#8594ad');
-  poly([[21,37],[35,37],[39,43],[35,49],[39+walk,58],[29,60],[18+walk,58],[21,48],[17,43]],'#1d2944');poly([[23,39],[33,39],[35,44],[32,49],[35+walk,56],[22+walk,56],[24,48],[21,44]],'#34445f');rect(26,37,7,5,'#263650');rect(24,38,1,9,'#62708d');rect(30,44,1,1,'#aab0bd');rect(29,50,1,1,'#aab0bd');line(24,53,23+walk,57,'#18283e');
-  const yy=pose==='domain'||attack?27:45;line(18,40,13,yy,'#263650',4);rect(11,yy-3,4,5,skin);line(12,yy-3,14,yy-10,skin,2);line(36,40,39,51,'#263650',4);rect(37,51,4,4,skin);
- }else if(dancer){
-  rect(21-walk,66,6,5,'#678a87');rect(30+walk,66,6,5,'#678a87');poly([[23,47],[34,47],[38+walk,59],[43+walk,67],[34,70],[28,68],[19,70],[12+walk,66],[19+walk,54]],'#8d445e');poly([[25,48],[31,48],[32,60],[39+walk,67],[31,67],[27,63],[23,68],[16+walk,65]],'#c3676a');poly([[34,51],[38+walk,59],[41+walk,65],[37,65],[32,58]],'#e59188');line(21,56,17+walk,65,'#f0a7a0');
-  rect(23,43,11,7,skin);rect(22,48,14,3,'#c0a8c5');for(const xx of [23,27,31,35])rect(xx,49+(xx%3),2,2,'#e5c28b');poly([[24,50],[27,51],[23+walk,64],[20+walk,67],[22,58]],'#a9d0c3');poly([[32,51],[35,52],[38-walk,63],[36-walk,68],[32,59]],'#c2dfd3');
-  poly([[20,37+y],[24,36+y],[29,41],[33,36+y],[38,39],[35,45],[30,46],[27,44],[23,46]],'#be5c64');poly([[24,37+y],[29,41],[33,37+y],[34,40],[29,44]],'#c7dcd1');rect(26,41,7,2,'#796080');
-  poly([[18,38],[13,36],[6,44],[9,52],[18,50],[23,42]],'#9c455b');poly([[17,39],[13,39],[9,44],[11,49],[18,47],[21,42]],'#dc7a77');poly([[36,38],[40,36],[47,45],[45,52],[36,49],[32,42]],'#9c455b');poly([[37,39],[40,39],[44,45],[42,49],[36,47]],'#dc7a77');rect(13,48,4,3,skin);rect(40,48,4,3,skin);
-  poly([[7,42],[15,38],[21,41],[18,44],[12,43],[8,48]],'#b4d9d0');poly([[39,40],[44,40],[48,53],[44,61],[40,59],[45,51]],'#cce4dc');line(44,45,46,53,'#87b4b1');
-  if(attack||pose==='brew'){rect(40,41,5,8,'#d6e9dc');rect(41,39,3,3,'#b39c71');rect(41,46,3,3,'#8bbb9c');}
- }else{
-  rect(21-walk,58,6,12,'#2e2b39');rect(30+walk,58,6,12,'#2e2b39');rect(20-walk,68,7,3,'#191e2e');rect(30+walk,68,7,3,'#191e2e');
-  poly([[21,46],[35,46],[42+walk,57],[46+walk,64],[40,67],[32,65],[26,68],[18,65],[10+walk,64],[15+walk,56]],'#242330');poly([[24,47],[31,47],[34+walk,55],[40+walk,65],[33,64],[27,66],[21,64],[15+walk,63],[21+walk,54]],'#f0ebe6');for(const xx of [15,21,27,33,39]){rect(xx,62+xx%3,3,2,'#bcb8c4');rect(xx+1,64+xx%3,2,2,'#f9f3ed');}poly([[21,49],[26,50],[22,60],[18,62],[13+walk,61]],'#4e3b47');poly([[32,50],[36,50],[43+walk,61],[37,62],[33,57]],'#4e3b47');
-  poly([[21,37+y],[25,36+y],[28,40],[32,36+y],[36,39],[34,46],[37,50],[30,53],[26,49],[20,52],[22,44]],'#202532');poly([[23,38],[27,40],[31,38],[33,40],[29,45],[24,44]],'#f0ebe6');rect(25,43,7,7,'#493845');for(const yy of [44,47,50]){rect(26,yy,1,1,'#c6b09d');rect(30,yy,1,1,'#c6b09d');}rect(20,37,4,5,'#37303e');rect(34,37,5,5,'#37303e');
-  const yy=attack||pose==='clock'?41:49;line(18,40,12,46,'#2e2938',4);line(36,40,43,yy,'#2e2938',4);rect(10,46,4,4,skin);rect(42,yy,4,3,skin);rect(42,yy-2,10,3,'#916d55');rect(49,yy-3,5,2,'#d4b98a');rect(44,yy+1,3,3,'#916d55');
-  line(11,47,7,28,'#986f56',3);line(7,30,6,20,'#c3b5a3',2);rect(8,42,4,2,'#c5a37e');
- }
- poly([[18,21+y],[37,21+y],[38,31+y],[34,37+y],[28,39+y],[21,36+y],[17,29+y]],skin);paintFace(r,female?'shinji':id,{y,expression,blink});
- if(female&&!blink&&expression!=='hurt')for(const xx of [22,32]){rect(xx,29+y,2,4,'#64bed7');rect(xx,29+y,1,1,'#f3fcff');}
-
- poly([[16,31+y],[14,22+y],[18,14+y],[25,10+y],[34,11+y],[40,17+y],[41,30+y],[37,35+y],[35,23+y],[31,20+y],[28,27+y],[24,21+y],[20,28+y],[19,34+y]],hairDark);poly([[17,24+y],[18,18+y],[23,13+y],[31,13+y],[38,18+y],[38,27+y],[34,21+y],[31,17+y],[28,23+y],[24,17+y],[21,24+y],[18,29+y]],hair);line(22,14+y,32,14+y,hairLight);line(18,20+y,17,28+y,hairLight);
- if(female){rect(19,15+y,7,4,'#27344e');rect(30,15+y,7,4,'#27344e');line(25,16+y,31,16+y,'#435878');rect(20,15+y,4,1,'#7787a5');rect(31,15+y,4,1,'#7787a5');}
- else{const flower=(xx,yy,col,edge)=>{for(const [dx,dy]of [[0,-2],[-2,0],[2,0],[0,2]])rect(xx+dx,yy+dy+y,3,3,edge);rect(xx,yy+y,3,3,col);rect(xx+1,yy+1+y,1,1,'#e8c8a4');};if(dancer){flower(38,16,'#617db4','#344d87');flower(40,19,'#6d91c4','#435e99');}else{flower(35,11,'#c46d79','#7c3e54');flower(39,15,'#bc626c','#7c3e54');flower(28,38,'#c46d79','#7c3e54');}}
- return outline(r.pixels,ink);
-}
-
 function frierenFrame(options){const r=raster();redrawFrieren(r,options);return outline(r.pixels,'#29333f');}
 
 function zeroSuitFrame({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='zerosuit'}){
@@ -286,6 +256,7 @@ export function characterPixels(id,{frame=0,moving=false,pose='',attack=false,ex
   if(id==='esdeath'){const result=esdeathPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='featherine'){const result=featherinePixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='maomao'){const result=maomaoPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
+  if(id==='gojo'){const result=gojoPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id!=='shinji'){const beach=beachOutfitPixels(id,skinId,{frame,moving,pose,attack,expression,blink,form})||cuteSwimPixels(id,skinId,{frame,moving,pose,attack,expression,blink,form});if(beach){dataCache.set(key,beach);return beach;}}
   if(skinId==='swimsuit'&&id!=='shinji'){const swimming=swimsuitPixels(id,{frame,moving,pose,attack,expression,blink,form});if(swimming){dataCache.set(key,swimming);return swimming;}}
   if(skinId==='pajamas'&&id!=='shinji'){const pajamas=pajamaPixels(id,{frame,moving,pose,attack,expression,blink,form});if(pajamas){dataCache.set(key,pajamas);return pajamas;}}
@@ -299,7 +270,6 @@ export function characterPixels(id,{frame=0,moving=false,pose='',attack=false,ex
   if(id==='samus'&&['zerosuit','stealth'].includes(skinId)&&pose!=='bomb'){const result=zeroSuitFrame({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='frieren'){const result=frierenFrame({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='samus'){const result=tintPixels(variaSuitPixels({frame,moving,pose,attack,expression,blink}),skinFor(id,skinId));dataCache.set(key,result);return result;}
-  if(id==='gojo'&&skinId==='female'){const result=referenceSkinFrame(id,skinId,{frame,moving,pose,attack,expression,blink});dataCache.set(key,result);return result;}
   if(id==='madoka'&&skinId==='goddess'){const result=goddessFrame({frame,moving,pose,attack,expression,blink});dataCache.set(key,result);return result;}
   if(id==='esdeath'){const result=tintPixels(esdeathFrame({frame,moving,pose,attack,expression,blink}),skinFor(id,skinId));dataCache.set(key,result);return result;}
   if(id==='shinji'){const result=evaFrame({frame,moving,pose,attack,expression,blink,skin:skinFor(id,skinId),evolved});dataCache.set(key,result);return result;}
