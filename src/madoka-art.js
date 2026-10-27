@@ -20,7 +20,7 @@ const c=MADOKA_ART,SK={base:'#ffe2c6',shade:'#ebb9a0',deep:'#cf8d84',light:'#fff
 const PINK=['#ae648f','#efa4c1','#ffe0e9'],GODDESS=['#c87aa4','#f8b8d4','#ffe8f2'];
 const LOOKS={
  default:{hair:'tails',ribbon:'big',body:'magical',sleeve:{upper:null,fore:null,puff:true,cuff:'#ffffff'}},
- goddess:{hair:'goddess',body:'goddess',sleeve:{upper:['#d8d0dc','#ffffff','#ffffff'],fore:['#d8d0dc','#ffffff','#ffffff'],cape:true}},
+ goddess:{hair:'goddess',body:'goddess',sleeve:{upper:null,fore:null,puff:true,frill:'#f8b8d4'}},
  school:{hair:'tails',ribbon:'small',body:'school',sleeve:{upper:['#c8b890','#f2e8cc','#fffaee'],fore:['#c8b890','#f2e8cc','#fffaee'],cuff:'#c0303a'}},
  casual:{hair:'tails',ribbon:'small',body:'pinafore',sleeve:{upper:['#d8d0dc','#ffffff','#ffffff'],fore:null,puff:true}},
  pajamas:{hair:'low',ribbon:'small',body:'nightdress',sleeve:{upper:['#d8a0b8','#f8d0e0','#fff0f6'],fore:['#d8a0b8','#f8d0e0','#fff0f6'],cuff:'#ffffff'}},
@@ -54,9 +54,9 @@ function hairBack(r,m,L){
   for(const s of [-1,1]){const x=28+s*12;P(shift([[x-2,28],[x+2,28],[x+2+s,46],[x-1+s,48],[x-3+s,44]],y),H[0]);P(shift([[x-1,29],[x+1,29],[x+1+s,44],[x-1+s,44]],y),H[1]);}return;}
  // Short twin tails swept out from either side of the head.
  const sway=moving?[0,1,0,-1][frame]:frame%2;
- P([[14,17],[8+sway,20],[9+sway,33],[12+sway,38],[14,33],[18,35],[18,22]],H[0]);P([[42,17],[48-sway,20],[47-sway,33],[44-sway,38],[42,33],[38,35],[38,22]],H[0]);
- P([[13,19],[10+sway,23],[12+sway,32],[14,29],[16,32],[16,21]],H[1]);P([[43,19],[46-sway,23],[44-sway,32],[42,29],[40,32],[40,21]],H[1]);
- R(11+sway,22,2,7,H[2]);R(43-sway,22,2,7,H[2]);
+ P(shift([[14,17],[8+sway,20],[9+sway,33],[12+sway,38],[14,33],[18,35],[18,22]],y),H[0]);P(shift([[42,17],[48-sway,20],[47-sway,33],[44-sway,38],[42,33],[38,35],[38,22]],y),H[0]);
+ P(shift([[13,19],[10+sway,23],[12+sway,32],[14,29],[16,32],[16,21]],y),H[1]);P(shift([[43,19],[46-sway,23],[44-sway,32],[42,29],[40,32],[40,21]],y),H[1]);
+ R(11+sway,22+y,2,7,H[2]);R(43-sway,22+y,2,7,H[2]);
 }
 function bow(r,x,y,big,colors){
  const {poly:P,rect:R}=r,[dark,mid,knot]=colors;
@@ -71,8 +71,12 @@ function hairFront(r,m,L){
  P(shift([[15,28],[14,18],[18,13],[24,10],[33,10],[39,13],[42,19],[41,29],[38,31],[35,25],[32,22],[29,27],[25,23],[22,28],[19,24],[18,32]],y),H[0]);
  P(shift([[16,24],[16,18],[20,14],[25,12],[32,12],[38,15],[40,20],[39,27],[35,22],[32,19],[29,24],[25,20],[22,25],[19,21]],y),H[1]);
  R(20,14+y,16,2,H[2]);R(17,18+y,3,3,'#f9bfd5');R(38,18+y,2,5,'#f9bfd5');
- if(L.hair==='goddess'){// White wing ornaments rise from the sides of her head.
-  for(const s of [-1,1]){const X=d=>28+s*d;P(shift([[X(9),16],[X(14),8],[X(15),12],[X(12),18]],y),'#ffffff');P(shift([[X(10),17],[X(16),11],[X(16),15],[X(12),19]],y),'#f4eef8');Ln(X(11),15+y,X(14),10+y,'#d8d0e8');}
+ if(L.hair==='goddess'){// Little pigtails on top, tied with big white bows.
+  for(const s0 of [-1,1]){const X=d=>28+s0*d;P(shift([[X(9),14],[X(14),11],[X(17),15],[X(15),22],[X(12),18]],y),H[0]);P(shift([[X(10),15],[X(14),12],[X(16),15],[X(14),20],[X(12),17]],y),H[1]);
+   // Bow: two rounded loops either side of a knot, with short trailing tails.
+   const bx=X(10),by=12+y;
+   for(const d of [-1,1]){P([[bx,by],[bx+d*6,by-4],[bx+d*7,by+1],[bx+d*4,by+3]],'#d8d0e0');P([[bx+d,by],[bx+d*5,by-3],[bx+d*6,by+1],[bx+d*4,by+2]],'#ffffff');}
+   r.rect(bx-1,by-1,3,3,'#f0e8f4');Ln(bx-1,by+2,bx-2,by+6,'#e8e0ec');Ln(bx+1,by+2,bx+2,by+6,'#e8e0ec');}
   return;}
  if(L.hair==='low'){R(14,28+y,4,2,'#e04a5a');R(39,28+y,4,2,'#e04a5a');return;}
  if(L.ribbon==='flower'){for(const x of [13,43]){const yy=16+y;for(const [dx,dy]of [[-2,0],[2,0],[0,-2],[0,2]])R(x+dx,yy+dy,2,2,'#ffffff');R(x,yy,2,2,'#f8c040');}return;}
@@ -114,16 +118,24 @@ function body(r,m,L){
   P(shift([[24,36],[32,36],[28,40]],y),'#ffffff');P(shift([[23,37],[28,40],[25,41]],y),'#f4f4f4');
   P(shift([[28,39],[23,37],[23,42]],y),'#c0303a');P(shift([[28,39],[33,37],[33,42]],y),'#c0303a');R(27,38+y,3,3,'#a02030');Ln(27,41+y,26,45+y,'#a02030');Ln(29,41+y,30,45+y,'#a02030');return;}
  if(b==='goddess'){
-  // The gown falls closed to the floor; its starry cosmos lining shows only at the flared hem,
-  // with just her winged slippers peeking out beneath.
-  P([[16,62],[40,62],[46+walk*.4,71],[10+walk*.4,71]],'#2a1a5a');P([[18,64],[38,64],[43+walk*.4,71],[13+walk*.4,71]],'#3a2a78');
-  for(const [x,yy]of [[14,69],[20,67],[27,70],[33,66],[39,69],[24,69],[43,70],[17,70]])put(x+walk*.3,yy,yy%2?'#ffffff':'#e0c8ff');
-  for(const [i,x]of [[0,23],[1,30]]){const d=i?walk:-walk;R(x+d*.5,68,4,3,'#f4f0f8');P([[x+d*.5,69],[x-3+d*.5,66],[x-1+d*.5,70]],'#ffffff');}
-  for(const [top,out]of [[46,12],[52,15],[57,18]]){P([[28-out+6,top],[28+out-6,top],[28+out+walk*.4,top+9],[28-out+walk*.4,top+9]],'#ffffff');Ln(28-out+walk*.4,top+9,28+out+walk*.4,top+9,'#2a2a3a');Ln(28-out+walk*.4,top+8,28+out+walk*.4,top+8,'#e0d8e8');for(const fx of [-6,0,6])Ln(28+fx*.6,top+1,28+fx*1.1+walk*.4,top+8,'#ece6f2');}
-  P(shift([[21,37],[35,37],[34,49],[22,49]],y),'#d8d0dc');P(shift([[22,38],[34,38],[33,48],[23,48]],y),'#ffffff');R(23,47+y,10,2,'#f4c0dc');
-  // A short white capelet over the shoulders.
-  P(shift([[17,37],[39,37],[42,45],[36,44],[28,46],[20,44],[14,45]],y),'#e8e0ec');P(shift([[18,38],[38,38],[40,44],[35,43],[28,45],[21,43],[16,44]],y),'#ffffff');Ln(14,45+y,20,44+y,'#a898b8');Ln(36,44+y,42,45+y,'#a898b8');
-  put(28,39+y,'#f8b8d4');return;}
+  // Small feathered wings fan out behind her shoulders.
+  for(const s0 of [-1,1])for(let i=0;i<5;i++){const X=d=>28+s0*d,tx=X(12+i*3),ty=30+i*3;P([[X(8),38],[tx,ty],[tx+s0*2,ty+4],[X(9),42]],i%2?'#ffe4f2':'#ffffff');Ln(X(8),39,tx,ty+1,'#f4c8e0');}
+  // A long train behind her, white above and lined with a starry cosmos.
+  P([[14,52],[42,52],[49+walk*.3,71],[7+walk*.3,71]],'#2a1a5a');P([[17,56],[39,56],[45+walk*.3,71],[11+walk*.3,71]],'#3a2a78');
+  for(const [x,yy]of [[12,68],[18,62],[38,61],[44,67],[16,70],[40,70],[21,66],[35,66]])put(x+walk*.3,yy,yy%2?'#ffffff':'#e0c8ff');
+  for(const s0 of [-1,1]){const X=d=>28+s0*d;P([[X(12),52],[X(16),52],[X(22)+walk*.3,70],[X(18)+walk*.3,71]],'#ffffff');for(let yy=56;yy<70;yy+=3)put(X(17+(yy-56)*.3)+walk*.3,yy,'#f8b8d4');}
+  // Pale pink thigh-high stockings and white heels with tiny wings at the ankles.
+  for(const [i,x]of [[0,23],[1,30]]){const d=i?walk:-walk;R(x+d*.5,55,4,13,'#f8dcea');R(x+3+d*.5,55,1,13,'#e8b8d0');R(x+d*.5,55,4,1,'#ffffff');
+   R(x-1+d*.5,68,5,3,'#ffffff');R(x-1+d*.5,70,5,1,'#d8d0e0');P([[x+(i?4:0)+d*.5,67],[x+(i?8:-4)+d*.5,64],[x+(i?6:-2)+d*.5,68]],'#ffffff');}
+  // A full skirt of white ruffles, each tier edged with a dark scalloped underside.
+  for(const [top,out,h]of [[45,12,5],[49,15,5],[53,18,5],[57,20,3]]){P([[28-out+4,top],[28+out-4,top],[28+out+walk*.4,top+h],[28-out+walk*.4,top+h]],'#ffffff');
+   for(let x=28-out;x<28+out;x+=3){put(x+walk*.4,top+h,'#3a2a6a');put(x+1+walk*.4,top+h,'#3a2a6a');put(x+2+walk*.4,top+h,'#c8a8e0');}
+   for(const fx of [-5,0,5])Ln(28+fx*.6,top+1,28+fx*1.1+walk*.4,top+h-1,'#ece6f2');}
+  // White bodice with a keyhole neckline, scalloped trim and the pink gem; a white choker.
+  P(shift([[21,38],[35,38],[34,48],[22,48]],y),'#d8d0dc');P(shift([[22,39],[34,39],[33,47],[23,47]],y),'#ffffff');
+  P(shift([[26,38],[30,38],[28,43]],y),SK.base);for(let x=22;x<35;x+=2)put(x,39+y,'#e8dcec');
+  P(shift([[28,42],[30,44],[28,46],[26,44]],y),'#e0306a');put(28,43+y,'#ffc0e0');R(25,36+y,7,1,'#ffffff');
+  return;}
  if(b==='pinafore'){
   legs(r,m,{top:56,sock:'#ffffff',sockTop:61,shoe:'#c0303a',strap:true});
   // A white blouse with a rounded collar under a rose pinafore dress to the knee.
@@ -166,15 +178,15 @@ function arms(r,m,L){
   if(S?.cuff)R(hx-2,hy-1+y,4,2,S.cuff);
   const glove=L.body==='magical'||L.body==='goddess';R(hx-1,hy+y,3,3,glove?'#ffffff':SK.base);R(hx-1,hy+2+y,3,1,glove?'#d8d0dc':SK.shade);
   // Round puffed shoulders or the goddess's capelet sit over the arm.
-  if(S?.puff){r.poly(shift([[sx-3,37],[sx+3,37],[sx+4,42],[sx-4,42]],y),'#d8d0dc');r.poly(shift([[sx-2,38],[sx+2,38],[sx+3,41],[sx-3,41]],y),'#ffffff');}
+  if(S?.puff){r.poly(shift([[sx-3,37],[sx+3,37],[sx+4,42],[sx-4,42]],y),'#d8d0dc');r.poly(shift([[sx-2,38],[sx+2,38],[sx+3,41],[sx-3,41]],y),'#ffffff');if(S.frill)Ln(sx-4,42+y,sx+4,42+y,S.frill);}
  }
 }
 const cache=new Map();
 export function madokaPixels({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='default'}={}){
  const look=LOOKS[skin]?skin:'default',key=[frame,moving,pose,attack,expression,blink,look].join(':');if(cache.has(key))return cache.get(key);
  const mo=motion({frame,moving}),m={frame:((frame%4)+4)%4,moving,pose,attack,expression,blink,walk:mo.walk*2,y:mo.y,cast:attack},L=LOOKS[look],r=canvas();
- hairBack(r,m,L);body(r,m,L);arms(r,m,L);face(r,m,L);hairFront(r,m,L);
- if(L.body==='goddess'){// The capelet covers the upper arms.
-  const {poly:P,line:Ln}=r,y=m.y;P(shift([[17,37],[23,37],[22,43],[14,45]],y),'#e8e0ec');P(shift([[39,37],[33,37],[34,43],[42,45]],y),'#e8e0ec');Ln(14,45+y,20,44+y,'#a898b8');Ln(36,44+y,42,45+y,'#a898b8');}
+ // The head sits a little higher than the torso so a short neck shows beneath the chin.
+ const hm={...m,y:m.y-3};
+ hairBack(r,hm,L);r.rect(25,33+m.y,7,6,SK.shade);r.rect(26,33+m.y,5,6,SK.base);body(r,m,L);arms(r,m,L);face(r,hm,L);hairFront(r,hm,L);
  const result=selout(r.pixels,c.ink);cache.set(key,result);return result;
 }
