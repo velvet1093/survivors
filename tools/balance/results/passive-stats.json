@@ -1,5 +1,15 @@
 [
  {
+  "id": "transparentworld",
+  "slots": 1,
+  "offense": 96,
+  "defence": 33.1,
+  "ultimate": 53.8,
+  "move": 9,
+  "magnet": 0,
+  "score": 134.7
+ },
+ {
   "id": "adaptivebarrier",
   "slots": 1,
   "offense": 0,
@@ -8,6 +18,26 @@
   "move": 0,
   "magnet": 0,
   "score": 121.2
+ },
+ {
+  "id": "gearfifth",
+  "slots": 1,
+  "offense": 24,
+  "defence": 115,
+  "ultimate": 0,
+  "move": 27,
+  "magnet": 33,
+  "score": 102.4
+ },
+ {
+  "id": "gateoftruth",
+  "slots": 1,
+  "offense": 76.2,
+  "defence": 34.5,
+  "ultimate": 12.4,
+  "move": 0,
+  "magnet": 9,
+  "score": 101
  },
  {
   "id": "quintet",
@@ -50,6 +80,16 @@
   "score": 71.1
  },
  {
+  "id": "philosopherstone",
+  "slots": 1,
+  "offense": 42.1,
+  "defence": 34.5,
+  "ultimate": 6.4,
+  "move": 0,
+  "magnet": 9,
+  "score": 65.1
+ },
+ {
   "id": "senzu",
   "slots": 1,
   "offense": 0,
@@ -58,6 +98,16 @@
   "move": 0,
   "magnet": 0,
   "score": 64.8
+ },
+ {
+  "id": "hinokami",
+  "slots": 1,
+  "offense": 40.8,
+  "defence": 24.8,
+  "ultimate": 12.4,
+  "move": 9,
+  "magnet": 0,
+  "score": 62
  },
  {
   "id": "purifiedsoul",
@@ -100,6 +150,16 @@
   "score": 53
  },
  {
+  "id": "piratelegacy",
+  "slots": 1,
+  "offense": 17,
+  "defence": 46.5,
+  "ultimate": 0,
+  "move": 20,
+  "magnet": 28,
+  "score": 52
+ },
+ {
   "id": "eyes",
   "slots": 1,
   "offense": 31.6,
@@ -130,6 +190,16 @@
   "score": 38.2
  },
  {
+  "id": "breathbond",
+  "slots": 1,
+  "offense": 24.4,
+  "defence": 19.1,
+  "ultimate": 6.4,
+  "move": 0,
+  "magnet": 0,
+  "score": 37.8
+ },
+ {
   "id": "energytank",
   "slots": 1,
   "offense": 0,
@@ -148,6 +218,16 @@
   "move": 0,
   "magnet": 0,
   "score": 36
+ },
+ {
+  "id": "stonebond",
+  "slots": 1,
+  "offense": 19.3,
+  "defence": 21.7,
+  "ultimate": 6.4,
+  "move": 0,
+  "magnet": 9,
+  "score": 34.6
  },
  {
   "id": "masscore",
@@ -220,6 +300,16 @@
   "score": 24.9
  },
  {
+  "id": "crewbond",
+  "slots": 1,
+  "offense": 9,
+  "defence": 17.9,
+  "ultimate": 0,
+  "move": 12,
+  "magnet": 18,
+  "score": 24.1
+ },
+ {
   "id": "memoryfragment",
   "slots": 1,
   "offense": 23.3,
@@ -278,6 +368,26 @@
   "move": 0,
   "magnet": 0,
   "score": 17.3
+ },
+ {
+  "id": "redstone",
+  "slots": 1,
+  "offense": 9,
+  "defence": 12,
+  "ultimate": 0,
+  "move": 0,
+  "magnet": 0,
+  "score": 16.2
+ },
+ {
+  "id": "gumgumfruit",
+  "slots": 1,
+  "offense": 0,
+  "defence": 26.8,
+  "ultimate": 0,
+  "move": 0,
+  "magnet": 0,
+  "score": 16.1
  },
  {
   "id": "purplegem",
@@ -340,6 +450,26 @@
   "score": 13
  },
  {
+  "id": "automail",
+  "slots": 1,
+  "offense": 0,
+  "defence": 21.7,
+  "ultimate": 0,
+  "move": 0,
+  "magnet": 0,
+  "score": 13
+ },
+ {
+  "id": "nichirintsuba",
+  "slots": 1,
+  "offense": 11.1,
+  "defence": 0,
+  "ultimate": 6.4,
+  "move": 0,
+  "magnet": 0,
+  "score": 13
+ },
+ {
   "id": "sagecloak",
   "slots": 1,
   "offense": 9,
@@ -350,7 +480,37 @@
   "score": 12.8
  },
  {
+  "id": "strawhat",
+  "slots": 1,
+  "offense": 9,
+  "defence": 0,
+  "ultimate": 0,
+  "move": 12,
+  "magnet": 0,
+  "score": 12.6
+ },
+ {
+  "id": "transmutation",
+  "slots": 1,
+  "offense": 12.2,
+  "defence": 0,
+  "ultimate": 0,
+  "move": 0,
+  "magnet": 0,
+  "score": 12.2
+ },
+ {
   "id": "truthseal",
+  "slots": 1,
+  "offense": 12,
+  "defence": 0,
+  "ultimate": 0,
+  "move": 0,
+  "magnet": 0,
+  "score": 12
+ },
+ {
+  "id": "hanafuda",
   "slots": 1,
   "offense": 12,
   "defence": 0,
@@ -380,6 +540,16 @@
   "score": 11.5
  },
  {
+  "id": "checkeredhaori",
+  "slots": 1,
+  "offense": 0,
+  "defence": 19.1,
+  "ultimate": 0,
+  "move": 0,
+  "magnet": 0,
+  "score": 11.5
+ },
+ {
   "id": "bluegem",
   "slots": 1,
   "offense": 0,
@@ -398,6 +568,26 @@
   "move": 0,
   "magnet": 9,
   "score": 8.7
+ },
+ {
+  "id": "alchemistwatch",
+  "slots": 1,
+  "offense": 6.4,
+  "defence": 0,
+  "ultimate": 6.4,
+  "move": 0,
+  "magnet": 9,
+  "score": 8.7
+ },
+ {
+  "id": "vivrecard",
+  "slots": 1,
+  "offense": 0,
+  "defence": 14.4,
+  "ultimate": 0,
+  "move": 0,
+  "magnet": 0,
+  "score": 8.6
  },
  {
   "id": "yellowgem",
@@ -420,6 +610,16 @@
   "score": 5.8
  },
  {
+  "id": "foxmask",
+  "slots": 1,
+  "offense": 0,
+  "defence": 4.7,
+  "ultimate": 0,
+  "move": 9,
+  "magnet": 0,
+  "score": 5.5
+ },
+ {
   "id": "magnet",
   "slots": 1,
   "offense": 0,
@@ -438,6 +638,16 @@
   "move": 9,
   "magnet": 0,
   "score": 4.6
+ },
+ {
+  "id": "logpose",
+  "slots": 1,
+  "offense": 0,
+  "defence": 3.1,
+  "ultimate": 0,
+  "move": 0,
+  "magnet": 18,
+  "score": 2.6
  },
  {
   "id": "gravitysuit",
