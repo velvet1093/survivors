@@ -18,3 +18,8 @@ test('Maomao’s items and ultimate use her new icons and effects',()=>{
  assert.ok(drawMaomaoEffect(c,{type:'vial-shatter',x:0,y:0,r:40},.5));assert.equal(drawMaomaoEffect(c,{type:'nova'},.5),false);
  for(const f of [{},{fused:true},{panacea:true}])drawPoisonPool(c,{x:0,y:0,r:50,age:1,life:2,...f});drawPoisonVial(c,{age:.2});
 });
+test('every Maomao outfit, including off-duty ones, shares her face and has its own design',async()=>{
+ const {SKINS}=await import('../src/skins.js');const ids=SKINS.maomao.map(s=>s.id);assert.equal(ids.length,9);
+ assert.equal(new Set(ids.map(skin=>JSON.stringify(characterPixels('maomao',{skin})))).size,ids.length);
+ for(const skin of ids){const px=characterPixels('maomao',{skin});assert.ok(px.includes('#7a72c8'),skin+' violet eyes');assert.ok(px.includes('#d89a84'),skin+' freckles');assert.notDeepEqual(characterPixels('maomao',{skin,attack:true}),px,skin+' throw');}
+});

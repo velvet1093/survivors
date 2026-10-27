@@ -285,6 +285,7 @@ export function characterPixels(id,{frame=0,moving=false,pose='',attack=false,ex
   if(id==='erza'){const result=erzaPixels({frame,moving,pose,attack,expression,blink,skin:skinId,form});dataCache.set(key,result);return result;}
   if(id==='esdeath'){const result=esdeathPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='featherine'){const result=featherinePixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
+  if(id==='maomao'){const result=maomaoPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id!=='shinji'){const beach=beachOutfitPixels(id,skinId,{frame,moving,pose,attack,expression,blink,form})||cuteSwimPixels(id,skinId,{frame,moving,pose,attack,expression,blink,form});if(beach){dataCache.set(key,beach);return beach;}}
   if(skinId==='swimsuit'&&id!=='shinji'){const swimming=swimsuitPixels(id,{frame,moving,pose,attack,expression,blink,form});if(swimming){dataCache.set(key,swimming);return swimming;}}
   if(skinId==='pajamas'&&id!=='shinji'){const pajamas=pajamaPixels(id,{frame,moving,pose,attack,expression,blink,form});if(pajamas){dataCache.set(key,pajamas);return pajamas;}}
@@ -301,7 +302,6 @@ export function characterPixels(id,{frame=0,moving=false,pose='',attack=false,ex
   if(id==='gojo'&&skinId==='female'){const result=referenceSkinFrame(id,skinId,{frame,moving,pose,attack,expression,blink});dataCache.set(key,result);return result;}
   if(id==='madoka'&&skinId==='goddess'){const result=goddessFrame({frame,moving,pose,attack,expression,blink});dataCache.set(key,result);return result;}
   if(id==='esdeath'){const result=tintPixels(esdeathFrame({frame,moving,pose,attack,expression,blink}),skinFor(id,skinId));dataCache.set(key,result);return result;}
-  if(id==='maomao'){const result=maomaoPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='shinji'){const result=evaFrame({frame,moving,pose,attack,expression,blink,skin:skinFor(id,skinId),evolved});dataCache.set(key,result);return result;}
   const p=CHARACTER_PALETTES[id],r=raster(),{rect,poly,line}=r;
   const madoka=id==='madoka',walk=moving?[0,1,0,-1][frame]:0,bob=moving?(frame%2):0;
