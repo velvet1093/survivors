@@ -7,6 +7,7 @@ import {evaIcon} from './eva-icons.js';
 import {maomaoIcon} from './maomao-icons.js';
 import {gojoIcon} from './gojo-icons.js';
 import {madokaIcon} from './madoka-icons.js';
+import {kurumiIcon} from './kurumi-icons.js';
 import {soulGemIcon} from './soul-gem-art.js';
 import {pairedItemIcon} from './paired-item-art.js';
 import {denjiIcon} from './denji-icons.js';
@@ -144,7 +145,7 @@ const palettes={kamehameha:['#65c2f5','#fff3bd'],purple:['#bc8beb','#f19ac1'],ra
 
 export function icon(id, className='') {
   if(id==='chest')return chestIllustration().replace('class="treasure-illustration ',`class="item-icon illustrated-icon ${className} `).replace('role="img"','aria-hidden="true"');
-  const pixel=complexItemIcon(id)||setItemIcon(id)||soulGemIcon(id)||pairedItemIcon(id)||denjiIcon(id)||shiraoriIcon(id)||megumiIcon(id)||erenIcon(id)||evaIcon(id)||maomaoIcon(id)||gojoIcon(id)||madokaIcon(id)||gutsIcon(id)||frierenBarrageIcon(id)||erzaWeaponArt(id)||erzaItemArt(id)||pixelItemArt(id);if(pixel)return `<svg class="item-icon illustrated-icon pixel-item-icon ${className}" data-pixel-icon="${id}" viewBox="0 0 34 34" shape-rendering="crispEdges" stroke="none" aria-hidden="true">${pixel}</svg>`;
+  const pixel=complexItemIcon(id)||setItemIcon(id)||soulGemIcon(id)||pairedItemIcon(id)||denjiIcon(id)||shiraoriIcon(id)||megumiIcon(id)||erenIcon(id)||evaIcon(id)||maomaoIcon(id)||gojoIcon(id)||madokaIcon(id)||kurumiIcon(id)||gutsIcon(id)||frierenBarrageIcon(id)||erzaWeaponArt(id)||erzaItemArt(id)||pixelItemArt(id);if(pixel)return `<svg class="item-icon illustrated-icon pixel-item-icon ${className}" data-pixel-icon="${id}" viewBox="0 0 34 34" shape-rendering="crispEdges" stroke="none" aria-hidden="true">${pixel}</svg>`;
   let art=artwork[id];
   if(!art){const colors=palettes[id];let i=0;art=(paths[id]||paths.fusion).replace(/<(path|circle|ellipse) /g,(m,tag)=>{
     if(!colors)return m;

@@ -7,13 +7,13 @@ export const WHITE_QUEEN_COLORS={hair:'#d2d5dc',hairShade:'#7f8492',hairLight:'#
 const QUEEN_HAIR={hair:WHITE_QUEEN_COLORS.hair,shade:WHITE_QUEEN_COLORS.hairShade,light:WHITE_QUEEN_COLORS.hairLight,sheen:'#ffffff'};
 const RED='#b85160',RED_DARK='#7a2f45',RED_LIGHT='#e17d7f',GOLD='#d9b45f',GOLD_DARK='#9c7334';
 const ASTRAL={mid:'#e0563f',dark:'#a3332e',light:'#f48a66'};
-// hair: twintails | loose | low | bun | side. eye: clock | patch | hidden.
+// hair: twintails | loose | low | lowlong | bun | side. eye: clock | patch | hidden.
 const OUTFITS={
  default:{hair:'twintails',eye:'clock',band:'headdress'},
  gothic:{hair:'loose',eye:'patch',band:'rose'},
  crimson:{hair:'low',eye:'hidden',band:'roseclips'},
- school:{hair:'twintails',eye:'hidden',band:'ribbons'},
- whitequeen:{hair:'loose',eye:'clock',band:'crown',palette:QUEEN_HAIR},
+ school:{hair:'lowlong',eye:'hidden',band:'lowties'},
+ whitequeen:{hair:'twintails',eye:'clock',band:'crown',palette:QUEEN_HAIR},
  casual:{hair:'twintails',eye:'clock',band:'ribbons'},
  pajamas:{hair:'loose',eye:'clock',band:'nightcap'},
  swimsuit:{hair:'side',eye:'clock',band:'rose'},
@@ -41,6 +41,13 @@ function backHair(r,style,h,walk,y){
   if(style==='side'){poly([[38,18+y],[44,22+y],[47+walk,40],[44+walk,54],[40,50],[40,30]],h.shade);poly([[39,20+y],[43,24+y],[45+walk,40],[43+walk,51],[41,46],[41,30]],h.hair);line(42,26,44+walk,46,h.sheen);}
  }else if(style==='low'){
   for(const [x,side]of [[18,-1],[38,1]]){const s=walk*side*.6;poly([[x-3,30],[x+3,30],[x+side*4+s,48],[x+side*2+s,62],[x-side*3+s,58],[x-side*2,42]],h.shade);poly([[x-2,31],[x+2,31],[x+side*3+s,48],[x+side*1+s,59],[x-side*2+s,55],[x-side,42]],h.hair);line(x,34,x+side*2+s,54,h.light);}
+ }else if(style==='lowlong'){
+  // Very long low twin tails gathered behind the ears and falling past the knees.
+  for(const [x,side]of [[17,-1],[39,1]]){const s=walk*side*.7;
+   poly([[x-side*2,22+y],[x+side*3,22+y],[x+side*6,38],[x+side*7+s,54],[x+side*5+s,65],[x+side*2+s,69],[x+s,63],[x-side+s,50],[x-side*2,36]],h.shade);
+   poly([[x-side,24+y],[x+side*2,24+y],[x+side*5,38],[x+side*6+s,54],[x+side*4+s,63],[x+side*2+s,66],[x+side+s,60],[x+s,49],[x-side,36]],h.hair);
+   line(x+side*2,28+y,x+side*4+s,58,h.light);line(x+side*3,34,x+side*5+s,52,h.sheen);
+  }
  }else if(style==='bun'){
   poly([[22,8+y],[26,3+y],[32,3+y],[35,8+y],[33,12+y],[24,12+y]],h.shade);poly([[23,8+y],[26,4+y],[31,4+y],[34,8+y],[31,11+y],[25,11+y]],h.hair);line(25,6+y,30,5+y,h.light);
  }
@@ -72,13 +79,17 @@ function accessory(r,band,y,walk){
   for(const [x,yy]of spots){rect(x,yy+y,5,5,'#7d2e44');rect(x+1,yy+y,3,4,'#b94e64');put(x+2,yy+1+y,'#e48a92');put(x+1,yy+2+y,'#7d2e44');rect(x-1,yy+4+y,2,2,'#4d6a4d');}
  }else if(band==='ribbons'){
   for(const x of [13,40]){poly([[x,14+y],[x+3,12+y],[x+3,17+y]],RED);poly([[x+6,14+y],[x+3,12+y],[x+3,17+y]],RED_DARK);rect(x+2,13+y,2,3,RED_LIGHT);}
+ }else if(band==='lowties'){
+  // Small red ties where the low tails gather below her ears.
+  for(const x of [14,40]){rect(x,30+y,3,2,RED_DARK);put(x+1,30+y,RED);}
  }else if(band==='bows'){
   for(const x of [12,40]){poly([[x,11+y],[x+3,14+y],[x,17+y]],'#d27a96');poly([[x+7,11+y],[x+4,14+y],[x+7,17+y]],'#a24b6c');rect(x+3,13+y,2,3,'#f2b3c6');}
  }else if(band==='crown'){
-  // Silver crown with lace points above the fringe.
-  const c=WHITE_QUEEN_COLORS;rect(18,9+y,20,3,c.silver);rect(18,11+y,20,1,c.trim);
-  for(let i=0;i<5;i++){const x=18+i*4.5;poly([[x,9+y],[x+2,3+y],[x+4,9+y]],c.silver);put(x+2,4+y,c.lace);put(x+2,5+y,c.lace);rect(x+1,7+y,2,2,c.lace);}
+  // A small silver tiara of four points set slightly off-centre, and white ribbon ties on the tails.
+  const c=WHITE_QUEEN_COLORS;rect(19,9+y,18,3,c.silver);rect(19,11+y,18,1,c.trim);
+  for(let i=0;i<4;i++){const x=19+i*4.5,tall=i===1||i===2?5:3;poly([[x,9+y],[x+2,9-tall+y],[x+4,9+y]],c.silver);put(x+2,10-tall+y,c.lace);rect(x+1,7+y,2,2,c.lace);}
   rect(26,9+y,4,2,'#a8b4cc');put(27,9+y,'#ffffff');
+  for(const x of [14,39]){poly([[x,12+y],[x+2,14+y],[x,16+y]],c.lace);poly([[x+5,12+y],[x+3,14+y],[x+5,16+y]],c.dressShade);rect(x+2,13+y,2,2,c.trim);}
  }else if(band==='nightcap'){
   poly([[16,15+y],[22,6+y],[33,5+y],[42,10+y],[46+walk*.5,20+y],[40,15+y],[34,12+y],[22,14+y]],'#6e3248');poly([[18,14+y],[23,8+y],[32,7+y],[40,11+y],[38,13+y],[30,10+y],[22,13+y]],'#9b4a63');
   rect(16,14+y,25,2,'#f1e2d6');rect(44+Math.round(walk*.5),19+y,4,4,'#f1e2d6');
@@ -108,7 +119,7 @@ function legsAndShoes(r,o,w){
  const leg=o.legs||'#1d1824',legLight=o.legLight||mix(leg,'#ffffff',.18),shoe=o.shoe||'#2a1f2c',shoeLight=o.shoeLight||mix(shoe,'#ffffff',.3);
  for(const [i,x]of [22,30].entries()){const d=i?w:-w;
   rect(x+d,54,5,13,leg);rect(x+d+1,55,1,10,legLight);if(o.lace)for(let yy=57;yy<66;yy+=3){r.put(x+d+1,yy,o.lace);r.put(x+d+3,yy,o.lace);r.put(x+d+2,yy+1,o.lace);}if(o.garter)rect(x+d,o.garter,5,1,o.garterColor||RED);
-  if(o.boots){rect(x+d-1,o.boots,7,71-o.boots,shoe);rect(x+d,o.boots,1,71-o.boots-1,shoeLight);if(o.laces)for(let yy=o.boots+1;yy<69;yy+=2)rect(x+d+2,yy,2,1,o.laces);rect(x+d-1,70,7,1,mix(shoe,'#000000',.45));}
+  if(o.boots){rect(x+d-1,o.boots,7,71-o.boots,shoe);rect(x+d,o.boots,1,71-o.boots-1,shoeLight);if(o.laces)for(let yy=o.boots+1;yy<69;yy+=2)rect(x+d+2,yy,2,1,o.laces);rect(x+d-1,70,7,1,mix(shoe,'#000000',.45));if(o.platform){rect(x+d-1,68,7,2,mix(shoe,'#000000',.25));rect(x+d-1,68,7,1,o.platform);}}
   else{rect(x+d-1,67,7,4,shoe);rect(x+d,67,4,1,shoeLight);rect(x+d-1,70,7,1,mix(shoe,'#000000',.45));if(o.strap)rect(x+d,68,5,1,o.strap);}
  }
 }
@@ -121,6 +132,14 @@ function frilledSkirt(r,w,{top=48,bottom=62,flare=9,dark,mid,light,frill,frillSh
   for(const [a,bx]of [[23,-4],[27,0],[31,4]])line(a,top+2,a+bx*1.4+w,b-3,light);
   for(let x=20-f+w;x<36+f+w;x+=3){rect(x,b-1,3,2,frill);rect(x+2,b,1,1,frillShade);}
  }
+}
+// One ruffled skirt tier centred on the waist; the hem sways with the walk and ends in scallops.
+function tier(r,w,{top,bottom,ht,hb,color,shade,light,edge,edgeShade}){
+ const {poly,line,rect,put}=r,L=28-hb+w,R=28+hb+w;
+ poly([[28-ht,top],[28+ht,top],[R,bottom],[L,bottom]],shade);
+ poly([[29-ht,top],[27+ht,top],[R-1,bottom-1],[L+1,bottom-1]],color);
+ if(light)for(const k of [-.55,0,.55])line(Math.round(28+k*ht),top+1,Math.round(28+k*hb+w),bottom-2,light);
+ if(edge)for(let x=L;x<R;x+=3){rect(x,bottom-1,2,2,edge);put(x+2,bottom-1,edgeShade||shade);}
 }
 function bodice(r,y,{dark,mid,light,lace}){
  const {poly,line,rect}=r;
@@ -139,42 +158,45 @@ function arms(r,y,o,{attack,raised}){
 
 const GARMENTS={
  default(r,y,w){
-  // Astral Dress: orange-red bell skirt banded with scalloped black stripes over a
-  // black ruffle hem, a black apron panel with a red bow, and a laced bodice on thin straps.
-  const A=ASTRAL,B='#1b1419';
-  // Wide bell skirt to mid-calf.
-  r.poly([[21,47],[35,47],[39,51],[46+w,62],[44+w,65],[12+w,65],[10+w,62],[17,51]],A.dark);
-  r.poly([[22,47],[34,47],[38,51],[44+w,61],[42+w,63],[14+w,63],[12+w,61],[18,51]],A.mid);
-  for(const a of [-7,-2,3,8])r.line(28+a*.6,49,28+a*1.9+w,60,A.light);
-  // Two wavy black bands follow the flare.
-  for(const [yy,half]of [[54,13],[59,16]])for(let x=-half;x<=half;x++){const xx=Math.round(28+x+w*(yy-47)/16);r.put(xx,yy+((x+20)%4<2?0:1),B);r.put(xx,yy+((x+20)%4<2?1:2),B);}
-  // Scalloped black ruffle hem.
-  for(let x=11+w;x<46+w;x++)r.put(x,63,B);for(let x=11+w;x<46+w;x+=3){r.rect(x,64,2,2,B);r.put(x+2,64,'#3a2a33');}
-  // Small front apron with a red dashed edge, under a red waist bow.
-  r.poly([[24,48],[32,48],[33,52],[28,54],[23,52]],B);for(let x=24;x<33;x+=2)r.put(x,52,A.dark);
-  r.poly([[24,46],[28,48],[24,50]],A.mid);r.poly([[32,46],[28,48],[32,50]],A.dark);r.rect(27,47,2,2,A.light);r.line(27,49,26,52,A.mid);r.line(29,49,30,52,A.dark);
+  // Astral Dress: a gothic-lolita gown of layered orange-red and black ruffles, a laced
+  // corset bodice with a black frill neckline, detached gloves and black platform boots.
+  const A=ASTRAL,B='#1b1419',B2='#3a2a33';
+  tier(r,w,{top:52,bottom:64,ht:10,hb:18,color:B,shade:'#100b10',edge:B2,edgeShade:'#100b10'});
+  tier(r,w,{top:50,bottom:62,ht:9,hb:17,color:A.mid,shade:A.dark,light:A.light,edge:B,edgeShade:A.dark});
+  tier(r,w,{top:48,bottom:59,ht:8,hb:15,color:B,shade:'#100b10',light:B2,edge:A.mid,edgeShade:A.dark});
+  tier(r,w,{top:47,bottom:56,ht:7,hb:13,color:A.mid,shade:A.dark,light:A.light,edge:B,edgeShade:A.dark});
+  // A red waist bow with trailing tails over the front of the skirt.
+  r.poly([[23,46],[28,48],[23,51]],A.mid);r.poly([[33,46],[28,48],[33,51]],A.dark);r.rect(27,47,2,2,A.light);r.line(27,49,25+w,55,A.dark);r.line(29,49,31+w,55,A.mid);
   // Bodice: red with a black lace-up panel, black frill along the top edge, bare shoulders above.
   r.poly([[21,40+y],[35,40+y],[34,48],[22,48]],A.dark);r.poly([[22,41+y],[34,41+y],[33,47],[23,47]],A.mid);r.line(23,42+y,23,46,A.light);
   r.rect(26,41+y,4,7,B);for(let yy=42+y;yy<47;yy+=2){r.put(26,yy,A.mid);r.put(29,yy,A.mid);r.put(27,yy+1,A.mid);r.put(28,yy+1,A.mid);}
-  for(let x=21;x<35;x+=2){r.rect(x,39+y,2,2,B);}r.put(24,38+y,B);r.put(32,38+y,B);
+  for(let x=21;x<35;x+=2){r.rect(x,39+y,2,2,B);r.put(x,41+y,B2);}r.put(24,38+y,B);r.put(32,38+y,B);
   r.line(23,37+y,23,39+y,B);r.line(33,37+y,33,39+y,B);
-  return {sleeve:SKIN.base,sleeveLight:SKIN.light,legs:B,legLight:'#3a2a33',lace:'#4a3a44',shoe:'#1b1419',shoeLight:'#4a3a44',strap:A.mid,
+  return {sleeve:SKIN.base,sleeveLight:SKIN.light,legs:B,legLight:'#3a2a33',lace:'#4a3a44',shoe:B,shoeLight:'#4a3a44',boots:60,laces:A.dark,platform:A.dark,
    after(r,y,{attack,raised}){
     // Detached black arm gloves with red frills at elbow and wrist.
     const glove=(x0,y0,x1,y1)=>{const mx=Math.round((x0+x1)/2),my=Math.round((y0+y1)/2);r.line(mx,my,x1,y1,B,4);r.rect(mx-2,my-1,5,2,A.mid);r.put(mx,my-1,A.light);r.rect(x1-1,y1+2,4,2,A.mid);};
     glove(20,41+y,16,raised?34:51);
     if(attack)glove(36,41+y,44,42);else glove(36,41+y,40,51);
    },
-   afterHead(r,y){r.rect(25,38+y,6,1,B);r.put(28,38+y,'#7a6a74');}};
+   afterHead(r,y){r.rect(25,38+y,6,1,B);r.put(28,38+y,A.mid);}};
  },
  gothic(r,y,w){
-  // Fitted black corset, split velvet overskirt and a white tiered petticoat.
-  frilledSkirt(r,w,{dark:'#d8ccc9',mid:'#f4e8e2',light:'#fff7ec',frill:'#fff7ec',frillShade:'#8c7c91',flare:8});
-  r.poly([[20,48],[25,48],[22+w,58],[13+w,61]],'#272936');r.poly([[31,48],[36,48],[43+w,61],[34+w,58]],'#272936');r.line(21,50,15+w,59,'#4a3f55');r.line(35,50,41+w,59,'#4a3f55');
-  for(const yy of [53,57])r.line(21+w,yy,35+w,yy,'#8c7c91');
-  bodice(r,y,{dark:'#141b27',mid:'#272936',light:'#44415a',lace:'#f4e8e2'});
-  r.rect(22,38+y,12,2,'#f4e8e2');r.rect(26,40+y,4,2,'#b94e64');
-  return {sleeve:'#272936',puff:'#f4e8e2',cuff:'#f4e8e2',legs:'#f4e8e2',legLight:'#ffffff',shoe:'#272936',strap:'#b94e64'};
+  // Gothic: a white puff-sleeved blouse under a black laced corset vest, a red rose brooch,
+  // black-and-white layered ruffle skirt, black tights and Mary Janes.
+  const W='#f4e8e2',WS='#c9bcc0',K='#272936',KS='#141b27';
+  tier(r,w,{top:52,bottom:64,ht:9,hb:15,color:W,shade:WS,edge:'#ffffff',edgeShade:WS});
+  tier(r,w,{top:49,bottom:61,ht:8,hb:13,color:K,shade:KS,light:'#44415a',edge:W,edgeShade:WS});
+  tier(r,w,{top:47,bottom:55,ht:7,hb:10,color:W,shade:WS,edge:K,edgeShade:KS});
+  // Blouse yoke and high frilled collar.
+  r.poly([[20,38+y],[36,38+y],[36,43+y],[20,43+y]],WS);r.poly([[21,38+y],[35,38+y],[35,42+y],[21,42+y]],W);
+  // Black corset vest cinched with white cross lacing.
+  r.poly([[21,41+y],[25,43+y],[28,44+y],[31,43+y],[35,41+y],[35,49],[21,49]],KS);r.poly([[22,42+y],[25,44+y],[28,45+y],[31,44+y],[34,42+y],[34,48],[22,48]],K);
+  for(let yy=44+y;yy<49;yy++)r.put(yy%2?27:29,yy,W);r.line(28,44+y,28,48,'#44415a');r.line(23,43+y,23,47,'#44415a');
+  r.rect(23,37+y,10,2,W);r.rect(24,37+y,8,1,'#ffffff');
+  // Rose brooch at the throat.
+  r.rect(26,39+y,4,3,'#7d2e44');r.rect(27,39+y,2,2,'#b94e64');r.put(27,39+y,'#e48a92');r.put(25,41+y,'#4d6a4d');r.put(30,41+y,'#4d6a4d');
+  return {sleeve:W,sleeveLight:'#ffffff',puff:'#ffffff',cuff:K,legs:'#1d1824',legLight:'#3a3346',shoe:'#1a1520',shoeLight:'#4a3f55',strap:'#4a3f55'};
  },
  crimson(r,y,w){
   // Midnight Rose: an ankle-length Victorian gown in plum and charcoal.
@@ -187,26 +209,39 @@ const GARMENTS={
   return {sleeve:'#353340',puff:'#95558e',cuff:'#a5658d',legs:'#353340',shoe:'#1f1a26'};
  },
  school(r,y,w){
-  // Navy blazer over a white shirt, red ribbon tie and purple pleated skirt.
-  r.poly([[21,48],[35,48],[39+w,60],[17+w,60]],'#4e4c84');r.poly([[22,48],[34,48],[37+w,59],[19+w,59]],'#6866a1');
-  for(let x=19+w;x<38+w;x+=3)r.line(x+1,50,x+1,58,'#4e4c84');r.rect(17+w,59,22,1,'#3c3a6a');
-  r.poly([[20,39+y],[36,39+y],[36,50],[20,50]],'#262a40');r.poly([[21,40+y],[35,40+y],[35,49],[21,49]],'#33385a');
-  r.poly([[25,39+y],[31,39+y],[29,46+y],[27,46+y]],'#f3f0ea');r.poly([[26,41+y],[30,41+y],[28,46+y]],RED);r.rect(27,40+y,2,2,RED_DARK);
-  r.rect(22,47,2,1,GOLD);r.rect(32,47,2,1,GOLD);
-  return {sleeve:'#262a40',sleeveLight:'#3c4266',cuff:'#f3f0ea',legs:'#24222e',shoe:'#3a2a26',shoeLight:'#6a5048'};
+  // Black blazer piped in white over a white collar and red ribbon tie, a blue pleated skirt.
+  const K='#1e1b26',KS='#121019',KL='#363244',T='#e9e6ee',BL='#3d5a9a',BS='#2b4174',BH='#5a78b8';
+  r.poly([[20,48],[36,48],[40+w,60],[16+w,60]],BS);r.poly([[21,48],[35,48],[38+w,59],[18+w,59]],BL);
+  for(let x=18+w;x<38+w;x+=3){r.line(x+1,50,x+1,58,BS);r.put(x+2,51,BH);}r.rect(16+w,59,24,1,'#1f2f58');
+  r.poly([[20,39+y],[36,39+y],[37,51],[19,51]],KS);r.poly([[21,40+y],[35,40+y],[36,50],[20,50]],K);
+  // White collar and shirt front framed by piped lapels.
+  r.poly([[24,38+y],[32,38+y],[30,46+y],[26,46+y]],'#f7f4ef');r.poly([[23,38+y],[26,38+y],[26,41+y]],T);r.poly([[30,38+y],[33,38+y],[30,41+y]],T);
+  r.line(25,40+y,28,47,T);r.line(31,40+y,28,47,T);r.line(28,47,28,50,T);r.line(20,50,36,50,T);
+  // Red ribbon tie: two loops and a knot under the collar.
+  r.poly([[24,40+y],[28,42+y],[24,44+y]],RED);r.poly([[32,40+y],[28,42+y],[32,44+y]],RED_DARK);r.rect(27,41+y,2,2,RED_LIGHT);r.line(27,43+y,26,46+y,RED);r.line(28,43+y,29,46+y,RED_DARK);
+  r.line(22,42+y,22,49,KL);r.rect(32,47,2,1,T);
+  return {sleeve:K,sleeveLight:KL,cuff:T,legs:'#24222e',legLight:'#3a3648',shoe:'#3a2a26',shoeLight:'#6a5048'};
  },
  whitequeen(r,y,w){
-  // Asymmetric white military coat-dress over a charcoal petticoat.
+  // White Queen: a white military coat-dress with a great bow at the breast and silver
+  // buttons, layered white and grey ruffles over a charcoal petticoat, and white laced boots.
   const c=WHITE_QUEEN_COLORS;
-  r.poly([[17,50],[39,50],[46+w,64],[10+w,64]],c.lining);for(let x=10+w;x<46+w;x+=3)r.rect(x,63,2,2,'#535363');
-  r.poly([[20,44],[36,44],[44+w,60],[38,62],[28,58],[18,62],[12+w,60]],c.dressShade);
-  r.poly([[21,44],[35,44],[42+w,58],[37,59],[28,56],[19,59],[14+w,58]],c.dress);
-  for(const a of [-6,-2,2,6])r.line(28+a,46,28+a*1.9+w,57,c.lace);r.line(14+w,58,19,59,c.trim);r.line(37,59,42+w,58,c.trim);
+  tier(r,w,{top:52,bottom:66,ht:10,hb:18,color:c.lining,shade:'#25262f',edge:'#535363',edgeShade:'#25262f'});
+  tier(r,w,{top:49,bottom:62,ht:9,hb:15,color:c.dressShade,shade:c.trim,light:c.dress,edge:c.lace,edgeShade:c.trim});
+  tier(r,w,{top:46,bottom:57,ht:8,hb:12,color:c.dress,shade:c.dressShade,light:c.lace,edge:c.lace,edgeShade:c.dressShade});
+  r.line(16+w,57,40+w,57,c.trim);
+  // Fitted coat bodice with a double row of silver buttons and a belted waist.
   r.poly([[19,38+y],[37,38+y],[36,50],[20,50]],c.dressShade);r.poly([[20,39+y],[36,39+y],[35,49],[21,49]],c.dress);
-  for(const yy of [41,44,47]){r.rect(24,yy+(yy<44?y:0),1,1,c.silver);r.rect(32,yy+(yy<44?y:0),1,1,c.silver);}
-  r.poly([[24,38+y],[28,44+y],[32,38+y]],c.lace);r.rect(27,41+y,2,2,'#a8b4cc');r.rect(20,48,16,2,c.trim);
-  r.poly([[16,38+y],[22,37+y],[22,41+y],[15,42+y]],c.silver);r.poly([[34,37+y],[40,38+y],[41,42+y],[34,41+y]],c.silver);
-  return {sleeve:c.dress,sleeveLight:c.lace,cuff:c.silver,legs:c.lining,shoe:c.trim,shoeLight:c.silver,boots:61,laces:c.lace,glove:c.lace};
+  for(const yy of [45,47]){r.put(24,yy,c.silver);r.put(32,yy,c.silver);}
+  r.rect(20,48,16,2,c.trim);r.rect(26,48,4,2,c.silver);r.put(27,48,'#ffffff');
+  r.rect(24,37+y,8,2,c.lace);r.rect(25,37+y,6,1,'#ffffff');
+  // The great bow: two broad loops, a jewelled knot and short tails.
+  r.poly([[19,38+y],[28,42+y],[19,47+y],[18,42+y]],c.trim);r.poly([[20,40+y],[26,42+y],[20,45+y]],c.dressShade);r.line(20,41+y,24,42+y,c.lace);
+  r.poly([[37,38+y],[28,42+y],[37,47+y],[38,42+y]],c.trim);r.poly([[36,40+y],[30,42+y],[36,45+y]],c.dressShade);r.line(36,41+y,32,42+y,c.lace);
+  r.rect(26,41+y,4,3,c.trim);r.rect(27,41+y,2,2,'#a8b4cc');r.put(27,41+y,'#ffffff');r.line(26,44+y,25,47,c.dressShade);r.line(29,44+y,30,47,c.dressShade);
+  // Silver epaulettes.
+  r.poly([[16,38+y],[22,37+y],[22,40+y],[15,41+y]],c.silver);r.poly([[34,37+y],[40,38+y],[41,41+y],[34,40+y]],c.silver);
+  return {sleeve:c.dress,sleeveLight:c.lace,cuff:c.silver,legs:c.lining,shoe:c.lace,shoeLight:c.silver,boots:60,laces:c.trim,platform:c.silver,glove:c.lace};
  },
  casual(r,y,w){
   // Crimson Café: striped knit sweater, black pleated skirt and tights.
