@@ -12,50 +12,47 @@ function pixelFrame(){
  const E=(x,y,rx,ry,c)=>{for(let yy=0;yy<32;yy++)for(let xx=0;xx<32;xx++)if(((xx+.5-x)/rx)**2+((yy+.5-y)/ry)**2<=1)R(xx,yy,1,1,c);};
  return{p,R,L,P,E};
 }
-function gemBase(a,index){
- const {P,E,L,R}=a,pal=[['#9e587e','#d97ba8','#f7c3dc'],['#4b7fa6','#77b5d7','#c2e6ed'],['#aa843c','#dfbc64','#ffedaa'],['#8e3c50','#cf5c6c','#f4a49f'],['#715b9a','#a88dca','#dfcaf0']][index];
- // A narrow gold mount leaves most of the egg-shaped crystalline body visible.
+const GEM_PALETTES=[['#9e587e','#d97ba8','#f7c3dc'],['#4b7fa6','#77b5d7','#c2e6ed'],['#aa843c','#dfbc64','#ffedaa'],['#8e3c50','#cf5c6c','#f4a49f'],['#715b9a','#a88dca','#dfcaf0']];
+// Every Soul Gem shares one setting: a jewelled crown, an egg-shaped gold frame with petal
+// claws at the sides and a stepped pedestal. Only the crystal's colour and its inlay differ.
+function gemBase(a,index,pal=GEM_PALETTES[index]){
+ const {P,E,L,R}=a;
  P([[16,2],[23,7],[26,17],[24,24],[20,28],[12,28],[8,24],[6,17],[9,7]],GOLD);
  E(16,16,8,11,pal[0]);P([[16,4],[22,9],[23,17],[20,24],[15,26],[10,21],[9,15],[12,7]],pal[1]);
  P([[15,6],[18,9],[18,17],[14,22],[11,17],[12,10]],pal[2]);L(14,6,12,12,'#fff1de');R(12,9,2,3,'#fff7e4');
  P([[10,25],[16,27],[22,25],[25,28],[22,30],[10,30],[7,28]],GOLD);L(9,28,23,28,LIGHT);R(13,30,6,1,'#8b7c74');
- L(8,13,8,20,LIGHT);L(24,13,24,20,LIGHT);return pal;
+ L(8,13,8,20,LIGHT);L(24,13,24,20,LIGHT);
+ // The crown, set with a small jewel in the gem's own colour.
+ P([[16,1],[18,3],[21,3],[20,6],[16,8],[12,6],[11,3],[14,3]],GOLD);P([[16,2],[19,4],[17,6],[14,6],[13,4]],pal[1]);R(15,3,2,2,pal[2]);
+ for(const side of [-1,1]){P([[16+side*8,20],[16+side*12,22],[16+side*8,25],[16+side*5,23]],GOLD);L(16+side*8,21,16+side*8,23,LIGHT);}
+ return pal;
 }
 function gem(a,index){
  const {P,E,L,R}=a;gemBase(a,index);
- if(index===0){
-  // Madoka: a rose crown and small petal claws.
-  P([[16,1],[18,3],[21,3],[20,6],[16,8],[12,6],[11,3],[14,3]],GOLD);P([[16,2],[19,4],[17,6],[14,6],[13,4]],'#e09aab');R(15,3,2,2,'#f8d6d6');
-  for(const side of [-1,1]){P([[16+side*8,20],[16+side*12,22],[16+side*8,25],[16+side*5,23]],GOLD);L(16+side*8,21,16+side*8,23,LIGHT);}
+ if(index===0){// Madoka: a diamond inlay.
   L(13,16,16,13,LIGHT);L(16,13,19,16,LIGHT);L(19,16,16,20,LIGHT);L(16,20,13,16,LIGHT);
- }else if(index===1){
-  // Sayaka: crescent flourish and a music-note inlay.
-  E(6,16,4,9,GOLD);E(7,15,3,7,INK);L(4,13,5,8,LIGHT);L(7,24,10,25,GOLD,2);
-  L(18,12,18,20,LIGHT,2);L(18,12,21,13,LIGHT);E(16,20,3,2,LIGHT);L(13,24,17,25,'#d9e5c6');
-  P([[23,22],[29,19],[28,24],[24,27],[21,26]],GOLD);L(24,24,27,22,LIGHT);
- }else if(index===2){
-  // Mami: a six-petal flower and ribbon-shaped base.
-  for(let i=0;i<6;i++){const t=i*TAU/6;E(16+Math.cos(t)*4,5+Math.sin(t)*3,2,2,GOLD);}E(16,5,2,2,LIGHT);
-  P([[8,23],[3,26],[8,27],[7,30],[14,27]],GOLD);P([[24,23],[29,26],[24,27],[25,30],[18,27]],GOLD);
-  for(let i=0;i<5;i++){const t=i*TAU/5;E(16+Math.cos(t)*3,17+Math.sin(t)*3,1.5,1.5,LIGHT);}E(16,17,1.5,1.5,'#9e743f');
-  L(11,28,14,27,LIGHT);L(21,28,18,27,LIGHT);
- }else if(index===3){
-  // Kyoko: pointed spear crest, diamond inlay and linked lower mount.
-  P([[16,0],[20,5],[16,8],[12,5]],GOLD);P([[16,1],[18,5],[16,6],[14,5]],LIGHT);
-  P([[16,11],[20,17],[16,23],[12,17]],'#f3d8ad');P([[16,14],[18,17],[16,20],[14,17]],'#b45a72');
-  P([[7,19],[3,23],[6,27],[10,25]],GOLD);P([[25,19],[29,23],[26,27],[22,25]],GOLD);L(5,23,7,25,LIGHT);L(27,23,25,25,LIGHT);
- }else{
-  // Homura: a protective circular frame with a tiny hourglass.
-  E(16,16,13,9,GOLD);E(16,16,11,7,INK);E(16,16,8,10,'#a88dca');P([[15,7],[18,10],[18,17],[14,22],[11,17],[12,10]],'#dfcaf0');R(12,9,2,3,'#fff7e4');
-  L(13,12,20,12,LIGHT);L(13,22,20,22,LIGHT);L(14,13,19,21,LIGHT);L(19,13,14,21,LIGHT);R(15,15,3,4,'#876f9f');R(16,16,1,2,LIGHT);
-  L(5,14,5,18,LIGHT);L(27,14,27,18,LIGHT);
+ }else if(index===1){// Sayaka: a music note.
+  L(18,12,18,20,LIGHT,2);L(18,12,21,13,LIGHT);E(16,20,2.4,1.8,LIGHT);
+ }else if(index===2){// Mami: a five-petal flower.
+  for(let i=0;i<5;i++){const t=i*TAU/5-Math.PI/2;E(16+Math.cos(t)*2.6,17+Math.sin(t)*2.6,1.4,1.4,LIGHT);}E(16,17,1.2,1.2,'#9e743f');
+ }else if(index===3){// Kyoko: a spear-tipped diamond.
+  L(16,10,16,13,LIGHT);P([[16,13],[19,17],[16,21],[13,17]],'#f3d8ad');P([[16,15],[17.5,17],[16,19],[14.5,17]],'#b45a72');
+ }else{// Homura: an hourglass.
+  L(13,12,19,12,LIGHT);L(13,22,19,22,LIGHT);L(14,13,18,21,LIGHT);L(18,13,14,21,LIGHT);R(15,15,3,2,'#876f9f');R(16,19,1,2,LIGHT);
  }
+}
+// A small version of the same setting for icons that hold several gems.
+function miniGem(a,x,y,index,{pal=GEM_PALETTES[index],big=false}={}){
+ const {P,E,L,R}=a,k=big?1.25:1;
+ E(x,y+.5,4.2*k,5.6*k,GOLD);E(x,y,3.2*k,4.4*k,pal[0]);E(x+.3,y-.3,2.4*k,3.4*k,SOUL_GEM_COLORS[index]);E(x-1,y-1.6,1*k,1.6*k,pal[2]);R(x-1.5,y-2.5,1,1,'#fff7e4');
+ P([[x,y-6.5*k],[x+2*k,y-5*k],[x,y-4*k],[x-2*k,y-5*k]],GOLD);R(x-.5,y-5.5*k,1,1,pal[2]);
+ R(x-3*k,y+5*k,6*k+1,1.6,GOLD);L(x-2*k,y+5*k,x+3*k,y+5*k,LIGHT);
 }
 // Soul Bond: three gems tied together by a pink ribbon, the circle not yet closed.
 function soulBondIcon(a){
- const {L,R,E}=a,gems=[[10,11,'#77b5d7','#c2e6ed'],[22,11,'#a88dca','#dfcaf0'],[16,23,'#d97ba8','#f7c3dc']];
+ const {L,R,E}=a,gems=[[9,11,1],[23,11,4],[16,22,0]];
  for(const [[x,y],[nx,ny]]of [[gems[0],gems[1]],[gems[1],gems[2]],[gems[2],gems[0]]])L(x,y,nx,ny,'#b85a86',2);
- for(const [x,y,base,light]of gems){E(x,y+1,5,6,GOLD);E(x,y,4,5,base);E(x-1,y-2,1.6,2,light);R(x-3,y+5,7,1,GOLD);}
+ for(const [x,y,i]of gems)miniGem(a,x,y,i);
  // The ribbon knot and its loose tails.
  E(16,15,2.2,2.2,'#f2a6c6');L(16,15,12,19,'#f2a6c6');L(16,15,20,19,'#f2a6c6');R(15,14,2,1,'#ffe0ee');
 }
@@ -71,14 +68,7 @@ function quintetIcon(a){
  }
  const star=[];for(let i=0;i<10;i++){const t=-Math.PI/2+i*Math.PI/5,r=i%2?3.5:7.5;star.push([16+Math.cos(t)*r,17+Math.sin(t)*r]);}
  P(star,GOLD);E(16,17,4,4,'#d8d7be');E(16,17,2,2,'#fff1d7');R(15,15,1,1,'#ffffff');
- positions.forEach(([x,y],i)=>{
-  const dx=x-16,dy=y-17,n=Math.hypot(dx,dy)||1;
-  P([[x+dx/n*6,y+dy/n*6],[x+3,y-3],[x+4,y+3],[x-4,y+3],[x-3,y-3]],GOLD);
-  E(x,y,4,5,GOLD);E(x,y,3,4,['#ae638b','#6495b8','#c29a4c','#b65c70','#9276b3'][i]);
-  P([[x,y-4],[x+2,y-1],[x+2,y+2],[x,y+4],[x-2,y+1],[x-2,y-2]],SOUL_GEM_COLORS[i]);
-  L(x-1,y-2,x-1,y,'#fff3de');R(x-1,y-2,1,1,'#ffffff');
-  R(x-4,y+1,1,2,LIGHT);R(x+3,y+1,1,2,LIGHT);
- });
+ positions.forEach(([x,y],i)=>miniGem(a,x,y,i));
 }
 function bowIcon(a){
  const {P,L,R,E}=a;
@@ -88,7 +78,7 @@ function bowIcon(a){
  for(let i=0;i<3;i++){P([[8-i*2,10+i*3],[2,6+i*3],[3,12+i*3],[9-i*2,16+i*2]],'#e4ded5');L(3,8+i*3,7,13+i*2,'#fff7e3');}
  L(2,17,29,17,'#f7e6c4',2);P([[31,17],[23,12],[25,17],[23,22]],'#f7ecd3');L(14,17,28,17,'#ffffff');
  const positions=[[16,3],[25,7],[29,15],[24,25],[15,29]];
- positions.forEach(([x,y],i)=>{E(x,y,3,3,GOLD);E(x,y,2,2,SOUL_GEM_COLORS[i]);R(x-1,y-1,1,1,'#fff4df');});
+ positions.forEach(([x,y],i)=>{E(x,y,3,3.6,GOLD);E(x,y,2.2,2.8,SOUL_GEM_COLORS[i]);R(x-1,y-1,1,1,GEM_PALETTES[i][2]);R(x,y-4,1,1,GOLD);});
  E(11,16,4,4,'#cf93af');P([[11,12],[14,15],[12,19],[9,19],[8,15]],'#f2bfd0');R(10,14,2,2,'#fff1d8');
 }
 export function soulGemPixels(id){
@@ -118,7 +108,9 @@ export function drawSalvationProjectile(c,s,{zoom=1,reducedMotion=false}={}){
   line(c,[[-26,side*9],[-11,side*2]],'#fff3de',1);
  }
  poly(c,[[24,0],[10,-8],[13,0],[10,8]],'#fff3d7','#baa07f',1.3);poly(c,[[19,0],[10,-4],[12,0],[10,4]],color,null);
- disc(c,5,0,4.3,color,'#eedeb0');disc(c,4,-1,1.5,'#fff7e5');
+ // The wish's Soul Gem rides the shaft in the same gold setting as the inventory gems.
+ c.fillStyle=GOLD;c.beginPath();c.ellipse(5,0,5.4,4,0,0,TAU);c.fill();c.fillStyle=color;c.beginPath();c.ellipse(5,0,4.2,3,0,0,TAU);c.fill();
+ poly(c,[[11,0],[9,-1.6],[9,1.6]],GOLD,null);disc(c,3.6,-1,1.3,'#fff7e5');
  if(!reducedMotion){for(let i=0;i<3;i++){const f=(t*1.9+i*.33)%1,x=-20-f*28,y=Math.sin(t*6+i*2.1)*5;petal(c,x,y,2.5,t+i,color);}star(c,-18,Math.sin(t*4)*7,2,'#eadca5');}
  c.restore();return true;
 }

@@ -10,7 +10,8 @@ const shot=(i=0,extra={})=>({type:'salvation-arrow',colorIndex:i,x:50,y:60,vx:30
 
 test('all five Soul Gems, the Soul Bond, the Quintet and Salvation have distinct native outlined art in the real inventory hook',()=>{
  const drawings=new Set(),silhouettes=new Set();for(const id of SOUL_GEM_ART_IDS){const p=soulGemPixels(id);assert.equal(p.length,1024);assert.ok(p.filter(Boolean).length>240,id+' readable complete silhouette');assert.ok(p.every(c=>c===null||/^#[0-9a-f]{6}$/i.test(c)));assert.ok(p.includes('#293346'));drawings.add(JSON.stringify(p));silhouettes.add(p.map(c=>c?'1':'0').join(''));assert.match(icon(id),new RegExp('data-pixel-icon="'+id+'"'));assert.match(soulGemIcon(id),/<rect /);assert.ok(!icon(id).includes('http'));}
- assert.equal(drawings.size,SOUL_GEM_ART_IDS.length);assert.ok(silhouettes.size>=6,'the gem mounts differ in outline as well as colour');assert.equal(soulGemPixels('unknown'),null);assert.equal(soulGemIcon('unknown'),null);
+ assert.equal(drawings.size,SOUL_GEM_ART_IDS.length);// The five gems share one setting; the Soul Bond, Quintet and Salvation each keep their own shape.
+ const gemShapes=new Set(SOUL_GEM_ART_IDS.slice(0,5).map(id=>soulGemPixels(id).map(c=>c?'1':'0').join('')));assert.equal(gemShapes.size,1,'every Soul Gem uses the same setting');assert.equal(silhouettes.size,4,'the combined gem items keep distinct outlines');assert.equal(soulGemPixels('unknown'),null);assert.equal(soulGemIcon('unknown'),null);
  const final=soulGemPixels('salvation');for(const color of SOUL_GEM_COLORS)assert.ok(final.includes(color),'each wish remains visible on the fusion bow');
 });
 
