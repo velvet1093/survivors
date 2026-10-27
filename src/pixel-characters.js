@@ -1,5 +1,6 @@
 import {denjiPixels} from './denji-art.js';
 import {shiraoriPixels} from './shiraori-art.js';
+import {megumiPixels} from './megumi-art.js';
 import {beachOutfitPixels} from './beach-outfit-art.js';
 import {cuteSwimPixels} from './cute-swim-art.js';
 import {pilotSwimPixels,paintPilotEvaSwim} from './pilot-swim-art.js';
@@ -304,14 +305,6 @@ function referenceSkinFrame(id,look,{frame=0,moving=false,pose='',attack=false,e
 
 function frierenFrame(options){const r=raster();redrawFrieren(r,options);return outline(r.pixels,'#29333f');}
 
-function megumiFrame({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false}){
- const r=raster(),{rect,poly,line}=r,ink='#20283b',coat='#37445f',shade='#202a44',light='#65718c',skin='#ffe2c6',walk=moving?[0,2,0,-2][frame]:0,y=moving?-frame%2:0;
- for(const [x,s]of [[21,-walk],[31,walk]]){rect(x+s,52,6,15,shade);rect(x+s,55,2,10,coat);rect(x+s-2,66,9,4,'#443e48');rect(x+s,66,5,1,'#9a8776');}
- poly([[19,37],[36,37],[39,48],[35,58],[20,58],[17,48]],shade);poly([[21,38],[34,38],[36,48],[33,54],[22,54],[20,46]],coat);rect(20,37,16,7,coat);line(29,39,29,54,light);for(const yy of [44,49,54])rect(30,yy,1,1,'#bfc5c5');
- const seal=attack||pose==='summon';line(19,42,seal?24:15,seal?47:53,coat,5);line(37,42,seal?32:40,seal?47:53,coat,5);rect(seal?24:14,seal?45:52,5,5,skin);rect(seal?29:39,seal?45:52,5,5,skin);if(seal){line(26,45,28,41,skin,2);line(31,45,30,41,skin,2);}
- poly([[18,22+y],[23,17+y],[34,17+y],[39,23+y],[37,32+y],[31,38+y],[24,37+y],[18,31+y]],skin);paintFace(r,'megumi',{y,expression,blink});
- poly([[16,29+y],[10,24+y],[16,21+y],[9,14+y],[20,17+y],[17,7+y],[26,12+y],[29,3+y],[32,12+y],[42,6+y],[39,17+y],[49,15+y],[42,23+y],[45,29+y],[37,27+y],[34,22+y],[29,27+y],[25,22+y],[21,29+y]],'#162a35');poly([[17,20+y],[21,17+y],[23,12+y],[27,17+y],[29,10+y],[32,18+y],[39,13+y],[36,22+y],[32,20+y],[29,24+y],[25,20+y],[21,25+y]],'#304952');line(22,18+y,26,19+y,'#506269');return outline(r.pixels,ink);
-}
 function zeroSuitFrame({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='zerosuit'}){
  const r=raster(),{rect,poly,line}=r,ink='#293347',blue=skin==='stealth'?'#3c465c':'#4e85c3',shade=skin==='stealth'?'#252e46':'#33517f',light=skin==='stealth'?'#727c94':'#a0c9ed',hair='#e4c275',hairDark='#a98855',tone='#ffe2c6',walk=moving?[0,2,0,-2][frame]:0,y=moving?-frame%2:0;
  poly([[35,16+y],[41,12+y],[47,18+y],[46,31+y],[49+walk,42],[44+walk,49],[40,40],[42,30],[38,25+y]],hairDark);poly([[39,17+y],[43,15+y],[45,20+y],[43,32],[46+walk,41],[44+walk,45],[42,36],[43,26]],hair);rect(38,18+y,5,3,'#b76072');
@@ -354,7 +347,7 @@ export function characterPixels(id,{frame=0,moving=false,pose='',attack=false,ex
   if(id==='rimuru'){const result=rimuruPixels({frame,moving,pose,attack,expression,blink,skin:skinId,form});dataCache.set(key,result);return result;}
   if(id==='eren'){const result=erenFrame({frame,moving,pose,attack,expression,blink,skin:skinId,form,evolved});dataCache.set(key,result);return result;}
   if(id==='samus'&&skinId==='fusion'){const result=fusionSuitFrame({frame,moving,pose,attack,expression});dataCache.set(key,result);return result;}
-  if(id==='megumi'){const result=tintPixels(megumiFrame({frame,moving,pose,attack,expression,blink}),skinFor(id,skinId));dataCache.set(key,result);return result;}
+  if(id==='megumi'){const result=megumiPixels({frame,moving,pose,attack,expression,blink,skin:skinId==='training'?'training':'default'});dataCache.set(key,result);return result;}
   if(id==='samus'&&['zerosuit','stealth'].includes(skinId)&&pose!=='bomb'){const result=zeroSuitFrame({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='frieren'){const result=frierenFrame({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='samus'){const result=tintPixels(variaSuitPixels({frame,moving,pose,attack,expression,blink}),skinFor(id,skinId));dataCache.set(key,result);return result;}

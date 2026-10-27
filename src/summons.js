@@ -21,9 +21,11 @@ export function summonPack(g,rank,power,fused=false,durationBoost=1){
  for(const [i,kind]of ['whiteDog','blackDog'].entries()){
   let s=g.summons.find(s=>s.kind===kind);if(!s){s={id:++g.id,kind,x:g.p.x+(i-1)*26,y:g.p.y+22,age:0,attackCD:i*.2,adaptation:0};g.summons.push(s);}Object.assign(s,{life:duration,baseDamage:25*power,fused,rank});refreshTemporarySummon(g,s);
  }
+ g.effects.push({type:'shadow-summon',x:g.p.x,y:g.p.y+4,r:44,fused,life:.7,max:.7});
 }
 export function summonNue(g,rank,power,fused=false,durationBoost=1){
  g.summons??=[];const duration=(8+rank)*(1+(g.p.passives.talisman||0)*.12+(g.p.meta.summonDuration||0))*durationBoost;let s=g.summons.find(s=>s.kind==='nue');if(!s){s={id:++g.id,kind:'nue',x:g.p.x+28,y:g.p.y-15,age:0,attackCD:.25,adaptation:0};g.summons.push(s);}Object.assign(s,{life:duration,baseDamage:28*power,fused,rank});refreshTemporarySummon(g,s);
+ g.effects.push({type:'shadow-summon',x:g.p.x,y:g.p.y+4,r:36,fused,bird:true,life:.7,max:.7});
 }
 export function restorePersistentSummons(g){
  g.summons??=[];
@@ -54,8 +56,8 @@ export function updateSummons(g,dt,{damage,burst}){
  if(spider&&(s.kind==='queentaratect'||target.kind!=='prop'))spiderAttack(g,s,target,targets,{damage,burst,onBite:heroSpiderBite});
  else if(!maho&&target.kind==='prop'){damageProp(g,target,s.damage);burst(g,target.x,target.y,'#c8d0df',4,35);}
  else if(maho){const r=130*g.p.area;for(const e of targets)if(Math.hypot(e.x-s.x,e.y-s.y)<r+e.r){damage(g,e,s.damage*(1+s.adaptation*.15),'#f5e6b6');applyStatus(e,'stun',.35);e.kvx=(e.x-s.x)*1.1;e.kvy=(e.y-s.y)*1.1;}damagePropsInRadius(g,s.x,s.y,r,s.damage);g.effects.push({type:'eva-claw',x:s.x,y:s.y-20,angle:Math.atan2(dy,dx),r,color:'#e5dbbb',life:.3,max:.3});}
- else if(bird){const hit=targets.filter(e=>e===target||(s.fused&&Math.hypot(e.x-target.x,e.y-target.y)<160)).slice(0,s.fused?4:1);const points=[{x:s.x,y:s.y-25}];for(const e of hit){damage(g,e,s.damage,'#c8d0ff');applyStatus(e,'stun',.4);points.push({x:e.x,y:e.y});}g.effects.push({type:'lightning',points,color:'#b7caff',life:.22,max:.22});}
- else{damage(g,target,s.damage,'#c9d2e4');applyStatus(target,'bleeding',2,{power:s.damage*.1,source:'divine-dog'});burst(g,target.x,target.y,'#bbc9dc',4,35);}
+ else if(bird){const hit=targets.filter(e=>e===target||(s.fused&&Math.hypot(e.x-target.x,e.y-target.y)<160)).slice(0,s.fused?4:1);const points=[{x:s.x,y:s.y-25}];for(const e of hit){damage(g,e,s.damage,'#c8d0ff');applyStatus(e,'stun',.4);points.push({x:e.x,y:e.y});}g.effects.push({type:'nue-strike',points,fused:s.fused,seed:++g.id,life:.3,max:.3});}
+ else{damage(g,target,s.damage,'#c9d2e4');applyStatus(target,'bleeding',2,{power:s.damage*.1,source:'divine-dog'});burst(g,target.x,target.y,'#bbc9dc',2,30);g.effects.push({type:'dog-bite',x:target.x,y:target.y-8,angle:Math.atan2(dy,dx),white:s.kind==='whiteDog',fused:s.fused,life:.3,max:.3});}
  }
  }g.summons=g.summons.filter(s=>GUARDIAN_SUMMONS.includes(s.kind)?s.hp>0:s.life>0);g.enemyShots=g.enemyShots.filter(q=>q.life>0);
 }

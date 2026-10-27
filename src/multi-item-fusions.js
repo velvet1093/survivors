@@ -34,8 +34,8 @@ function gardenPulse(g,s,api){
   if(points.length<7)points.push({x:e.x,y:e.y});
  }
  damagePropsInRadius(g,s.x,s.y,s.r,s.damage);
- effect(g,'nova',{x:s.x,y:s.y,r:s.r,color:'#7e9fca',life:.42,max:.42});
- if(points.length)effect(g,'lightning',{points:[{x:s.x,y:s.y},...points],color:'#c3caf1',life:.22,max:.22});
+ effect(g,'nova',{x:s.x,y:s.y,r:s.r,color:'#5a6fa0',life:.42,max:.42});
+ if(points.length)effect(g,'shadow-grasp',{points,life:.5,max:.5});
 }
 
 function flashImpact(g,s,target,api){

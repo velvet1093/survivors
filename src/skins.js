@@ -14,7 +14,7 @@ export const SKINS={
  diavolo:[base('Hidden Emperor'),{id:'doppio',name:'Vinegar Doppio'}],
  yuki:[base('Star Rage · Red Trousers'),{id:'midnight',name:'High Collar · Blue Trousers'}],
  eren:[base('Scout Uniform'),{id:'cloak',name:'Survey Corps Cloak'},{id:'yeagerist',name:'Yeagerist · Long Coat'},{id:'infiltrator',name:'Marley Infiltrator'}],
- megumi:[base('Jujutsu Uniform'),{id:'training',name:'Training Uniform',replace:{'#37445f':'#68758b','#202a44':'#39455f','#65718c':'#a2a7b4'}}],
+ megumi:[base('Jujutsu Uniform'),{id:'training',name:'Training Uniform'}],
  frieren:[base('Elven Mage'),{id:'maid',name:'Maid Frieren'}],
  samus:[base('Varia Suit'),{id:'zerosuit',name:'Zero Suit'},{id:'stealth',name:'Zero Suit · Stealth'},{id:'fusion',name:'Fusion Suit',replace:{'#d9954f':'#579fc4','#8c573d':'#345680','#f1c67a':'#a8dfed','#ac5854':'#4479a8','#e2a450':'#dda95b'}},{id:'gravity',name:'Gravity Suit',replace:{'#d9954f':'#9d74bf','#8c573d':'#5c477b','#f1c67a':'#d4b1e2','#e2a450':'#a681c5'}}],
  goku:[base('Orange Gi'),{id:'supersaiyan',name:'Super Saiyan',replace:{'#182331':'#ecd064','#101520':'#ab7d32','#354459':'#fff1a3'}}],

@@ -1,17 +1,12 @@
 import {drawGuardianHealth} from './guardian-health.js';
 import {raster,outline,pixelRuns} from './pixel-characters.js';
 import {spiderPixels} from './shiraori-spider-art.js';
+import {divineDogPixels,nuePixels} from './megumi-shikigami-art.js';
 export function summonPixels(kind,{frame=0,attack=false,fused=false}={}){
  if(['spiderling','archtaratect','queentaratect'].includes(kind))return spiderPixels(kind,{frame,attack});
  const r=raster(),{rect,poly,line}=r,ink='#2b3447',step=[0,2,0,-2][frame%4];
- if(kind==='whiteDog'||kind==='blackDog'){
- const white=kind==='whiteDog',base=white?'#e3e5db':'#47556b',shade=white?'#a0b3ba':'#28364c',light=white?'#fff7e2':'#84949f';
- for(const [x,s]of [[13,-step],[22,step],[34,-step],[41,step]]){line(x,59,x+s,68,shade,3);rect(x+s-1,68,5,2,light);}poly([[10,53],[18,48],[37,50],[43,56],[39,63],[17,63],[10,59]],shade);poly([[13,53],[21,50],[35,52],[39,57],[35,60],[18,60]],base);line(12,53,5,46+step,base,3);poly([[34,53],[36,43],[39,38],[42,46],[48,44],[49,52],[54,56],[51,60],[43,61],[38,57]],base);rect(44,51,3,2,white?'#b47783':'#edba79');rect(51,55,3,2,ink);if(attack)rect(46,58,6,2,'#d8baa9');if(fused){line(38,47,43,51,'#d7cedd',1);line(41,44,42,49,'#d7cedd',1);}return outline(r.pixels,ink);
- }
- if(kind==='nue'){
- for(const side of [-1,1]){poly([[28+side*7,43],[28+side*25,30+step],[28+side*21,44],[28+side*13,52],[28+side*8,49]],'#514661');line(28+side*9,43,28+side*21,35+step,'#a9899c',2);}
- poly([[20,38],[36,38],[39,49],[33,57],[28,61],[21,55],[17,47]],'#a57974');poly([[21,34],[26,29],[32,30],[37,36],[35,45],[29,49],[23,45]],'#e3d4bb');rect(23,38,4,3,'#65415a');rect(32,38,4,3,'#65415a');poly([[27,43],[32,43],[29,48]],'#d8a562');rect(25,55,2,6,'#d4ad77');rect(32,55,2,6,'#d4ad77');return outline(r.pixels,ink);
- }
+ if(kind==='whiteDog'||kind==='blackDog')return divineDogPixels(kind,{frame,attack,fused});
+ if(kind==='nue')return nuePixels({frame,attack,fused});
  // Eight-Handled Sword Divergent Sila Divine General. The large Dharma
  // wheel sits behind the covered eyes, with eight separate blunt grips.
  const pale='#dbe4d2',bone='#f5f0dd',skinLight='#edf0dd',shadow='#92a79a',deep='#536e68',gold='#c3ac71',darkGold='#796748',pants='#202d3b',fold='#40515d',raised=attack?-7:0;
