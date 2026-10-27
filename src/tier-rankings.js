@@ -531,6 +531,111 @@ export const PASSIVE_RANKINGS={
   comparison:'Every stat category improves at once, and it frees four support slots, which no single passive can match.',
   caution:'Five maxed items is the longest recipe chain among composites; the individual pieces are weak until the set is done.',
   bestWith:'Finish all five maxed ingredients, then evolve Rasenshuriken or Flying Thunder God; the absorbed Headband and Scroll still count.'}),
+ philosopherstone:entry('S',{
+  reason:'Four alchemy pieces become one slot with area, damage, HP, resistance, cooldown, pickup range and regeneration, plus a +8% damage and +6% area completion bonus.',
+  comparison:'It raises offense and effective HP by roughly 40% and 35% from one slot while freeing three, on par with Sage’s Regalia.',
+  caution:'The pieces are individually modest; the payoff comes from bonding them, and the completion bonus only arrives with the fourth piece.',
+  bestWith:'Bond pieces as they max or fuse all four maxed ingredients at once, then awaken it with a maxed Red Truth Seal into The Gate of Truth.'}),
+ piratelegacy:entry('S',{
+  reason:'Four pirate pieces become one slot with speed, damage, pickup range, dodge, regeneration, healing, HP and resistance, plus a speed, damage and pickup completion bonus.',
+  comparison:'It is the strongest mobility composite and nearly half again as much effective HP, while freeing three support slots.',
+  caution:'Its offense is lower than the other new sets, and Log Pose and Vivre Card are weak on their own while you assemble it.',
+  bestWith:'Gather all four maxed ingredients into the Straw Hat Crew, then awaken it with a maxed Key of Freedom for Gear Fifth.'}),
+ hinokami:entry('S',{
+  reason:'Four Demon Slayer pieces become one slot with damage, HP, resistance, cooldown, area, speed and dodge, plus +8% damage and −5% cooldowns on completion.',
+  comparison:'It matches the Philosopher’s Stone on offense and adds the best ultimate uptime of the new sets, freeing three slots.',
+  caution:'Its defence is the lightest of the three new sets, and Fox Mask adds little until the set is complete.',
+  bestWith:'Bond all four maxed ingredients, then awaken it with a maxed Six Eyes into the Transparent World.'}),
+ gateoftruth:entry('S',{
+  reason:'The finished Philosopher’s Stone and Red Truth Seal become one slot, keeping all five bonuses and raising the set bonus to +15% damage, +10% area and −5% cooldowns.',
+  comparison:'It roughly adds three quarters to weapon offense from a single slot, the strongest damage composite outside the Transparent World.',
+  caution:'It is the end of a long chain: four maxed pieces, the finished stone and both max-rank ingredients for the awakening.',
+  bestWith:'Finish the Philosopher’s Stone first, then fuse it with a maxed Red Truth Seal; both max-rank ingredients are absorbed into one slot.'}),
+ gearfifth:entry('S',{
+  reason:'The Pirate King’s Legacy and Key of Freedom become one slot, keeping all five bonuses and adding +15% damage, speed and pickup range and 1.5 HP per second.',
+  comparison:'It more than doubles effective HP from one slot and adds the largest movement bonus of any passive.',
+  caution:'Offense is modest for such a long chain, and it needs both max-rank ingredients: the finished Legacy and Key of Freedom.',
+  bestWith:'Complete the Legacy, then fuse it with a maxed Key of Freedom; Eren’s Thunder Spears stay available because Freedom still counts at max rank.'}),
+ transparentworld:entry('S',{
+  reason:'Hinokami Kagura and Six Eyes become one slot, keeping all five bonuses and raising the set bonus to +10% damage, −5% cooldowns and +6% dodge.',
+  comparison:'Six Eyes’ cooldown stacks with the set’s, so it nearly doubles weapon offense and adds half again ultimate uptime from a single slot.',
+  caution:'It is the longest chain in the game and needs both max-rank ingredients, including a maxed Six Eyes that you give up as a separate slot.',
+  bestWith:'Finish Hinokami Kagura, then fuse it with a maxed Six Eyes; Gojo’s Hollow Purple stays available because Six Eyes still counts at max rank.'}),
+ stonebond:entry('A',{
+  reason:'Bonds maxed alchemy pieces into one slot as you max them, keeping each piece’s full bonus and freeing a slot with every piece added.',
+  comparison:'Weaker than the finished stone and without its completion bonus, but it starts paying off as soon as two pieces are maxed.',
+  caution:'Only pieces at max rank can join, and it needs at least two of them before it exists.',
+  bestWith:'Bond the first two maxed pieces and add the rest; the fourth piece completes the Philosopher’s Stone.'}),
+ breathbond:entry('A',{
+  reason:'Bonds maxed Demon Slayer pieces into one slot one at a time, keeping every bonus and freeing the slots they used.',
+  comparison:'It gives most of Hinokami Kagura’s damage and cooldown early, short of the completion bonus.',
+  caution:'Only maxed pieces can join, and the completion bonus waits for the fourth piece.',
+  bestWith:'Start it with your first two maxed pieces; the fourth completes Hinokami Kagura.'}),
+ crewbond:entry('B',{
+  reason:'Gathers maxed pirate pieces into one slot one at a time, keeping each piece’s full bonus and freeing a slot with each addition.',
+  comparison:'Mostly mobility, pickup range and sustain until the crew is complete, so its offense is light.',
+  caution:'Only maxed pieces can join, and the speed, damage and pickup completion bonus only comes with the fourth.',
+  bestWith:'Recruit pieces as they max; the fourth turns the crew into the Pirate King’s Legacy.'}),
+ redstone:entry('B',{
+  reason:'Red Stone adds 9% weapon damage and 0.75 HP per second, a rare mix of offense and sustain in one base slot.',
+  comparison:'Close to Red Soul Gem’s damage with some regeneration on top, and the best single alchemy piece.',
+  caution:'It is a set piece first; on its own it is a modest slot compared with Power Band.',
+  bestWith:'Collect it toward the Philosopher’s Stone.'}),
+ gumgumfruit:entry('B',{
+  reason:'Gum-Gum Fruit adds 24 maximum HP and 6% damage resistance for solid effective HP.',
+  comparison:'Sturdier than Varia Suit Module per slot and the toughest pirate piece.',
+  caution:'It adds no offense, so it is mainly worth it on the way to the Legacy.',
+  bestWith:'Collect it toward the Pirate King’s Legacy.'}),
+ automail:entry('B',{
+  reason:'Automail Arm adds 18 maximum HP and 6% damage resistance.',
+  comparison:'A solid defensive piece, a little behind Gum-Gum Fruit.',
+  caution:'No offense; take it if you plan to finish the Philosopher’s Stone.',
+  bestWith:'Collect it toward the Philosopher’s Stone.'}),
+ nichirintsuba:entry('B',{
+  reason:'Nichirin Tsuba cuts cooldowns by 6% and adds 9% weapon area.',
+  comparison:'It improves both weapons and the ultimate, much like Witch’s Ring with more area.',
+  caution:'Small alone; it is mostly worth it toward Hinokami Kagura.',
+  bestWith:'Collect it toward Hinokami Kagura.'}),
+ strawhat:entry('B',{
+  reason:'Straw Hat adds 12% movement speed and 9% weapon damage.',
+  comparison:'Faster than most damage passives and stronger than most mobility ones.',
+  caution:'Each bonus is small on its own; its value grows inside the Legacy.',
+  bestWith:'Collect it toward the Pirate King’s Legacy.'}),
+ transmutation:entry('B',{
+  reason:'Transmutation Circle adds 12% weapon area and 6% weapon damage.',
+  comparison:'A balanced offensive piece, a little behind Mana Crystal.',
+  caution:'Small alone; take it if you plan to finish the Philosopher’s Stone.',
+  bestWith:'Collect it toward the Philosopher’s Stone.'}),
+ hanafuda:entry('B',{
+  reason:'Hanafuda Earrings add 12% weapon damage with nothing else attached.',
+  comparison:'A third of Power Band’s damage; it exists to complete Hinokami Kagura.',
+  caution:'Plain damage in one slot is weak unless you finish the set.',
+  bestWith:'Collect it toward Hinokami Kagura.'}),
+ checkeredhaori:entry('C',{
+  reason:'Checkered Haori adds 15 maximum HP and 6% damage resistance.',
+  comparison:'A little below Automail Arm; it exists to complete Hinokami Kagura.',
+  caution:'Weak alone; only take it if you plan to finish the set.',
+  bestWith:'Collect it toward Hinokami Kagura.'}),
+ alchemistwatch:entry('C',{
+  reason:'State Alchemist’s Watch cuts cooldowns by 6% and adds 9% pickup range.',
+  comparison:'Small bonuses; it exists to complete the Philosopher’s Stone.',
+  caution:'Weak alone; only take it if you plan to finish the stone.',
+  bestWith:'Collect it toward the Philosopher’s Stone.'}),
+ vivrecard:entry('C',{
+  reason:'Vivre Card adds 0.9 HP per second and 15% food healing.',
+  comparison:'Light sustain on its own; it exists to complete the Pirate King’s Legacy.',
+  caution:'Weak alone; only take it if you plan to finish the Legacy.',
+  bestWith:'Collect it toward the Pirate King’s Legacy.'}),
+ foxmask:entry('C',{
+  reason:'Fox Mask adds 9% movement speed and 4.5% dodge.',
+  comparison:'Small bonuses; it exists to complete Hinokami Kagura.',
+  caution:'Weak alone; only take it if you plan to finish the set.',
+  bestWith:'Collect it toward Hinokami Kagura.'}),
+ logpose:entry('C',{
+  reason:'Log Pose adds 18% XP pickup range and 3% dodge.',
+  comparison:'Mostly pickup range; it exists to complete the Pirate King’s Legacy.',
+  caution:'Weak alone; only take it if you plan to finish the Legacy.',
+  bestWith:'Collect it toward the Pirate King’s Legacy.'}),
  senzu:entry('S',{
   reason:'Senzu Bean adds 4.5 HP per second and 45 maximum HP, the largest sustain from any single base passive.',
   comparison:'It doubles effective HP over a short fight with no setup, and it is half of the S-tier Panacea Pouch.',

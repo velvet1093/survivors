@@ -1,4 +1,5 @@
 import {complexItemIcon} from './complex-item-art.js';
+import {setItemIcon} from './set-item-art.js';
 import {soulGemIcon} from './soul-gem-art.js';
 import {pairedItemIcon} from './paired-item-art.js';
 import {denjiIcon} from './denji-icons.js';
@@ -136,7 +137,7 @@ const palettes={kamehameha:['#65c2f5','#fff3bd'],purple:['#bc8beb','#f19ac1'],ra
 
 export function icon(id, className='') {
   if(id==='chest')return chestIllustration().replace('class="treasure-illustration ',`class="item-icon illustrated-icon ${className} `).replace('role="img"','aria-hidden="true"');
-  const pixel=complexItemIcon(id)||soulGemIcon(id)||pairedItemIcon(id)||denjiIcon(id)||gutsIcon(id)||frierenBarrageIcon(id)||erzaWeaponArt(id)||erzaItemArt(id)||pixelItemArt(id);if(pixel)return `<svg class="item-icon illustrated-icon pixel-item-icon ${className}" data-pixel-icon="${id}" viewBox="0 0 34 34" shape-rendering="crispEdges" stroke="none" aria-hidden="true">${pixel}</svg>`;
+  const pixel=complexItemIcon(id)||setItemIcon(id)||soulGemIcon(id)||pairedItemIcon(id)||denjiIcon(id)||gutsIcon(id)||frierenBarrageIcon(id)||erzaWeaponArt(id)||erzaItemArt(id)||pixelItemArt(id);if(pixel)return `<svg class="item-icon illustrated-icon pixel-item-icon ${className}" data-pixel-icon="${id}" viewBox="0 0 34 34" shape-rendering="crispEdges" stroke="none" aria-hidden="true">${pixel}</svg>`;
   let art=artwork[id];
   if(!art){const colors=palettes[id];let i=0;art=(paths[id]||paths.fusion).replace(/<(path|circle|ellipse) /g,(m,tag)=>{
     if(!colors)return m;

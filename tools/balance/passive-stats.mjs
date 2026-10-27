@@ -14,12 +14,18 @@ function profile(p){
  return {offense,defence,ultimate:1/p.cooldown,move:p.move,magnet:p.magnet};
 }
 const base=profile(player());
+// Equip a fusion's maxed ingredients and fuse it; a fusion-only ingredient (a set
+// relic that an awakening absorbs) is built first from its own recipe.
+function build(p,fusion){
+ for(const ing of G.fusionIngredients(fusion)){const it=G.ITEMS[ing];if(it?.type!=='passive')continue;
+  if(it.fusionOnly){const maker=G.FUSIONS.find(f=>f.resultItem===ing);if(!maker||!build(p,maker))return false;}else p.passives[ing]=it.max;}
+ G.refreshStats(p);return G.applyChoice(p,{kind:'fusion',id:fusion.id});
+}
 const rows=[];
 const passives=[...Object.entries(G.ITEMS).filter(([,i])=>i.type==='passive'&&!i.fusionOnly).map(([id])=>({id,fusion:null})),...G.FUSIONS.filter(f=>G.fusionType(f)==='passive').map(f=>({id:f.id,fusion:f}))];
 for(const {id,fusion}of passives){
  const p=player();
- if(fusion){for(const ing of G.fusionIngredients(fusion)){const it=G.ITEMS[ing];if(it?.type==='passive'&&!it.fusionOnly)p.passives[ing]=it.max;}
-  G.refreshStats(p);if(!G.applyChoice(p,{kind:'fusion',id})){rows.push({id,error:'not fusable'});continue;}}
+ if(fusion){if(!build(p,fusion)){rows.push({id,error:'not fusable'});continue;}}
  else p.passives[id]=G.ITEMS[id].max;
  G.refreshStats(p);const v=profile(p);
  // Slots used after fusing: a fusion frees ingredient slots, so its value is per slot actually occupied.
@@ -34,6 +40,11 @@ for(const {id,fusion}of passives){
  for(let i=0;i<3;i++){const c=G.soulBondChoices(p)[0];if(!c||!G.applyChoice(p,c))break;}
  if(!p.passives.soulbond)rows.push({id:'soulbond',error:'not bondable'});else{G.refreshStats(p);const v=profile(p),slots=Object.keys(p.passives).length||1,gain=k=>v[k]/base[k]-1;
   rows.push({id:'soulbond',slots,offense:+(gain('offense')*100).toFixed(1),defence:+(gain('defence')*100).toFixed(1),ultimate:+(gain('ultimate')*100).toFixed(1),move:+(gain('move')*100).toFixed(1),magnet:+(gain('magnet')*100).toFixed(1),score:+((gain('offense')*100+gain('defence')*60+gain('ultimate')*30+gain('move')*30+gain('magnet')*4)/slots).toFixed(1)});}}
+// Equipment set bonds are built piece by piece too: measure each with three of four pieces.
+for(const set of G.SET_BONDS){const p=player();for(const id of set.members.slice(0,3))p.passives[id]=G.ITEMS[id].max;G.refreshStats(p);
+ for(let i=0;i<2;i++){const c=G.setBondChoices(p).find(c=>c.set===set.id);if(!c||!G.applyChoice(p,c))break;}
+ if(!p.passives[set.bond]){rows.push({id:set.bond,error:'not bondable'});continue;}G.refreshStats(p);const v=profile(p),slots=Object.keys(p.passives).length||1,gain=k=>v[k]/base[k]-1;
+ rows.push({id:set.bond,slots,offense:+(gain('offense')*100).toFixed(1),defence:+(gain('defence')*100).toFixed(1),ultimate:+(gain('ultimate')*100).toFixed(1),move:+(gain('move')*100).toFixed(1),magnet:+(gain('magnet')*100).toFixed(1),score:+((gain('offense')*100+gain('defence')*60+gain('ultimate')*30+gain('move')*30+gain('magnet')*4)/slots).toFixed(1)});}
 rows.sort((a,b)=>(b.score??-1)-(a.score??-1));
 for(const r of rows)console.log(JSON.stringify(r));
 const fs=await import('fs');fs.mkdirSync(new URL('./results/',import.meta.url),{recursive:true});fs.writeFileSync(new URL('./results/passive-stats.json',import.meta.url),JSON.stringify(rows,null,1));

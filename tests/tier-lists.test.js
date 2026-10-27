@@ -75,7 +75,7 @@ test('base and evolved filters partition weapons and passives without hiding eli
   assert.equal(base.length+evolved.length,all.length);assert.equal(base.filter(entry=>ids(evolved).has(entry.id)).length,0);
   assert.deepEqual(ids([...base,...evolved]),ids(all));
  }
- assert.deepEqual(ids(filterTierEntries('passives',{form:'evolved'})),new Set(['panaceapouch','adaptivebarrier','purifiedsoul','sagecodex','quintet','sageregalia','chozosuit','witcharchive']));
+ assert.deepEqual(ids(filterTierEntries('passives',{form:'evolved'})),new Set(['panaceapouch','adaptivebarrier','purifiedsoul','sagecodex','quintet','sageregalia','chozosuit','witcharchive','philosopherstone','piratelegacy','hinokami','gateoftruth','gearfifth','transparentworld']));
  assert.deepEqual(filterTierEntries('weapons',{form:'evolved',query:'Hollow Purple'}).map(entry=>entry.id),['purple']);
 });
 

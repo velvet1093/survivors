@@ -2,6 +2,8 @@ import {DENJI_CHARACTER,DENJI_ITEMS,DENJI_FUSIONS} from './denji-data.js';
 import {PAIRED_ITEMS,PAIRED_FUSIONS} from './paired-item-data.js';
 import {SOUL_GEM_IDS,SOUL_GEM_ITEMS,QUINTET_FUSION,SALVATION_FUSION} from './soul-gem-data.js';
 import {COMPLEX_ITEMS,COMPLEX_FUSIONS} from './complex-item-data.js';
+import {SET_ITEMS,SET_FUSIONS,SET_BONDS} from './set-item-data.js';
+export {SET_BONDS};
 import {TOKYO_MAPS} from './tokyo-maps.js';
 import {BERSERK_MAP} from './berserk-map.js';
 import {GRAVEYARD_MAP} from './graveyard-map.js';
@@ -34,6 +36,7 @@ export const CHARACTERS = [
 ];
 export const ITEMS = {
  ...COMPLEX_ITEMS,
+ ...SET_ITEMS,
  ...SOUL_GEM_ITEMS,
  ...PAIRED_ITEMS,
  ...GUTS_ITEMS,
@@ -83,6 +86,7 @@ export const ITEMS = {
 };
 export const FUSIONS = [
  ...COMPLEX_FUSIONS,
+ ...SET_FUSIONS,
  QUINTET_FUSION,
  SALVATION_FUSION,
  ...PAIRED_FUSIONS,
@@ -143,13 +147,25 @@ export const hasQuintet=p=>hasComposite(p,'quintet');
 // Soul Bond: maxed Soul Gems merge into one slot a gem at a time, keeping every bonus.
 export const soulBondGems=p=>!p.hardcore&&(p.passives?.soulbond||0)>=1&&Array.isArray(p.soulBond)?p.soulBond.filter(id=>SOUL_GEM_IDS.includes(id)):[];
 const bondPurified=p=>p.soulBondPurified===true&&soulBondGems(p).includes('soulgem');
-export const consumedFusionIngredient=(p,id)=>soulBondGems(p).includes(id)||bondPurified(p)&&id==='griefseed'||FUSIONS.some(f=>p.fusions?.[fusionBase(f)]===f.id&&fusionConsumedIngredients(f).includes(id))||hasQuintet(p)&&p.quintetPurified===true&&id==='griefseed'||hasComposite(p,'chozosuit')&&p.chozoBarrier===true&&id==='atfield';
+// Equipment sets bond the same way: maxed pieces join the set's bond slot one at a
+// time and the last piece completes the relic (see set-item-data.js).
+export const setBondFor=id=>SET_BONDS.find(s=>s.id===id)||null;
+export const setBondMembers=(p,set)=>{const s=typeof set==='string'?setBondFor(set):set;return s&&!p.hardcore&&(p.passives?.[s.bond]||0)>=1&&Array.isArray(p.setBonds?.[s.id])?p.setBonds[s.id].filter(id=>s.members.includes(id)):[];};
+const bondedSetPiece=(p,id)=>SET_BONDS.some(s=>setBondMembers(p,s).includes(id));
+// 0 while building, 1 for the finished relic, 2 once it has been awakened.
+export const setTier=(p,set)=>{const s=typeof set==='string'?setBondFor(set):set;return !s?0:hasComposite(p,s.awaken)?2:hasComposite(p,s.id)?1:0;};
+export function setBonus(p){
+ const total={damage:0,area:0,cooldown:0,move:0,magnet:0,dodge:0,regen:0};
+ for(const s of SET_BONDS){const tier=setTier(p,s),bonus=tier===2?s.awakenBonus:tier===1?s.bonus:null;if(bonus)for(const [k,v]of Object.entries(bonus))total[k]+=v;}
+ return total;
+}
+export const consumedFusionIngredient=(p,id)=>soulBondGems(p).includes(id)||bondedSetPiece(p,id)||bondPurified(p)&&id==='griefseed'||FUSIONS.some(f=>p.fusions?.[fusionBase(f)]===f.id&&fusionConsumedIngredients(f).includes(id))||hasQuintet(p)&&p.quintetPurified===true&&id==='griefseed'||hasComposite(p,'chozosuit')&&p.chozoBarrier===true&&id==='atfield';
 // Absorbed passives keep all their statistics and still unlock weapon evolutions.
 export function effectivePassiveRank(p,id){
  if(forbiddenPassive(p,id))return 0;
  const owned=p.passives[id]||0;
  if(id==='griefseed'&&hasQuintet(p)&&p.quintetPurified===true)return Math.max(owned,ITEMS.griefseed.max);
- if(soulBondGems(p).includes(id)||id==='griefseed'&&bondPurified(p))return Math.max(owned,ITEMS[id].max);
+ if(soulBondGems(p).includes(id)||id==='griefseed'&&bondPurified(p)||bondedSetPiece(p,id))return Math.max(owned,ITEMS[id].max);
  if(id==='atfield'&&hasComposite(p,'chozosuit')&&p.chozoBarrier===true)return Math.max(owned,ITEMS.atfield.max);
  return FUSIONS.some(f=>hardcoreFusionAllowed(p,f)&&fusionConsumedIngredients(f).includes(id)&&ITEMS[id]?.type==='passive'&&p.fusions?.[fusionBase(f)]===f.id&&((fusionType(f)==='passive'?p.passives:p.weapons)[fusionBase(f)]||0)>=ITEMS[fusionBase(f)].max)?Math.max(owned,ITEMS[id].max):owned;
 }
@@ -167,15 +183,16 @@ export function createPlayer(character,meta={}) {
 export function refreshStats(p) {
   p.shieldRulesVersion=2;
   const rank=id=>effectivePassiveRank(p,id);const m=p.meta||{},panacea=!p.hardcore&&p.fusions.herbs==='panaceapouch',barrier=!p.hardcore&&(p.fusions.energytank==='adaptivebarrier'||hasComposite(p,'chozosuit')&&p.chozoBarrier===true),purified=!p.hardcore&&(p.fusions.soulgem==='purifiedsoul'&&(p.passives.soulgem||0)>=ITEMS.soulgem.max||hasQuintet(p)&&p.quintetPurified===true||bondPurified(p)),codex=!p.hardcore&&p.fusions.grimoire==='sagecodex';
-  p.maxHp=p.baseHp+rank('senzu')*15+rank('energytank')*18+rank('freedom')*10+rank('masscore')*10+rank('brand')*12+rank('bloodengine')*10+rank('variasuit')*5+(m.hp||0);
-  p.regen=1+rank('senzu')*1.5+rank('herbs')*.6+rank('freedom')*.3+rank('bluegem')*.35+rank('toadoil')*.2+(m.regen||0)+(panacea?1:0);p.healing=1+rank('herbs')*.15+rank('toadoil')*.05+(m.healing||0)+(panacea?.25:0)+(purified?.2:0);
-  p.cooldown=1-rank('eyes')*.08-rank('timepiece')*.06-rank('griefseed')*.03-rank('purplegem')*.03-rank('sagebeads')*.02-rank('witchring')*.02-(codex?.06:0);
-  p.move=CHARACTERS.find(c=>c.id===p.id).move*(1+rank('headband')*.1+rank('morphball')*.03+(m.move||0));
-  p.dodge=rank('headband')*.05+rank('epitaph')*.04+rank('purplegem')*.015+rank('morphball')*.01;
-  p.magnet=115*(1+rank('magnet')*.45+rank('greatsage')*.06+rank('griefseed')*.05+rank('sagebeads')*.03+rank('gravitysuit')*.05+rank('goldenbutterfly')*.05+(m.magnet||0));
-  p.area=1+rank('scroll')*.15+rank('demonextract')*.06+rank('grimoire')*.08+rank('memoryfragment')*.05+rank('manacrystal')*.04+rank('yellowgem')*.05+rank('witchring')*.03;p.freezeResistance=Math.min(.9,rank('demonextract')*.25+rank('gravitysuit')*.1);
-  p.damage=(1+rank('power')*.12+rank('soulgem')*.06+rank('demonextract')*.04+rank('grimoire')*.05+rank('talisman')*.05+rank('masscore')*.06+rank('epitaph')*.06+rank('greatsage')*.05+rank('memoryfragment')*.05+rank('heartkreuz')*.04+rank('bloodengine')*.04+rank('manacrystal')*.03+rank('redgem')*.04+rank('sagecloak')*.03+rank('truthseal')*.04)*(1+(m.damage||0));
-  p.maxShield=(p.id==='eren'&&p.erenForm==='titan'?45:0)+rank('soulgem')*10+rank('atfield')*11+rank('heartkreuz')*7+(m.shield||0)+(barrier?20:0);p.damageReduction=rank('atfield')*.04+rank('energytank')*.035+rank('brand')*.03+rank('sagecloak')*.02+rank('variasuit')*.02;p.shieldRecharge=barrier?7:rank('atfield')?9:p.id==='eren'&&p.erenForm==='titan'?8:10;
+  const set=setBonus(p);
+  p.maxHp=p.baseHp+rank('automail')*6+rank('gumgumfruit')*8+rank('checkeredhaori')*5+rank('senzu')*15+rank('energytank')*18+rank('freedom')*10+rank('masscore')*10+rank('brand')*12+rank('bloodengine')*10+rank('variasuit')*5+(m.hp||0);
+  p.regen=1+rank('senzu')*1.5+rank('herbs')*.6+rank('freedom')*.3+rank('bluegem')*.35+rank('toadoil')*.2+rank('redstone')*.25+rank('vivrecard')*.3+set.regen+(m.regen||0)+(panacea?1:0);p.healing=1+rank('herbs')*.15+rank('toadoil')*.05+rank('vivrecard')*.05+(m.healing||0)+(panacea?.25:0)+(purified?.2:0);
+  p.cooldown=1-rank('eyes')*.08-rank('timepiece')*.06-rank('griefseed')*.03-rank('purplegem')*.03-rank('sagebeads')*.02-rank('witchring')*.02-rank('alchemistwatch')*.02-rank('nichirintsuba')*.02-set.cooldown-(codex?.06:0);
+  p.move=CHARACTERS.find(c=>c.id===p.id).move*(1+rank('headband')*.1+rank('morphball')*.03+rank('strawhat')*.04+rank('foxmask')*.03+set.move+(m.move||0));
+  p.dodge=rank('headband')*.05+rank('epitaph')*.04+rank('purplegem')*.015+rank('morphball')*.01+rank('logpose')*.01+rank('foxmask')*.015+set.dodge;
+  p.magnet=115*(1+rank('magnet')*.45+rank('greatsage')*.06+rank('griefseed')*.05+rank('sagebeads')*.03+rank('gravitysuit')*.05+rank('goldenbutterfly')*.05+rank('alchemistwatch')*.03+rank('logpose')*.06+set.magnet+(m.magnet||0));
+  p.area=1+rank('scroll')*.15+rank('demonextract')*.06+rank('grimoire')*.08+rank('memoryfragment')*.05+rank('manacrystal')*.04+rank('yellowgem')*.05+rank('witchring')*.03+rank('transmutation')*.04+rank('nichirintsuba')*.03+set.area;p.freezeResistance=Math.min(.9,rank('demonextract')*.25+rank('gravitysuit')*.1);
+  p.damage=(1+rank('power')*.12+rank('soulgem')*.06+rank('demonextract')*.04+rank('grimoire')*.05+rank('talisman')*.05+rank('masscore')*.06+rank('epitaph')*.06+rank('greatsage')*.05+rank('memoryfragment')*.05+rank('heartkreuz')*.04+rank('bloodengine')*.04+rank('manacrystal')*.03+rank('redgem')*.04+rank('sagecloak')*.03+rank('truthseal')*.04+rank('transmutation')*.02+rank('redstone')*.03+rank('strawhat')*.03+rank('hanafuda')*.04+set.damage)*(1+(m.damage||0));
+  p.maxShield=(p.id==='eren'&&p.erenForm==='titan'?45:0)+rank('soulgem')*10+rank('atfield')*11+rank('heartkreuz')*7+(m.shield||0)+(barrier?20:0);p.damageReduction=rank('atfield')*.04+rank('energytank')*.035+rank('brand')*.03+rank('sagecloak')*.02+rank('variasuit')*.02+rank('automail')*.02+rank('gumgumfruit')*.02+rank('checkeredhaori')*.02;p.shieldRecharge=barrier?7:rank('atfield')?9:p.id==='eren'&&p.erenForm==='titan'?8:10;
   if(purified)p.shieldRecharge=Math.min(p.shieldRecharge,8);
   // Ascent pacts and events: lasting multipliers (regeneration adds) for the run.
   if(p.ascentMods){const a=p.ascentMods;p.damage*=a.damage||1;p.maxHp*=a.maxHp||1;p.move*=a.move||1;p.cooldown*=a.cooldown||1;p.magnet*=a.magnet||1;p.regen+=a.regen||0;}
@@ -212,7 +229,7 @@ export function getUpgradePool(p) {
     pool.push({kind:'item',id,level:level+1});
   }
   for(const f of FUSIONS) if(fusionReady(p,f))pool.push({kind:'fusion',id:f.id});
-  pool.push(...soulBondChoices(p));
+  pool.push(...soulBondChoices(p),...setBondChoices(p));
   if(pool.length<3)pool.push({kind:'heal',id:'heal'});
   return pool;
 }
@@ -242,8 +259,39 @@ function applySoulBond(p,choice){
   }
   refreshStats(p);p.hp=Math.min(p.maxHp,p.hp+Math.max(0,p.maxHp-oldMax));p.shield=Math.min(p.maxShield,p.shield+Math.max(0,p.maxShield-oldShield));return true;
 }
+// Offered like a fusion: start a set's bond from two maxed pieces, or add one more.
+// Skipped while all four pieces sit equipped, since the whole-set fusion is then ready.
+export function setBondChoices(p){
+  if(p.hardcore)return [];
+  const out=[];
+  for(const s of SET_BONDS){
+    const whole=FUSIONS.find(f=>f.id===s.id);
+    if(setTier(p,s)||fusionReady(p,whole))continue;
+    const bond=setBondMembers(p,s),ready=s.members.filter(id=>!bond.includes(id)&&!p.fusions[id]&&(p.passives[id]||0)>=ITEMS[id].max);
+    if(bond.length)out.push(...ready.slice(0,1).map(id=>({kind:'bond',set:s.id,id})));
+    else if(ready.length>=2)out.push({kind:'bond',set:s.id,id:ready[1],with:ready[0]});
+  }
+  return out;
+}
+function applySetBond(p,choice){
+  const s=setBondFor(choice.set),offer=s&&setBondChoices(p).find(c=>c.set===s.id&&c.id===choice.id&&(c.with||null)===(choice.with||null));if(!offer)return false;
+  const added=[...(offer.with?[offer.with]:[]),offer.id],members=[...setBondMembers(p,s),...added],oldMax=p.maxHp,oldShield=p.maxShield;
+  for(const id of added){delete p.passives[id];delete p.fusions[id];delete p.cooldowns[id];}
+  p.setBonds={...(p.setBonds||{}),[s.id]:members};p.passives[s.bond]=1;
+  if(s.members.every(id=>members.includes(id))){
+    // The last piece completes the set: the bond becomes the finished relic.
+    delete p.passives[s.bond];delete p.setBonds[s.id];p.passives[s.id]=ITEMS[s.id].max;p.fusions[s.id]=s.id;
+  }
+  refreshStats(p);p.hp=Math.min(p.maxHp,p.hp+Math.max(0,p.maxHp-oldMax));p.shield=Math.min(p.maxShield,p.shield+Math.max(0,p.maxShield-oldShield));return true;
+}
+// What a bond choice would build, for both the Soul Bond and the equipment sets.
+export function bondPreview(p,choice){
+  const s=choice.set?setBondFor(choice.set):null,members=s?s.members:SOUL_GEM_IDS,current=s?setBondMembers(p,s):soulBondGems(p);
+  const added=[...(choice.with?[choice.with]:[]),choice.id],after=[...current,...added],complete=members.every(id=>after.includes(id));
+  return {set:s,bondId:s?s.bond:'soulbond',resultId:s?s.id:'quintet',id:complete?(s?s.id:'quintet'):(s?s.bond:'soulbond'),count:after.length,total:members.length,complete,started:current.length>0,added};
+}
 export function applyChoice(p, choice) {
-  if(choice.kind==='bond')return applySoulBond(p,choice);
+  if(choice.kind==='bond')return choice.set?applySetBond(p,choice):applySoulBond(p,choice);
   if(choice.kind==='fusion') {
     const f=FUSIONS.find(f=>f.id===choice.id);
     if(!f||!fusionReady(p,f))return false;

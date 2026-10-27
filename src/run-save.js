@@ -19,6 +19,7 @@ import {syncErenProgress} from './eren-progress.js';
 import {initializeHardcore,signatureWeaponIds,signaturePassiveIds} from './hardcore.js';
 import {refreshStats,consumedFusionIngredient,fusionConsumedIngredients,hasQuintet} from './game.js';
 import {SOUL_GEM_IDS} from './soul-gem-data.js';
+import {SET_BONDS} from './set-item-data.js';
 import {CHARACTERS,MAPS,ITEMS,FUSIONS,MAX_SLOTS,forbiddenItem,inactiveFormWeapon,hardcoreFusionAllowed,fusionBase,fusionType,fusionReady} from './game.js';
 import {createRun} from './engine.js';
 import {skinFor} from './skins.js';
@@ -81,7 +82,7 @@ function restoreRunMode(g,character){
  if(!allowed.has('crimson'))g.crimsonEchoes=[];
  // A forged or migrated mixed loadout must not retain foreign attacks in flight.
  if(removed){g.shots=[];g.fields=[];g.summons=[];g.crimsonEchoes=[];g.effects=[];if(g.garuda){g.garuda.inFlight=false;g.garuda.flightId=null;}refreshStats(g.p);}
- const legal=choice=>choice?.kind==='heal'||choice?.kind==='item'&&!!ITEMS[choice.id]&&!forbiddenItem(g.p,choice.id)&&!inactiveFormWeapon(g.p,choice.id)||choice?.kind==='fusion'&&FUSIONS.some(f=>f.id===choice.id&&hardcoreFusionAllowed(g.p,f))||choice?.kind==='bond'&&SOUL_GEM_IDS.includes(choice.id)&&(!choice.with||SOUL_GEM_IDS.includes(choice.with));
+ const legal=choice=>choice?.kind==='heal'||choice?.kind==='item'&&!!ITEMS[choice.id]&&!forbiddenItem(g.p,choice.id)&&!inactiveFormWeapon(g.p,choice.id)||choice?.kind==='fusion'&&FUSIONS.some(f=>f.id===choice.id&&hardcoreFusionAllowed(g.p,f))||choice?.kind==='bond'&&(choice.set?SET_BONDS.some(set=>set.id===choice.set&&set.members.includes(choice.id)&&(!choice.with||set.members.includes(choice.with))):SOUL_GEM_IDS.includes(choice.id)&&(!choice.with||SOUL_GEM_IDS.includes(choice.with)));
  if(g.levelChoices?.some(choice=>!legal(choice)))g.levelChoices=null;
  // A legacy fusion-only cache may have offered only a foreign passive fusion.
  // Preserve its reward opportunity without reopening an empty selection screen.

@@ -1546,6 +1546,27 @@ export const TIER_MEASUREMENTS={
   }
  },
  "passives": {
+  "transparentworld": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+96%"
+    ],
+    [
+     "Effective HP",
+     "+33%"
+    ],
+    [
+     "Ultimate uptime",
+     "+54%"
+    ],
+    [
+     "Move speed",
+     "+9%"
+    ]
+   ]
+  },
   "adaptivebarrier": {
    "label": "FROM STAT FORMULAS",
    "stats": [
@@ -1556,6 +1577,48 @@ export const TIER_MEASUREMENTS={
     [
      "Effective HP",
      "+202%"
+    ]
+   ]
+  },
+  "gearfifth": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+24%"
+    ],
+    [
+     "Effective HP",
+     "+115%"
+    ],
+    [
+     "Move speed",
+     "+27%"
+    ],
+    [
+     "Pickup range",
+     "+33%"
+    ]
+   ]
+  },
+  "gateoftruth": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+76%"
+    ],
+    [
+     "Effective HP",
+     "+35%"
+    ],
+    [
+     "Ultimate uptime",
+     "+12%"
+    ],
+    [
+     "Pickup range",
+     "+9%"
     ]
    ]
   },
@@ -1623,6 +1686,27 @@ export const TIER_MEASUREMENTS={
     ]
    ]
   },
+  "philosopherstone": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+42%"
+    ],
+    [
+     "Effective HP",
+     "+35%"
+    ],
+    [
+     "Ultimate uptime",
+     "+6%"
+    ],
+    [
+     "Pickup range",
+     "+9%"
+    ]
+   ]
+  },
   "senzu": {
    "label": "FROM STAT FORMULAS",
    "stats": [
@@ -1633,6 +1717,27 @@ export const TIER_MEASUREMENTS={
     [
      "Effective HP",
      "+108%"
+    ]
+   ]
+  },
+  "hinokami": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+41%"
+    ],
+    [
+     "Effective HP",
+     "+25%"
+    ],
+    [
+     "Ultimate uptime",
+     "+12%"
+    ],
+    [
+     "Move speed",
+     "+9%"
     ]
    ]
   },
@@ -1716,6 +1821,27 @@ export const TIER_MEASUREMENTS={
     ]
    ]
   },
+  "piratelegacy": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+17%"
+    ],
+    [
+     "Effective HP",
+     "+47%"
+    ],
+    [
+     "Move speed",
+     "+20%"
+    ],
+    [
+     "Pickup range",
+     "+28%"
+    ]
+   ]
+  },
   "eyes": {
    "label": "FROM STAT FORMULAS",
    "stats": [
@@ -1759,6 +1885,23 @@ export const TIER_MEASUREMENTS={
     ]
    ]
   },
+  "breathbond": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+24%"
+    ],
+    [
+     "Effective HP",
+     "+19%"
+    ],
+    [
+     "Ultimate uptime",
+     "+6%"
+    ]
+   ]
+  },
   "energytank": {
    "label": "FROM STAT FORMULAS",
    "stats": [
@@ -1782,6 +1925,27 @@ export const TIER_MEASUREMENTS={
     [
      "Effective HP",
      "+0%"
+    ]
+   ]
+  },
+  "stonebond": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+19%"
+    ],
+    [
+     "Effective HP",
+     "+22%"
+    ],
+    [
+     "Ultimate uptime",
+     "+6%"
+    ],
+    [
+     "Pickup range",
+     "+9%"
     ]
    ]
   },
@@ -1880,6 +2044,27 @@ export const TIER_MEASUREMENTS={
     ]
    ]
   },
+  "crewbond": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+9%"
+    ],
+    [
+     "Effective HP",
+     "+18%"
+    ],
+    [
+     "Move speed",
+     "+12%"
+    ],
+    [
+     "Pickup range",
+     "+18%"
+    ]
+   ]
+  },
   "memoryfragment": {
    "label": "FROM STAT FORMULAS",
    "stats": [
@@ -1959,6 +2144,32 @@ export const TIER_MEASUREMENTS={
     [
      "Effective HP",
      "+29%"
+    ]
+   ]
+  },
+  "redstone": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+9%"
+    ],
+    [
+     "Effective HP",
+     "+12%"
+    ]
+   ]
+  },
+  "gumgumfruit": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+0%"
+    ],
+    [
+     "Effective HP",
+     "+27%"
     ]
    ]
   },
@@ -2060,6 +2271,36 @@ export const TIER_MEASUREMENTS={
     ]
    ]
   },
+  "automail": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+0%"
+    ],
+    [
+     "Effective HP",
+     "+22%"
+    ]
+   ]
+  },
+  "nichirintsuba": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+11%"
+    ],
+    [
+     "Effective HP",
+     "+0%"
+    ],
+    [
+     "Ultimate uptime",
+     "+6%"
+    ]
+   ]
+  },
   "sagecloak": {
    "label": "FROM STAT FORMULAS",
    "stats": [
@@ -2073,7 +2314,50 @@ export const TIER_MEASUREMENTS={
     ]
    ]
   },
+  "strawhat": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+9%"
+    ],
+    [
+     "Effective HP",
+     "+0%"
+    ],
+    [
+     "Move speed",
+     "+12%"
+    ]
+   ]
+  },
+  "transmutation": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+12%"
+    ],
+    [
+     "Effective HP",
+     "+0%"
+    ]
+   ]
+  },
   "truthseal": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+12%"
+    ],
+    [
+     "Effective HP",
+     "+0%"
+    ]
+   ]
+  },
+  "hanafuda": {
    "label": "FROM STAT FORMULAS",
    "stats": [
     [
@@ -2100,6 +2384,19 @@ export const TIER_MEASUREMENTS={
    ]
   },
   "variasuit": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+0%"
+    ],
+    [
+     "Effective HP",
+     "+19%"
+    ]
+   ]
+  },
+  "checkeredhaori": {
    "label": "FROM STAT FORMULAS",
    "stats": [
     [
@@ -2146,6 +2443,40 @@ export const TIER_MEASUREMENTS={
     ]
    ]
   },
+  "alchemistwatch": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+6%"
+    ],
+    [
+     "Effective HP",
+     "+0%"
+    ],
+    [
+     "Ultimate uptime",
+     "+6%"
+    ],
+    [
+     "Pickup range",
+     "+9%"
+    ]
+   ]
+  },
+  "vivrecard": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+0%"
+    ],
+    [
+     "Effective HP",
+     "+14%"
+    ]
+   ]
+  },
   "yellowgem": {
    "label": "FROM STAT FORMULAS",
    "stats": [
@@ -2169,6 +2500,23 @@ export const TIER_MEASUREMENTS={
     [
      "Effective HP",
      "+10%"
+    ]
+   ]
+  },
+  "foxmask": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+0%"
+    ],
+    [
+     "Effective HP",
+     "+5%"
+    ],
+    [
+     "Move speed",
+     "+9%"
     ]
    ]
   },
@@ -2203,6 +2551,23 @@ export const TIER_MEASUREMENTS={
     [
      "Move speed",
      "+9%"
+    ]
+   ]
+  },
+  "logpose": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+0%"
+    ],
+    [
+     "Effective HP",
+     "+3%"
+    ],
+    [
+     "Pickup range",
+     "+18%"
     ]
    ]
   },

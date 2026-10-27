@@ -13,7 +13,11 @@ const byId=Object.fromEntries(RARITIES.map(r=>[r.id,r]));
 // assemble (maxed ingredients, multi-stage chains, form locks) and how strong they are.
 export const FUSION_RARITY={
  // Four or five maxed items in one slot, or a second evolution built on them.
- sageregalia:'mythic',chozosuit:'mythic',witcharchive:'mythic',quintet:'mythic',salvation:'mythic',purple:'mythic',chimeragarden:'mythic',
+ sageregalia:'mythic',chozosuit:'mythic',witcharchive:'mythic',quintet:'mythic',
+ philosopherstone:'mythic',piratelegacy:'mythic',hinokami:'mythic',gateoftruth:'mythic',gearfifth:'mythic',transparentworld:'mythic',
+ // Half-built set bonds.
+ stonebond:'legendary',crewbond:'legendary',breathbond:'legendary',
+salvation:'mythic',purple:'mythic',chimeragarden:'mythic',
  // Signature finishers and three-item weapon fusions.
  rasenflash:'legendary',kamehameha:'legendary',heavensarsenal:'legendary',berserkeredge:'legendary',chainsawoverdrive:'legendary',ultimate:'legendary',beelzebub:'legendary',positron:'legendary',fatalforecast:'legendary',zafkiel:'legendary',titanquake:'legendary',
  // Solid weapon evolutions.
@@ -26,7 +30,7 @@ export function rarityFor(id){
  if(f)return byId[FUSION_RARITY[f.id]||'epic'];
  const item=ITEMS[id];if(!item)return null;
  // A fusion-only result item shares the rarity of the fusion that creates it.
- if(item.fusionOnly){const maker=FUSIONS.find(f=>f.resultItem===id);return byId[FUSION_RARITY[maker?.id]||'mythic'];}
+ if(item.fusionOnly){const maker=FUSIONS.find(f=>f.resultItem===id);return byId[FUSION_RARITY[maker?.id]||FUSION_RARITY[id]||'mythic'];}
  return byId.common;
 }
 export function rarityBadge(id){const r=rarityFor(id);return r?`<span class="rarity-badge rarity-${r.id}" style="--rarity:${r.color}">${r.name.toUpperCase()}</span>`:'';}

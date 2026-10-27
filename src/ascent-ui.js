@@ -1,5 +1,5 @@
 import {NODE_TYPES,ASCENT_ACTS,ASCENT_FLOORS,reachableNodes,ascentNode,enterNode,claimReward,skipReward,continueAct,buyOffer,buyHeal,buyTrinket,rerollShop,leaveScreen,restHeal,restTrain,forgeEmpower,forgeReforge,FORGE_REFORGE_PRICE,ownedItems,PACTS,swearPact,altarOffer,eventFor,resolveEvent,objectiveText} from './ascent.js';
-import {ITEMS,MAPS} from './game.js';
+import {ITEMS,MAPS,bondPreview} from './game.js';
 import {trinketFor,trinketIcon} from './trinkets.js';
 import {icon} from './icons.js';
 import {rarityFor,rarityBadge} from './rarity.js';
@@ -29,7 +29,7 @@ function mapView(g){
  <div class="ascent-actions"><button class="secondary" id="ascent-menu">PAUSE MENU</button></div>`;
 }
 function choiceCards(g,choices,renderChoice,{action='CLAIM'}={}){
- return `<div class="upgrades ascent-cards">${choices.map((choice,i)=>{const c=renderChoice(choice),rare=rarityFor(choice.kind==='bond'?'soulbond':choice.id);return `<button class="upgrade ${choice.kind==='fusion'||choice.kind==='bond'?'fusion-choice':''}" data-claim="${i}" ${rare?`data-rarity="${rare.id}"`:''} style="--item:${c.color};${rare?'--rarity:'+rare.color:''}"><span class="upgrade-label">${esc(c.label)}</span>${rare?rarityBadge(choice.kind==='bond'?'soulbond':choice.id):''}<span class="upgrade-art">${icon(c.id)}</span><small class="upgrade-origin">${esc(c.sub)}</small><strong>${esc(c.name)}</strong><p>${esc(c.text)}</p><b>${esc(action==='CLAIM'?c.action:action)} <span>${icon('arrow')}</span></b></button>`;}).join('')}</div>`;
+ return `<div class="upgrades ascent-cards">${choices.map((choice,i)=>{const c=renderChoice(choice),rare=rarityFor(choice.kind==='bond'?bondPreview(g.p,choice).id:choice.id);return `<button class="upgrade ${choice.kind==='fusion'||choice.kind==='bond'?'fusion-choice':''}" data-claim="${i}" ${rare?`data-rarity="${rare.id}"`:''} style="--item:${c.color};${rare?'--rarity:'+rare.color:''}"><span class="upgrade-label">${esc(c.label)}</span>${rare?rarityBadge(choice.kind==='bond'?bondPreview(g.p,choice).id:choice.id):''}<span class="upgrade-art">${icon(c.id)}</span><small class="upgrade-origin">${esc(c.sub)}</small><strong>${esc(c.name)}</strong><p>${esc(c.text)}</p><b>${esc(action==='CLAIM'?c.action:action)} <span>${icon('arrow')}</span></b></button>`;}).join('')}</div>`;
 }
 function rewardView(g,renderChoice){
  const rw=g.ascent.rewards,choices=rw.picks[rw.index]||[];
@@ -37,7 +37,7 @@ function rewardView(g,renderChoice){
 }
 function shopView(g,renderChoice){
  const a=g.ascent,s=a.shop,t=s.trinket&&trinketFor(s.trinket.id);
- const offers=s.offers.map((o,i)=>{const c=renderChoice(o.choice),rare=rarityFor(o.choice.kind==='bond'?'soulbond':o.choice.id);return `<article class="ascent-offer ${o.sold?'sold':''}" style="--item:${c.color};--rarity:${rare?.color||'#999'}"><span class="item-art">${icon(c.id)}</span><div>${rare?rarityBadge(o.choice.kind==='bond'?'soulbond':o.choice.id):''}<small>${esc(c.label)}</small><strong>${esc(c.name)}</strong><p>${esc(c.text)}</p></div><button data-buy="${i}" ${o.sold||a.gold<o.price?'disabled':''}>${o.sold?'SOLD':'◉ '+o.price}</button></article>`;}).join('')||'<p class="ascent-note">The merchant has nothing that fits your loadout.</p>';
+ const offers=s.offers.map((o,i)=>{const c=renderChoice(o.choice),rare=rarityFor(o.choice.kind==='bond'?bondPreview(g.p,o.choice).id:o.choice.id);return `<article class="ascent-offer ${o.sold?'sold':''}" style="--item:${c.color};--rarity:${rare?.color||'#999'}"><span class="item-art">${icon(c.id)}</span><div>${rare?rarityBadge(o.choice.kind==='bond'?bondPreview(g.p,o.choice).id:o.choice.id):''}<small>${esc(c.label)}</small><strong>${esc(c.name)}</strong><p>${esc(c.text)}</p></div><button data-buy="${i}" ${o.sold||a.gold<o.price?'disabled':''}>${o.sold?'SOLD':'◉ '+o.price}</button></article>`;}).join('')||'<p class="ascent-note">The merchant has nothing that fits your loadout.</p>';
  return `${header(g,{title:'The merchant’s wares.'})}<div class="ascent-shop">${offers}
  ${t?`<article class="ascent-offer ${s.trinket.sold?'sold':''}" style="--item:${t.color}"><span class="item-art">${trinketIcon(t.id)}</span><div><small>TRINKET · ${esc(t.series)}</small><strong>${esc(t.name)}</strong><p>Equip it or melt it into a trinket you carry.</p></div><button id="buy-trinket" ${s.trinket.sold||a.gold<s.trinket.price?'disabled':''}>${s.trinket.sold?'SOLD':'◉ '+s.trinket.price}</button></article>`:''}
  <article class="ascent-offer ${s.heal.sold?'sold':''}" style="--item:#eaa0ae"><span class="item-art">${icon('heal')}</span><div><small>SERVICE</small><strong>Field medic</strong><p>Restore 40% of your max HP.</p></div><button id="buy-heal" ${s.heal.sold||a.gold<s.heal.price||g.p.hp>=g.p.maxHp?'disabled':''}>${s.heal.sold?'SOLD':'◉ '+s.heal.price}</button></article></div>
