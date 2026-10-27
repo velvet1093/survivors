@@ -3,6 +3,8 @@ import {companionLeash,nearbyCompanionTargets,companionHome,recallCompanion} fro
 import {navigateEnemy,damagePropsInRadius,damageProp} from './world.js';
 import {applyStatus} from './status.js';
 import {queueSummonDeath} from './friendly-death.js';
+import {SPIDER_KINDS,spiderTuning,spiderAttack} from './shiraori.js';
+import {heroSpiderBite} from './hero-mechanics.js';
 const mahoragaDamage=g=>85*g.p.damage*(1+(g.p.meta.ultimateDamage||0))*summonLevelPower(g);
 function refreshTemporarySummon(g,s){
  // Legacy temporary summons stored only damage, before level scaling existed.
@@ -32,12 +34,13 @@ export function summonMahoraga(g){
 export function updateSummons(g,dt,{damage,burst}){
  if(g.status!=='playing'||g.bossIntro||!(dt>0))return;restorePersistentSummons(g);for(const s of g.summons){if(s.kind!=='mahoraga'){refreshTemporarySummon(g,s);s.life-=dt;}s.age+=dt;s.attackCD-=dt;s.attackAnim=Math.max(0,(s.attackAnim||0)-dt);s.wheelCD=Math.max(0,(s.wheelCD||0)-dt);if(s.life<=0){queueSummonDeath(g,s,{reason:'expired'});continue;}if(s.kind==='mahoraga'&&s.hp<=0)continue;
  recallCompanion(g,s);const home=companionHome(g,s);
- const targets=nearbyCompanionTargets(g),target=targets.reduce((a,b)=>!a||Math.hypot(b.x-s.x,b.y-s.y)<Math.hypot(a.x-s.x,a.y-s.y)?b:a,null)||g.world.active.filter(o=>Number.isFinite(o.hp)&&o.hp>0&&Math.hypot(o.x-g.p.x,o.y-g.p.y)<companionLeash(g)*.9&&Math.hypot(o.x-s.x,o.y-s.y)<60+o.r).sort((a,b)=>Math.hypot(a.x-s.x,a.y-s.y)-Math.hypot(b.x-s.x,b.y-s.y))[0],maho=s.kind==='mahoraga',bird=s.kind==='nue';
- const tx=target?.x??home.x,ty=target?.y??home.y,dx=tx-s.x,dy=ty-s.y,d=Math.hypot(dx,dy)||1;s.facing=dx<0?-1:1;s.moving=target?.kind==='prop'?false:d>(target?(bird?130:maho?65:25):15);
- if(s.moving){s.r=maho?25:10;s.speed=target?(bird?230:maho?200:290):400;s.waterWalker=bird;s.boss=maho;navigateEnemy(g,s,dx/d*s.speed,dy/d*s.speed,dt);}recallCompanion(g,s);
+ const targets=nearbyCompanionTargets(g),target=targets.reduce((a,b)=>!a||Math.hypot(b.x-s.x,b.y-s.y)<Math.hypot(a.x-s.x,a.y-s.y)?b:a,null)||g.world.active.filter(o=>Number.isFinite(o.hp)&&o.hp>0&&Math.hypot(o.x-g.p.x,o.y-g.p.y)<companionLeash(g)*.9&&Math.hypot(o.x-s.x,o.y-s.y)<60+o.r).sort((a,b)=>Math.hypot(a.x-s.x,a.y-s.y)-Math.hypot(b.x-s.x,b.y-s.y))[0],maho=s.kind==='mahoraga',bird=s.kind==='nue',spider=SPIDER_KINDS.includes(s.kind)?spiderTuning(s.kind):null;
+ const tx=target?.x??home.x,ty=target?.y??home.y,dx=tx-s.x,dy=ty-s.y,d=Math.hypot(dx,dy)||1;s.facing=dx<0?-1:1;s.moving=target?.kind==='prop'?false:d>(target?(spider?spider.chase:bird?130:maho?65:25):15);
+ if(s.moving){s.r=spider?spider.r:maho?25:10;s.speed=target?(spider?spider.speed:bird?230:maho?200:290):400;s.waterWalker=bird;s.boss=maho;navigateEnemy(g,s,dx/d*s.speed,dy/d*s.speed,dt);}recallCompanion(g,s);
  if(maho){updateGuardianHealth(g,s,dt,{burst});if(s.hp<=0)continue;}
- if(target&&s.attackCD<=0&&d<(bird?310:maho?175:55)+target.r){s.attackCD=bird?1.5:maho?1:.8;s.attackAnim=.35;
- if(!maho&&target.kind==='prop'){damageProp(g,target,s.damage);burst(g,target.x,target.y,'#c8d0df',4,35);}
+ if(target&&s.attackCD<=0&&d<(spider?spider.reach:bird?310:maho?175:55)+target.r){s.attackCD=spider?spider.cooldown:bird?1.5:maho?1:.8;s.attackAnim=.35;
+ if(spider&&(s.kind==='queentaratect'||target.kind!=='prop'))spiderAttack(g,s,target,targets,{damage,burst,onBite:heroSpiderBite});
+ else if(!maho&&target.kind==='prop'){damageProp(g,target,s.damage);burst(g,target.x,target.y,'#c8d0df',4,35);}
  else if(maho){const r=130*g.p.area;for(const e of targets)if(Math.hypot(e.x-s.x,e.y-s.y)<r+e.r){damage(g,e,s.damage*(1+s.adaptation*.15),'#f5e6b6');applyStatus(e,'stun',.35);e.kvx=(e.x-s.x)*1.1;e.kvy=(e.y-s.y)*1.1;}damagePropsInRadius(g,s.x,s.y,r,s.damage);g.effects.push({type:'eva-claw',x:s.x,y:s.y-20,angle:Math.atan2(dy,dx),r,color:'#e5dbbb',life:.3,max:.3});}
  else if(bird){const hit=targets.filter(e=>e===target||(s.fused&&Math.hypot(e.x-target.x,e.y-target.y)<160)).slice(0,s.fused?4:1);const points=[{x:s.x,y:s.y-25}];for(const e of hit){damage(g,e,s.damage,'#c8d0ff');applyStatus(e,'stun',.4);points.push({x:e.x,y:e.y});}g.effects.push({type:'lightning',points,color:'#b7caff',life:.22,max:.22});}
  else{damage(g,target,s.damage,'#c9d2e4');applyStatus(target,'bleeding',2,{power:s.damage*.1,source:'divine-dog'});burst(g,target.x,target.y,'#bbc9dc',4,35);}

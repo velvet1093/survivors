@@ -1,0 +1,42 @@
+[
+ {
+  "id": "spiderbrood",
+  "style": "kite",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 52.6,
+  "kills": 78,
+  "takenPerMin": 137.4,
+  "xp": 2333435
+ },
+ {
+  "id": "spiderbrood",
+  "style": "kite",
+  "owner": true,
+  "hero": "shiraori",
+  "dps": 45.5,
+  "kills": 51,
+  "takenPerMin": 206.3,
+  "xp": 1666769
+ },
+ {
+  "id": "archtaratect",
+  "style": "kite",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 57.5,
+  "kills": 55,
+  "takenPerMin": 235.2,
+  "xp": 2000149
+ },
+ {
+  "id": "archtaratect",
+  "style": "kite",
+  "owner": true,
+  "hero": "shiraori",
+  "dps": 76.9,
+  "kills": 96,
+  "takenPerMin": 125.7,
+  "xp": 2333558
+ }
+]

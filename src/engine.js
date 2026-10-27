@@ -25,6 +25,7 @@ import {castEvolvedWeapon,updateEvolvedShot} from './evolved-weapons.js';
 import {bossUltimatePaused} from './boss-ultimates.js';
 import {cannonStage,cannonPayload,CANNON_STAGES} from './samus-cannon.js';
 import {summonPack,summonNue,updateSummons} from './summons.js';
+import {summonBrood} from './shiraori.js';
 import {petFor,updatePet} from './pets.js';
 import {newHeroMechanic,updateHeroMechanic,heroMovement,heroDamageBonus,heroMoveBonus,heroResistance,blockHeroHit,heroHurt,heroKill,heroXp,heroToxin,heroFreeze,consumeHeroCast,spendStolenTime} from './hero-mechanics.js';
 import {queueBossIntro,tickBossIntro} from './boss-intro.js';
@@ -157,6 +158,8 @@ export function castWeapon(g,id,target){
     effect(g,'ki-charge',{x:p.x,y:yy,r:fused?24:15,color:'#c0edff',life:.25,max:.25});
   }else if(id==='red'){
     const yy=p.y-20,aim=Math.atan2(target.y-yy,target.x-p.x),q=shoot(g,'red',p.x,yy,aim,30*power,rank,false);q.r=7;q.vx=Math.cos(aim)*390;q.vy=Math.sin(aim)*390;q.pierce=1;q.color='#ff9ba9';q.blastRadius=(55+rank*9)*p.area;
+  }else if(id==='spiderbrood'){
+    summonBrood(g,rank,power,fused,boost);
   }else if(id==='shadows'){
     summonPack(g,rank,power,fused,boost.duration||1);
   }else if(id==='blue'){
@@ -322,7 +325,7 @@ export function updateRun(g,dt,input={x:0,y:0}){
         for(const o of g.world.active)if(o.hp>0&&Number.isFinite(o.hp)&&Math.hypot(o.x-x,o.y-y)<o.r+16*p.area){o.orbitCD=(o.orbitCD||0)-dt;if(o.orbitCD<=0){damageProp(g,o,15+rank*9);o.orbitCD=.4;}}
         for(const e of g.enemies)if(e.orbitCD<=0&&Math.hypot(e.x-x,e.y-y)<e.r+16*p.area){damageEnemy(g,e,(15+rank*9)*p.damage*(fused?2:1),'#97d7ff');e.orbitCD=.35;burst(g,x,y,'#97d7ff',4);}}
     }else if(attackTarget&&p.cooldowns[id]<=0){
-      if(castWeapon(g,id,attackTarget)===false)continue;p.cooldowns[id]=((id==='rosebow'&&p.fusions.rosebow==='salvation'?1.6:pairedWeaponCooldown(g,id))??((p.fusions[id]&&['pallet','odmblades'].includes(id))?1.8:({chainsaw:.85,dragonslayer:1.55,requip:1.3,quill:1.2,blackflame:1.3,crimson:1.05,garuda:1.15,odmblades:.85,titanfists:1.4,nue:6,ki:1.4,red:1.7,shadows:5.5,blue:1.6,shuriken:.8,kunai:.85,lightning:1.65,rosebow:.95,poison:1.7,pallet:1.05,icelance:1.2,clockshot:1.15,zoltraak:1.35,powerbeam:.85}[id])))*(id==='requip'?erzaForm(g).cadence:1)*(1-(p.weapons[id]-1)*.07)*p.cooldown*(g.ultimate?.type==='shinji'?.75:1)*((id===p.weapon||(p.id==='megumi'&&id==='nue'))?1-(p.meta.signatureCooldown||0):1);
+      if(castWeapon(g,id,attackTarget)===false)continue;p.cooldowns[id]=((id==='rosebow'&&p.fusions.rosebow==='salvation'?1.6:pairedWeaponCooldown(g,id))??((p.fusions[id]&&['pallet','odmblades'].includes(id))?1.8:({chainsaw:.85,dragonslayer:1.55,requip:1.3,quill:1.2,blackflame:1.3,crimson:1.05,garuda:1.15,odmblades:.85,titanfists:1.4,nue:6,spiderbrood:5,ki:1.4,red:1.7,shadows:5.5,blue:1.6,shuriken:.8,kunai:.85,lightning:1.65,rosebow:.95,poison:1.7,pallet:1.05,icelance:1.2,clockshot:1.15,zoltraak:1.35,powerbeam:.85}[id])))*(id==='requip'?erzaForm(g).cadence:1)*(1-(p.weapons[id]-1)*.07)*p.cooldown*(g.ultimate?.type==='shinji'?.75:1)*((id===p.weapon||(p.id==='megumi'&&id==='nue'))?1-(p.meta.signatureCooldown||0):1);
     }
   }
 

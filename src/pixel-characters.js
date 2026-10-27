@@ -1,4 +1,5 @@
 import {denjiPixels} from './denji-art.js';
+import {shiraoriPixels} from './shiraori-art.js';
 import {beachOutfitPixels} from './beach-outfit-art.js';
 import {cuteSwimPixels} from './cute-swim-art.js';
 import {pilotSwimPixels,paintPilotEvaSwim} from './pilot-swim-art.js';
@@ -336,6 +337,7 @@ const dataCache=new Map();
 export function characterPixels(id,{frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin:skinId='default',form=id==='erza'?3:0,evolved=''}={}){
   frame=((frame%4)+4)%4;const key=[id,frame,moving,pose,attack,expression,blink,skinId,form,evolved].join(':');if(dataCache.has(key))return dataCache.get(key);
   if(id==='denji'){const result=denjiPixels({frame,moving,pose,attack,expression,blink,skin:skinId,form});dataCache.set(key,result);return result;}
+  if(id==='shiraori'){const result=shiraoriPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='guts'){const result=gutsPixels({frame,moving,pose,attack,expression,blink,skin:skinId,form});dataCache.set(key,result);return result;}
   if(id==='kurumi'){const result=kurumiPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='diavolo'){const result=diavoloPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}

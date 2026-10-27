@@ -1,6 +1,8 @@
 import {drawGuardianHealth} from './guardian-health.js';
 import {raster,outline,pixelRuns} from './pixel-characters.js';
+import {spiderPixels} from './shiraori-spider-art.js';
 export function summonPixels(kind,{frame=0,attack=false,fused=false}={}){
+ if(['spiderling','archtaratect','queentaratect'].includes(kind))return spiderPixels(kind,{frame,attack});
  const r=raster(),{rect,poly,line}=r,ink='#2b3447',step=[0,2,0,-2][frame%4];
  if(kind==='whiteDog'||kind==='blackDog'){
  const white=kind==='whiteDog',base=white?'#e3e5db':'#47556b',shade=white?'#a0b3ba':'#28364c',light=white?'#fff7e2':'#84949f';
@@ -60,4 +62,4 @@ export function summonPixels(kind,{frame=0,attack=false,fused=false}={}){
  return outline(r.pixels,ink);
 }
 const cache=new Map();
-export function drawSummon(c,s,reduced=false,hideUi=false){const frame=reduced?0:Math.floor(s.age*(s.summonKind==='nue'?6:8))%4,key=[s.summonKind,frame,s.attackAnim>0,s.fused].join(':');if(!cache.has(key)){const cv=document.createElement('canvas');cv.width=56;cv.height=76;const cc=cv.getContext('2d');for(const run of pixelRuns(summonPixels(s.summonKind,{frame,attack:s.attackAnim>0,fused:s.fused}))){cc.fillStyle=run.color;cc.fillRect(run.x,run.y,run.width,1);}cache.set(key,cv);}c.save();c.translate(Math.round(s.x),Math.round(s.y));c.imageSmoothingEnabled=false;const scale=s.summonKind==='mahoraga'?1.05:.85;c.scale((s.facing||1)*scale,scale);c.drawImage(cache.get(key),-28,-71);c.restore();if(s.summonKind==='mahoraga'&&!hideUi){c.fillStyle='#f1dfaa';c.font='9px sans-serif';c.textAlign='center';c.fillText('ADAPT '+(s.adaptation||0)+'/4',s.x,s.y+10);drawGuardianHealth(c,{...s,kind:'mahoraga'},'MAHORAGA','#d6d9af');}}
+export function drawSummon(c,s,reduced=false,hideUi=false){const frame=reduced?0:Math.floor(s.age*(s.summonKind==='nue'?6:8))%4,key=[s.summonKind,frame,s.attackAnim>0,s.fused].join(':');if(!cache.has(key)){const cv=document.createElement('canvas');cv.width=56;cv.height=76;const cc=cv.getContext('2d');for(const run of pixelRuns(summonPixels(s.summonKind,{frame,attack:s.attackAnim>0,fused:s.fused}))){cc.fillStyle=run.color;cc.fillRect(run.x,run.y,run.width,1);}cache.set(key,cv);}c.save();c.translate(Math.round(s.x),Math.round(s.y));c.imageSmoothingEnabled=false;const scale=s.summonKind==='mahoraga'?1.05:s.summonKind==='queentaratect'?2.2:s.summonKind==='archtaratect'?.62:s.summonKind==='spiderling'?.42:.85;c.scale((s.facing||1)*scale,scale);c.drawImage(cache.get(key),-28,-71);c.restore();if(s.summonKind==='mahoraga'&&!hideUi){c.fillStyle='#f1dfaa';c.font='9px sans-serif';c.textAlign='center';c.fillText('ADAPT '+(s.adaptation||0)+'/4',s.x,s.y+10);drawGuardianHealth(c,{...s,kind:'mahoraga'},'MAHORAGA','#d6d9af');}}

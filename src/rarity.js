@@ -19,7 +19,7 @@ export const FUSION_RARITY={
  stonebond:'legendary',crewbond:'legendary',breathbond:'legendary',
 salvation:'mythic',purple:'mythic',chimeragarden:'mythic',
  // Signature finishers and three-item weapon fusions.
- rasenflash:'legendary',kamehameha:'legendary',heavensarsenal:'legendary',berserkeredge:'legendary',chainsawoverdrive:'legendary',ultimate:'legendary',beelzebub:'legendary',positron:'legendary',fatalforecast:'legendary',zafkiel:'legendary',titanquake:'legendary',
+ rasenflash:'legendary',kamehameha:'legendary',archtaratect:'legendary',heavensarsenal:'legendary',berserkeredge:'legendary',chainsawoverdrive:'legendary',ultimate:'legendary',beelzebub:'legendary',positron:'legendary',fatalforecast:'legendary',zafkiel:'legendary',titanquake:'legendary',
  // Solid weapon evolutions.
  raijinrasengan:'epic',dragonroar:'epic',wisteriagarden:'epic',scoutassault:'epic',starcrusher:'epic',stormnue:'epic',totality:'epic',ancientmagic:'epic',plasmabeam:'epic',icecrown:'epic',finalchapter:'epic',rasen:'epic',tempest:'epic',
  // Stat-only passive fusions and evolutions from shared basic items.

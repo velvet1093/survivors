@@ -290,6 +290,16 @@
   "score": 26.2
  },
  {
+  "id": "parallelminds",
+  "slots": 1,
+  "offense": 23.1,
+  "defence": 0,
+  "ultimate": 9.9,
+  "move": 0,
+  "magnet": 0,
+  "score": 26
+ },
+ {
   "id": "brand",
   "slots": 1,
   "offense": 0,

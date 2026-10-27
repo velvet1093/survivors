@@ -9,7 +9,7 @@ import {erzaWeaponAppearance} from './erza-equipment.js';
 
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const normalize=value=>String(value??'').normalize('NFD').replace(/\p{Diacritic}/gu,'').toLowerCase().trim();
-const roles=['Striker','Sorcerer','Assassin','Magical Girl','Apothecary','EVA Pilot','Ice General','Time Spirit','Elven Mage','Bounty Hunter','Summoner','Titan Shifter','Star Rage','Stand User','Slime Sovereign','Author of Miracles','Requip Knight','Black Swordsman','Chainsaw Hybrid'];
+const roles=['Striker','Sorcerer','Assassin','Magical Girl','Apothecary','EVA Pilot','Ice General','Time Spirit','Elven Mage','Bounty Hunter','Summoner','Titan Shifter','Star Rage','Stand User','Slime Sovereign','Author of Miracles','Requip Knight','Black Swordsman','Chainsaw Hybrid','Spider Summoner'];
 export const heroRole=hero=>roles[CHARACTERS.indexOf(hero)]||'Legend';
 // Five readable ratings for the showcase: the authored power, attack speed and range
 // scores, plus health and mobility scaled from each hero's base stats.

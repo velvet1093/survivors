@@ -1,6 +1,20 @@
 import {GENERAL_TREE,CHARACTER_TREES} from './progression.js';
 // Each node has its own silhouette; colors connect the illustration to its tree.
 export const SKILL_ART={
+ shiraori:{
+  venom:'<path d="M17 3q9 8 9 16a9 9 0 0 1-18 0q0-8 9-16Z"/><path d="M12 19a5 5 0 0 0 5 5m-3-12 3-3" class="light"/>',
+  minds:'<circle cx="10" cy="12" r="6"/><circle cx="24" cy="12" r="6"/><circle cx="17" cy="24" r="6"/><path d="M10 12h14l-7 12Z" class="light"/>',
+  clutch:'<ellipse cx="11" cy="22" rx="6" ry="7"/><ellipse cx="23" cy="22" rx="6" ry="7"/><ellipse cx="17" cy="11" rx="6" ry="7"/><path d="M9 20h2m10 0h2m-8-11h2" class="light"/>',
+  queen:'<path d="m4 14 5-8 4 5 4-9 4 9 4-5 5 8-3 4H7Z"/><path d="M8 22h18l-3 9H11Z" class="light"/>',
+  kumoko:'<path d="M3 30V12l14-9 14 9v18h-9v-9h-10v9Z"/><path d="M12 21h10v9M17 8v5m-6 1h12" class="light"/>',
+  godhood:'<path d="m17 2 4 9 10 2-7 7 2 10-9-5-9 5 2-10-7-7 10-2Z"/><path d="M17 11v10m-5-5h10" class="light"/>',
+  threads:'<path d="M17 2 30 9v16l-13 7-13-7V9Z"/><path d="M17 2v30M4 9l26 16M30 9 4 25" class="light"/>',
+  skitter:'<ellipse cx="17" cy="18" rx="7" ry="6"/><path d="m11 15-8-6m8 9-9 0m9 3-8 6m14-12 8-6m-8 9h9m-9 3 8 6" class="light"/>',
+  silk:'<path d="M5 3h24l-6 28h-12Z"/><path d="M9 7h16M10 13h14M11 19h12M12 25h10" class="light"/>',
+  heresy:'<circle cx="17" cy="17" r="14"/><path d="M17 5v24M5 17h24M9 9l16 16M25 9 9 25" class="light"/>',
+  parallel:'<path d="M3 26 10 6l7 20Zm14 0 7-20 7 20Z"/><path d="M7 20h6m8 0h6M10 12v6m14-6v6" class="light"/>',
+  ascension:'<path d="M17 2 29 10l-4 16-8 6-8-6-4-16Z"/><path d="M17 8v18m-7-12 7 4 7-4M12 24l5-4 5 4" class="light"/>',
+ },
  denji:{
   teeth:'<path d="m3 25 4-9L25 3l6 4-3 7L10 29Z"/><path d="m8 23 19-15M9 12l3 2m3-6 3 2m3-6 3 2M3 25l6 6" class="light"/>',
   heartbeat:'<path d="m17 31-12-9V9q5-8 12-1 7-7 12 1v13Z"/><path d="m7 18 5-1 3 5 4-12 3 7h5" class="light"/>',
@@ -199,7 +213,7 @@ const MOTIFS={
  path:'<path d="M4 29h8V19h10V9h8V3"/><path d="m24 5 6-2 2 6M7 26l3 3-3 3" class="light"/>',
 };
 const effectMotif={revGain:'energy',struggleGain:'energy',requipCooldown:'timepiece',erzaSwordCount:'bolts',hp:'heal',regen:'herbs',healing:'herbs',shield:'atfield',coinGain:'chest',masteryGain:'grimoire',rerolls:'scroll',vanishes:'void',magnet:'magnet',move:'headband',damage:'power',signatureDamage:'power',signatureCooldown:'timepiece',ultimateCooldown:'timepiece',ultimateDamage:'energy',ultimateDuration:'duration',ultimateArea:'area',signatureArea:'area',projectiles:'bolts',summonDuration:'duration',cloneCount:'clone',rageGain:'energy',rageDuration:'duration',predationGain:'void',fateGain:'timepiece',authorityGain:'memoryfragment',titanResistance:'atfield',poisonDuration:'herbs',startRank:'path'};
-const treeSeals={denji:'<path d="m1 10 8-9 4 3-8 9Zm1-4 2 2m2-6 2 2m2-3 2 2"/>',guts:'<path d="m7 0-3 4 3 3-3 4 3 3m0-14 3 4-3 3 3 4-3 3"/>',erza:'<path d="m1 13 1-4L10 0h3v3L5 12Zm0-5 5 5M0 14l3-3"/>',general:'<path d="m1 7 6-6 6 6-6 6Z"/>',goku:'<path d="m1 11 2-9 3 5 2-7 4 11Z"/>',gojo:'<path d="M1 7Q7-1 13 7 7 15 1 7Z"/>',naruto:'<path d="M2 8a5 5 0 1 1 5 5H1m6-9q5 0 4 4T6 9"/>',madoka:'<path d="m7 0 2 5 5 2-5 2-2 5-2-5-5-2 5-2Z"/>',maomao:'<path d="M3 1h7v3L9 5v3l4 5H1l4-5V5L3 4Z"/>',shinji:'<path d="m1 2 4-2 2 7 2-7 4 2-1 11H2Z"/>',esdeath:'<path d="M7 0v14M1 3l12 8M1 11l12-8"/>',kurumi:'<circle cx="7" cy="7" r="6"/><path d="M7 3v4l4 2" class="light"/>',frieren:'<path d="m1 12 10-11 3 3L4 14ZM7 1h6v6"/>',samus:'<path d="M1 3h7v8H1Zm7 2h6v4H8Z"/>',megumi:'<path d="m0 2 5 4 2-6 2 6 5-4-3 10H3Z"/>',eren:'<path d="m1 0 11 10-2 2L0 2Zm12 0L2 10l2 2L14 2Z"/>',yuki:'<circle cx="7" cy="7" r="5"/><ellipse cx="7" cy="7" rx="7" ry="2" class="light"/>',diavolo:'<path d="m7 0 7 4-2 8-5 2-5-2L0 4Z"/><path d="m3 7 3 3 5-6" class="light"/>',rimuru:'<path d="M0 9Q1-1 7 1q7 0 7 8 0 5-7 5T0 9Z"/>',featherine:'<path d="M3 0Q-2 7 3 14l2-2Q1 7 6 2Zm8 0q5 7 0 14l-2-2q4-5-1-10Z"/>'};
+const treeSeals={shiraori:'<path d="M7 1v12M1 7h12M3 3l8 8m0-8-8 8"/>',denji:'<path d="m1 10 8-9 4 3-8 9Zm1-4 2 2m2-6 2 2m2-3 2 2"/>',guts:'<path d="m7 0-3 4 3 3-3 4 3 3m0-14 3 4-3 3 3 4-3 3"/>',erza:'<path d="m1 13 1-4L10 0h3v3L5 12Zm0-5 5 5M0 14l3-3"/>',general:'<path d="m1 7 6-6 6 6-6 6Z"/>',goku:'<path d="m1 11 2-9 3 5 2-7 4 11Z"/>',gojo:'<path d="M1 7Q7-1 13 7 7 15 1 7Z"/>',naruto:'<path d="M2 8a5 5 0 1 1 5 5H1m6-9q5 0 4 4T6 9"/>',madoka:'<path d="m7 0 2 5 5 2-5 2-2 5-2-5-5-2 5-2Z"/>',maomao:'<path d="M3 1h7v3L9 5v3l4 5H1l4-5V5L3 4Z"/>',shinji:'<path d="m1 2 4-2 2 7 2-7 4 2-1 11H2Z"/>',esdeath:'<path d="M7 0v14M1 3l12 8M1 11l12-8"/>',kurumi:'<circle cx="7" cy="7" r="6"/><path d="M7 3v4l4 2" class="light"/>',frieren:'<path d="m1 12 10-11 3 3L4 14ZM7 1h6v6"/>',samus:'<path d="M1 3h7v8H1Zm7 2h6v4H8Z"/>',megumi:'<path d="m0 2 5 4 2-6 2 6 5-4-3 10H3Z"/>',eren:'<path d="m1 0 11 10-2 2L0 2Zm12 0L2 10l2 2L14 2Z"/>',yuki:'<circle cx="7" cy="7" r="5"/><ellipse cx="7" cy="7" rx="7" ry="2" class="light"/>',diavolo:'<path d="m7 0 7 4-2 8-5 2-5-2L0 4Z"/><path d="m3 7 3 3 5-6" class="light"/>',rimuru:'<path d="M0 9Q1-1 7 1q7 0 7 8 0 5-7 5T0 9Z"/>',featherine:'<path d="M3 0Q-2 7 3 14l2-2Q1 7 6 2Zm8 0q5 7 0 14l-2-2q4-5-1-10Z"/>'};
 for(const [tree,nodes]of Object.entries({general:GENERAL_TREE,...CHARACTER_TREES})){
  SKILL_ART[tree]??={};
  for(const [index,n]of nodes.entries())if(!SKILL_ART[tree][n.id]){
@@ -208,7 +222,7 @@ for(const [tree,nodes]of Object.entries({general:GENERAL_TREE,...CHARACTER_TREES
   SKILL_ART[tree][n.id]=`<g transform="translate(1 0) scale(.84)">${art}</g><g transform="translate(23 23) scale(.68)">${treeSeals[tree]||treeSeals.general}</g><path d="M${2+rune} 31h${cut}m${cut+2} 0h2" class="light"/>`;
  }
 }
-const COLORS={denji:['#d8915c','#f0e3b8'],guts:['#8a929d','#efb8a0'],erza:['#a9bac6','#f4d296'],featherine:['#a47bc4','#f2dcb2'],rimuru:['#6faecb','#f0dc9d'],diavolo:['#c1769a','#e7d9a0'],yuki:['#cc927c','#b8e2b9'],eren:['#5caa88','#ffe0a5'],megumi:['#8499d5','#e3efb6'],frieren:['#7bc7ab','#fff0b5'],samus:['#db9c5b','#c9edd0'],general:['#b390ec','#ffe3a0'],goku:['#e29a54','#fff0b2'],gojo:['#9f8ddd','#c4eeff'],naruto:['#62b995','#ffdf9a'],madoka:['#d98db8','#fff0d7'],maomao:['#80c69a','#f3e79b'],shinji:['#9b80c8','#d3ed9a'],esdeath:['#77afcf','#e2f9f8'],kurumi:['#ba6a85','#f5d29a']};
+const COLORS={shiraori:['#b8a8d4','#f4e6f8'],denji:['#d8915c','#f0e3b8'],guts:['#8a929d','#efb8a0'],erza:['#a9bac6','#f4d296'],featherine:['#a47bc4','#f2dcb2'],rimuru:['#6faecb','#f0dc9d'],diavolo:['#c1769a','#e7d9a0'],yuki:['#cc927c','#b8e2b9'],eren:['#5caa88','#ffe0a5'],megumi:['#8499d5','#e3efb6'],frieren:['#7bc7ab','#fff0b5'],samus:['#db9c5b','#c9edd0'],general:['#b390ec','#ffe3a0'],goku:['#e29a54','#fff0b2'],gojo:['#9f8ddd','#c4eeff'],naruto:['#62b995','#ffdf9a'],madoka:['#d98db8','#fff0d7'],maomao:['#80c69a','#f3e79b'],shinji:['#9b80c8','#d3ed9a'],esdeath:['#77afcf','#e2f9f8'],kurumi:['#ba6a85','#f5d29a']};
 export function skillIcon(scope,node,character){
  const tree=scope==='general'?'general':character,art=SKILL_ART[tree]?.[node.id];if(!art)return '';
  const [a,b]=COLORS[tree];return `<svg class="item-icon skill-icon" data-skill-art="${tree}:${node.id}" viewBox="0 0 34 34" fill="${a}" stroke="#25263b" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">${art.replaceAll('class="light"',`fill="${b}"`)}</svg>`;

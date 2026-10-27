@@ -12,6 +12,7 @@ import {NEW_ANIME_MAPS} from './anime-maps.js';
 import {syncErenProgress} from './eren-progress.js';
 import {signatureWeaponIds,signaturePassiveIds} from './hardcore.js';
 import {ERZA_CHARACTER,ERZA_ITEMS,ERZA_FUSIONS} from './erza-data.js';
+import {SHIRAORI_CHARACTER,SHIRAORI_ITEMS,SHIRAORI_FUSIONS} from './shiraori-data.js';
 export const CHARACTERS = [
   
   { id:'goku', name:'Goku', title:'THE SAIYAN', series:'DRAGON BALL', color:'#ffb35c', weapon:'ki', passive:'senzu', skill:'Spirit bomb', description:'Turn your fighting spirit into a piercing wave of ki. Recover with Senzu Beans and ascend beyond your limits.', power:5, speed:3, range:5, hp:120, move:215 },
@@ -33,6 +34,7 @@ export const CHARACTERS = [
  ERZA_CHARACTER,
  GUTS_CHARACTER,
  DENJI_CHARACTER,
+ SHIRAORI_CHARACTER,
 ];
 export const ITEMS = {
  ...COMPLEX_ITEMS,
@@ -41,6 +43,7 @@ export const ITEMS = {
  ...PAIRED_ITEMS,
  ...GUTS_ITEMS,
  ...DENJI_ITEMS,
+ ...SHIRAORI_ITEMS,
  ...ERZA_ITEMS,
  quill:{name:'Author’s Quill',type:'weapon',color:'#baa2da',owner:'Featherine',max:5,description:'Write homing ink quills that pierce and curse enemies. Ranks add quills and piercing. Featherine’s full Narrative Authority turns the next volley into an empowered Red Truth.',scaling:'+ quills, damage and piercing'},
  memoryfragment:{name:'Memory Fragment',type:'passive',color:'#b9cba0',owner:'Featherine',max:3,description:'+5% weapon damage and +5% weapon area per rank. Featherine gains 10% more Narrative Authority per rank.',scaling:'+ damage, area and Authority gain'},
@@ -92,6 +95,7 @@ export const FUSIONS = [
  ...PAIRED_FUSIONS,
  ...GUTS_FUSIONS,
  ...DENJI_FUSIONS,
+ ...SHIRAORI_FUSIONS,
  ...ERZA_FUSIONS,
  {id:'chimeragarden',name:'Chimera Shadow Garden',weapon:'shadows',weapon2:'nue',passive:'talisman',color:'#a3b9df',description:'Divine Dogs + Nue + Shadow Talisman → unite Totality dogs and chain-lightning Nue inside a lingering shadow garden. Its pulses curse, slow and pull enemies. Consumes Nue and frees one weapon slot.'},
  {id:'rasenflash',name:'Flying Raijin: Rasen Flash',weapon:'shuriken',weapon2:'kunai',passive:'scroll',color:'#c7efd0',description:'Wind Shuriken + Flying Kunai + Sage Scroll → marked kunai flash between nearby enemies, releasing stunning, bleeding wind explosions at every jump. Consumes Flying Kunai and frees one weapon slot.'},
@@ -186,12 +190,12 @@ export function refreshStats(p) {
   const set=setBonus(p);
   p.maxHp=p.baseHp+rank('automail')*6+rank('gumgumfruit')*8+rank('checkeredhaori')*5+rank('senzu')*15+rank('energytank')*18+rank('freedom')*10+rank('masscore')*10+rank('brand')*12+rank('bloodengine')*10+rank('variasuit')*5+(m.hp||0);
   p.regen=1+rank('senzu')*1.5+rank('herbs')*.6+rank('freedom')*.3+rank('bluegem')*.35+rank('toadoil')*.2+rank('redstone')*.25+rank('vivrecard')*.3+set.regen+(m.regen||0)+(panacea?1:0);p.healing=1+rank('herbs')*.15+rank('toadoil')*.05+rank('vivrecard')*.05+(m.healing||0)+(panacea?.25:0)+(purified?.2:0);
-  p.cooldown=1-rank('eyes')*.08-rank('timepiece')*.06-rank('griefseed')*.03-rank('purplegem')*.03-rank('sagebeads')*.02-rank('witchring')*.02-rank('alchemistwatch')*.02-rank('nichirintsuba')*.02-set.cooldown-(codex?.06:0);
+  p.cooldown=1-rank('eyes')*.08-rank('parallelminds')*.03-rank('timepiece')*.06-rank('griefseed')*.03-rank('purplegem')*.03-rank('sagebeads')*.02-rank('witchring')*.02-rank('alchemistwatch')*.02-rank('nichirintsuba')*.02-set.cooldown-(codex?.06:0);
   p.move=CHARACTERS.find(c=>c.id===p.id).move*(1+rank('headband')*.1+rank('morphball')*.03+rank('strawhat')*.04+rank('foxmask')*.03+set.move+(m.move||0));
   p.dodge=rank('headband')*.05+rank('epitaph')*.04+rank('purplegem')*.015+rank('morphball')*.01+rank('logpose')*.01+rank('foxmask')*.015+set.dodge;
   p.magnet=115*(1+rank('magnet')*.45+rank('greatsage')*.06+rank('griefseed')*.05+rank('sagebeads')*.03+rank('gravitysuit')*.05+rank('goldenbutterfly')*.05+rank('alchemistwatch')*.03+rank('logpose')*.06+set.magnet+(m.magnet||0));
   p.area=1+rank('scroll')*.15+rank('demonextract')*.06+rank('grimoire')*.08+rank('memoryfragment')*.05+rank('manacrystal')*.04+rank('yellowgem')*.05+rank('witchring')*.03+rank('transmutation')*.04+rank('nichirintsuba')*.03+set.area;p.freezeResistance=Math.min(.9,rank('demonextract')*.25+rank('gravitysuit')*.1);
-  p.damage=(1+rank('power')*.12+rank('soulgem')*.06+rank('demonextract')*.04+rank('grimoire')*.05+rank('talisman')*.05+rank('masscore')*.06+rank('epitaph')*.06+rank('greatsage')*.05+rank('memoryfragment')*.05+rank('heartkreuz')*.04+rank('bloodengine')*.04+rank('manacrystal')*.03+rank('redgem')*.04+rank('sagecloak')*.03+rank('truthseal')*.04+rank('transmutation')*.02+rank('redstone')*.03+rank('strawhat')*.03+rank('hanafuda')*.04+set.damage)*(1+(m.damage||0));
+  p.damage=(1+rank('power')*.12+rank('soulgem')*.06+rank('demonextract')*.04+rank('grimoire')*.05+rank('talisman')*.05+rank('masscore')*.06+rank('epitaph')*.06+rank('greatsage')*.05+rank('memoryfragment')*.05+rank('heartkreuz')*.04+rank('bloodengine')*.04+rank('manacrystal')*.03+rank('redgem')*.04+rank('sagecloak')*.03+rank('truthseal')*.04+rank('transmutation')*.02+rank('redstone')*.03+rank('strawhat')*.03+rank('hanafuda')*.04+rank('parallelminds')*.04+set.damage)*(1+(m.damage||0));
   p.maxShield=(p.id==='eren'&&p.erenForm==='titan'?45:0)+rank('soulgem')*10+rank('atfield')*11+rank('heartkreuz')*7+(m.shield||0)+(barrier?20:0);p.damageReduction=rank('atfield')*.04+rank('energytank')*.035+rank('brand')*.03+rank('sagecloak')*.02+rank('variasuit')*.02+rank('automail')*.02+rank('gumgumfruit')*.02+rank('checkeredhaori')*.02;p.shieldRecharge=barrier?7:rank('atfield')?9:p.id==='eren'&&p.erenForm==='titan'?8:10;
   if(purified)p.shieldRecharge=Math.min(p.shieldRecharge,8);
   // Ascent pacts and events: lasting multipliers (regeneration adds) for the run.

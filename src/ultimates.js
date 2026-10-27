@@ -7,6 +7,7 @@ import {prepareYukiUltimate,updateYukiUltimate,YUKI_CHARGE_SECONDS,YUKI_ACTIVE_S
 import {FEATHERINE_ULTIMATE,startFeatherineUltimate,updateFeatherineUltimate} from './featherine.js';
 import {FRIEREN_GOLEM_DURATION,startFrierenGolem,updateFrierenGolem} from './frieren-golem.js';
 import {crimsonStrike} from './diavolo.js';
+import {SHIRAORI_ULTIMATE,startShiraoriUltimate} from './shiraori.js';
 import {toggleErenForm} from './eren.js';
 import {nearbyCompanionTargets,recallCompanion,companionLeash} from './companion-ai.js';
 import {summonMahoraga} from './summons.js';
@@ -20,6 +21,7 @@ export const ULTIMATES={
  guts:GUTS_ULTIMATE,
  erza:ERZA_ULTIMATE,
  featherine:FEATHERINE_ULTIMATE,
+ shiraori:SHIRAORI_ULTIMATE,
  rimuru:{name:'Gluttony',duration:5,color:'#acddeb',description:'Become a slime and pull nearby enemies into a devouring field. Repeated damage executes weakened ordinary enemies below 20% HP. Absorb nearby hostile shots for essence and restore up to 30 HP by consuming enemies. Bosses resist the pull and cannot be executed.'},
  diavolo:{name:'King Crimson: Time Erasure',duration:5,color:'#e5a1b5',description:'Erase five seconds: become immune to damage and move 20% faster while enemies continue their actions. Automatic weapon casts pause. Time returns with a broad King Crimson finishing barrage at your new position.'},
  yuki:{name:'Maximum: Black Hole',duration:YUKI_CHARGE_SECONDS+YUKI_ACTIVE_SECONDS,color:'#efc49c',description:'Compress virtual mass for two seconds, then release a five-second black hole with a brilliant accretion rim. The fixed singularity pulls nearby enemies, crushes them repeatedly and consumes hostile shots before a final mass collapse. Bosses resist its pull. Immediately fills Star Rage.'},
@@ -51,6 +53,7 @@ export function startUltimate(g){
     let target=null;for(const e of g.enemies)if(e.hp>0&&(!target||Math.hypot(e.x-p.x,e.y-p.y)<Math.hypot(target.x-p.x,target.y-p.y)))target=e;
     const dx=target?target.x-p.x:p.facing*250,dy=target?target.y-p.y:0,d=Math.hypot(dx,dy)||1,length=Math.min(380,Math.max(140,d));g.ultimate.tx=p.x+dx/d*length;g.ultimate.ty=p.y+dy/d*length;
   }else if(p.id==='megumi'){p.pose='summon';summonMahoraga(g);}
+  else if(p.id==='shiraori'){startShiraoriUltimate(g);}
   else if(p.id==='frieren'){startFrierenGolem(g);}
   else if(p.id==='samus'){p.pose='bomb';clearStatuses(p);}
   else if(p.id==='kurumi'){p.pose='clock';g.ultimate.shadows=Array.from({length:3},(_,i)=>({id:-100-i,x:p.x+Math.cos(i*TAU/3-Math.PI/2)*95,y:p.y+Math.sin(i*TAU/3-Math.PI/2)*95,aimAngle:0,attackTimer:0}));}

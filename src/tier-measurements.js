@@ -399,6 +399,27 @@ export const TIER_MEASUREMENTS={
      "66%"
     ]
    ]
+  },
+  "shiraori": {
+   "label": "6 BOT RUNS · 10 MIN · CLOSE RANGE",
+   "stats": [
+    [
+     "Damage / sec",
+     "837"
+    ],
+    [
+     "Kills",
+     "625"
+    ],
+    [
+     "Level reached",
+     "22"
+    ],
+    [
+     "HP pool lost / min",
+     "334%"
+    ]
+   ]
   }
  },
  "weapons": {
@@ -1543,6 +1564,48 @@ export const TIER_MEASUREMENTS={
      "76"
     ]
    ]
+  },
+  "spiderbrood": {
+   "label": "SOLO AT MAX RANK · CLOSE RANGE",
+   "stats": [
+    [
+     "Damage / sec",
+     "56"
+    ],
+    [
+     "vs. median weapon",
+     "-28%"
+    ],
+    [
+     "Kills (3 min)",
+     "76"
+    ],
+    [
+     "On Shiraori",
+     "63 / sec"
+    ]
+   ]
+  },
+  "archtaratect": {
+   "label": "SOLO AT MAX RANK · CLOSE RANGE",
+   "stats": [
+    [
+     "Damage / sec",
+     "105"
+    ],
+    [
+     "vs. median weapon",
+     "+37%"
+    ],
+    [
+     "Kills (3 min)",
+     "125"
+    ],
+    [
+     "On Shiraori",
+     "77 / sec"
+    ]
+   ]
   }
  },
  "passives": {
@@ -2028,6 +2091,23 @@ export const TIER_MEASUREMENTS={
     [
      "Effective HP",
      "+14%"
+    ]
+   ]
+  },
+  "parallelminds": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+23%"
+    ],
+    [
+     "Effective HP",
+     "+0%"
+    ],
+    [
+     "Ultimate uptime",
+     "+10%"
     ]
    ]
   },

@@ -49,6 +49,11 @@ export const CHARACTER_RANKINGS={
   comparison:'He is the strongest B hero: his damage beats the A brawlers, but he lacks Diavolo’s negation or Titan Eren’s resistance.',
   caution:'He moves slowly and must stand in the crowd to hit, so ranged enemies punish him.',
   bestWith:'Brand of Sacrifice for Astral Edge, defensive passives, and Berserker Armor saved for dense packs.'}),
+ shiraori:entry('A',{
+  reason:'Shiraori fights through a swarm: Spider Brood hatches spiderlings that chase the nearest enemies and poison every bite, and Parallel Minds adds one more per rank.',
+  comparison:'She deals the most damage in the roster when fighting up close, but she also takes the most damage, so her composite lands in A rather than S.',
+  caution:'Her spiders spread their bites across many targets, so single bosses melt slower than crowds, and she has no defensive mechanic of her own.',
+  bestWith:'Parallel Minds early for extra spiderlings, Arch Taratect Brood as soon as both are maxed, and a defensive passive or two.'}),
  megumi:entry('B',{
   reason:'Megumi deals the second-highest damage in the roster: Divine Dogs and Nue fight independently and evolve into stronger summons.',
   comparison:'His clear speed is S-level, but he loses HP faster than most heroes, which pulls his composite into B.',
@@ -134,6 +139,11 @@ export const ULTIMATE_RANKINGS={
   comparison:'Its damage on a packed crowd rivals the S domains and it fills Star Rage instantly. The charge-up and boss resistance keep it just below them.',
   caution:'It compresses for two seconds before the hole opens, leaving you exposed, and bosses resist its pull.',
   bestWith:'Start the charge before the crowd reaches you, then fight inside Maximum Mass while the hole keeps feeding Garuda targets.'}),
+ shiraori:entry('A',{
+  reason:'The Queen Taratect fights beside Shiraori for ten seconds, stomping every enemy around it, poisoning and slowing them, and arriving with a fresh brood of spiderlings.',
+  comparison:'Strong, reliable area control around the hero that also refills the brood, though it lasts a fixed time instead of staying until defeated like Mahoraga.',
+  caution:'The Queen stays close to Shiraori, so it does little against enemies attacking from range, and it does not block shots.',
+  bestWith:'Call it when a crowd closes in or a boss arrives, and pair it with mastery that extends its duration and damage.'}),
  megumi:entry('A',{
   reason:'Mahoraga stays until defeated, slashes nearby enemies, intercepts shots and adapts to grow stronger and tougher.',
   comparison:'A persistent bodyguard keeps working long after the button press, which is excellent value per cooldown. It is less of an instant rescue than a domain.',
@@ -375,6 +385,16 @@ export const WEAPON_RANKINGS={
   comparison:'About median damage with freezes, and the root of the S-tier Ice Cavalry.',
   caution:'Bosses resist repeated immobilization.',
   bestWith:'Demon’s Extract for Ice Cavalry.'}),
+ spiderbrood:entry('B',{
+  reason:'Spider Brood hatches two to four spiderlings that skitter to the nearest enemies and bite them with poison.',
+  comparison:'Close to the median signature weapon on its own; on Shiraori it grows with Parallel Minds and leads to the A-tier Arch Taratect Brood.',
+  caution:'The spiders choose their own targets, so damage is spread across the crowd; on other heroes it lacks Parallel Minds’ extra spiderlings.',
+  bestWith:'Shiraori with Parallel Minds, toward the Arch Taratect Brood.'}),
+ archtaratect:entry('A',{
+  reason:'Arch Taratect Brood turns every spiderling into a larger hunter whose bites spread poison to nearby enemies and web them in place.',
+  comparison:'Its splash poison and webs make it one of the strongest crowd evolutions, well ahead of Ten Shadows: Totality.',
+  caution:'Its spreading poison shines in crowds; against a lone boss it is a plain summon with stronger bites.',
+  bestWith:'Shiraori, with Parallel Minds maxed for the largest brood.'}),
  totality:entry('B',{
   reason:'Ten Shadows: Totality empowers the Divine Dogs with stronger bleeding bites.',
   comparison:'Better than the base dogs, but the three-ingredient Chimera Shadow Garden is far stronger.',
@@ -766,6 +786,11 @@ export const PASSIVE_RANKINGS={
   comparison:'Modest alone; its value is fusing into Sage’s Codex.',
   caution:'Weak as a stand-alone slot.',
   bestWith:'Fuse it with Ancient Grimoire.'}),
+ parallelminds:entry('A',{
+  reason:'Parallel Minds adds 12% weapon damage and cuts cooldowns by 9%; on Shiraori it also hatches three more spiderlings.',
+  comparison:'About as valuable as Blood Engine or Epitaph for one slot, and better on Shiraori, whose brood grows with every rank.',
+  caution:'Its extra spiderlings are exclusive to Shiraori; on other heroes it is a modest damage and cooldown passive.',
+  bestWith:'Shiraori, where it evolves Spider Brood into the Arch Taratect Brood.'}),
  talisman:entry('B',{
   reason:'Shadow Talisman adds 15% damage and 36% summon duration.',
   comparison:'Summon duration matters a lot for Megumi and little for others.',

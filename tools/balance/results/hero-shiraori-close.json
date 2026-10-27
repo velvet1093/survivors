@@ -1,0 +1,94 @@
+[
+ {
+  "id": "shiraori",
+  "style": "close",
+  "dps": 837,
+  "kills": 625,
+  "level": 21.5,
+  "lateTakenPerMin": 736.7,
+  "ehp": 132,
+  "regenPerMin": 60,
+  "pressure": 3.3440000000000003,
+  "fusions": 1,
+  "rows": [
+   {
+    "dealt": 402026,
+    "kills": 580,
+    "level": 21,
+    "takenPerMin": 466.5,
+    "lateTakenPerMin": 801.4,
+    "ehp": 131,
+    "regenPerMin": 60,
+    "pressure": 4.202,
+    "bossShare": 0.38,
+    "ults": 8,
+    "fusions": 0
+   },
+   {
+    "dealt": 797790,
+    "kills": 866,
+    "level": 23,
+    "takenPerMin": 464.6,
+    "lateTakenPerMin": 727,
+    "ehp": 150,
+    "regenPerMin": 60,
+    "pressure": 3.467,
+    "bossShare": 0.34,
+    "ults": 9,
+    "fusions": 2
+   },
+   {
+    "dealt": 301051,
+    "kills": 368,
+    "level": 19,
+    "takenPerMin": 499.9,
+    "lateTakenPerMin": 797.3,
+    "ehp": 100,
+    "regenPerMin": 60,
+    "pressure": 4.983,
+    "bossShare": 0.32,
+    "ults": 5,
+    "fusions": 1
+   },
+   {
+    "dealt": 616154,
+    "kills": 834,
+    "level": 23,
+    "takenPerMin": 422.8,
+    "lateTakenPerMin": 722.6,
+    "ehp": 164,
+    "regenPerMin": 60,
+    "pressure": 3.221,
+    "bossShare": 0.34,
+    "ults": 8,
+    "fusions": 2
+   },
+   {
+    "dealt": 602337,
+    "kills": 670,
+    "level": 22,
+    "takenPerMin": 343.9,
+    "lateTakenPerMin": 575.4,
+    "ehp": 133,
+    "regenPerMin": 60,
+    "pressure": 2.982,
+    "bossShare": 0.37,
+    "ults": 9,
+    "fusions": 1
+   },
+   {
+    "dealt": 306626,
+    "kills": 555,
+    "level": 20,
+    "takenPerMin": 476.4,
+    "lateTakenPerMin": 746.4,
+    "ehp": 125,
+    "regenPerMin": 207.6,
+    "pressure": 2.247,
+    "bossShare": 0.46,
+    "ults": 8,
+    "fusions": 0
+   }
+  ]
+ }
+]

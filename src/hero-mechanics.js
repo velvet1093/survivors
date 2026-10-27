@@ -22,6 +22,7 @@ export const HERO_MECHANICS={
  madoka:{name:'Threads of Hope',color:'#f3b8d5',max:100,description:'Collect 40 in-run XP to fill hope. The next bow volley adds three arrows, restores 5 HP and repairs up to 8 shield.'},
  maomao:{name:'Precise Dose',color:'#a8db94',max:100,description:'Poison-circle hits build toxicology. At 100, the next vial has 40% more area, 30% more damage and heals 6 HP.'},
  esdeath:{name:'Frost Dominion',color:'#aedff4',max:100,description:'Freezing enemies builds dominion. At 100, gain six seconds of ice armor: +25% damage and 25% damage resistance.'},
+ shiraori:{name:'Egg Sac',color:'#e2d6ea',max:100,description:'Each spiderling bite adds 3 to the Egg Sac; ordinary kills add 5, elites 10 and bosses 20. Parallel Minds increases gain by 10% per rank. At 100, the next Spider Brood hatches three extra spiderlings with 30% more bite damage and 25% longer lives.'},
  kurumi:{name:'Stolen Seconds',color:'#e8bb86',max:10,description:'Kills bank up to ten seconds. Your next ultimate spends them to reduce its cooldown and extend its domain by 0.15 seconds per second spent.'},
 };
 export const SAIYAN_STAGES=[{name:'Base',at:0,color:'#ffc16c'},{name:'Super Saiyan',at:60,color:'#f4d274'},{name:'Super Saiyan 2',at:150,color:'#fff0aa'},{name:'Super Saiyan 3',at:300,color:'#f2c563'},{name:'Super Saiyan Blue',at:480,color:'#75d9ed'}];
@@ -46,12 +47,13 @@ export function heroMoveBonus(g){const m=g.mechanic;if(m?.id==='denji'&&g.ultima
 export function heroResistance(g){const m=g.mechanic;if(m?.id==='denji'&&g.ultimate?.type==='denji')return .8;if(m?.id==='guts'&&g.ultimate?.type==='guts')return .75;if(m?.id==='erza')return erzaForm(g).resistance;if(m?.id==='rimuru')return 1-(m.stage||0)*.02;if(m?.id==='eren'&&g.p.erenForm==='titan')return Math.max(.45,.65-(g.p.meta.titanResistance||0));return m?.active>0?(m.id==='yuki'?.8:m.id==='shinji'?.8:m.id==='esdeath'?.75:1):1;}
 export function blockHeroHit(g){const m=g.mechanic;if(m?.id==='diavolo'&&m.value>=m.max){m.value=0;m.counter=3;g.invuln=Math.max(g.invuln,.8);announce(g,'EPITAPH · FATE AVOIDED / COUNTER READY','#edb4c1');return true;}if(m?.id!=='gojo'||m.value<m.max)return false;m.value=0;g.invuln=Math.max(g.invuln,.3);announce(g,'INFINITY · HIT NEGATED','#c5b7fa');return true;}
 export function heroHurt(g,amount){if(g.mechanic?.id==='guts')gainStruggle(g,Math.min(20,amount*.6));if(g.mechanic?.id==='shinji'&&!g.mechanic.active)gain(g,Math.min(40,amount*1.4));}
-export function heroKill(g,e){const m=g.mechanic;if(m.id==='denji')gainRev(g,e.boss?24:e.elite?12:6);else if(m.id==='guts')gainStruggle(g,e.boss?24:e.elite?12:6);else if(m.id==='featherine')heroAuthorityHit(g,e.boss?24:e.elite?12:6);else if(m.id==='rimuru')heroPredation(g,e.boss?50:e.elite?25:10);else if(m.id==='diavolo')heroFateHit(g,8);else if(m.id==='yuki')heroMassHit(g,5);else if(m.id==='shinji'&&!m.active)gain(g,4);else if(m.id==='naruto')gain(g,10);else if(m.id==='kurumi')gain(g,e.boss?4:e.elite?2:.5);else if(m.id==='megumi')gain(g,5);else if(m.id==='frieren')gain(g,4);else if(m.id==='samus')gain(g,8);}
+export function heroKill(g,e){const m=g.mechanic;if(m.id==='denji')gainRev(g,e.boss?24:e.elite?12:6);else if(m.id==='guts')gainStruggle(g,e.boss?24:e.elite?12:6);else if(m.id==='featherine')heroAuthorityHit(g,e.boss?24:e.elite?12:6);else if(m.id==='rimuru')heroPredation(g,e.boss?50:e.elite?25:10);else if(m.id==='diavolo')heroFateHit(g,8);else if(m.id==='yuki')heroMassHit(g,5);else if(m.id==='shinji'&&!m.active)gain(g,4);else if(m.id==='naruto')gain(g,10);else if(m.id==='kurumi')gain(g,e.boss?4:e.elite?2:.5);else if(m.id==='megumi')gain(g,5);else if(m.id==='shiraori')heroSpiderBite(g,e.boss?20:e.elite?10:5);else if(m.id==='frieren')gain(g,4);else if(m.id==='samus')gain(g,8);}
 export function heroXp(g,amount){if(g.mechanic.id==='madoka')gain(g,amount*2.5);}
 export function heroPredation(g,amount){const m=g.mechanic;if(m?.id!=='rimuru'||m.stage>=5)return;if(!(amount>0))return;m.value+=amount*(1+(g.p.passives.greatsage||0)*.1+(g.p.meta.predationGain||0));while(m.value>=100&&m.stage<5){m.value-=100;m.stage++;announce(g,'PREDATION · ADAPTATION '+m.stage+' / 5','#a8d9e8');}if(m.stage>=5)m.value=100;}
 export function heroFateHit(g,amount=18){if(g.mechanic?.id==='diavolo')gain(g,amount*(1+(g.p.passives.epitaph||0)*.1+(g.p.meta.fateGain||0)));}
 export function heroAuthorityHit(g,amount=8){if(g.mechanic?.id==='featherine'&&amount>0)gain(g,amount*(1+effectivePassiveRank(g.p,'memoryfragment')*.1+(g.p.meta.authorityGain||0)));}
 export function heroMassHit(g,amount=12){if(g.mechanic?.id==='yuki'&&!g.mechanic.active)gain(g,amount*(1+(g.p.passives.masscore||0)*.1+(g.p.meta.rageGain||0)));}
+export function heroSpiderBite(g,amount=3){if(g.mechanic?.id==='shiraori'&&amount>0)gain(g,amount*(1+effectivePassiveRank(g.p,'parallelminds')*.1+(g.p.meta.broodGain||0)));}
 export function heroToxin(g){if(g.mechanic.id==='maomao')gain(g,4);}
 export function heroFreeze(g){if(g.mechanic.id==='esdeath'&&!g.mechanic.active)gain(g,5);}
 export function consumeHeroCast(g,id,target){
@@ -62,6 +64,7 @@ export function consumeHeroCast(g,id,target){
  else if(m.id==='madoka'&&id==='rosebow'){b.projectiles=3;g.p.hp=Math.min(g.p.maxHp,g.p.hp+5);g.p.shield=Math.min(g.p.maxShield,g.p.shield+8);}
  else if(m.id==='maomao'&&id==='poison'){b.area=1.4;b.damage=1.3;g.p.hp=Math.min(g.p.maxHp,g.p.hp+6);}
  else if(m.id==='megumi'&&['shadows','nue'].includes(id)){b.damage=1.4;b.duration=1.25;}
+ else if(m.id==='shiraori'&&id==='spiderbrood'){b.damage=1.3;b.duration=1.25;b.projectiles=3;}
  else if(m.id==='frieren'&&id==='zoltraak'){b.damage=1.5;b.area=1.2;}
  else if(m.id==='samus'&&id==='powerbeam'){b.damage=1.8;b.pierce=2;b.charged=true;}
  else return b;
