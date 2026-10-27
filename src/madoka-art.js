@@ -1,4 +1,5 @@
-import {canvas,motion,selout,mix,head} from './hero-kit.js';
+import {canvas,motion,selout,mix} from './hero-kit.js';
+import {paintFace} from './expressions.js';
 // Madoka Kaname. Shared features: short pink twin tails tied with red ribbons, round
 // pink eyes, a soft blush and a small smile.
 //  Magical Girl: big red bows, white puffed sleeves and gloves, a cream bodice laced in
@@ -14,9 +15,9 @@ import {canvas,motion,selout,mix,head} from './hero-kit.js';
 //  Rosewater Swim Dress: a polka-dot pink swim dress with a flared skirt.
 //  Rosewater Ruffles: a white top and pink bottoms layered in ruffles.
 //  Little Rose Bathrobe: a fluffy pink robe with a bunny-eared hood.
-export const MADOKA_ART={ink:'#3a1a2a',iris:'#f06a9a',irisDark:'#b02a62'};
+export const MADOKA_ART={ink:'#503548',iris:'#ad577e'};
 const c=MADOKA_ART,SK={base:'#ffe2c6',shade:'#ebb9a0',deep:'#cf8d84',light:'#fff2e4'};
-const PINK=['#b0507a','#f090b8','#ffc8dc'],GODDESS=['#c87aa4','#f8b8d4','#ffe8f2'];
+const PINK=['#ae648f','#efa4c1','#ffe0e9'],GODDESS=['#c87aa4','#f8b8d4','#ffe8f2'];
 const LOOKS={
  default:{hair:'tails',ribbon:'big',body:'magical',sleeve:{upper:null,fore:null,puff:true,cuff:'#ffffff'}},
  goddess:{hair:'goddess',body:'goddess',sleeve:{upper:['#d8d0dc','#ffffff','#ffffff'],fore:['#d8d0dc','#ffffff','#ffffff'],cape:true}},
@@ -28,106 +29,55 @@ const LOOKS={
  bathsuit:{hair:'hood',body:'bathrobe',sleeve:{upper:['#d890ac','#f8b8d0','#ffe0ec'],fore:['#d890ac','#f8b8d0','#ffe0ec'],cuff:'#ffffff'}},
 };
 const shift=(pts,y)=>pts.map(([x,yy])=>[x,yy+y]);
-// Big, round, gentle eyes: a soft curved lash, a two-tone iris with a dark pupil and two
-// highlights, thin brows set high and round blush under each eye.
-function madokaEye(r,x,y,{iris,mid,dark,side,blink,hurt,focus}){
- const {rect:R,put,line:Ln}=r,lash='#6a2a44';
- if(blink){Ln(x,y+4,x+4,y+4,lash);put(x+(side<0?-1:5),y+3,lash);put(x+1,y+5,'#e8a898');put(x+3,y+5,'#e8a898');return;}
- if(hurt){Ln(x,y+2,x+4,y+4,lash);Ln(x,y+5,x+4,y+3,lash);return;}
- R(x,y+1,5,5,'#fffaf4');
- R(x+1,y+1,3,5,mid);R(x+1,y+1,3,2,dark);R(x,y+2,1,3,mid);R(x+4,y+2,1,3,mid);R(x+1,y+3,3,2,mix(dark,'#5a0a30',.4));R(x+2,y+3,1,1,'#5a0a30');
- put(x+1,y+2,'#ffffff');put(x+1,y+1,'#ffffff');put(x+3,y+4,'#ffe0ee');put(x+2,y+5,iris);put(x+3,y+5,iris);
- // Upper lash curving down at the outer corner; a faint lower lash.
- Ln(x,y,x+4,y,lash);put(x+(side<0?-1:5),y+1,lash);if(!focus)put(x+(side<0?-1:5),y,lash);else{put(x+(side<0?4:0),y-1,lash);}
- Ln(x+1,y+6,x+3,y+6,'#e8a8a8');
-}
-// ---- Face drafts ----
-const LASH='#4a1430';
-function headShape(r,y,pts){const sh=pts.map(([x,yy])=>[x,yy+y]);r.rect(25,36+y,6,4,SK.shade);r.poly(sh,SK.shade);
- const cx=sh.reduce((t,q)=>t+q[0],0)/sh.length,cy=sh.reduce((t,q)=>t+q[1],0)/sh.length;r.poly(sh.map(([x,yy])=>{const dx=cx-x,dy=cy-yy,l=Math.hypot(dx,dy)||1;return [x+dx/l,yy+dy/l];}),SK.base);}
-// An anime eye that is mostly iris: a thick arched upper lash, a sliver of white at the inner
-// corner, a dark-to-light iris, a small pupil and a large highlight.
-function irisEye(r,x,y,{w,h,col,side,blink,hurt,wing=false,lower=false}){
- const {rect:R,put,line:Ln}=r,inner=side<0?x+w-1:x;
- if(blink){Ln(x,y+h-2,x+w-1,y+h-2,LASH);put(side<0?x-1:x+w,y+h-3,LASH);return;}
- if(hurt){Ln(x,y+1,x+w-1,y+h-2,LASH);Ln(x,y+h-2,x+w-1,y+1,LASH);return;}
- R(x,y+1,w,h-1,col.mid);R(x,y+1,w,Math.ceil((h-1)*.4),col.dark);R(x,y+h-2,w,1,col.iris);R(inner,y+2,1,h-3,'#fff6f6');
- const px=x+Math.floor(w/2)-(side<0?1:0);R(px,y+Math.floor(h/2),2,2,mix(col.dark,'#3a0020',.5));
- R(x+(side<0?0:w-3),y+2,2,2,'#ffffff');put(x+(side<0?w-2:1),y+h-2,'#ffffff');
- // Thick lash arching over the eye, thinning at the inner corner.
- Ln(x,y,x+w-1,y,LASH);Ln(x+(side<0?0:1),y-1,x+w-(side<0?2:1),y-1,LASH);put(side<0?x-1:x+w,y+1,LASH);
- if(wing){put(side<0?x-2:x+w+1,y,LASH);put(side<0?x-1:x+w,y,LASH);}
- if(lower)Ln(x+1,y+h,x+w-2,y+h,mix(LASH,SK.base,.55));
-}
-function brows(r,y,xs,color='#d07898'){for(const [x,side]of xs){r.rect(x,y,3,1,color);r.put(side<0?x-1:x+3,y+1,color);}}
-const FACES={
- // A: round cheeks, huge round irises and an open, happy smile.
- a:{head:[[17,20],[39,20],[40,29],[38,34],[33,38],[23,38],[18,34],[16,29]],fringe:1,lock:6,
-  eyes:(r,m,col)=>{for(const [x,side]of [[19,-1],[32,1]])irisEye(r,x,25+m.y,{w:6,h:7,col,side,blink:m.blink,hurt:m.expression==='hurt'});brows(r,22+m.y,[[20,-1],[34,1]]);},
-  mouth:(r,y)=>{r.rect(26,34+y,5,2,'#b03a50');r.rect(27,35+y,3,1,'#f08898');r.rect(27,34+y,3,1,'#ffffff');},
-  blush:[[18,33],[36,33]]},
- // B: a softer oval with a gently pointed chin, smaller calm eyes and a little cat smile.
- b:{head:[[18,20],[38,20],[38,28],[36,33],[31,37],[28,38],[25,37],[20,33],[18,28]],fringe:2,lock:4,
-  eyes:(r,m,col)=>{for(const [x,side]of [[20,-1],[32,1]])irisEye(r,x,26+m.y,{w:5,h:6,col,side,blink:m.blink,hurt:m.expression==='hurt',lower:true});brows(r,23+m.y,[[21,-1],[33,1]]);},
-  mouth:(r,y)=>{r.put(26,34+y,'#b85a6a');r.put(27,35+y,'#b85a6a');r.put(28,34+y,'#b85a6a');r.put(29,35+y,'#b85a6a');r.put(30,34+y,'#b85a6a');},
-  blush:[[19,32],[34,32]]},
- // C: classic cel style, tall eyes with winged lashes, a tiny nose and a small open smile.
- c:{head:[[17,20],[39,20],[39,30],[36,35],[31,38],[25,38],[20,35],[17,30]],fringe:0,lock:5,
-  eyes:(r,m,col)=>{for(const [x,side]of [[20,-1],[32,1]])irisEye(r,x,24+m.y,{w:5,h:8,col,side,blink:m.blink,hurt:m.expression==='hurt',wing:true,lower:true});brows(r,21+m.y,[[21,-1],[33,1]],'#c06088');r.put(28,32+m.y,SK.deep);},
-  mouth:(r,y)=>{r.rect(27,34+y,3,2,'#b03a50');r.rect(28,35+y,1,1,'#f08898');},
-  blush:[[18,32],[36,32]]},
-};
-function draftFace(r,m,col,F){
- headShape(r,m.y,F.head);F.eyes(r,m,col);
- for(const [x,yy]of F.blush){r.rect(x,yy+m.y,3,1,'#f8a8b0');r.put(x+1,yy+1+m.y,'#fbc4c8');}
- if(m.expression==='hurt')r.rect(27,34+m.y,3,2,'#8f4f5c');else F.mouth(r,m.y);
-}
+// Her face keeps the original sprite's proportions: a broad face with a compact jaw and
+// cheek shading, small bright eyes with pink irises, a soft smile and blush.
 function face(r,m,L){
- const {y,blink,expression}=m,{rect:R,put}=r,hurt=expression==='hurt',focus=expression==='focused'||m.cast,gold=L.hair==='goddess';
- const col=gold?{iris:'#ffe890',mid:'#f0c040',dark:'#b07a10'}:{iris:'#ffa8c8',mid:'#f06a9a',dark:'#b02a62'};
- if(FACES[m.faceStyle])return draftFace(r,m,col,FACES[m.faceStyle]);
- head(r,y,{skin:SK});
- for(const [x,side]of [[20,-1],[31,1]])madokaEye(r,x,25+y,{...col,side,blink,hurt,focus});
- // Thin, high brows.
- for(const [x,side]of [[21,-1],[32,1]]){R(x,23+y,3,1,'#c86890');put(side<0?x-1:x+3,24+y,'#c86890');}
- // Round blush beneath the eyes.
- for(const x of [19,35]){R(x,32+y,3,1,'#f8a8b0');put(x+1,33+y,'#fbc0c4');}
- if(hurt)R(27,34+y,3,2,'#8f4f5c');
- else if(expression==='ultimate'){R(27,34+y,3,2,'#c0606a');put(28,34+y,'#fff4ee');}
- else{put(26,34+y,'#c0707a');R(27,35+y,3,1,'#c0707a');put(30,34+y,'#c0707a');}
+ const {y,blink,expression}=m,{poly:P,rect:R}=r,shadow='#e8af96';
+ R(25,36+y,7,4,shadow);
+ P(shift([[18,20],[37,20],[39,30],[36,36],[31,39],[24,39],[18,35],[16,29]],y),shadow);
+ P(shift([[19,20],[36,20],[37,31],[34,36],[30,38],[24,37],[19,34],[18,28]],y),SK.base);
+ R(16,29+y,2,4,shadow);R(38,29+y,2,4,shadow);
+ paintFace(r,'madoka',{y,expression,blink});
+ R(19,34+y,3,1,'#edb0b5');R(35,34+y,3,1,'#edb0b5');
+ // Ultimate Madoka's eyes turn gold.
+ if(L.hair==='goddess')for(let yy=27+y;yy<34+y;yy++)for(let x=20;x<37;x++){const i=yy*56+x;if(r.pixels[i]==='#ad577e')r.pixels[i]='#e0a830';}
 }
 function hairBack(r,m,L){
- const {y,walk}=m,{poly:P,line:Ln}=r,H=L.hair==='goddess'?GODDESS:PINK;
+ const {y,walk,frame,moving}=m,{poly:P,line:Ln,rect:R}=r,H=L.hair==='goddess'?GODDESS:PINK;
  if(L.hair==='goddess'){// Floor-length hair streaming out behind her on both sides.
-  for(const s of [-1,1]){const X=d=>28+s*d;P(shift([[X(8),18],[X(13),22],[X(16),40],[X(19)+walk*.5,58],[X(17)+walk*.5,71],[X(12),71],[X(10),56],[X(8),40]],y*0),H[0]);P(shift([[X(9),22],[X(12),24],[X(14),40],[X(16)+walk*.5,58],[X(15)+walk*.5,69],[X(12),69],[X(11),56],[X(9),40]],0),H[1]);Ln(X(12),30,X(15)+walk*.5,66,H[2]);}
-  P(shift([[15,22],[17,12],[28,9],[39,12],[41,22],[40,34],[16,34]],y),H[0]);return;}
+  for(const s of [-1,1]){const X=d=>28+s*d;P([[X(8),18],[X(13),22],[X(16),40],[X(19)+walk*.5,58],[X(17)+walk*.5,71],[X(12),71],[X(10),56],[X(8),40]],H[0]);P([[X(9),22],[X(12),24],[X(14),40],[X(16)+walk*.5,58],[X(15)+walk*.5,69],[X(12),69],[X(11),56],[X(9),40]],H[1]);Ln(X(12),30,X(15)+walk*.5,66,H[2]);}
+  return;}
  if(L.hair==='hood'){// The bathrobe hood with two floppy bunny ears.
   P(shift([[14,28],[14,16],[20,9],[36,9],[42,16],[42,28],[38,34],[18,34]],y),'#d890ac');P(shift([[15,27],[16,16],[21,11],[35,11],[40,16],[41,27]],y),'#f8b8d0');
   for(const s of [-1,1]){P(shift([[28+s*6,11],[28+s*12,1],[28+s*14,4],[28+s*9,13]],y),'#f8b8d0');P(shift([[28+s*7,10],[28+s*12,3],[28+s*12,6],[28+s*9,11]],y),'#ffd8e4');}return;}
- P(shift([[16,30],[15,20],[20,13],[36,13],[41,20],[40,30]],y),H[0]);
- if(L.hair==='low')for(const s of [-1,1]){const x=28+s*12;P(shift([[x-2,30],[x+2,30],[x+2+s,46],[x-1+s,48],[x-3+s,44]],y),H[0]);P(shift([[x-1,31],[x+1,31],[x+1+s,44],[x-1+s,44]],y),H[1]);}
+ if(L.hair==='low'){// Tails tied low and hanging down for bed.
+  for(const s of [-1,1]){const x=28+s*12;P(shift([[x-2,28],[x+2,28],[x+2+s,46],[x-1+s,48],[x-3+s,44]],y),H[0]);P(shift([[x-1,29],[x+1,29],[x+1+s,44],[x-1+s,44]],y),H[1]);}return;}
+ // Short twin tails swept out from either side of the head.
+ const sway=moving?[0,1,0,-1][frame]:frame%2;
+ P([[14,17],[8+sway,20],[9+sway,33],[12+sway,38],[14,33],[18,35],[18,22]],H[0]);P([[42,17],[48-sway,20],[47-sway,33],[44-sway,38],[42,33],[38,35],[38,22]],H[0]);
+ P([[13,19],[10+sway,23],[12+sway,32],[14,29],[16,32],[16,21]],H[1]);P([[43,19],[46-sway,23],[44-sway,32],[42,29],[40,32],[40,21]],H[1]);
+ R(11+sway,22,2,7,H[2]);R(43-sway,22,2,7,H[2]);
+}
+function bow(r,x,y,big,colors){
+ const {poly:P,rect:R}=r,[dark,mid,knot]=colors;
+ if(big){P([[x-3,13+y],[x+7,17+y],[x+3,24+y],[x-6,19+y]],dark);P([[x-2,14+y],[x+5,17+y],[x+2,22+y],[x-4,19+y]],mid);R(x,17+y,4,4,knot);return;}
+ P([[x,13+y],[x+5,17+y],[x+2,21+y],[x-3,18+y]],dark);P([[x,14+y],[x+3,17+y],[x+1,19+y],[x-1,17+y]],mid);R(x+1,18+y,3,3,knot);
 }
 function hairFront(r,m,L){
- const {y,walk}=m,{poly:P,line:Ln,rect:R,put}=r,H=L.hair==='goddess'?GODDESS:PINK;
+ const {y}=m,{poly:P,line:Ln,rect:R,put}=r,H=L.hair==='goddess'?GODDESS:PINK;
  if(L.hair==='hood'){// Only a fringe shows under the hood.
   P(shift([[18,25],[19,18],[24,14],[32,14],[37,18],[38,25],[35,22],[32,24],[29,21],[26,24],[23,21],[20,24]],y),H[1]);Ln(21,17+y,27,15+y,H[2]);return;}
- // Rounded crown with soft, pointed bangs and side locks.
- const F=FACES[m.faceStyle],lift=F?F.fringe:0;
- P(shift([[16,27],[16,18],[20,12],[28,9],[36,12],[40,18],[40,27],[38,22-lift],[36,24-lift],[34,20-lift],[31,24-lift],[28,20-lift],[25,24-lift],[22,20-lift],[20,24-lift],[18,22-lift]],y),H[1]);
- for(const [x0,y0,x1,y1]of [[19,15,26,11],[29,11,35,14],[22,16,22,20],[28,15,28,19],[34,16,34,20]])Ln(x0,y0+y,x1,y1+y,H[2]);
- const lock=F?F.lock:10;for(const x of [16,38]){R(x,24+y,3,lock,H[1]);Ln(x+(x<28?0:2),25+y,x+(x<28?0:2),23+lock+y,H[0]);}
+ // The original rounded crown and fringe, with its bright band of shine.
+ P(shift([[15,28],[14,18],[18,13],[24,10],[33,10],[39,13],[42,19],[41,29],[38,31],[35,25],[32,22],[29,27],[25,23],[22,28],[19,24],[18,32]],y),H[0]);
+ P(shift([[16,24],[16,18],[20,14],[25,12],[32,12],[38,15],[40,20],[39,27],[35,22],[32,19],[29,24],[25,20],[22,25],[19,21]],y),H[1]);
+ R(20,14+y,16,2,H[2]);R(17,18+y,3,3,'#f9bfd5');R(38,18+y,2,5,'#f9bfd5');
  if(L.hair==='goddess'){// White wing ornaments rise from the sides of her head.
   for(const s of [-1,1]){const X=d=>28+s*d;P(shift([[X(9),16],[X(14),8],[X(15),12],[X(12),18]],y),'#ffffff');P(shift([[X(10),17],[X(16),11],[X(16),15],[X(12),19]],y),'#f4eef8');Ln(X(11),15+y,X(14),10+y,'#d8d0e8');}
   return;}
- if(L.hair==='low'){R(15,30+y,3,2,'#e04a5a');R(39,30+y,3,2,'#e04a5a');return;}
- // Short twin tails that flick outward, tied above each ear.
- for(const s of [-1,1]){const X=d=>28+s*d,sway=walk*.4*s;
-  P(shift([[X(10),14],[X(16),15],[X(19)+sway,22],[X(18)+sway,30],[X(15),27],[X(12),20]],y),H[0]);P(shift([[X(11),15],[X(15),16],[X(17)+sway,22],[X(17)+sway,28],[X(14),24]],y),H[1]);Ln(X(13),17+y,X(16)+sway,25+y,H[2]);}
- if(L.ribbon==='big')for(const s of [-1,1]){const X=d=>28+s*d;// Big red bows.
-  P(shift([[X(9),11],[X(16),5],[X(17),10],[X(15),15]],y),'#b02a4a');P(shift([[X(10),11],[X(15),7],[X(16),10],[X(14),13]],y),'#e85a7a');P(shift([[X(9),11],[X(3),6],[X(2),10],[X(5),14]],y),'#b02a4a');P(shift([[X(8),11],[X(4),8],[X(4),11],[X(6),13]],y),'#e85a7a');
-  R(Math.min(X(8),X(10)),9+y,3,4,'#b02a4a');Ln(X(9),13+y,X(11),17+y,'#b02a4a');}
- else if(L.ribbon==='flower')for(const s of [-1,1]){const x=28+s*11,yy=13+y;for(const [dx,dy]of [[-2,0],[2,0],[0,-2],[0,2]])R(x+dx,yy+dy,2,2,'#ffffff');R(x,yy,2,2,'#f8c040');}
- else for(const s of [-1,1]){const X=d=>28+s*d;P(shift([[X(10),12],[X(14),9],[X(14),15]],y),'#c0303a');P(shift([[X(10),12],[X(6),9],[X(7),14]],y),'#c0303a');put(X(10),12+y,'#e84a5a');}
+ if(L.hair==='low'){R(14,28+y,4,2,'#e04a5a');R(39,28+y,4,2,'#e04a5a');return;}
+ if(L.ribbon==='flower'){for(const x of [13,43]){const yy=16+y;for(const [dx,dy]of [[-2,0],[2,0],[0,-2],[0,2]])R(x+dx,yy+dy,2,2,'#ffffff');R(x,yy,2,2,'#f8c040');}return;}
+ const big=L.ribbon==='big',colors=big?['#b02a4a','#e85a7a','#c03a5a']:['#ac3b63','#dd6b92','#bd456e'];
+ for(const x of [12,40])bow(r,big&&x>28?x+1:x,y,big,colors);
 }
 function legs(r,m,{top,sock,sockTop,shoe,strap,frill}){
  const {walk}=m,{rect:R,line:Ln}=r;
@@ -220,9 +170,9 @@ function arms(r,m,L){
  }
 }
 const cache=new Map();
-export function madokaPixels({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='default',faceStyle=''}={}){
- const look=LOOKS[skin]?skin:'default',key=[frame,moving,pose,attack,expression,blink,look,faceStyle].join(':');if(cache.has(key))return cache.get(key);
- const mo=motion({frame,moving}),m={frame:((frame%4)+4)%4,moving,pose,attack,expression,blink,walk:mo.walk*2,y:mo.y,cast:attack,faceStyle},L=LOOKS[look],r=canvas();
+export function madokaPixels({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='default'}={}){
+ const look=LOOKS[skin]?skin:'default',key=[frame,moving,pose,attack,expression,blink,look].join(':');if(cache.has(key))return cache.get(key);
+ const mo=motion({frame,moving}),m={frame:((frame%4)+4)%4,moving,pose,attack,expression,blink,walk:mo.walk*2,y:mo.y,cast:attack},L=LOOKS[look],r=canvas();
  hairBack(r,m,L);body(r,m,L);arms(r,m,L);face(r,m,L);hairFront(r,m,L);
  if(L.body==='goddess'){// The capelet covers the upper arms.
   const {poly:P,line:Ln}=r,y=m.y;P(shift([[17,37],[23,37],[22,43],[14,45]],y),'#e8e0ec');P(shift([[39,37],[33,37],[34,43],[42,45]],y),'#e8e0ec');Ln(14,45+y,20,44+y,'#a898b8');Ln(36,44+y,42,45+y,'#a898b8');}
