@@ -1,0 +1,94 @@
+[
+ {
+  "id": "lelouch",
+  "style": "kite",
+  "dps": 330.2,
+  "kills": 365.5,
+  "level": 17,
+  "lateTakenPerMin": 195.45,
+  "ehp": 120,
+  "regenPerMin": 60,
+  "pressure": 1.027,
+  "fusions": 0,
+  "rows": [
+   {
+    "dealt": 196998,
+    "kills": 326,
+    "level": 17,
+    "takenPerMin": 122.3,
+    "lateTakenPerMin": 148.4,
+    "ehp": 109,
+    "regenPerMin": 81,
+    "pressure": 0.782,
+    "bossShare": 0.54,
+    "ults": 7,
+    "fusions": 1
+   },
+   {
+    "dealt": 210703,
+    "kills": 350,
+    "level": 18,
+    "takenPerMin": 182.8,
+    "lateTakenPerMin": 200.7,
+    "ehp": 124,
+    "regenPerMin": 96,
+    "pressure": 0.912,
+    "bossShare": 0.53,
+    "ults": 7,
+    "fusions": 0
+   },
+   {
+    "dealt": 110128,
+    "kills": 260,
+    "level": 16,
+    "takenPerMin": 200.1,
+    "lateTakenPerMin": 190.2,
+    "ehp": 116,
+    "regenPerMin": 60,
+    "pressure": 1.081,
+    "bossShare": 0.51,
+    "ults": 7,
+    "fusions": 0
+   },
+   {
+    "dealt": 181253,
+    "kills": 441,
+    "level": 19,
+    "takenPerMin": 131,
+    "lateTakenPerMin": 180.7,
+    "ehp": 126,
+    "regenPerMin": 60,
+    "pressure": 0.973,
+    "bossShare": 0.49,
+    "ults": 7,
+    "fusions": 0
+   },
+   {
+    "dealt": 299000,
+    "kills": 401,
+    "level": 17,
+    "takenPerMin": 434.9,
+    "lateTakenPerMin": 768.4,
+    "ehp": 114,
+    "regenPerMin": 60,
+    "pressure": 4.421,
+    "bossShare": 0.55,
+    "ults": 7,
+    "fusions": 0
+   },
+   {
+    "dealt": 199208,
+    "kills": 381,
+    "level": 17,
+    "takenPerMin": 296.6,
+    "lateTakenPerMin": 507.7,
+    "ehp": 138,
+    "regenPerMin": 60,
+    "pressure": 2.564,
+    "bossShare": 0.62,
+    "ults": 8,
+    "fusions": 0
+   }
+  ]
+ }
+]

@@ -1,0 +1,42 @@
+[
+ {
+  "id": "geass",
+  "style": "kite",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 11.7,
+  "kills": 7,
+  "takenPerMin": 215.9,
+  "xp": 333345
+ },
+ {
+  "id": "geass",
+  "style": "kite",
+  "owner": true,
+  "hero": "lelouch",
+  "dps": 54.8,
+  "kills": 82,
+  "takenPerMin": 87.8,
+  "xp": 1333463
+ },
+ {
+  "id": "kingspower",
+  "style": "kite",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 35.4,
+  "kills": 53,
+  "takenPerMin": 162,
+  "xp": 666727
+ },
+ {
+  "id": "kingspower",
+  "style": "kite",
+  "owner": true,
+  "hero": "lelouch",
+  "dps": 87.5,
+  "kills": 109,
+  "takenPerMin": 70.3,
+  "xp": 2333474
+ }
+]

@@ -1,0 +1,42 @@
+[
+ {
+  "id": "geass",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 14,
+  "kills": 8,
+  "takenPerMin": 453.4,
+  "xp": 13
+ },
+ {
+  "id": "geass",
+  "style": "close",
+  "owner": true,
+  "hero": "lelouch",
+  "dps": 53.2,
+  "kills": 74,
+  "takenPerMin": 119.8,
+  "xp": 1666763
+ },
+ {
+  "id": "kingspower",
+  "style": "close",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 42.2,
+  "kills": 69,
+  "takenPerMin": 322.9,
+  "xp": 1000087
+ },
+ {
+  "id": "kingspower",
+  "style": "close",
+  "owner": true,
+  "hero": "lelouch",
+  "dps": 96.4,
+  "kills": 99,
+  "takenPerMin": 156.9,
+  "xp": 3333589
+ }
+]

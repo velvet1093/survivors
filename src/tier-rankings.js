@@ -54,6 +54,11 @@ export const CHARACTER_RANKINGS={
   comparison:'His Uzi out-damages most starting weapons and he is one of the fastest heroes, but he has little health and no defensive mechanic of his own.',
   caution:'The Combo breaks after 2.5 seconds without a kill, so his frenzy depends on dense waves; against a lone boss it rarely triggers.',
   bestWith:'Richard the Rooster early for damage and speed, Hotline Massacre as soon as both are maxed, and a shield or health passive.'}),
+ lelouch:entry('B',{
+  reason:'Lelouch & C.C. fight as a pair: the Geass turns the enemies nearest his target against their own pack, and C.C. walks beside him firing her pistol without needing a weapon slot.',
+  comparison:'Up close their damage is in the roster’s upper middle, and commanded enemies stop attacking, but in melee range the pair still takes heavy hits, so their composite lands in B.',
+  caution:'Absolute Command only stuns bosses, so a lone boss is left to C.C.’s pistol and your other weapons; the Geass needs a crowd to shine.',
+  bestWith:'The Witch’s Code early for faster pistol fire, the Power of the King once both are maxed, and the Gawain saved for bosses.'}),
  jinwoo:entry('B',{
   reason:'Jinwoo levels through the System: each level-up allocates stat points, extracts a new shadow or grades one up, and his shadow army fights beside Kamish’s Wrath.',
   comparison:'His army builds slowly, then reaches damage in the roster’s upper middle as shadows climb toward Commander grade; he takes more damage than most heroes, which keeps his composite in B.',
@@ -154,6 +159,11 @@ export const ULTIMATE_RANKINGS={
   comparison:'It is both a panic button and a clear: few ultimates combine full immunity with this much area damage, and weakened ordinary enemies die outright.',
   caution:'Its reach is short, so you must walk him into the crowd yourself; bosses are only stunned, never executed.',
   bestWith:'Use it when surrounded or to escape a boss pattern, and take the Hammer Time mastery nodes for heavier smashes.'}),
+ lelouch:entry('A',{
+  reason:'The Gawain makes the pair untouchable for eight seconds while its twin Hadron Cannons fire through the crowd every 1.4 seconds and its slash harkens strike the four nearest enemies twice a second.',
+  comparison:'One of the longest invulnerable ultimates, with long-range line damage rather than a domain; it hits bosses at full strength.',
+  caution:'The Hadron Cannons fire along a line toward the nearest enemy, so a crowd spread all around takes less damage than a column.',
+  bestWith:'Use it to escape a boss pattern or a surrounding wave, and take Hadron Overload for heavier beams.'}),
  jinwoo:entry('A',{
   reason:'Arise empowers every shadow for eight seconds, 60% more damage and 40% faster attacks, and each enemy that falls in the domain rises as a temporary shadow soldier.',
   comparison:'It snowballs like no other ultimate: in a dense wave the risen soldiers multiply the army; against a lone boss it is a strong but plain damage window.',
@@ -250,6 +260,16 @@ export const WEAPON_RANKINGS={
   comparison:'Among the strongest weapon evolutions measured, near Beelzebub and Final Chapter.',
   caution:'It needs both max-rank ingredients: a maxed Uzi Spray and a maxed Richard the Rooster.',
   bestWith:'Jacket, whose Combo frenzy stacks on top of its damage.'}),
+ geass:entry('B',{
+  reason:'Absolute Command commands the enemies nearest the target: they stop attacking you, chase their own allies and strike them until the order wears off.',
+  comparison:'Its own damage is modest, below the strongest starting weapons even on Lelouch with C.C. firing alongside. Its value is control: commanded enemies stop attacking and fight each other.',
+  caution:'Bosses are only stunned for half a second, and on other heroes it lacks C.C.’s pistol, so it falls well behind damage weapons.',
+  bestWith:'Lelouch & C.C., the Witch’s Code for the Power of the King, and crowd-heavy maps.'}),
+ kingspower:entry('B',{
+  reason:'The Power of the King commands twice as many enemies, and every order ends with “Die”: the commanded enemy falls and bursts, hurting the enemies around it.',
+  comparison:'On its owner it deals almost twice the damage of Absolute Command, though less than the top evolutions such as Hotline Massacre. Commanded enemies fight for you and then explode, which keeps pressure off the pair.',
+  caution:'It needs a maxed Absolute Command and a maxed Witch’s Code, and bosses still only get stunned.',
+  bestWith:'Lelouch & C.C., where Checkmate turns its next cast into a mass command.'}),
  salvation:entry('S',{
   reason:'Salvation: Five Wishes measured the highest damage of any weapon by a wide margin, almost four times the median.',
   comparison:'Nothing else is close, but it takes two separate steps: Ultimate Madoka first, then the five-gem Quintet, so it arrives late.',
@@ -826,6 +846,11 @@ export const PASSIVE_RANKINGS={
   comparison:'A balanced offence-and-speed passive, a little behind pure damage passives such as Power Band for one slot.',
   caution:'Its Combo bonus is exclusive to Jacket; on other heroes it is a modest damage and speed passive.',
   bestWith:'Jacket, where it evolves Uzi Spray into Hotline Massacre.'}),
+ witchcode:entry('B',{
+  reason:'The Witch’s Code adds 5% weapon damage and 8 max HP per rank; on Lelouch it also makes C.C.’s pistol stronger and faster and adds 10% Checkmate per rank.',
+  comparison:'A balanced damage-and-health passive, behind pure damage passives for one slot on other heroes.',
+  caution:'C.C.’s pistol and Checkmate bonuses only work for Lelouch & C.C.',
+  bestWith:'Lelouch & C.C., where it evolves Absolute Command into the Power of the King.'}),
  parallelminds:entry('A',{
   reason:'Parallel Minds adds 12% weapon damage and cuts cooldowns by 9%; on Shiraori it also hatches three more spiderlings.',
   comparison:'About as valuable as Blood Engine or Epitaph for one slot, and better on Shiraori, whose brood grows with every rank.',

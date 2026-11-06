@@ -12,6 +12,7 @@ import {drawRedOrb} from './gojo-effects.js';
 import {drawRoseArrow} from './madoka-effects.js';
 import {drawZoltraakBolt} from './frieren-effects.js';
 import {drawJacketShot} from './jacket-effects.js';
+import {drawCcShot} from './lelouch-effects.js';
 import {drawPairedProjectile} from './paired-attack-art.js';
 const TAU=Math.PI*2;
 const line=(c,points,color,width)=>{c.strokeStyle=color;c.lineWidth=width;c.lineCap='round';c.lineJoin='round';c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();};
@@ -48,6 +49,7 @@ export function drawPlayerProjectile(c,s,{zoom=1,area=1,reducedMotion=false}={})
   else if(s.type==='powerbeam'){trail(s.color,s.charged?24:16);disc(c,3,0,s.charged?8:4,s.beamStage>=2?'#dbf7fc':s.fused?'#b9f5d6':'#ffe0a1');disc(c,5,-1,s.charged?3:1.5,'#fffae0');}
   else if(s.type==='zoltraak')drawZoltraakBolt(c,s,reducedMotion);
   else if(s.type==='uzi'||s.type==='hammer')drawJacketShot(c,s,reducedMotion);
+  else if(s.type==='ccshot')drawCcShot(c,s);
   else if(s.type==='pallet')drawPalletRound(c,s,reducedMotion);
   else if(s.type==='icelance'){trail('#6bc6ed',23);poly(c,[[22,0],[-3,-6],[-13,0],[-3,6]],'#b2eafa');line(c,[[-10,0],[19,0]],'#f5fffc',2);line(c,[[-3,-4],[5,0],[-3,4]],'#64aed7',1);}
   else if(s.type==='rosebow')drawRoseArrow(c,s,reducedMotion);

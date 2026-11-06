@@ -270,6 +270,16 @@
   "score": 27.1
  },
  {
+  "id": "witchcode",
+  "slots": 1,
+  "offense": 15,
+  "defence": 19.2,
+  "ultimate": 0,
+  "move": 0,
+  "magnet": 0,
+  "score": 26.5
+ },
+ {
   "id": "bloodengine",
   "slots": 1,
   "offense": 12,

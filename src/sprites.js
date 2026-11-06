@@ -7,6 +7,7 @@ import {enemyPixels} from './pixel-enemies.js';
 import {characterPixels,pixelRuns,SPRITE_WIDTH,SPRITE_HEIGHT,HERO_SCALE,HERO_FOOT} from './pixel-characters.js';
 import {bowPose,bowPixels,BOW_SCALE,BOW_ANCHOR} from './bow.js';
 import {enemyMotion} from './enemy-animation.js';
+import {drawGawain} from './lelouch-effects.js';
 const TAU=Math.PI*2;
 function oval(c,x,y,rx,ry,fill,rotation=0){c.fillStyle=fill;c.beginPath();c.ellipse(x,y,Math.max(.1,rx),Math.max(.1,ry),rotation,0,TAU);c.fill();}
 const heroFrames=new Map(),bowFrames=new Map();
@@ -24,6 +25,7 @@ function drawBow(c,p,x,y,scale){
   c.save();c.translate(pose.grip.x,pose.grip.y);c.rotate(pose.angle);c.scale(BOW_SCALE*scale,BOW_SCALE*scale);c.imageSmoothingEnabled=false;c.drawImage(bowFrames.get(key),-BOW_ANCHOR.x,-BOW_ANCHOR.y);c.restore();
 }
 export function drawHero(c,p,x,y,time,alpha=1,scale=1){
+  if(p.id==='lelouch'&&p.pose==='gawain'){drawGawain(c,p,x,y,time,alpha,!!p.reducedMotion);return;}
   const native=HERO_SCALE*scale*(p.id==='shinji'?1.15:p.id==='eren'&&p.form?1.55:1),pose=p.id==='madoka'?bowPose({...p,x,y}):null,facing=pose?(Math.cos(pose.angle)<0?-1:1):((['goku','maomao','gojo','shinji','frieren','samus','megumi','eren','diavolo','yuki','rimuru','erza','guts','kurumi'].includes(p.id))&&(p.attackTimer||0)>0?(Math.cos(p.aimAngle||0)<0?-1:1):(p.facing||1));
   c.save();c.globalAlpha=alpha;c.imageSmoothingEnabled=false;
   oval(c,x,y+2,10*scale,3*scale,'#05091555');
