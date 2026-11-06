@@ -34,6 +34,8 @@ export function drawGutsSlash(c,e,progress,reduced=false){
  // end of the arc. Quiet mode keeps the blade and removes flying debris.
  c.strokeStyle=hot?'#e4bab1':'#e4ece0';c.lineWidth=hot?3:2;c.beginPath();c.arc(0,0,r*.87,s<0?angle:angle-.4,s<0?angle+.4:angle);c.stroke();
  if(!reduced&&t>.35){for(let i=0;i<6;i++){const a=angle+s*(i-.5)*.13,dist=r*(.75+Math.max(0,t-.35)*.4),x=Math.cos(a)*dist,y=Math.sin(a)*dist;c.fillStyle=i%2?'#ac9d83':'#e8d9b0';c.fillRect(Math.round(x),Math.round(y),i%2?3:5,2);}}
+ // Blood thrown off the slab along the arc, flung farther as the swing completes.
+ if(!reduced&&t>.25){for(let i=0;i<8;i++){const a=angle-s*(i*.09),dist=r*(.55+i*.06+t*.25),x=Math.cos(a)*dist,y=Math.sin(a)*dist+t*t*10;c.fillStyle=i%3?'#a81c28':'#e0404a';c.fillRect(Math.round(x),Math.round(y),i%2?2:3,i%2?2:3);}}
  if(hot){c.strokeStyle='#d3827a';c.lineWidth=1.5;c.beginPath();c.arc(0,0,r*.98,s<0?angle:angle-.58,s<0?angle+.58:angle);c.stroke();}
  c.restore();return true;
 }

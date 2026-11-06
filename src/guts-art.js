@@ -63,24 +63,24 @@ function berserkerSkinPixels({frame=0,moving=false,pose='',attack=false}={}){
 }
 
 function slab(r,{attack,step=0,berserk=false}){
- const {poly:P,line:L,rect:R}=r,c=GUTS_ART;
+ const {poly:P,line:L,rect:R,put}=r,c=GUTS_ART;
  if(attack){
-  // A broad, blunt slab rather than a slender fantasy sword. The in-game
-  // swing continues this blade beyond the character's small native frame.
-  P([[27,45],[31,38],[51,20],[55,24],[55,33],[34,51]],c.steelShade);
-  P([[31,43],[34,39],[52,23],[54,26],[53,31],[34,48]],c.steel);
-  L(34,40,52,24,c.steelLight);L(32,47,51,31,'#8e9ca0');
-  L(26,47,34,38,c.plateShade,3);L(26,46,34,38,c.buckle,1);
-  L(24,49,29,44,c.leather,4);R(23,49,4,3,c.buckle);
+  // Mid-swing: the slab sweeps out level across his body, chipped along its edge.
+  P([[24,47],[27,40],[52,29],[55,32],[55,40],[29,51]],c.steelShade);
+  P([[27,45],[29,41],[52,31],[54,33],[54,38],[30,48]],c.steel);
+  L(29,42,52,32,c.steelLight);L(30,47,53,38,'#8e9ca0');for(const x of [36,43,49])put(x,x<45?47-(x-36)*.25:44,c.steelShade);
+  L(22,51,27,43,c.plateShade,4);L(24,45,29,50,c.buckle,2);L(20,53,24,48,c.leather,3);R(19,52,3,3,c.buckle);
  }else{
-  P([[34,42],[41,12+step],[47,3+step],[54,7+step],[51,20+step],[43,44]],c.steelShade);
-  P([[37,40],[43,13+step],[48,6+step],[51,8+step],[49,20+step],[41,41]],c.steel);
-  L(41,23+step,47,8+step,c.steelLight,2);L(38,38,41,25+step,c.steelLight);
-  L(42,40,48,21+step,'#85949a');
-  L(33,42,44,45,c.plateShade,3);L(34,42,43,44,c.buckle);
-  L(38,45,35,56,c.leather,4);L(38,46,36,53,'#a18163');R(34,55,5,3,c.buckle);
+  // Carried over the right shoulder: a near-vertical slab of iron taller than he is,
+  // blunt at the tip, chipped along its edge, with a plain crossguard and wrapped grip.
+  P([[37,44],[39,6+step],[42,0+step],[50,0+step],[52,5+step],[50,44]],c.steelShade);
+  P([[39,42],[41,7+step],[43,2+step],[49,2+step],[50,6+step],[48,42]],c.steel);
+  L(42,40,43,4+step,c.steelLight,2);L(47,41,48,6+step,'#85949a');
+  for(const yy of [12,21,30])R(50,yy+step,1,2,c.plateShade);
+  L(35,45,52,44,c.plateShade,3);L(36,45,51,44,c.buckle);
+  L(43,47,43,56,c.leather,4);for(const yy of [48,51,54])L(42,yy,45,yy+1,'#a18163');R(41,56,5,3,c.buckle);
  }
- if(berserk){const x=attack?47:46,y=attack?29:25;L(x,y,x-4,y+8,'#a66c68');R(x-2,y+4,2,2,'#e7a388');}
+ if(berserk){const x=attack?47:46,y=attack?33:20;L(x,y,x-4,y+8,'#a66c68');R(x-2,y+4,2,2,'#e7a388');}
 }
 
 function civilianPixels({frame,moving,pose,attack,expression,blink,skin}){
@@ -134,59 +134,75 @@ export function gutsPixels({frame=0,moving=false,pose='',attack=false,expression
  if(skin==='berserker')return berserkerSkinPixels({frame,moving,pose,attack});
  const r=raster(),{rect:R,poly:P,line:L}=r,c=GUTS_ART,berserk=form===1||form==='berserk'||pose==='berserk',golden=skin==='goldenage'&&!berserk,stride=moving?[0,2,0,-2][((frame%4)+4)%4]:0,bob=moving?-(frame%2):0,cast=attack||pose==='cleave'||pose==='ultimate',plate=golden?'#777d85':c.plate,plateLight=golden?'#bcc1bd':c.plateLight,cape=golden?'#636c80':c.cape;
  if(!berserk&&['casual','pajamas','swimsuit'].includes(skin))return civilianPixels({frame,moving,pose,attack,expression,blink,skin});
- // A ragged cape sits behind the body, leaving the iron forearm and the great
- // sword separate. Its uneven tails swing independently of the armored legs.
- P([[18,31+bob],[29,32+bob],[36,44],[35-stride,61],[28,65],[23-stride,69],[19,64],[14-stride,69],[12,61],[7-stride,65],[9,52],[9,40]],c.capeShade);
- P([[17,33+bob],[23,34+bob],[26,44],[26-stride,60],[22,65],[17,60],[13-stride,64],[12,55],[11,43]],cape);
- L(16,40,14-stride,57,c.capeLight);L(21,44,22-stride,60,'#49424d');L(10,49,10-stride,59,'#464450');
- // Sword is carried high behind his right shoulder, not drawn as a UI panel.
+ // In the ultimate every outfit becomes the Berserker Armor, its eyes burning with
+ // trailing red light and a bloodlust aura rising around the greaves.
+ if(berserk){const px=berserkerSkinPixels({frame,moving,pose,attack}),put=(x,y,color)=>{if(x>=0&&x<56&&y>=0&&y<76)px[y*56+x]=color;},bob=moving?-(frame%2):0;
+  for(let x=22;x<36;x++)if(x<27||x>30)put(x,23+bob+(x<27?(27-x)>>2:(x-30)>>2),c.red);put(24,22+bob,'#ffd4ad');put(33,22+bob,'#ffd4ad');
+  for(let i=0;i<8;i++){const x=6+i*6,h=4+(i*5+frame*3)%7;for(let k=0;k<h;k++)put(x+(k>h/2?(i%2?1:-1):0),73-k,k<2?'#a72d46':i%2?c.red:'#ed5862');}
+  return px;}
+ // A heavy, tattered black cape behind the body, ragged tips swinging with each step.
+ P([[17,31+bob],[30,32+bob],[37,44],[36-stride,61],[30,66],[26-stride,70],[22,64],[17-stride,71],[13,63],[7-stride,68],[8,58],[4-stride,61],[7,48],[9,38]],c.capeShade);
+ P([[16,33+bob],[23,34+bob],[27,44],[27-stride,60],[23,66],[18,61],[14-stride,66],[12,57],[8-stride,60],[10,48],[11,40]],cape);
+ L(15,40,13-stride,58,c.capeLight);L(21,44,22-stride,61,'#49424d');L(10,49,9-stride,58,'#464450');L(18,52,16-stride,63,c.capeShade);
  if(!cast)slab(r,{attack:false,step:bob,berserk});
- for(const [x,s]of [[20,-stride],[30,stride]]){
-  P([[x,49],[x+7,49],[x+7+s,60],[x+6+s,69],[x-1+s,69],[x-1,59]],c.plateShade);
-  P([[x+1,51],[x+5,52],[x+5+s,59],[x+3+s,66],[x+s,64]],plate);
-  L(x+2,54,x+2+s,61,plateLight);P([[x-1+s,59],[x+6+s,59],[x+7+s,63],[x+4+s,66],[x+s,64]],c.plateShade);
-  L(x+s,60,x+5+s,60,plateLight);R(x+s,65,5,4,plate);R(x+s+1,66,1,3,plateLight);
-  P([[x-1+s,67],[x+6+s,67],[x+8+s,70],[x+7+s,72],[x-3+s,72],[x-3+s,70]],c.plateShade);R(x-1+s,69,6,1,plateLight);R(x-2+s,71,9,1,'#7b7c76');
+ // Iron-plated legs with knee cops and heavy boots.
+ for(const [x,s0]of [[20,-stride],[30,stride]]){
+  P([[x,49],[x+7,49],[x+7+s0,60],[x+6+s0,69],[x-1+s0,69],[x-1,59]],c.plateShade);
+  P([[x+1,51],[x+5,52],[x+5+s0,59],[x+3+s0,66],[x+s0,64]],plate);L(x+2,54,x+2+s0,61,plateLight);
+  P([[x-1+s0,58],[x+6+s0,58],[x+7+s0,62],[x+3+s0,65],[x+s0,63]],c.plateShade);L(x+s0,59,x+5+s0,59,plateLight);R(x+2+s0,60,2,2,plateLight);
+  R(x+s0,65,5,4,plate);R(x+s0+1,66,1,3,plateLight);
+  P([[x-1+s0,67],[x+6+s0,67],[x+8+s0,70],[x+7+s0,72],[x-3+s0,72],[x-3+s0,70]],c.plateShade);R(x-1+s0,69,6,1,plateLight);R(x-2+s0,71,9,1,'#7b7c76');
  }
- // Broad angular breastplate, articulated abdomen and leather cross-straps.
+ // Angular breastplate and articulated abdomen under a chest strap of throwing knives.
  P([[19,31+bob],[25,30+bob],[33,30+bob],[38,34+bob],[39,43],[36,51],[29,55],[20,52],[17,43]],c.plateShade);
  P([[21,33+bob],[26,32+bob],[32,33+bob],[36,36+bob],[35,43],[31,48],[22,46],[19,40]],plate);
  P([[22,34+bob],[28,36+bob],[33,34+bob],[35,38],[31,41],[24,40],[20,37]],golden?'#9da3a4':'#53606b');
  L(22,34+bob,28,37+bob,plateLight);L(29,37+bob,34,35+bob,plateLight);
  for(const yy of [43,47,50]){P([[21,yy],[28,yy+1],[35,yy-1],[34,yy+3],[28,yy+4],[21,yy+2]],plate);L(22,yy+1,28,yy+2,plateLight);}
- L(20,34+bob,33,48,c.leather,3);L(21,34+bob,34,47,'#a58b68');R(25,40,4,4,c.buckle);R(26,41,2,2,c.leather);
- R(20,51,16,4,c.leather);R(26,51,5,3,c.buckle);R(27,52,3,1,'#e0c49a');R(19,53,5,7,c.plateShade);R(20,54,3,5,'#695c51');
- // Human right arm and a visibly segmented iron prosthetic on his left.
+ L(20,33+bob,34,48,c.leather,3);L(21,33+bob,35,47,'#a58b68');
+ if(!golden)for(let i=0;i<4;i++){const x=22+i*3,yy=35+bob+Math.round(i*2.4);P([[x,yy],[x+2,yy-1],[x+2,yy+3]],c.steelLight);r.put(x+1,yy+2,c.steelShade);}
+ R(25,41,4,4,c.buckle);R(26,42,2,2,c.leather);
+ R(20,51,16,4,c.leather);R(26,51,5,3,c.buckle);R(27,52,3,1,'#e0c49a');R(19,53,5,7,c.plateShade);R(20,54,3,5,'#695c51');R(31,53,4,5,'#5a4a3e');R(31,53,4,1,'#8a7060');
+ // His iron left arm: riveted plates ending in the cannon's dark muzzle.
  const hy=cast?44:49;
  P([[18,34+bob],[15,35+bob],[12,41],[12,48],[17,51],[20,44],[21,38]],c.plateShade);
  P([[16,36+bob],[14,40],[14,45],[18,46],[19,40]],plate);L(15,37+bob,15,42,plateLight);
- P([[12,44],[17,44],[19,48],[18,54],[12,56],[10,52],[11,48]],c.steelShade);R(12,46,5,3,c.steel);R(12,50,5,2,c.steel);R(12,54,5,2,c.plateLight);R(13,47,1,7,c.steelLight);L(11,48,16,48,c.plateShade);L(11,52,17,52,c.plateShade);
+ P([[11,43],[17,43],[19,48],[18,55],[12,57],[10,52],[10,47]],c.steelShade);R(12,45,5,3,c.steel);R(12,49,5,3,c.steel);R(12,53,5,2,c.plateLight);R(13,46,1,8,c.steelLight);
+ L(11,48,17,48,c.plateShade);L(11,52,17,52,c.plateShade);for(const [x,yy]of [[16,46],[16,50]])r.put(x,yy,c.steelLight);R(13,55,3,2,c.hairShade);r.put(14,55,'#0a0c10');
  P([[35,34+bob],[39,35+bob],[42,41],[41,hy+3],[36,hy+4],[34,43]],c.plateShade);P([[36,36+bob],[39,37+bob],[40,42],[38,hy+1],[36,hy]],plate);L(38,38,39,42,plateLight);
  R(cast?29:35,hy,6,4,c.skin);L(cast?29:35,hy+3,cast?34:39,hy+3,c.skinShade);R(36,hy-2,5,3,c.leather);
- // Raised, layered shoulder armor and the rough cloth collar are independent
- // silhouettes, not color changes on the face or on the blade.
- for(const [x,side]of [[16,-1],[36,1]]){P([[x-3,34+bob],[x,30+bob],[x+6,32+bob],[x+8,38],[x+5,41],[x-3,39]],c.plateShade);P([[x-2,34+bob],[x+1,32+bob],[x+5,34+bob],[x+6,37],[x+3,39],[x-2,37]],plate);L(x,34+bob,x+4,35+bob,plateLight);if(berserk)P([[x-3,34+bob],[x+side*4,28+bob],[x+4,33+bob]],plateLight);}
- P([[20,31+bob],[23,28+bob],[33,28+bob],[36,32+bob],[33,36+bob],[29,34+bob],[24,36+bob]],c.capeShade);L(21,32+bob,25,34+bob,c.capeLight);R(31,32+bob,3,2,c.buckle);
+ // A broad layered pauldron on the iron arm's shoulder; a smaller one on the sword arm.
+ P([[9,36+bob],[12,29+bob],[20,29+bob],[23,34+bob],[21,40],[13,42]],c.plateShade);P([[10,36+bob],[13,31+bob],[19,31+bob],[21,34+bob],[19,38],[13,40]],plate);
+ L(12,33+bob,19,32+bob,plateLight);L(11,37+bob,19,36+bob,plateLight);L(11,39,18,38,c.plateShade);
+ P([[34,34+bob],[37,30+bob],[42,32+bob],[44,37],[41,40],[34,38]],c.plateShade);P([[35,34+bob],[37,32+bob],[41,33+bob],[42,36],[40,38],[35,37]],plate);L(37,33+bob,41,34+bob,plateLight);
+ if(berserk)for(const [x,yy]of [[11,29],[17,28],[39,30]])P([[x,yy+bob],[x+2,yy-4+bob],[x+3,yy+bob]],c.plateShade);
+ // The cloak's high collar wraps the neck.
+ P([[20,31+bob],[23,27+bob],[33,27+bob],[36,31+bob],[33,35+bob],[29,33+bob],[24,35+bob]],c.capeShade);L(21,32+bob,25,34+bob,c.capeLight);R(31,32+bob,3,2,c.buckle);
  if(berserk){
-  // The Beast of Darkness: long snout, swept ears and one red visor cut.
-  P([[18,20+bob],[17,9+bob],[22,13+bob],[27,8+bob],[32,12+bob],[37,9+bob],[39,20+bob],[43,25+bob],[38,32+bob],[32,36+bob],[24,33+bob],[19,28+bob]],c.plateShade);
-  P([[20,20+bob],[20,12+bob],[24,16+bob],[28,11+bob],[32,16+bob],[36,13+bob],[36,22+bob],[40,26+bob],[36,29+bob],[29,31+bob],[23,28+bob]],plate);
-  P([[22,17+bob],[27,13+bob],[31,18+bob],[29,23+bob],[24,22+bob]],'#56626e');L(21,18+bob,21,24+bob,plateLight);L(30,15+bob,34,19+bob,plateLight);
-  P([[21,24+bob],[28,25+bob],[36,21+bob],[40,25+bob],[35,28+bob],[29,27+bob],[23,29+bob]],c.hairShade);
-  L(25,25+bob,34,24+bob,c.red,2);R(30,24+bob,4,1,'#ffd4ad');
-  P([[24,29+bob],[30,30+bob],[37,27+bob],[35,33+bob],[31,36+bob],[25,33+bob]],plate);L(27,31+bob,33,32+bob,plateLight);for(const x of [28,31,34])R(x,29+bob,1,2,c.steelLight);
+  // The Beast of Darkness helm: swept ear-horns, a long wolf snout, bared fangs and one red visor cut.
+  P([[18,20+bob],[15,6+bob],[22,13+bob],[27,9+bob],[32,13+bob],[40,6+bob],[39,20+bob],[44,25+bob],[39,32+bob],[32,36+bob],[24,33+bob],[19,28+bob]],c.plateShade);
+  P([[20,20+bob],[18,10+bob],[24,16+bob],[28,12+bob],[32,16+bob],[38,10+bob],[36,22+bob],[41,26+bob],[36,29+bob],[29,31+bob],[23,28+bob]],plate);
+  P([[22,17+bob],[27,14+bob],[31,18+bob],[29,23+bob],[24,22+bob]],'#56626e');L(19,12+bob,21,22+bob,plateLight);L(37,12+bob,35,20+bob,plateLight);
+  P([[21,24+bob],[28,25+bob],[36,21+bob],[41,25+bob],[35,28+bob],[29,27+bob],[23,29+bob]],c.hairShade);
+  L(24,25+bob,35,23+bob,c.red,2);R(30,24+bob,4,1,'#ffd4ad');R(23,25+bob,2,1,'#ffd4ad');
+  P([[24,29+bob],[30,30+bob],[38,27+bob],[36,33+bob],[31,36+bob],[25,33+bob]],plate);L(27,31+bob,34,31+bob,plateLight);for(const x of [27,30,33,36])P([[x,29+bob],[x+1,29+bob],[x+.5,32+bob]],c.steelLight);
+  for(let i=0;i<6;i++){const x=10+i*7,h=4+(i*5+frame*3)%6;L(x,72,x+(i%2?1:-1),72-h,i%2?'#a72d46':'#ed5862');}
  }else{
-  P([[19,19+bob],[23,14+bob],[32,14+bob],[37,19+bob],[38,27+bob],[34,33+bob],[29,36+bob],[23,33+bob],[19,28+bob]],c.skinShade);
-  P([[21,20+bob],[24,16+bob],[31,16+bob],[35,20+bob],[36,27+bob],[32,32+bob],[28,33+bob],[23,30+bob],[21,26+bob]],c.skin);P([[23,22+bob],[32,21+bob],[35,25+bob],[31,29+bob],[24,28+bob]],c.skinLight);
-  // His lost right eye is a closed scar. Only the other eye can blink.
-  L(22,25+bob,26,26+bob,c.hairShade);if(golden){if(blink||expression==='hurt')L(23,27+bob,26,27+bob,c.hairShade);else{R(23,26+bob,4,2,'#f1e7ce');R(24,26+bob,2,2,'#54605d');R(25,26+bob,1,2,c.hairShade);}}else{L(23,22+bob,24,29+bob,'#93675d');L(24,22+bob,25,28+bob,'#b88977');}
-  L(31,25+bob,35,24+bob,c.hairShade);if(blink||expression==='hurt')L(31,27+bob,34,27+bob,c.hairShade);else{R(31,26+bob,4,2,'#f1e7ce');R(32,26+bob,2,2,'#54605d');R(33,26+bob,1,2,c.hairShade);if(['focused','ultimate'].includes(expression)){L(30,24+bob,34,25+bob,c.hairShade);R(31,26+bob,1,1,c.hairShade);}}
-  L(28,27+bob,28,29+bob,c.skinShade);L(26,32+bob,31,32+bob,expression==='hurt'?'#8c5255':'#865d56');L(20,29+bob,23,31+bob,c.skinShade);
-  P([[17,23+bob],[16,16+bob],[19,13+bob],[18,8+bob],[24,11+bob],[26,6+bob],[30,10+bob],[34,8+bob],[35,13+bob],[39,12+bob],[39,21+bob],[36,25+bob],[34,18+bob],[31,21+bob],[29,16+bob],[25,20+bob],[23,17+bob],[21,22+bob],[19,20+bob],[19,27+bob]],c.hairShade);
-  P([[19,17+bob],[20,13+bob],[24,14+bob],[27,10+bob],[30,14+bob],[33,12+bob],[36,16+bob],[36,20+bob],[33,17+bob],[30,19+bob],[28,14+bob],[24,18+bob],[22,15+bob],[20,21+bob]],c.hair);
-  L(22,13+bob,25,14+bob,c.hairLight);L(28,11+bob,31,14+bob,c.hairLight);L(34,14+bob,36,17+bob,c.hairLight);
-  // Small red Brand of Sacrifice above the collar on the exposed neck.
-  L(33,31+bob,33,34+bob,c.red);L(32,32+bob,34,33+bob,c.red);R(33,34+bob,1,1,c.red);
+  // A stern, angular face; the lost right eye is a scar sealed shut.
+  P([[19,19+bob],[23,14+bob],[32,14+bob],[37,19+bob],[38,27+bob],[35,33+bob],[29,36+bob],[23,33+bob],[19,28+bob]],c.skinShade);
+  P([[21,20+bob],[24,16+bob],[31,16+bob],[35,20+bob],[36,27+bob],[33,32+bob],[28,33+bob],[23,30+bob],[21,26+bob]],c.skin);P([[23,22+bob],[32,21+bob],[35,25+bob],[31,28+bob],[24,27+bob]],c.skinLight);
+  L(21,24+bob,26,26+bob,c.hairShade);L(31,25+bob,36,23+bob,c.hairShade);
+  if(golden){if(blink||expression==='hurt')L(23,27+bob,26,27+bob,c.hairShade);else{R(23,26+bob,4,2,'#f1e7ce');R(24,26+bob,2,2,'#54605d');R(25,26+bob,1,2,c.hairShade);}}
+  else{L(23,22+bob,25,30+bob,'#93675d');L(22,27+bob,26,27+bob,c.hairShade);r.put(24,28+bob,'#93675d');L(25,27+bob,32,28+bob,'#b07a6a');}
+  if(blink||expression==='hurt')L(31,27+bob,34,27+bob,c.hairShade);else{R(31,26+bob,4,2,'#f1e7ce');R(32,26+bob,2,2,'#54605d');R(33,26+bob,1,2,c.hairShade);if(['focused','ultimate'].includes(expression))L(30,24+bob,35,25+bob,c.hairShade);}
+  L(28,28+bob,28,30+bob,c.skinShade);L(26,32+bob,31,32+bob,expression==='hurt'?'#8c5255':'#865d56');if(expression==='ultimate')R(27,32+bob,4,1,'#f1e7ce');
+  if(!golden)for(const [x,yy]of [[24,31],[26,33],[30,33],[33,31],[22,29],[35,29]])r.put(x,yy+bob,'#b08a78');
+  // Spiky black hair: short, rough points all over, one falling between the brows.
+  P([[17,23+bob],[15,16+bob],[18,13+bob],[16,7+bob],[22,10+bob],[24,4+bob],[28,9+bob],[32,4+bob],[34,10+bob],[40,8+bob],[38,15+bob],[41,19+bob],[37,24+bob],[34,18+bob],[31,21+bob],[29,16+bob],[26,22+bob],[24,17+bob],[21,22+bob],[19,20+bob],[19,27+bob]],c.hairShade);
+  P([[19,17+bob],[19,11+bob],[23,13+bob],[25,7+bob],[28,12+bob],[32,7+bob],[33,13+bob],[38,11+bob],[36,17+bob],[36,20+bob],[33,17+bob],[30,19+bob],[28,14+bob],[25,19+bob],[22,15+bob],[20,21+bob]],c.hair);
+  L(21,12+bob,24,13+bob,c.hairLight);L(28,10+bob,31,13+bob,c.hairLight);L(34,12+bob,37,15+bob,c.hairLight);
+  // The Brand of Sacrifice on his neck.
+  L(33,30+bob,33,33+bob,c.red);L(32,31+bob,34,32+bob,c.red);R(33,33+bob,1,1,c.red);
  }
  if(cast)slab(r,{attack:true,step:bob,berserk});
  return outline(r.pixels,c.ink);
