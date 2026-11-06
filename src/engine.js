@@ -26,6 +26,7 @@ import {bossUltimatePaused} from './boss-ultimates.js';
 import {cannonStage,cannonPayload,CANNON_STAGES} from './samus-cannon.js';
 import {summonPack,summonNue,updateSummons} from './summons.js';
 import {summonBrood} from './shiraori.js';
+import {syncShadowArmy,updateJinwoo} from './jinwoo.js';
 import {petFor,updatePet} from './pets.js';
 import {newHeroMechanic,updateHeroMechanic,heroMovement,heroDamageBonus,heroMoveBonus,heroResistance,blockHeroHit,heroHurt,heroKill,heroXp,heroToxin,heroFreeze,consumeHeroCast,spendStolenTime} from './hero-mechanics.js';
 import {queueBossIntro,tickBossIntro} from './boss-intro.js';
@@ -293,7 +294,7 @@ export function updateRun(g,dt,input={x:0,y:0}){
   if(g.mode==='ascent'&&updateAscent(g,dt,{spawn:spawnEnemy,queueIntro:queueBossIntro})&&g.status!=='playing')return;
   if(natural&&!riftActive&&!eventCombatActive(g)&&updateWaves(g,dt,{spawn:spawnEnemy,queueIntro:queueBossIntro,pendingDeath:bossDeathPending}))return;
   if(g.bossIntro)return;
-  updateSummons(g,dt,{damage:damageEnemy,burst});
+  syncShadowArmy(g);updateSummons(g,dt,{damage:damageEnemy,burst});
   if(g.ultimate?.type!=='frieren')updateFrierenGolem(g,dt,{damage:(g,e,v,color)=>damageEnemy(g,e,v*(1+(g.p.meta.ultimateDamage||0)),color),burst});
   updateCrimsonEchoes(g,dt,damageEnemy);
   const departingDecoys=[...g.cloneUnits.map(unit=>({kind:'clone',unit:{...unit},hero:{...p,id:'naruto'}})),...(g.ultimate?.shadows||[]).map(unit=>({kind:'shadow',unit:{...unit},hero:{...p,id:'kurumi'}}))];
@@ -317,6 +318,7 @@ export function updateRun(g,dt,input={x:0,y:0}){
 
   let target=null,best=Infinity;for(const e of g.enemies){if(e.hp<=0)continue;const d=distance(e,p);if(d<best){best=d;target=e;}}
   let attackTarget=target;const supply=g.world.active.filter(o=>o.hp>0&&Number.isFinite(o.hp)&&distance(o,p)<260).sort((a,b)=>distance(a,p)-distance(b,p))[0];if(supply&&(!target||distance(supply,p)<distance(target,p)))attackTarget=supply;
+  if(p.id==='jinwoo'&&playerMods.canAct)updateJinwoo(g,dt,{damage:damageEnemy,burst,target:attackTarget});
   for(const id of Object.keys(p.weapons)){
     if(!playerMods.canAct||g.ultimate?.type==='diavolo')continue;
     p.cooldowns[id]=Math.max(0,(p.cooldowns[id]||0)-dt);

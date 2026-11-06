@@ -1,0 +1,10 @@
+/* Jinwoo's System: a translucent blue notification window, his stat sheet and HUD strip. */
+.upgrade-modal.system-modal{background:linear-gradient(180deg,#0a1a38f2,#071226f2);border:1px solid #6ab8f0;box-shadow:0 0 0 1px #1c4a7a inset,0 0 38px #2a7ad866}
+.upgrade-modal.system-modal .eyebrow{color:#9ad8ff;letter-spacing:.18em}
+.upgrade-modal.system-modal h2{color:#e8f6ff;text-shadow:0 0 14px #4aa8f088}
+.upgrade-modal.system-modal .upgrade{background:#0c1e3cdd;border-color:#2a5a8a}
+.system-sheet{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:4px 0 12px}
+.system-sheet span{border:1px solid var(--stat);color:var(--stat);background:#06101ecc;border-radius:3px;padding:3px 8px;font:600 12px/1.2 'Barlow Condensed',sans-serif;letter-spacing:.08em}
+.system-sheet b{color:#ffffff;margin-left:3px}
+.inventory-row.system-stats{gap:2px;flex-wrap:nowrap}
+.inventory-row.system-stats b{color:var(--stat);font:600 9px/1 'Barlow Condensed',sans-serif;letter-spacing:.02em;padding:3px 3px;white-space:nowrap;border:1px solid color-mix(in srgb,var(--stat) 55%,transparent);border-radius:3px;background:#0a0c18aa}

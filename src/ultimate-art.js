@@ -3,6 +3,7 @@ import {drawUnlimitedVoid} from './gojo-effects.js';
 import {drawPanaceaAura} from './maomao-effects.js';
 import {drawDenjiUltimate} from './denji-effects.js';
 import {drawGluttony} from './rimuru-art-effects.js';
+import {drawAriseDomain} from './jinwoo-effects.js';
 import {drawGutsUltimate} from './guts-effects.js';
 import {drawFrierenBarrage} from './frieren-barrage-art.js';
 import {drawYukiSingularity} from './yuki-singularity-art.js';
@@ -16,6 +17,7 @@ export function ultimateUnder(c,g){
   }else if(u.type==='guts'){drawGutsUltimate(c,g,!!g.p.reducedMotion);
   }else if(u.type==='frieren-barrage'){drawFrierenBarrage(c,g,'under');
   }else if(u.type==='featherine'){drawFeatherineUltimate(c,g,'under');
+  }else if(u.type==='jinwoo'){drawAriseDomain(c,g,'under');
   }else if(u.type==='rimuru'){drawGluttony(c,g,'under');
   }else if(u.type==='diavolo'){
     const phase=g.p.reducedMotion?0:u.age,r=150;c.strokeStyle='#dfa1b477';c.lineWidth=1.5;c.setLineDash([13,9,3,9]);c.beginPath();c.ellipse(g.p.x,g.p.y-20,r,r*.52,phase*.13,0,TAU);c.stroke();c.setLineDash([]);for(let i=0;i<8;i++){const a=i*TAU/8+phase*.2;c.fillStyle=i%2?'#d2c5d877':'#edb9ae88';c.fillRect(g.p.x+Math.cos(a)*r,g.p.y-20+Math.sin(a)*r*.52,8,2);}drawKingCrimson(c,{x:g.p.x-g.p.facing*33,y:g.p.y-8,facing:g.p.facing,scale:1.25,frame:g.p.reducedMotion?0:Math.floor(u.age*5)%4,opacity:.38});
@@ -44,6 +46,7 @@ export function ultimateOver(c,g){
   if(u.type==='frieren-barrage'){drawFrierenBarrage(c,g,'over');}
   else if(u.type==='featherine'){drawFeatherineUltimate(c,g,'over');}
   else if(u.type==='rimuru'){drawGluttony(c,g,'over');}
+  else if(u.type==='jinwoo'){drawAriseDomain(c,g,'over');}
   else if(u.type==='yuki'){drawYukiSingularity(c,g,'over');}
   else if(u.type==='goku'&&u.age<1.8){
     const charge=Math.min(1,u.age/1.2),fly=Math.max(0,Math.min(1,(u.age-1.2)/.6)),x=u.x+(u.tx-u.x)*fly,y=u.y+(u.ty-u.y)*fly-100*(1-fly),r=10+charge*45;

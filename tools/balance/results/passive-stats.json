@@ -370,6 +370,16 @@
   "score": 19.6
  },
  {
+  "id": "blackheart",
+  "slots": 1,
+  "offense": 0,
+  "defence": 28.8,
+  "ultimate": 0,
+  "move": 0,
+  "magnet": 0,
+  "score": 17.3
+ },
+ {
   "id": "herbs",
   "slots": 1,
   "offense": 0,

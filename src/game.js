@@ -13,6 +13,7 @@ import {syncErenProgress} from './eren-progress.js';
 import {signatureWeaponIds,signaturePassiveIds} from './hardcore.js';
 import {ERZA_CHARACTER,ERZA_ITEMS,ERZA_FUSIONS} from './erza-data.js';
 import {SHIRAORI_CHARACTER,SHIRAORI_ITEMS,SHIRAORI_FUSIONS} from './shiraori-data.js';
+import {JINWOO_CHARACTER,JINWOO_ITEMS,MAX_SHADOWS,STAT_IDS,STAT_POINTS,newStats} from './jinwoo-data.js';
 export const CHARACTERS = [
   
   { id:'goku', name:'Goku', title:'THE SAIYAN', series:'DRAGON BALL', color:'#ffb35c', weapon:'ki', passive:'senzu', skill:'Spirit bomb', description:'Turn your fighting spirit into a piercing wave of ki. Recover with Senzu Beans and ascend beyond your limits.', power:5, speed:3, range:5, hp:120, move:215 },
@@ -35,6 +36,7 @@ export const CHARACTERS = [
  GUTS_CHARACTER,
  DENJI_CHARACTER,
  SHIRAORI_CHARACTER,
+ JINWOO_CHARACTER,
 ];
 export const ITEMS = {
  ...COMPLEX_ITEMS,
@@ -44,6 +46,7 @@ export const ITEMS = {
  ...GUTS_ITEMS,
  ...DENJI_ITEMS,
  ...SHIRAORI_ITEMS,
+ ...JINWOO_ITEMS,
  ...ERZA_ITEMS,
  quill:{name:'Author’s Quill',type:'weapon',color:'#baa2da',owner:'Featherine',max:5,description:'Write homing ink quills that pierce and curse enemies. Ranks add quills and piercing. Featherine’s full Narrative Authority turns the next volley into an empowered Red Truth.',scaling:'+ quills, damage and piercing'},
  memoryfragment:{name:'Memory Fragment',type:'passive',color:'#b9cba0',owner:'Featherine',max:3,description:'+5% weapon damage and +5% weapon area per rank. Featherine gains 10% more Narrative Authority per rank.',scaling:'+ damage, area and Authority gain'},
@@ -174,15 +177,15 @@ export function effectivePassiveRank(p,id){
  return FUSIONS.some(f=>hardcoreFusionAllowed(p,f)&&fusionConsumedIngredients(f).includes(id)&&ITEMS[id]?.type==='passive'&&p.fusions?.[fusionBase(f)]===f.id&&((fusionType(f)==='passive'?p.passives:p.weapons)[fusionBase(f)]||0)>=ITEMS[fusionBase(f)].max)?Math.max(owned,ITEMS[id].max):owned;
 }
 export const fusionRequirement=f=>fusionIngredients(f).map(id=>`${id===fusionBase(f)&&f.requiresEvolution?FUSIONS.find(other=>other.id===f.requiresEvolution)?.name||ITEMS[id].name:ITEMS[id].name} LV ${ITEMS[id].max}`).join(' + ')+(f.requiresEvolution&&!fusionIngredients(f).includes(fusionBase(f))?` · Requires ${FUSIONS.find(other=>other.id===f.requiresEvolution)?.name||f.requiresEvolution} LV ${ITEMS[fusionBase(f)].max}`:'')+(f.requiredCharacter?` · ${CHARACTERS.find(c=>c.id===f.requiredCharacter)?.name||f.requiredCharacter} only`:'');
-export const forbiddenWeapon=(p,id)=>id==='titanfists'&&(p.id!=='eren'||p.erenForm!=='titan')||!!(p.hardcore&&ITEMS[id]?.type==='weapon'&&!signatureWeaponIds(CHARACTERS.find(c=>c.id===p.id)).includes(id));
+export const forbiddenWeapon=(p,id)=>p.id==='jinwoo'&&ITEMS[id]?.type==='weapon'||id==='titanfists'&&(p.id!=='eren'||p.erenForm!=='titan')||!!(p.hardcore&&ITEMS[id]?.type==='weapon'&&!signatureWeaponIds(CHARACTERS.find(c=>c.id===p.id)).includes(id));
 export const forbiddenPassive=(p,id)=>!!(p.hardcore&&ITEMS[id]?.type==='passive'&&!signaturePassiveIds(CHARACTERS.find(c=>c.id===p.id)).includes(id));
 export const forbiddenItem=(p,id)=>forbiddenWeapon(p,id)||forbiddenPassive(p,id);
 export const hardcoreFusionAllowed=(p,f)=>!p.hardcore||p.shenronEvolution===f.id&&fusionType(f)==='weapon'&&signatureWeaponIds(CHARACTERS.find(c=>c.id===p.id)).includes(f.weapon)||fusionIngredients(f).every(id=>ITEMS[id]?.type==='weapon'?signatureWeaponIds(CHARACTERS.find(c=>c.id===p.id)).includes(id):ITEMS[id]?.type==='passive'&&signaturePassiveIds(CHARACTERS.find(c=>c.id===p.id)).includes(id));
 export const inactiveFormWeapon=(p,id)=>p.id==='eren'&&['odmblades','titanfists'].includes(id)&&id!==p.weapon;
 export function createPlayer(character,meta={}) {
   const p = {...character,meta,vanished:[],baseRulesVersion:2,rerollsLeft:1+(meta.rerolls||0),vanishesLeft:1+(meta.vanishes||0), x:0, y:0, hp:character.hp, baseHp:character.hp, maxHp:character.hp, xp:0, level:1, nextXp:6,
-    weapons:{[character.weapon]:1}, passives:{[character.passive]:1}, fusions:{}, cooldowns:{}, facing:1, moving:false, walk:0, damage:1, shield:0, maxShield:0, shieldTimer:0, cooldown:1, magnet:115, area:1, regen:0, dodge:0};
-  if(character.secondWeapon)p.weapons[character.secondWeapon]=1;p.weapons[character.weapon]+=meta.startRank||0;if(character.id==='eren'){p.erenForm='human';p.form=0;p.formWeapons={odmblades:p.weapons.odmblades,titanfists:1+(meta.startRank||0)};p.erenRulesVersion=2;syncErenProgress(p);}refreshStats(p); p.hp=p.maxHp;p.shield=p.maxShield; return p;
+    weapons:character.noWeapons?{}:{[character.weapon]:1}, passives:{[character.passive]:1}, fusions:{}, cooldowns:{}, facing:1, moving:false, walk:0, damage:1, shield:0, maxShield:0, shieldTimer:0, cooldown:1, magnet:115, area:1, regen:0, dodge:0};
+  if(character.noWeapons){p.shadows={[character.weapon]:1+(meta.startRank||0)};p.stats=newStats();}else{if(character.secondWeapon)p.weapons[character.secondWeapon]=1;p.weapons[character.weapon]+=meta.startRank||0;}if(character.id==='eren'){p.erenForm='human';p.form=0;p.formWeapons={odmblades:p.weapons.odmblades,titanfists:1+(meta.startRank||0)};p.erenRulesVersion=2;syncErenProgress(p);}refreshStats(p); p.hp=p.maxHp;p.shield=p.maxShield; return p;
 }
 export function refreshStats(p) {
   p.shieldRulesVersion=2;
@@ -198,6 +201,10 @@ export function refreshStats(p) {
   p.damage=(1+rank('power')*.12+rank('soulgem')*.06+rank('demonextract')*.04+rank('grimoire')*.05+rank('talisman')*.05+rank('masscore')*.06+rank('epitaph')*.06+rank('greatsage')*.05+rank('memoryfragment')*.05+rank('heartkreuz')*.04+rank('bloodengine')*.04+rank('manacrystal')*.03+rank('redgem')*.04+rank('sagecloak')*.03+rank('truthseal')*.04+rank('transmutation')*.02+rank('redstone')*.03+rank('strawhat')*.03+rank('hanafuda')*.04+rank('parallelminds')*.04+set.damage)*(1+(m.damage||0));
   p.maxShield=(p.id==='eren'&&p.erenForm==='titan'?45:0)+rank('soulgem')*10+rank('atfield')*11+rank('heartkreuz')*7+(m.shield||0)+(barrier?20:0);p.damageReduction=rank('atfield')*.04+rank('energytank')*.035+rank('brand')*.03+rank('sagecloak')*.02+rank('variasuit')*.02+rank('automail')*.02+rank('gumgumfruit')*.02+rank('checkeredhaori')*.02;p.shieldRecharge=barrier?7:rank('atfield')?9:p.id==='eren'&&p.erenForm==='titan'?8:10;
   if(purified)p.shieldRecharge=Math.min(p.shieldRecharge,8);
+  // Jinwoo's System stats and Black Heart, applied before run-wide multipliers.
+  p.maxHp+=rank('blackheart')*12;
+  if(p.stats){const st=p.stats,d=k=>(st[k]||10)-10;p.maxHp+=d('vit')*4;p.regen+=d('vit')*.06;p.damage*=1+d('str')*.01;p.daggerPower=1+d('str')*.03;p.shadowPower=(1+d('int')*.03)*(1+rank('blackheart')*.06);
+   p.move*=1+d('agi')*.01;p.attackSpeed=1+d('agi')*.01;p.cooldown*=Math.max(.6,1-d('agi')*.01);p.magnet*=1+d('sen')*.03;p.dodge=Math.min(.6,p.dodge+d('sen')*.003);p.area*=1+d('int')*.015;}
   // Ascent pacts and events: lasting multipliers (regeneration adds) for the run.
   if(p.ascentMods){const a=p.ascentMods;p.damage*=a.damage||1;p.maxHp*=a.maxHp||1;p.move*=a.move||1;p.cooldown*=a.cooldown||1;p.magnet*=a.magnet||1;p.regen+=a.regen||0;}
   if(p.shenronBlessing===true){p.maxHp*=1.2;p.damage*=1.2;p.move*=1.1;p.regen+=1;}
@@ -223,24 +230,34 @@ export function fusionReady(p, fusion) {
     return fusionType(fusion)==='passive'? (!p.fusions[id]||fusion.acceptsFusions?.[id]?.includes(p.fusions[id]))&&!consumedFusionIngredient(p,id)&&(p.passives[id]||0)>=item.max : effectivePassiveRank(p,id)>=item.max;
   });
 }
+// The inventory an item lives in: weapons, passives, or Jinwoo's Shadow Inventory.
+export const inventoryFor=(p,item)=>item.type==='shadow'?(p.shadows??={}):item.type==='weapon'?p.weapons:p.passives;
+export const slotLimit=item=>item.type==='shadow'?MAX_SHADOWS:MAX_SLOTS;
 export function getUpgradePool(p) {
   const pool=[];
   for(const [id,item] of Object.entries(ITEMS)) {
-    const inventory=item.type==='weapon'?p.weapons:p.passives, level=inventory[id]||0;
+    if(item.type==='shadow'&&(p.id!=='jinwoo'||(item.minLevel||0)>(p.level||1)&&!(p.shadows?.[id])))continue;
+    const inventory=inventoryFor(p,item), level=inventory[id]||0;
     if(item.fusionOnly||forbiddenItem(p,id)||inactiveFormWeapon(p,id)||p.vanished?.includes(id)||consumedFusionIngredient(p,id))continue;
     if(level>=item.max || p.fusions[id])continue;
-    if(!level && Object.keys(inventory).length>=MAX_SLOTS)continue;
+    if(!level && Object.keys(inventory).length>=slotLimit(item))continue;
     pool.push({kind:'item',id,level:level+1});
   }
+  // The System: Jinwoo can always allocate stat points.
+  if(p.id==='jinwoo'&&p.stats)for(const id of STAT_IDS)pool.push({kind:'stat',id,points:STAT_POINTS});
   for(const f of FUSIONS) if(fusionReady(p,f))pool.push({kind:'fusion',id:f.id});
   pool.push(...soulBondChoices(p),...setBondChoices(p));
-  if(pool.length<3)pool.push({kind:'heal',id:'heal'});
+  if(pool.filter(c=>c.kind!=='stat').length<3&&p.id!=='jinwoo'||pool.length<3)pool.push({kind:'heal',id:'heal'});
   return pool;
 }
 export function getChoices(p, random=Math.random,exclude=[]) {
   const pool=getUpgradePool(p), fusions=pool.filter(c=>c.kind==='fusion'||c.kind==='bond');
   const regular=pool.filter(c=>c.kind!=='fusion'&&c.kind!=='bond');
   for(let i=regular.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[regular[i],regular[j]]=[regular[j],regular[i]];}
+  // The System always offers one stat allocation and, while any remain, one shadow card.
+  if(p.id==='jinwoo'){const first=kind=>regular.find(c=>kind(c)&&!exclude.includes(c.id))||regular.find(kind),isShadow=c=>c.kind==='item'&&ITEMS[c.id]?.type==='shadow';
+   const stat=first(c=>c.kind==='stat'),shadow=first(isShadow),rest=regular.filter(c=>c!==stat&&c!==shadow&&c.kind!=='stat');
+   return [...(stat?[stat]:[]),...(shadow?[shadow]:[]),...fusions,...rest.filter(c=>!exclude.includes(c.id)),...rest.filter(c=>exclude.includes(c.id))].slice(0,3);}
   // An available fusion is always offered; other slots remain random.
   return [...fusions,...regular.filter(c=>!exclude.includes(c.id)),...regular.filter(c=>exclude.includes(c.id))].slice(0,3);
 }
@@ -308,10 +325,11 @@ export function applyChoice(p, choice) {
     syncErenProgress(p);refreshStats(p);p.hp=Math.min(p.maxHp,p.hp+Math.max(0,p.maxHp-oldMax));p.shield=Math.min(p.maxShield,p.shield+Math.max(0,p.maxShield-oldShield));return true;
   }
   if(choice.kind==='heal'){p.hp=Math.min(p.maxHp,p.hp+50);return true;}
-  const item=ITEMS[choice.id];if(!item||item.fusionOnly||forbiddenItem(p,choice.id)||inactiveFormWeapon(p,choice.id))return false;
-  const inventory=item.type==='weapon'?p.weapons:p.passives, rank=inventory[choice.id]||0;
+  if(choice.kind==='stat'){if(p.id!=='jinwoo'||!p.stats||!STAT_IDS.includes(choice.id))return false;p.stats[choice.id]+=STAT_POINTS;const oldMax=p.maxHp;refreshStats(p);p.hp=Math.min(p.maxHp,p.hp+Math.max(0,p.maxHp-oldMax));return true;}
+  const item=ITEMS[choice.id];if(!item||item.fusionOnly||forbiddenItem(p,choice.id)||inactiveFormWeapon(p,choice.id)||item.type==='shadow'&&p.id!=='jinwoo')return false;
+  const inventory=inventoryFor(p,item), rank=inventory[choice.id]||0;
   if(consumedFusionIngredient(p,choice.id))return false;
-  if(rank>=item.max||(!rank&&Object.keys(inventory).length>=MAX_SLOTS)||p.fusions[choice.id])return false;
+  if(rank>=item.max||(!rank&&Object.keys(inventory).length>=slotLimit(item))||p.fusions[choice.id])return false;
   inventory[choice.id]=choice.maxLevel===true?item.max:rank+1;if(p.id==='eren'&&choice.id===p.weapon)p.formWeapons[choice.id]=inventory[choice.id];syncErenProgress(p);const oldMax=p.maxHp;refreshStats(p);p.hp=Math.min(p.maxHp,p.hp+Math.max(0,p.maxHp-oldMax));return true;
 }
 export function formatTime(seconds){return `${Math.floor(seconds/60).toString().padStart(2,'0')}:${Math.floor(seconds%60).toString().padStart(2,'0')}`;}
@@ -322,7 +340,7 @@ export const waveAt=time=>Math.floor(time/WAVE_SECONDS)+1;
 export function chestItemCount(random=Math.random){const roll=random();return roll<.65?1:roll<.9?3:5;}
 export function chestOffers(p,count,random=Math.random,context={}){
   if(count<=0)return [];
-  const virtual={...p,weapons:{...p.weapons},passives:{...p.passives},fusions:{...p.fusions},cooldowns:{...p.cooldowns},formWeapons:{...p.formWeapons}},rewards=[];
+  const virtual={...p,weapons:{...p.weapons},passives:{...p.passives},shadows:p.shadows&&{...p.shadows},stats:p.stats&&{...p.stats},fusions:{...p.fusions},cooldowns:{...p.cooldowns},formWeapons:{...p.formWeapons}},rewards=[];
   for(let i=0;i<count;i++){
     const pool=getUpgradePool(virtual),fusions=pool.filter(c=>c.kind==='fusion'),items=pool.filter(c=>c.kind==='item'),refill=context.maxLevelItems&&(Object.keys(virtual.weapons).length<MAX_SLOTS||Object.keys(virtual.passives).length<MAX_SLOTS),choices=refill&&items.length?items:fusions.length?fusions:items.length?items:[{kind:'heal',id:'heal'}];
     let choice=choices[Math.min(choices.length-1,Math.floor(random()*choices.length))];

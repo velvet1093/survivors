@@ -22,7 +22,7 @@ function sim(g,t,input={x:0,y:0}){for(let i=0;i<Math.round(t/.02);i++)updateRun(
 
 function finishDeath(g){for(let i=0;i<90&&g.status==='playing'&&g.enemies.some(e=>e.boss&&e.hp<=0&&!e.deathComplete);i++)updateRun(g,.02);}
 test('every hero receives base healing, one reroll and one ban; permanent upgrades add to them',()=>{
- for(const c of CHARACTERS){const p=createPlayer(c);assert.ok(p.regen>=1);assert.equal(p.rerollsLeft,1);assert.equal(p.vanishesLeft,1);const cards=getChoices(p);assert.ok(rerollChoices(p,cards));assert.equal(p.rerollsLeft,0);assert.ok(vanishItem(p,'orbit'));assert.equal(p.vanishesLeft,0);assert.ok(!getUpgradePool(p).some(c=>c.id==='orbit'));}
+ for(const c of CHARACTERS){const p=createPlayer(c);assert.ok(p.regen>=1);assert.equal(p.rerollsLeft,1);assert.equal(p.vanishesLeft,1);const cards=getChoices(p);assert.ok(rerollChoices(p,cards));assert.equal(p.rerollsLeft,0);const ban=c.noWeapons?'power':'orbit';assert.ok(vanishItem(p,ban));assert.equal(p.vanishesLeft,0);assert.ok(!getUpgradePool(p).some(c=>c.id===ban));}
  const p=createPlayer(hero('samus'),{rerolls:2,vanishes:2,regen:.5});p.passives={};refreshStats(p);assert.equal(p.regen,1.5);assert.equal(p.rerollsLeft,3);assert.equal(p.vanishesLeft,3);
  const g=quiet();g.p.passives={};refreshStats(g.p);g.p.hp=50;g.p.weapons={};sim(g,1);assert.ok(Math.abs(g.p.hp-51)<1e-7);
 });

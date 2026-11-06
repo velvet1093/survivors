@@ -11,10 +11,12 @@ const enemy=(id,x=100,y=0,hp=1000)=>({id,x,y,hp,maxHp:hp,speed:0,r:15,hit:0,slow
 function quietRun(index=0){const g=createRun(CHARACTERS[index]);g.events.nextAt=1e9;g.chestRandom=()=>.99;g.spawn=1e6;g.eliteAt=1e6;return g;}
 test('each hero starts with a unique signature weapon and passive',()=>{
   assert.equal(new Set(CHARACTERS.map(c=>c.weapon)).size,CHARACTERS.length);assert.equal(new Set(CHARACTERS.map(c=>c.passive)).size,CHARACTERS.length);
-  for(const c of CHARACTERS){const p=createPlayer(c);assert.deepEqual(p.weapons,{[c.weapon]:1,...(c.secondWeapon?{[c.secondWeapon]:1}:{})});assert.deepEqual(p.passives,{[c.passive]:1});assert.equal(p.hp,p.maxHp);}
+  // Jinwoo never holds weapons: his signature item is the shadow that opens his Shadow Inventory.
+  for(const c of CHARACTERS){const p=createPlayer(c);if(c.noWeapons){assert.deepEqual(p.weapons,{});assert.deepEqual(p.shadows,{[c.weapon]:1});}else assert.deepEqual(p.weapons,{[c.weapon]:1,...(c.secondWeapon?{[c.secondWeapon]:1}:{})});assert.deepEqual(p.passives,{[c.passive]:1});assert.equal(p.hp,p.maxHp);}
 });
 test('the shared pool includes all heroes’ signature weapons and passives',()=>{
-  for(const c of CHARACTERS){const p=createPlayer(c),pool=getUpgradePool(p);for(const other of CHARACTERS){assert.ok(pool.some(u=>u.id===other.weapon));assert.ok(pool.some(u=>u.id===other.passive));}}
+  // Weapons are shared by every hero but Jinwoo, whose shadows belong to him alone.
+  for(const c of CHARACTERS){const p=createPlayer(c),pool=getUpgradePool(p);for(const other of CHARACTERS){if(!c.noWeapons&&!other.noWeapons||c===other)assert.ok(pool.some(u=>u.id===other.weapon)||p.shadows?.[other.weapon],c.id+' '+other.weapon);else assert.ok(!pool.some(u=>u.id===other.weapon),c.id+' '+other.weapon);assert.ok(pool.some(u=>u.id===other.passive));}}
 });
 test('new item unlocks and upgrades obey independent five-slot limits',()=>{
   const p=createPlayer(CHARACTERS[0]);for(const id of ['blue','shuriken','kunai','orbit','eyes','headband','magnet','power'])upgrade(p,id);

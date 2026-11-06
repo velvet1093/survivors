@@ -400,6 +400,27 @@ export const TIER_MEASUREMENTS={
     ]
    ]
   },
+  "jinwoo": {
+   "label": "6 BOT RUNS · 10 MIN",
+   "stats": [
+    [
+     "Damage / sec",
+     "560"
+    ],
+    [
+     "Kills",
+     "474"
+    ],
+    [
+     "Level reached",
+     "20"
+    ],
+    [
+     "HP pool lost / min",
+     "163%"
+    ]
+   ]
+  },
   "shiraori": {
    "label": "6 BOT RUNS · 10 MIN · CLOSE RANGE",
    "stats": [
@@ -2211,6 +2232,19 @@ export const TIER_MEASUREMENTS={
     [
      "Move speed",
      "+30%"
+    ]
+   ]
+  },
+  "blackheart": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+0%"
+    ],
+    [
+     "Effective HP",
+     "+29%"
     ]
    ]
   },

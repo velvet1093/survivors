@@ -1,0 +1,94 @@
+[
+ {
+  "id": "jinwoo",
+  "style": "close",
+  "dps": 589.7,
+  "kills": 512,
+  "level": 20,
+  "lateTakenPerMin": 972.4,
+  "ehp": 205,
+  "regenPerMin": 115.4,
+  "pressure": 3.038,
+  "fusions": 0,
+  "rows": [
+   {
+    "dealt": 355851,
+    "kills": 572,
+    "level": 20,
+    "takenPerMin": 695.9,
+    "lateTakenPerMin": 1212.9,
+    "ehp": 213,
+    "regenPerMin": 343.3,
+    "pressure": 2.181,
+    "bossShare": 0.44,
+    "ults": 8,
+    "fusions": 0
+   },
+   {
+    "dealt": 386559,
+    "kills": 518,
+    "level": 21,
+    "takenPerMin": 630.7,
+    "lateTakenPerMin": 910,
+    "ehp": 214,
+    "regenPerMin": 95.1,
+    "pressure": 2.945,
+    "bossShare": 0.31,
+    "ults": 8,
+    "fusions": 0
+   },
+   {
+    "dealt": 260160,
+    "kills": 441,
+    "level": 18,
+    "takenPerMin": 507.4,
+    "lateTakenPerMin": 815.6,
+    "ehp": 197,
+    "regenPerMin": 95.4,
+    "pressure": 2.794,
+    "bossShare": 0.51,
+    "ults": 8,
+    "fusions": 0
+   },
+   {
+    "dealt": 486885,
+    "kills": 712,
+    "level": 22,
+    "takenPerMin": 638.1,
+    "lateTakenPerMin": 1114.1,
+    "ehp": 215,
+    "regenPerMin": 135.4,
+    "pressure": 3.182,
+    "bossShare": 0.32,
+    "ults": 9,
+    "fusions": 0
+   },
+   {
+    "dealt": 351740,
+    "kills": 506,
+    "level": 20,
+    "takenPerMin": 612.1,
+    "lateTakenPerMin": 1034.8,
+    "ehp": 178,
+    "regenPerMin": 152.6,
+    "pressure": 3.131,
+    "bossShare": 0.37,
+    "ults": 9,
+    "fusions": 0
+   },
+   {
+    "dealt": 230614,
+    "kills": 275,
+    "level": 17,
+    "takenPerMin": 555.8,
+    "lateTakenPerMin": 752.1,
+    "ehp": 143,
+    "regenPerMin": 78.1,
+    "pressure": 3.403,
+    "bossShare": 0.54,
+    "ults": 7,
+    "fusions": 0
+   }
+  ]
+ }
+]

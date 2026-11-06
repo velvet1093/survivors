@@ -49,6 +49,11 @@ export const CHARACTER_RANKINGS={
   comparison:'He is the strongest B hero: his damage beats the A brawlers, but he lacks Diavolo’s negation or Titan Eren’s resistance.',
   caution:'He moves slowly and must stand in the crowd to hit, so ranged enemies punish him.',
   bestWith:'Brand of Sacrifice for Astral Edge, defensive passives, and Berserker Armor saved for dense packs.'}),
+ jinwoo:entry('B',{
+  reason:'Jinwoo levels through the System: each level-up allocates stat points, extracts a new shadow or grades one up, and his shadow army fights beside Kamish’s Wrath.',
+  comparison:'His army builds slowly, then reaches damage in the roster’s upper middle as shadows climb toward Commander grade; he takes more damage than most heroes, which keeps his composite in B.',
+  caution:'He can never take weapons or weapon evolutions, so his damage depends on choosing shadows over stat cards early; his own dagger is short-ranged.',
+  bestWith:'Extract shadows first and grade up the Shadow Soldier squad, put early stat points into Strength or Intelligence, and finish the Daily Quest for free stats.'}),
  shiraori:entry('A',{
   reason:'Shiraori fights through a swarm: Spider Brood hatches spiderlings that chase the nearest enemies and poison every bite, and Parallel Minds adds one more per rank.',
   comparison:'She deals the most damage in the roster when fighting up close, but she also takes the most damage, so her composite lands in A rather than S.',
@@ -139,6 +144,11 @@ export const ULTIMATE_RANKINGS={
   comparison:'Its damage on a packed crowd rivals the S domains and it fills Star Rage instantly. The charge-up and boss resistance keep it just below them.',
   caution:'It compresses for two seconds before the hole opens, leaving you exposed, and bosses resist its pull.',
   bestWith:'Start the charge before the crowd reaches you, then fight inside Maximum Mass while the hole keeps feeding Garuda targets.'}),
+ jinwoo:entry('A',{
+  reason:'Arise empowers every shadow for eight seconds, 60% more damage and 40% faster attacks, and each enemy that falls in the domain rises as a temporary shadow soldier.',
+  comparison:'It snowballs like no other ultimate: in a dense wave the risen soldiers multiply the army; against a lone boss it is a strong but plain damage window.',
+  caution:'Its value scales with the shadows you own and the enemies that die inside the domain; with a small army or a single target it gains much less.',
+  bestWith:'Cast it into a big wave after grading up your shadows, and take the Monarch mastery nodes for a longer, harder-hitting domain.'}),
  shiraori:entry('A',{
   reason:'The Queen Taratect stays on the field with its own HP until defeated, stomping, poisoning and slowing every enemy around it, and arrives with a fresh brood of spiderlings.',
   comparison:'Like Mahoraga it keeps working long after the button press and grows with your level; its stomps hit whole crowds where Mahoraga cuts a few targets harder.',
@@ -786,6 +796,11 @@ export const PASSIVE_RANKINGS={
   comparison:'Modest alone; its value is fusing into Sage’s Codex.',
   caution:'Weak as a stand-alone slot.',
   bestWith:'Fuse it with Ancient Grimoire.'}),
+ blackheart:entry('B',{
+  reason:'Black Heart adds 12 max HP per rank for any hero; on Jinwoo it also adds 6% shadow damage and speeds the Daily Quest by 15% per rank.',
+  comparison:'For most heroes it is a steady health passive like Automail; on Jinwoo it is closer to a damage passive because his shadows carry his offence.',
+  caution:'Outside Jinwoo it offers only maximum HP, with no damage, cooldown or mobility bonus.',
+  bestWith:'Jinwoo, who starts with it and uses it to clear the Daily Quest faster for extra stats.'}),
  parallelminds:entry('A',{
   reason:'Parallel Minds adds 12% weapon damage and cuts cooldowns by 9%; on Shiraori it also hatches three more spiderlings.',
   comparison:'About as valuable as Blood Engine or Epitaph for one slot, and better on Shiraori, whose brood grows with every rank.',

@@ -25,7 +25,7 @@ test('Hardcore preserves normal run stats and limits every hero to canonical wea
 test('random choices, rerolls and five-reward chests never offer foreign weapons or passives',()=>{
  for(const {id}of CHARACTERS){
   const p=hardcore(id).p,allowed=signatureWeaponIds(hero(id));p.rerollsLeft=30;
-  const valid=choice=>{if(choice.kind==='item')assert.ok(ITEMS[choice.id].type==='weapon'?allowed.includes(choice.id):choice.id===hero(id).passive);};
+  const valid=choice=>{if(choice.kind==='item'){const type=ITEMS[choice.id].type;assert.ok(type==='weapon'?allowed.includes(choice.id):type==='shadow'?id==='jinwoo':choice.id===hero(id).passive);}};
   for(let i=0;i<20;i++){const choices=getChoices(p,()=>i/20);choices.forEach(valid);(rerollChoices(p,choices,()=>1-(i+1)/21)||[]).forEach(valid);openChest(p,()=>.95).forEach(valid);}
  }
 });
@@ -116,7 +116,8 @@ test('legacy foreign passive rewards and fusions are replaced while taken chest 
 
 
 test('every hero can max and evolve its native weapons using only its own passive',()=>{
- for(const character of CHARACTERS){
+ // Jinwoo has no weapons and so no weapon evolutions; his shadows grow by grade instead.
+ for(const character of CHARACTERS.filter(c=>!c.noWeapons)){
   const allowed=signatureWeaponIds(character),p=hardcore(character.id).p;for(const id of Object.keys(p.weapons))max(p,'weapons',id);max(p,'passives',character.passive);
   const recipes=FUSIONS.filter(f=>fusionIngredients(f).every(id=>ITEMS[id].type==='weapon'?allowed.includes(id)&&!inactiveFormWeapon(p,id):id===character.passive));assert.ok(recipes.length,character.id+' has a native evolution');
   for(const recipe of recipes){const candidate=structuredClone(p);assert.equal(fusionReady(candidate,recipe),true,recipe.id);assert.equal(applyChoice(candidate,{kind:'fusion',id:recipe.id}),true,recipe.id);assert.deepEqual(Object.keys(candidate.passives),[character.passive]);}

@@ -5,7 +5,8 @@ const CLOSE=process.env.BOT_STYLE==='close',KEEP=CLOSE?28:70;
 const E=await import(src+'/engine.js');const G=await import(src+'/game.js');const T=await import(src+'/trinkets.js');const S=await import(src+'/shenron.js');
 function pick(p,choices,rand){
  // Prefer fusions, then upgrading owned weapons, owned passives, new weapons, new passives.
- const score=c=>c.kind==='fusion'?100:c.kind==='heal'?1:(p.weapons?.[c.id]?60:p.passives?.[c.id]?50:G.ITEMS[c.id]?.type==='weapon'?40:30)+rand();
+ // Jinwoo's shadows count as his weapons; System stat cards rank just above new passives.
+ const score=c=>c.kind==='fusion'?100:c.kind==='heal'?1:c.kind==='stat'?33:(p.weapons?.[c.id]||p.shadows?.[c.id]?60:p.passives?.[c.id]?50:['weapon','shadow'].includes(G.ITEMS[c.id]?.type)?40:30)+rand();
  return [...choices].sort((a,b)=>score(b)-score(a))[0];
 }
 function settle(g,rand,{freeze=false}={}){

@@ -1,13 +1,16 @@
-import {CHARACTERS,ITEMS,FUSIONS,MAX_SLOTS,forbiddenWeapon,inactiveFormWeapon,refreshStats,fusionReady,applyChoice,consumedFusionIngredient} from './game.js';
+import {CHARACTERS,ITEMS,FUSIONS,MAX_SLOTS,inventoryFor,slotLimit,forbiddenWeapon,inactiveFormWeapon,refreshStats,fusionReady,applyChoice,consumedFusionIngredient} from './game.js';
 import {BOSSES,shuffledBossOrder} from './enemies.js';
 import {syncErenProgress} from './eren-progress.js';
 import {enemyPressure} from './difficulty.js';
 
 export function rushRequiredItems(g){
  const hero=CHARACTERS.find(c=>c.id===g.p.id);
+ if(hero.noWeapons)return {weapons:[],shadows:[hero.weapon],passives:[hero.passive]};
  return {weapons:[g.p.id==='eren'?g.p.weapon:hero.weapon,...(hero.secondWeapon?[hero.secondWeapon]:[])],passives:[hero.passive]};
 }
-export function rushLoadoutFull(g){return ['weapons','passives'].every(type=>Object.keys(g.p[type]).length===MAX_SLOTS&&Object.entries(g.p[type]).every(([id,n])=>n===ITEMS[id]?.max));}
+// Jinwoo drafts shadows where other heroes draft weapons.
+const rushCategories=g=>g.p.id==='jinwoo'?[['shadows','shadow'],['passives','passive']]:[['weapons','weapon'],['passives','passive']];
+export function rushLoadoutFull(g){return rushCategories(g).every(([type,kind])=>Object.keys(g.p[type]||{}).length===slotLimit({type:kind})&&Object.entries(g.p[type]).every(([id,n])=>n===ITEMS[id]?.max));}
 function refreshPreparation(g){
  if(g.p.id==='eren'){g.p.sharedFormRank=5;g.p.formWeapons={odmblades:5,titanfists:5};syncErenProgress(g.p);}
  refreshStats(g.p);g.p.hp=g.p.maxHp;g.p.shield=g.p.maxShield;
@@ -15,8 +18,9 @@ function refreshPreparation(g){
 }
 export function getRushDraftPool(g){
  return Object.entries(ITEMS).filter(([id,item])=>{
-  const inventory=item.type==='weapon'?g.p.weapons:g.p.passives;
-  return !item.fusionOnly&&!inventory[id]&&Object.keys(inventory).length<MAX_SLOTS&&!g.p.vanished?.includes(id)&&!forbiddenWeapon(g.p,id)&&!inactiveFormWeapon(g.p,id)&&!consumedFusionIngredient(g.p,id);
+  if(item.type==='shadow'&&g.p.id!=='jinwoo')return false;
+  const inventory=inventoryFor(g.p,item);
+  return !item.fusionOnly&&!inventory[id]&&Object.keys(inventory).length<slotLimit(item)&&!g.p.vanished?.includes(id)&&!forbiddenWeapon(g.p,id)&&!inactiveFormWeapon(g.p,id)&&!consumedFusionIngredient(g.p,id);
  }).map(([id,item])=>({kind:'item',id,level:item.max}));
 }
 function drawChoices(pool,random,exclude=[]){
@@ -31,7 +35,7 @@ export function getRushDraftChoices(g,random=Math.random){
 }
 export function chooseRushDraft(g,id){
  if(g.status!=='rush-draft'||!getRushDraftChoices(g).some(c=>c.id===id))return false;
- const item=ITEMS[id],inventory=item.type==='weapon'?g.p.weapons:g.p.passives;
+ const item=ITEMS[id],inventory=inventoryFor(g.p,item);
  inventory[id]=item.max;g.p.level++;g.p.xp=0;refreshPreparation(g);return true;
 }
 export function rerollRushDraft(g,random=Math.random){
@@ -41,14 +45,14 @@ export function rerollRushDraft(g,random=Math.random){
 }
 export function banRushDraft(g,id,random=Math.random){
  if(g.status!=='rush-draft'||g.p.vanishesLeft<=0||!getRushDraftChoices(g).some(c=>c.id===id))return false;
- const type=ITEMS[id].type,inventory=type==='weapon'?g.p.weapons:g.p.passives;
+ const type=ITEMS[id].type,inventory=inventoryFor(g.p,ITEMS[id]);
  // A ban may narrow the draft, but must never prevent filling a category.
- if(getRushDraftPool(g).filter(c=>c.id!==id&&ITEMS[c.id].type===type).length<MAX_SLOTS-Object.keys(inventory).length)return false;
+ if(getRushDraftPool(g).filter(c=>c.id!==id&&ITEMS[c.id].type===type).length<slotLimit(ITEMS[id])-Object.keys(inventory).length)return false;
  g.p.vanished??=[];g.p.vanished.push(id);g.p.vanishesLeft--;g.rush.choices=drawChoices(getRushDraftPool(g),random);return true;
 }
 export function initializeBossRush(g){
  const order=shuffledBossOrder(g.map.id);g.mode='bossrush';g.rush={rulesVersion:2,stage:'draft',round:1,cleared:0,total:order.length,order,activeBossId:null,awaitingLoot:false,intermission:0,choices:null};
- const required=rushRequiredItems(g);g.p.weapons=Object.fromEntries(required.weapons.map(id=>[id,ITEMS[id].max]));g.p.passives=Object.fromEntries(required.passives.map(id=>[id,ITEMS[id].max]));g.p.fusions={};g.p.cooldowns={};g.p.vanished=[];refreshPreparation(g);getRushDraftChoices(g);g.spawn=g.eliteAt=Infinity;return g;
+ const required=rushRequiredItems(g);g.p.weapons=Object.fromEntries(required.weapons.map(id=>[id,ITEMS[id].max]));if(required.shadows)g.p.shadows=Object.fromEntries(required.shadows.map(id=>[id,ITEMS[id].max]));g.p.passives=Object.fromEntries(required.passives.map(id=>[id,ITEMS[id].max]));g.p.fusions={};g.p.cooldowns={};g.p.vanished=[];refreshPreparation(g);getRushDraftChoices(g);g.spawn=g.eliteAt=Infinity;return g;
 }
 // Used for migrating catalog-style preparation and deterministic run fixtures.
 // The live mode always reaches this state through random max-level choices.

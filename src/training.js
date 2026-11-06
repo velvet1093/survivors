@@ -1,4 +1,4 @@
-import {ITEMS,FUSIONS,MAX_SLOTS,applyChoice,refreshStats,forbiddenItem,inactiveFormWeapon,fusionBase,fusionIngredients,fusionReady,CHARACTERS} from './game.js';
+import {ITEMS,FUSIONS,MAX_SLOTS,inventoryFor,slotLimit,applyChoice,refreshStats,forbiddenItem,inactiveFormWeapon,fusionBase,fusionIngredients,fusionReady,CHARACTERS} from './game.js';
 import {syncErenProgress} from './eren-progress.js';
 import {ENEMIES,BOSSES} from './enemies.js';
 import {newTrinkets,trinketFor} from './trinkets.js';
@@ -79,19 +79,20 @@ export function trainingOpenRift(g,id){
 
 // ---- Items ----
 export function trainingItems(p){
- return Object.entries(ITEMS).filter(([,item])=>!item.fusionOnly).map(([id,item])=>{const inv=item.type==='weapon'?p.weapons:p.passives;return {id,name:item.name,type:item.type,max:item.max,level:inv[id]||0,locked:!!(forbiddenItem(p,id)||inactiveFormWeapon(p,id)),fused:!!p.fusions[id]};});
+ // Shadows belong to Jinwoo alone and are listed only for him.
+ return Object.entries(ITEMS).filter(([,item])=>!item.fusionOnly&&(item.type!=='shadow'||p.id==='jinwoo')).map(([id,item])=>{const inv=inventoryFor(p,item);return {id,name:item.name,type:item.type,max:item.max,level:inv[id]||0,locked:!!(forbiddenItem(p,id)||inactiveFormWeapon(p,id)),fused:!!p.fusions[id]};});
 }
 // Sets an item to an exact level (0 removes it). Returns a short reason when refused.
 export function setItemLevel(g,id,level){
  const p=g.p,item=ITEMS[id];if(!item||item.fusionOnly)return 'Unknown item';
- if(forbiddenItem(p,id)||inactiveFormWeapon(p,id))return item.name+' cannot be equipped by '+p.displayName+' right now';
- const inv=item.type==='weapon'?p.weapons:p.passives,rank=inv[id]||0,target=Math.max(0,Math.min(item.max,Math.floor(level)));
+ if(forbiddenItem(p,id)||inactiveFormWeapon(p,id)||item.type==='shadow'&&p.id!=='jinwoo')return item.name+' cannot be equipped by '+p.displayName+' right now';
+ const inv=inventoryFor(p,item),rank=inv[id]||0,target=Math.max(0,Math.min(item.max,Math.floor(level)));
  if(target===rank)return '';
  if(target===0){
-  if(id===CHARACTERS.find(c=>c.id===p.id)?.weapon&&Object.keys(p.weapons).length<=1)return 'Keep at least one weapon';
+  if(id===CHARACTERS.find(c=>c.id===p.id)?.weapon&&Object.keys(inv).length<=1)return item.type==='shadow'?'Keep at least one shadow':'Keep at least one weapon';
   delete inv[id];delete p.cooldowns?.[id];delete p.fusions[id];
  }else{
-  if(!rank&&Object.keys(inv).length>=MAX_SLOTS)return 'All '+MAX_SLOTS+' '+item.type+' slots are full · remove one first';
+  if(!rank&&Object.keys(inv).length>=slotLimit(item))return 'All '+slotLimit(item)+' '+item.type+' slots are full · remove one first';
   if(p.fusions[id]&&target<item.max)delete p.fusions[id];
   inv[id]=target;if(p.id==='eren'&&p.formWeapons&&id===p.weapon)p.formWeapons[id]=target;
  }
