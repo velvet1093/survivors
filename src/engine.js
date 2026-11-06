@@ -28,6 +28,7 @@ import {summonPack,summonNue,updateSummons} from './summons.js';
 import {summonBrood} from './shiraori.js';
 import {syncShadowArmy,updateJinwoo} from './jinwoo.js';
 import {castUzi} from './jacket.js';
+import {updateRiftPhases,riftShielded,markRiftHurt} from './rift-phases.js';
 import {petFor,updatePet} from './pets.js';
 import {newHeroMechanic,updateHeroMechanic,heroMovement,heroDamageBonus,heroMoveBonus,heroResistance,blockHeroHit,heroHurt,heroKill,heroXp,heroToxin,heroFreeze,consumeHeroCast,spendStolenTime} from './hero-mechanics.js';
 import {queueBossIntro,tickBossIntro} from './boss-intro.js';
@@ -65,7 +66,7 @@ export function burst(g,x,y,color,n=10,speed=150){
 }
 function effect(g,type,data){g.effects.push({type,life:.4,max:.4,...data});}
 export function damageEnemy(g,e,damage,color='#fff'){
-  if(e.hp<=0||riftTrialActive(g))return;
+  if(e.hp<=0||riftTrialActive(g)||riftShielded(e))return;
   damage*=heroDamageBonus(g)*statusModifiers(e).damageTaken*(e.armorTime>0?.6:1)*(e.boss?1-BOSS_DAMAGE_REDUCTION:1);damage=rushPhaseDamage(g,e,cellDamage(e,damage));if(e.riftBoss&&!e.enraged)damage=Math.max(0,Math.min(damage,e.hp-(e.maxHp*.5-.01)));e.hp-=damage;e.lastDamagedAt=g.time;e.hit=.12;g.shake=Math.max(g.shake,1.5);
   if(g.numbers.length<75)g.numbers.push({x:e.x+(Math.random()-.5)*15,y:e.y-e.r,amount:Math.round(damage),life:.65,color});
 }
@@ -80,6 +81,7 @@ export function hitPlayer(g,damage,{dot=false}={}){
   if(g.ultimate?.type==='maomao'||g.ultimate?.type==='shinji')damage*=.65;
   const p=g.p;damage*=heroResistance(g)*statusModifiers(p).damageTaken*(1-(p.damageReduction||0));const dodged=!dot&&Math.random()<p.dodge;if(!dot)g.invuln=dodged?.3:.65;
   if(dodged){g.numbers.push({x:p.x,y:p.y-40,amount:'DODGE',life:.6,color:'#94efcc'});return false;}
+  markRiftHurt(g);
   if(!dot&&blockHeroHit(g))return false;
   const armorAbsorbed=absorbErzaBarrier(g,damage);damage-=armorAbsorbed;heroHurt(g,damage);p.hurtTimer=.45;g.hurtFlash=dot?.18:.55;const absorbed=Math.min(p.shield,damage);p.shield-=absorbed;p.hp-=damage-absorbed;g.shake=Math.max(g.shake,dot?1:6);
   burst(g,p.x,p.y,absorbed?'#fac4ea':'#ff8499',dot?3:12);
@@ -289,6 +291,7 @@ export function updateRun(g,dt,input={x:0,y:0}){
   const natural=trainingNatural(g)&&g.mode!=='ascent';
   if(natural)updateWorldEvents(g,dt,worldEventAPI(g));
   if(g.status!=='playing'||g.bossIntro)return;
+  updateRiftPhases(g,dt);
   if((natural||g.rifts?.portal)&&!eventCombatActive(g))updateRifts(g,dt,{blocked:(x,y,r)=>pointCollider(g,x,y,r)},g.chestRandom||Math.random);
   if(g.status!=='playing')return;
   const riftActive=riftCombatActive(g);

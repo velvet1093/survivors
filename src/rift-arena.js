@@ -1,3 +1,4 @@
+import {drawArenaPhase} from './rift-phases.js';
 const TAU=Math.PI*2;
 export const RIFT_ARENAS={
  foundereren:{id:'paths',name:'The Paths · Rumbling Horizon',radius:760,dark:'#191d28',floor:'#414047',line:'#c5b99b',accent:'#e2c8a6'},
@@ -230,5 +231,6 @@ export function drawRiftArena(c,g,left,top,w,h,reducedMotion=false){
   for(const side of [-1,1]){const x=side*(r-17);c.fillStyle='#50283e';c.fillRect(x-20,-r,40,r*2);for(let i=0;i<5;i++){c.fillStyle=i%2?'#824658':'#361f36';c.fillRect(x-20+i*8,-r,6,r*2);}path(c,[[x,-r+80],[x-side*55,-r+140],[x-side*100,-r+135]],'#bd936153',4);}
  }
  c.strokeStyle=def.line;c.lineWidth=8;c.strokeRect(-r,-r,r*2,r*2);c.strokeStyle='#101725';c.lineWidth=3;c.strokeRect(-r+9,-r+9,r*2-18,r*2-18);
+ drawArenaPhase(c,{...arena,accent:def.accent},time,reducedMotion);
  c.restore();return true;
 }

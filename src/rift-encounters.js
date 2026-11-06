@@ -5,6 +5,7 @@ import {syncGutsArmor} from './guts.js';
 import {chestOffers,openChest,getUpgradePool,waveAt} from './game.js';
 import {createWorld,ensureWorld} from './world.js';
 import {createRiftArena,restoreRiftArena} from './rift-arena.js';
+import {flawlessBonus} from './rift-phases.js';
 
 // Rifts are optional encounters, never members of the normal map rotations.
 export const RIFT_OPEN_AT=180;
@@ -136,7 +137,8 @@ export function defeatedRiftBoss(g,e,{makeGem,coinMultiplier=()=>1,clearOutgoing
  if(active.rewarded)return true;
  active.rewarded=true;e.riftRewarded=true;r.cleared++;r.history.push({serial:active.serial,bossId:active.bossId,defeatedAt:g.time});
  if(r.history.length>30)r.history.shift();
- const coins=900+150*(r.cleared-1),xp=250+75*(r.cleared-1),paid=Math.round(coins*(1+(g.p.meta?.coinGain||0))*coinMultiplier(g));
+ // A clear without taking damage pays half as much again.
+ const flawless=flawlessBonus(active,e),coins=Math.round((900+150*(r.cleared-1))*(1+flawless)),xp=Math.round((250+75*(r.cleared-1))*(1+flawless)),paid=Math.round(coins*(1+(g.p.meta?.coinGain||0))*coinMultiplier(g));if(flawless)r.flawless=(r.flawless||0)+1;
  g.money+=paid;g.kills++;g.bossKills++;g.characterXp+=150*(1+(g.p.meta?.masteryGain||0));
  g.p.hp=Math.min(g.p.maxHp,g.p.hp+g.p.maxHp*.35);g.p.shield=Math.min(g.p.maxShield||0,(g.p.shield||0)+(g.p.maxShield||0)*.35);
  // Encounter-bound reinforcements cannot follow the hero out of their arena or
@@ -147,7 +149,7 @@ export function defeatedRiftBoss(g,e,{makeGem,coinMultiplier=()=>1,clearOutgoing
  g.gems.push(gem);
  g.chests.push({id:'rift-cache:'+active.serial,x:g.p.x,y:g.p.y,boss:true,source:e.name,rewardCount:5,tier:'rift',kind:'rift',riftReward:true,bonus:{coins:paid,xp,healing:35}});
  r.active=null;r.nextAt=g.time+RIFT_INTERVAL;
- g.toast='CALAMITY CLEARED · +'+paid+' COINS · '+xp+' XP · FIVE REWARDS';g.toastTime=7;
+ g.toast=(flawless?'FLAWLESS · ':'')+'CALAMITY CLEARED · +'+paid+' COINS · '+xp+' XP · FIVE REWARDS';g.toastTime=7;
  return true;
 }
 

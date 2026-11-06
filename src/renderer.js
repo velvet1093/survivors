@@ -44,6 +44,8 @@ import {drawShiraoriEffect} from './shiraori-effects.js';
 import {drawRimuruEffect} from './rimuru-art-effects.js';
 import {drawJinwooEffect} from './jinwoo-effects.js';
 import {drawJacketEffect} from './jacket-effects.js';
+import {drawRiftPhaseEffect} from './rift-phases.js';
+import {drawMapAtmosphere} from './map-atmosphere.js';
 import {drawGem,drawUnitStatuses,drawCombatField} from './combat-art.js';
 import {terrain,propSprite} from './pixel-world.js';
 import {drawHero,drawEnemy} from './sprites.js';
@@ -99,7 +101,7 @@ function drawWorldLoot(c,g){
 }
 function drawEffects(c,g){
   for(const e of g.effects){const progress=1-e.life/e.max;c.save();c.globalAlpha=Math.min(1,e.life/e.max*2);
-    if(drawSalvationEffect(c,e,progress,!!g.p.reducedMotion)||drawPairedEffect(c,e,progress,!!g.p.reducedMotion)||drawKurumiClockEffect(c,e,progress,!!g.p.reducedMotion)||drawGutsSlash(c,e,progress,!!g.p.reducedMotion)||drawDenjiSlash(c,e,progress,!!g.p.reducedMotion)||drawMegumiEffect(c,e,progress,!!g.p.reducedMotion)||drawEvaEffect(c,e,progress,!!g.p.reducedMotion)||drawMaomaoEffect(c,e,progress,!!g.p.reducedMotion)||drawGojoEffect(c,e,progress,!!g.p.reducedMotion)||drawMadokaEffect(c,e,progress,!!g.p.reducedMotion)||drawZoltraakRay(c,e,progress,!!g.p.reducedMotion)||drawShiraoriEffect(c,e,progress,!!g.p.reducedMotion)||drawRimuruEffect(c,e,progress,!!g.p.reducedMotion)||drawJinwooEffect(c,e,progress,!!g.p.reducedMotion)||drawJacketEffect(c,e,progress,!!g.p.reducedMotion)){c.restore();continue;}
+    if(drawSalvationEffect(c,e,progress,!!g.p.reducedMotion)||drawPairedEffect(c,e,progress,!!g.p.reducedMotion)||drawKurumiClockEffect(c,e,progress,!!g.p.reducedMotion)||drawGutsSlash(c,e,progress,!!g.p.reducedMotion)||drawDenjiSlash(c,e,progress,!!g.p.reducedMotion)||drawMegumiEffect(c,e,progress,!!g.p.reducedMotion)||drawEvaEffect(c,e,progress,!!g.p.reducedMotion)||drawMaomaoEffect(c,e,progress,!!g.p.reducedMotion)||drawGojoEffect(c,e,progress,!!g.p.reducedMotion)||drawMadokaEffect(c,e,progress,!!g.p.reducedMotion)||drawZoltraakRay(c,e,progress,!!g.p.reducedMotion)||drawShiraoriEffect(c,e,progress,!!g.p.reducedMotion)||drawRimuruEffect(c,e,progress,!!g.p.reducedMotion)||drawJinwooEffect(c,e,progress,!!g.p.reducedMotion)||drawJacketEffect(c,e,progress,!!g.p.reducedMotion)||drawRiftPhaseEffect(c,e,progress,!!g.p.reducedMotion)){c.restore();continue;}
     if(drawErzaEffect(c,e,progress,!!g.p.reducedMotion)){c.restore();continue;}
     if(e.type==='crimson-strike'){drawCrimsonStrike(c,e,progress,!!g.p.reducedMotion);c.restore();continue;}
     if(e.type==='thunder-blast'){c.strokeStyle='#e9c889';c.lineWidth=3;c.beginPath();c.arc(e.x,e.y,e.r*(.25+progress*.75),0,TAU);c.stroke();for(let i=0;i<7;i++){const a=i*2.399,r=e.r*(.3+progress*.6);path(c,[[e.x+Math.cos(a)*r*.3,e.y+Math.sin(a)*r*.3],[e.x+Math.cos(a+.15)*r*.7,e.y+Math.sin(a+.15)*r*.7],[e.x+Math.cos(a)*r,e.y+Math.sin(a)*r]],'#ffedc3',2);}}
@@ -164,6 +166,7 @@ export function drawScene(canvas,g,reducedMotion=false){
   drawEffects(c,g);drawFeatherineGlyphs(c,g);
   for(const q of g.particles){c.globalAlpha=Math.min(1,q.life*2);ellipse(c,q.x,q.y,q.size/2,q.size/2,q.color);}c.globalAlpha=1;
   c.textAlign='center';c.font='600 12px "DM Sans",sans-serif';for(const q of g.hudHidden?[]:g.numbers){c.globalAlpha=Math.min(1,q.life*4);c.fillStyle='#101527';c.fillText(q.amount,q.x+1,q.y+1);c.fillStyle=q.color;c.fillText(q.amount,q.x,q.y);}c.globalAlpha=1;c.restore();
+  drawMapAtmosphere(c,g,w,h,reducedMotion);
   drawWorldEventWeather(c,g,w,h,reducedMotion);
   drawRiftCompass(c,g,w,h,reducedMotion);
   const vignette=c.createRadialGradient(w/2,h/2,w*.15,w/2,h/2,Math.max(w,h)*.73);vignette.addColorStop(0,'#0e101600');vignette.addColorStop(1,'#080b186b');c.fillStyle=vignette;c.fillRect(0,0,w,h);

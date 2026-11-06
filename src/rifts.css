@@ -16,3 +16,6 @@
 .rift-offer-actions button{min-height:46px;font-size:10px;flex:1;white-space:normal}
 @media(max-width:480px){.rift-offer{padding:24px 18px}.rift-offer-art{height:128px;margin:12px auto 8px}.rift-offer-art svg{height:120px;width:89px}.rift-offer h2{font-size:34px}.rift-offer>p{font-size:10px}.rift-loot-preview{margin:16px 0;padding:12px 0;gap:4px}.rift-loot-preview span{font-size:6px}.rift-offer-actions{flex-direction:column}.rift-offer-actions button{width:100%;flex:auto}}
 @media(max-height:500px) and (orientation:landscape){.rift-offer-art{float:left;width:120px;height:140px;margin:10px 20px 10px 0}.rift-offer{text-align:left}.rift-offer h2{font-size:32px}.rift-loot-preview{clear:both}.rift-offer>.eyebrow{justify-content:flex-start}}
+
+/* Rift calamities show where their trial (50%) and Final Stand (25%) begin. */
+.boss-health{position:relative}.boss-health .phase-pip{position:absolute;top:-2px;bottom:-2px;width:2px;background:#ffffffcc;box-shadow:0 0 4px #000}

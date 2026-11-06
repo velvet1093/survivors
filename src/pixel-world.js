@@ -4,6 +4,7 @@ import {TOKYO_WORLD_PALETTES,drawTokyoTerrain,drawTokyoProp,tokyoMapPreview} fro
 import {ANIME_WORLD_PALETTES,drawAnimeTerrain,drawAnimeProp,animeMapPreview} from './anime-maps.js';
 import {drawMapSupply} from './map-supplies.js';
 import {hash} from './world.js';
+import {decorateTerrain,drawCenterpiece} from './map-decor.js';
 const terrainCache=new Map(),propCache=new Map();
 export const WORLD_PALETTES={
  ...GRAVEYARD_WORLD_PALETTES,
@@ -24,7 +25,7 @@ export const WORLD_PALETTES={
 function canvas(w,h){const tile=document.createElement('canvas');tile.width=w;tile.height=h;const c=tile.getContext('2d');const rect=(x,y,w,h,col)=>{c.fillStyle=col;c.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h));};const poly=(points,col)=>{for(let y=Math.floor(Math.min(...points.map(p=>p[1])));y<=Math.max(...points.map(p=>p[1]));y++){const xs=[];for(let i=0,j=points.length-1;i<points.length;j=i++){const a=points[i],b=points[j];if((a[1]>y+.5)!==(b[1]>y+.5))xs.push(a[0]+(y+.5-a[1])*(b[0]-a[0])/(b[1]-a[1]));}xs.sort((a,b)=>a-b);for(let i=0;i<xs.length;i+=2)rect(Math.ceil(xs[i]-.5),y,Math.floor(xs[i+1]-.5)-Math.ceil(xs[i]-.5)+1,1,col);}};return{tile,rect,poly};}
 export function terrain(map,cx,cy){
  const key=map.id+':'+cx+':'+cy;if(terrainCache.has(key))return terrainCache.get(key);const {tile,rect,poly}=canvas(256,256),p=WORLD_PALETTES[map.id],ox=cx*512,oy=cy*512;rect(0,0,256,256,p.ground);
- if(drawGraveyardTerrain(map,cx,cy,rect,poly)||drawBerserkTerrain(map,cx,cy,rect,poly)||drawTokyoTerrain(map,cx,cy,rect,poly)||drawAnimeTerrain(map,cx,cy,rect,poly)){if(terrainCache.size>=80)terrainCache.delete(terrainCache.keys().next().value);terrainCache.set(key,tile);return tile;}
+ if(drawGraveyardTerrain(map,cx,cy,rect,poly)||drawBerserkTerrain(map,cx,cy,rect,poly)||drawTokyoTerrain(map,cx,cy,rect,poly)||drawAnimeTerrain(map,cx,cy,rect,poly)){decorateTerrain(map,cx,cy,rect,p);drawCenterpiece(map,cx,cy,rect,p);if(terrainCache.size>=80)terrainCache.delete(terrainCache.keys().next().value);terrainCache.set(key,tile);return tile;}
  for(let y=0;y<256;y+=16)for(let x=0;x<256;x+=16){const wx=ox+x*2,wy=oy+y*2,n=hash(wx,wy);
    if(map.id==='shiganshina'){
      rect(x,y,16,16,p.edge);for(let row=0;row<2;row++){const shift=(Math.floor(wy/16)+row)%2*4;for(let k=-1;k<2;k++){const xx=x+k*9+shift,yy=y+row*8;if(xx<x||xx+8>x+16)continue;rect(xx+1,yy+1,7,6,n>.55?'#b2a58c':'#a99c84');rect(xx+2,yy+1,5,1,'#c7b89b');rect(xx+1,yy+6,7,1,'#8a826f');}}if(n>.9){rect(x+5,y+12,2,2,'#6d7c60');rect(x+7,y+11,1,2,'#8c9671');}if(Math.abs(wx+16)<38){rect(x+1,y+1,14,14,'#c1b394');rect(x+2,y+2,12,1,'#ded0ad');rect(x+1,y+14,14,1,'#8d836d');}
@@ -49,6 +50,7 @@ export function terrain(map,cx,cy){
    for(let x=0;x<256;x+=2){const wx=ox+x*2,d=Math.abs(wx-stream);if(d<105){if(bridge){rect(x,y,2,2,'#8b7661');if(Math.floor(wy/12)%2===0)rect(x,y,2,1,'#574b48');if(d>92)rect(x,y,2,2,'#d1b38a');}else{rect(x,y,2,2,d>91?p.deep:p.water);if(d>85&&d<92)rect(x,y,2,2,p.ripple);if(d<75&&hash(Math.floor(wx/20),Math.floor(wy/14))>.92)rect(x,y,2,1,p.ripple);}}}
  }
  if(map.id==='marineford'){for(let sy=Math.floor(oy/800);sy<=Math.ceil((oy+512)/800);sy++){const wy=sy*800+180,wx=650+Math.sin(wy/400)*90,x=(wx-ox)/2,y=(wy-oy)/2;poly([[x-16,y-23],[x+16,y-23],[x+19,y+18],[x,y+31],[x-19,y+18]],'#d7ddd4');rect(x-12,y-19,25,36,'#667b89');rect(x-3,y-17,7,26,'#cfcdc1');rect(x-10,y-1,22,2,'#e4dfc3');rect(x-1,y-35,2,30,'#495d70');rect(x+1,y-35,14,9,'#eef0de');}}
+ decorateTerrain(map,cx,cy,rect,p);drawCenterpiece(map,cx,cy,rect,p);
  if(cx>=-1&&cx<=0&&cy>=-1&&cy<=0){const x=-ox/2,y=-oy/2;poly([[x,y-18],[x+18,y],[x,y+18],[x-18,y]],p.edge);poly([[x,y-15],[x+15,y],[x,y+15],[x-15,y]],p.ground);rect(x-2,y-2,5,5,p.stone);}
  if(terrainCache.size>=80)terrainCache.delete(terrainCache.keys().next().value);terrainCache.set(key,tile);return tile;
 }
