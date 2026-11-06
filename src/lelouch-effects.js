@@ -11,7 +11,9 @@ const TAU=Math.PI*2,ease=t=>1-(1-t)**3;
 function sigilPath(c,x,y,s){
  c.beginPath();
  const P=pts=>{pts.forEach(([px,py],i)=>i?c.lineTo(x+px*s,y+py*s):c.moveTo(x+px*s,y+py*s));c.closePath();};
- P([[0,-2],[-10,-8],[-7,-1],[-12,1],[-6,3],[0,2]]);P([[0,-2],[10,-8],[7,-1],[12,1],[6,3],[0,2]]);P([[-2,2],[2,2],[0,9]]);P([[0,-7],[2,-4],[0,-2],[-2,-4]]);
+ // The bird of the Geass and the Code: diamond head, notched swept wings and a spike tail.
+ P([[0,-12],[2.5,-8.5],[0,-5],[-2.5,-8.5]]);P([[-2,-6],[2,-6],[1.5,2],[-1.5,2]]);
+ P([[-1.5,-5],[-13,-11],[-10.5,-6],[-14,-4],[-9.5,-2],[-12.5,1],[-6.5,1.5],[-1.5,0]]);P([[1.5,-5],[13,-11],[10.5,-6],[14,-4],[9.5,-2],[12.5,1],[6.5,1.5],[1.5,0]]);P([[-1.5,1],[1.5,1],[0,12]]);
 }
 export function drawSigil(c,x,y,s,color){c.fillStyle=color;sigilPath(c,x,y,s);c.fill();}
 // Called in the projectile's local frame, already rotated to its flight direction.

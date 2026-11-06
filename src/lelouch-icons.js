@@ -1,5 +1,5 @@
 // Lelouch & C.C.'s icons on the 32×32 item grid: the Geass sigil blazing in a violet eye,
-// C.C.'s Code glowing on her brow under green hair, Zero's mask with its open red eye for
+// C.C.'s Code sigil blazing on a dark seal between locks of her hair, Zero's mask with its open red eye for
 // the Power of the King, and the Gawain's black-and-gold head between twin Hadron beams.
 export const LELOUCH_ICON_IDS=['geass','witchcode','kingspower','gawain'];
 const cache=new Map(),INK='#120e18';
@@ -21,11 +21,16 @@ export function lelouchIconPixels(id){
   T([[2,16],[9,9],[16,7],[23,9],[30,16],[23,23],[16,25],[9,23]],'#2a1a3a');T([[4,16],[10,10],[16,9],[22,10],[28,16],[22,22],[16,23],[10,22]],'#f8f0f4');
   E(16,16,7,7,RED_DARK);E(16,16,6,6,RED);sigil(a,16,16,.62,'#5a0a18','#5a0a18');E(16,16,1.6,1.6,RED_LIGHT);R(12,12,2,2,'#ffffff');
   L(2,16,9,8,'#1a1020',2);L(9,8,16,6,'#1a1020',2);L(16,6,23,8,'#1a1020',2);L(23,8,30,15,'#1a1020',2);for(const [x,y]of [[4,6],[27,5],[28,26],[3,27]])R(x,y,1,1,RED);}
- else if(id==='witchcode'){// Green hair framing C.C.'s brow and the red Code sigil glowing upon it.
-  E(16,16,14,14,GREEN_DARK);E(16,15,13,13,GREEN);T([[7,30],[6,12],[10,7],[22,7],[26,12],[25,30],[21,30],[21,14],[11,14],[11,30]],GREEN_DARK);
-  T([[9,12],[16,9],[23,12],[23,26],[16,30],[9,26]],'#fde1c9');R(10,23,12,1,'#eab59f');
-  T([[8,13],[11,8],[16,7],[21,8],[24,13],[21,12],[19,15],[17,11],[15,15],[13,11],[11,15]],GREEN);L(11,9,15,8,GREEN_LIGHT);
-  sigil(a,16,17,.36,RED,RED_LIGHT);for(const [x,y]of [[11,21],[19,21]]){R(x,y,3,2,'#e8b030');R(x,y,3,1,'#2a1a10');R(x+1,y+1,1,1,'#a06818');}L(14,26,17,26,'#b9707a');}
+ else if(id==='witchcode'){// The Code: C.C.'s bird sigil blazing red on a dark seal ringed in her green.
+  E(16,16,15,15,GREEN_DARK);E(16,16,14,14,GREEN);E(16,16,13,13,'#1a0c18');E(16,16,10,10,'#2a0c1c');
+  const bird=(dx,dy,c)=>{const P=pts=>pts.map(([x,y])=>[x+dx,y+dy]);
+   T(P([[16,4],[18.5,7.5],[16,11],[13.5,7.5]]),c);T(P([[14,10],[18,10],[17.5,18],[14.5,18]]),c);
+   T(P([[14.5,11],[3,5],[5.5,10],[2,12],[6.5,14],[3.5,17],[9.5,17.5],[14.5,16]]),c);
+   T(P([[17.5,11],[29,5],[26.5,10],[30,12],[25.5,14],[28.5,17],[22.5,17.5],[17.5,16]]),c);
+   T(P([[14.5,17],[17.5,17],[16,28]]),c);};
+  bird(0,1,RED_DARK);bird(0,0,RED);
+  L(13,8,6,6,RED_LIGHT);L(19,8,26,6,RED_LIGHT);L(16,12,16,20,RED_LIGHT);R(15,6,2,2,'#ffffff');
+ }
  else if(id==='kingspower'){// Zero's mask: spiked crown, gold trim and the open eye panel glowing red.
   T([[11,8],[12,1],[14,5],[16,0],[18,5],[20,1],[21,8]],'#18122a');T([[12,7],[13,3],[14,6],[16,2],[18,6],[19,3],[20,7]],'#2a2040');
   E(16,17,11,12,'#18122a');E(16,17,10,11,'#2a2040');L(8,13,11,28,GOLD,1);L(24,13,21,28,GOLD,1);L(9,14,12,27,GOLD_DARK);

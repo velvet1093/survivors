@@ -4,7 +4,7 @@
 export const LELOUCH_CHARACTER={
  id:'lelouch',name:'Lelouch & C.C.',fullName:'Lelouch vi Britannia & C.C.',title:'THE DEMON KING & THE WITCH',series:'CODE GEASS',color:'#d8304a',
  weapon:'geass',passive:'witchcode',skill:'Gawain',duo:'cc',
- description:'Two heroes, one contract. Lelouch’s Geass commands enemies to turn on their own while C.C. covers him with her pistol. Commanded kills build Checkmate for a mass command, and together they board the Gawain to fire its Hadron Cannons.',
+ description:'Two heroes, one contract. Lelouch’s Geass commands enemies to turn on their own while C.C. covers him with her pistol. Commanded kills build Checkmate for a mass command, and together they board the Gawain for thirty seconds, extended by every kill.',
  power:4,speed:3,range:4,hp:90,move:235,
 };
 export const LELOUCH_ITEMS={

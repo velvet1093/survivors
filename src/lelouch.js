@@ -13,7 +13,8 @@ import {effectivePassiveRank} from './game.js';
 // Gawain (ultimate): they board the knightmare together. It is untouchable, fires twin
 // Hadron Cannons and lashes out with slash harkens.
 export const GEASS_RANGE=240,MASS_COMMAND_RANGE=340,CC_RANGE=380;
-export const LELOUCH_ULTIMATE={name:'Gawain',duration:8,color:'#d8304a',description:'Lelouch and C.C. board the Gawain for eight seconds. C.C. pilots and Lelouch commands. The knightmare is untouchable, fires its twin Hadron Cannons through the crowd every 1.4 seconds and lashes the four nearest enemies with slash harkens twice a second.'};
+export const GAWAIN_SECONDS=30,GAWAIN_KILL_TIME={normal:.4,elite:1,boss:4};
+export const LELOUCH_ULTIMATE={name:'Gawain',duration:GAWAIN_SECONDS,color:'#d8304a',description:'Lelouch and C.C. board the Gawain for thirty seconds, and every kill keeps it in the field longer: +0.4 seconds per ordinary enemy, +1 per elite and +4 per boss, up to thirty seconds remaining. C.C. pilots and Lelouch commands. The knightmare is untouchable, fires its twin Hadron Cannons through the crowd every 1.4 seconds and lashes the four nearest enemies with slash harkens twice a second.'};
 const commanded=e=>(e.geass||0)>0;
 export function geassDuration(g,rank){return 2.6+rank*.3+(g.p.meta?.geassDuration||0);}
 function command(g,e,{power,rank,fused,damage}){
@@ -69,7 +70,13 @@ export function updateLelouch(g,dt,{damage,burst,shoot}){
     e.commandedKill=true;damage(g,e,e.hp+1,'#ff4a6a');burst(g,e.x,e.y,'#ff4a6a',10,120);}}
  }
 }
+// Kills during the Gawain extend it, never past thirty seconds remaining.
+export function extendGawain(g,e){
+ const u=g.ultimate;if(u?.type!=='lelouch')return 0;const add=e?.boss?GAWAIN_KILL_TIME.boss:e?.elite?GAWAIN_KILL_TIME.elite:GAWAIN_KILL_TIME.normal;
+ const before=u.duration;u.duration=Math.min(u.age+GAWAIN_SECONDS+(g.p.meta?.ultimateDuration||0),u.duration+add);return u.duration-before;
+}
 export function lelouchKill(g,e){
+ extendGawain(g,e);
  const m=g.mechanic;if(m?.id!=='lelouch'||m.value>=m.max)return;
  const base=e?.boss?30:e?.commandedKill||commanded(e)?10:3;
  m.value=Math.min(m.max,m.value+base*(1+effectivePassiveRank(g.p,'witchcode')*.1+(g.p.meta?.checkmateGain||0)));
@@ -82,7 +89,9 @@ export function startGawain(g){
  g.effects.push({type:'gawain-land',x:p.x,y:p.y,r:120,life:.7,max:.7});
 }
 export function updateGawain(g,u,dt,{damage,burst}){
- const p=g.p;p.pose='gawain';g.invuln=Math.max(g.invuln||0,.35);u.tick-=dt;p.gawainFiring=Math.max(0,(p.gawainFiring||0)-dt);u.harken-=dt;
+ const p=g.p;p.pose='gawain';g.invuln=Math.max(g.invuln||0,.35);
+ // The cooldown waits for the knightmare to leave the field.
+ g.special=Math.max(g.special||0,g.specialMax||0);u.tick-=dt;p.gawainFiring=Math.max(0,(p.gawainFiring||0)-dt);u.harken-=dt;
  const alive=g.enemies.filter(e=>e.hp>0).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y));
  if(u.tick<=0){u.tick=1.4;const t=alive[0],sy=p.y-62,aim=t?Math.atan2(t.y-sy,t.x-p.x):(p.facing<0?Math.PI:0),len=u.r||620,width=26;
   for(const side of [-1,1]){const ox=p.x+side*16,oy=sy,cx=Math.cos(aim),cy=Math.sin(aim);

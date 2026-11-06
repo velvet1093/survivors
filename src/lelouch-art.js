@@ -63,9 +63,10 @@ function ccTwinTails(r,{y,walk}){
 }
 function ccFringe(r,y,{locks=true}={}){
  const {poly,line}=r;
- poly(shift([[16,30],[15,19],[19,12],[28,10],[37,12],[41,19],[40,30],[38,27],[36,28],[34,22],[32,27],[29,21],[27,27],[24,21],[22,27],[20,23],[18,28],[17,34]],y),c.greenShade);
- poly(shift([[17,27],[17,19],[20,14],[28,12],[36,14],[39,19],[39,26],[37,24],[35,26],[33,20],[31,25],[29,19],[27,25],[25,19],[23,25],[21,21],[19,25]],y),c.green);
- line(20,17+y,26,13+y,c.greenLight);line(30,13+y,35,16+y,c.greenLight);line(28,14+y,28,18+y,c.greenLight);
+ // Full, straight-cut bangs that fall to the brows, with only shallow notches between locks.
+ poly(shift([[16,30],[15,19],[19,12],[28,10],[37,12],[41,19],[40,30],[38,29],[36,30],[34,26],[32,30],[30,26],[28,30],[26,26],[24,30],[22,26],[20,30],[18,29],[17,34]],y),c.greenShade);
+ poly(shift([[17,28],[17,19],[20,14],[28,12],[36,14],[39,19],[39,28],[37,27],[35,28],[33,24],[31,28],[29,24],[27,28],[25,24],[23,28],[21,24],[19,28]],y),c.green);
+ line(20,17+y,26,13+y,c.greenLight);line(30,13+y,35,16+y,c.greenLight);line(28,14+y,28,20+y,c.greenLight);line(23,16+y,22,22+y,c.greenMid);line(33,16+y,34,22+y,c.greenMid);
  if(locks){for(const x of [17,38]){W(r,x,22+y,2,22,c.greenMid);line(x+(x<28?0:1),24+y,x+(x<28?0:1),42+y,c.greenLight);r.put(x+(x<28?1:0),44+y,c.greenShade);}}
 }
 // ---------- props ----------

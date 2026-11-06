@@ -1,7 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {CHARACTERS,createPlayer,applyChoice,fusionReady,FUSIONS} from '../src/game.js';
 import {createRun,spawnEnemy,castWeapon,updateRun,useSpecial} from '../src/engine.js';
-import {lelouchKill,isCommanded} from '../src/lelouch.js';
+import {lelouchKill,isCommanded,GAWAIN_SECONDS} from '../src/lelouch.js';
 import {characterPixels} from '../src/pixel-characters.js';
 import {lelouchIconPixels,LELOUCH_ICON_IDS} from '../src/lelouch-icons.js';
 import {SKINS} from '../src/skins.js';
@@ -42,4 +42,11 @@ test('Lelouch, C.C. and their paired outfits have distinct animated pixel art an
  for(const id of ['lelouch','cc'])assert.equal(new Set(looks.map(skin=>JSON.stringify(characterPixels(id,{skin})))).size,looks.length,id);
  for(const id of ['lelouch','cc'])for(const skin of looks)for(const o of [{blink:true},{expression:'hurt'},{attack:true},{moving:true,frame:1}])assert.notDeepEqual(characterPixels(id,{skin,...o}),characterPixels(id,{skin}),id+' '+skin+' '+JSON.stringify(o));
  assert.equal(new Set(LELOUCH_ICON_IDS.map(id=>JSON.stringify(lelouchIconPixels(id)))).size,LELOUCH_ICON_IDS.length);
+});
+test('the Gawain lasts thirty seconds, kills extend it up to thirty seconds remaining, and the cooldown waits for it',()=>{
+ const g=quiet();foe(g,400,0);g.special=0;assert.ok(useSpecial(g));assert.equal(g.ultimate.duration,GAWAIN_SECONDS);
+ for(let i=0;i<10;i++)updateRun(g,.02,{x:0,y:0});const before=g.ultimate.duration;
+ lelouchKill(g,{});assert.ok(g.ultimate.duration>before);const age=g.ultimate.age;
+ for(let i=0;i<200;i++)lelouchKill(g,{boss:true});assert.ok(g.ultimate.duration-age<=GAWAIN_SECONDS+1e-9);
+ assert.ok(g.special>=g.specialMax-1e-9,'cooldown held while the Gawain is out');
 });
