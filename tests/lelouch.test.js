@@ -1,6 +1,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {CHARACTERS,createPlayer,applyChoice,fusionReady,FUSIONS} from '../src/game.js';
-import {createRun,spawnEnemy,castWeapon,updateRun,useSpecial} from '../src/engine.js';
+import {createRun,spawnEnemy,castWeapon,updateRun,useSpecial,hitPlayer} from '../src/engine.js';
 import {lelouchKill,isCommanded,GAWAIN_SECONDS} from '../src/lelouch.js';
 import {characterPixels} from '../src/pixel-characters.js';
 import {lelouchIconPixels,LELOUCH_ICON_IDS} from '../src/lelouch-icons.js';
@@ -32,10 +32,10 @@ test('a full Checkmate turns the next Geass into a mass command',()=>{
  const g=quiet();for(let i=0;i<40;i++)lelouchKill(g,{commandedKill:true});assert.equal(g.mechanic.value,g.mechanic.max);
  const foes=Array.from({length:8},(_,i)=>foe(g,100+i*20,-30+(i%3)*20));castWeapon(g,'geass',foes[0]);assert.ok(foes.every(isCommanded));assert.equal(g.mechanic.value,0);
 });
-test('the Gawain is untouchable and fires the Hadron Cannons and slash harkens',()=>{
+test('the Gawain fires the Hadron Cannons and slash harkens',()=>{
  const g=quiet(),e=foe(g,200,-30),boss=spawnEnemy(g,true,false);Object.assign(boss,{x:-180,y:10,speed:0,attackCD:999});const bossHp=boss.hp;
  g.special=0;assert.ok(useSpecial(g));assert.equal(g.ultimate.type,'lelouch');for(let i=0;i<100;i++)updateRun(g,.02,{x:0,y:0});
- assert.equal(g.p.pose,'gawain');assert.ok(g.invuln>0);assert.ok(e.hp<5000);assert.ok(boss.hp<bossHp);assert.ok(g.effects.some(f=>f.type==='hadron')||g.effects.some(f=>f.type==='harken'));
+ assert.equal(g.p.pose,'gawain');assert.ok(e.hp<5000);assert.ok(boss.hp<bossHp);assert.ok(g.effects.some(f=>f.type==='hadron')||g.effects.some(f=>f.type==='harken'));
 });
 test('Lelouch, C.C. and their paired outfits have distinct animated pixel art and icons',()=>{
  const looks=[...new Set([...SKINS.lelouch.map(s=>s.id),'casual','pajamas','swimsuit'])];assert.ok(looks.length>=7);
@@ -49,4 +49,9 @@ test('the Gawain lasts thirty seconds, kills extend it up to thirty seconds rema
  lelouchKill(g,{});assert.ok(g.ultimate.duration>before);const age=g.ultimate.age;
  for(let i=0;i<200;i++)lelouchKill(g,{boss:true});assert.ok(g.ultimate.duration-age<=GAWAIN_SECONDS+1e-9);
  assert.ok(g.special>=g.specialMax-1e-9,'cooldown held while the Gawain is out');
+});
+test('the Gawain takes hits on its own armor, and breaking the armor destroys it early',()=>{
+ const g=quiet();foe(g,400,0);g.special=0;assert.ok(useSpecial(g));const hp=g.p.hp,armor=g.ultimate.armor;assert.ok(armor>0);
+ g.invuln=0;g.p.dodge=0;assert.ok(hitPlayer(g,30));assert.equal(g.p.hp,hp,'the pilots are not hurt');assert.ok(g.ultimate.armor<armor,'the armor is');
+ g.invuln=0;hitPlayer(g,1e6);updateRun(g,.02,{x:0,y:0});assert.equal(g.ultimate,null,'destroyed');assert.equal(g.p.pose,'');assert.match(g.toast,/DESTROYED/);
 });

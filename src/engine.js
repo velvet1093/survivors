@@ -28,7 +28,7 @@ import {summonPack,summonNue,updateSummons} from './summons.js';
 import {summonBrood} from './shiraori.js';
 import {syncShadowArmy,updateJinwoo} from './jinwoo.js';
 import {castUzi} from './jacket.js';
-import {castGeass,updateLelouch} from './lelouch.js';
+import {castGeass,updateLelouch,gawainAbsorb} from './lelouch.js';
 import {updateRiftPhases,riftShielded,markRiftHurt} from './rift-phases.js';
 import {petFor,updatePet} from './pets.js';
 import {newHeroMechanic,updateHeroMechanic,heroMovement,heroDamageBonus,heroMoveBonus,heroResistance,blockHeroHit,heroHurt,heroKill,heroXp,heroToxin,heroFreeze,consumeHeroCast,spendStolenTime} from './hero-mechanics.js';
@@ -83,6 +83,7 @@ export function hitPlayer(g,damage,{dot=false}={}){
   const p=g.p;damage*=heroResistance(g)*statusModifiers(p).damageTaken*(1-(p.damageReduction||0));const dodged=!dot&&Math.random()<p.dodge;if(!dot)g.invuln=dodged?.3:.65;
   if(dodged){g.numbers.push({x:p.x,y:p.y-40,amount:'DODGE',life:.6,color:'#94efcc'});return false;}
   markRiftHurt(g);
+  if(gawainAbsorb(g,damage))return true;
   if(!dot&&blockHeroHit(g))return false;
   const armorAbsorbed=absorbErzaBarrier(g,damage);damage-=armorAbsorbed;heroHurt(g,damage);p.hurtTimer=.45;g.hurtFlash=dot?.18:.55;const absorbed=Math.min(p.shield,damage);p.shield-=absorbed;p.hp-=damage-absorbed;g.shake=Math.max(g.shake,dot?1:6);
   burst(g,p.x,p.y,absorbed?'#fac4ea':'#ff8499',dot?3:12);

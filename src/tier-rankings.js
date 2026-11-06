@@ -160,9 +160,9 @@ export const ULTIMATE_RANKINGS={
   caution:'Its reach is short, so you must walk him into the crowd yourself; bosses are only stunned, never executed.',
   bestWith:'Use it when surrounded or to escape a boss pattern, and take the Hammer Time mastery nodes for heavier smashes.'}),
  lelouch:entry('A',{
-  reason:'The Gawain makes the pair untouchable for thirty seconds while its twin Hadron Cannons fire through the crowd every 1.4 seconds and its slash harkens strike the four nearest enemies twice a second. Every kill extends it: 0.4 seconds per ordinary enemy, 1 per elite and 4 per boss.',
-  comparison:'The longest invulnerable ultimate in the roster: in a steady wave the kills keep it in the field far beyond thirty seconds, and its line damage hits bosses at full strength.',
-  caution:'The Hadron Cannons fire along a line toward the nearest enemy, so a crowd spread all around takes less damage than a column, and with few enemies left there is little to extend it.',
+  reason:'The Gawain shields the pair inside its own armor for thirty seconds while its twin Hadron Cannons fire through the crowd every 1.4 seconds and its slash harkens strike the four nearest enemies twice a second. Every kill extends it: 0.4 seconds per ordinary enemy, 1 per elite and 4 per boss.',
+  comparison:'The longest ultimate in the roster: in a steady wave the kills keep it in the field far beyond thirty seconds, and its line damage hits bosses at full strength. Its armor, about twice your max HP plus 200, takes the hits for you.',
+  caution:'The Hadron Cannons fire along a line toward the nearest enemy, so a crowd spread all around takes less damage than a column, and with few enemies left there is little to extend it. Heavy hits wear the armor down, and when it breaks the Gawain is destroyed early.',
   bestWith:'Use it to escape a boss pattern or a surrounding wave, and take Hadron Overload for heavier beams.'}),
  jinwoo:entry('A',{
   reason:'Arise empowers every shadow for eight seconds, 60% more damage and 40% faster attacks, and each enemy that falls in the domain rises as a temporary shadow soldier.',

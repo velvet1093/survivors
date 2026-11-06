@@ -66,5 +66,8 @@ export function drawGawain(c,p,x,y,time,alpha=1,reduced=false){
  c.save();c.globalAlpha=alpha;c.imageSmoothingEnabled=false;
  c.fillStyle='#05091544';c.beginPath();c.ellipse(x,y+2,30,8,0,0,TAU);c.fill();
  // The float system keeps it hovering above the ground.
- c.translate(Math.round(x),Math.round(y-10+hover));c.scale(p.facing||1,1);c.drawImage(gawainBitmap(frame,firing),-28*s,-72*s,56*s,76*s);c.restore();
+ c.save();c.translate(Math.round(x),Math.round(y-10+hover));c.scale(p.facing||1,1);if(p.gawainHit>0)c.filter='brightness(1.8)';c.drawImage(gawainBitmap(frame,firing),-28*s,-72*s,56*s,76*s);c.restore();
+ // Armor gauge above the crest.
+ if(p.gawainArmor!==undefined){const k=Math.max(0,Math.min(1,p.gawainArmor)),bw=56,by=y-10+hover-72*s-8;c.fillStyle='#120e18';c.fillRect(x-bw/2-1,by-1,bw+2,6);c.fillStyle='#3a3048';c.fillRect(x-bw/2,by,bw,4);c.fillStyle=k>.35?'#d8b048':'#ff4a3a';c.fillRect(x-bw/2,by,bw*k,4);c.fillStyle='#f4dc88';c.fillRect(x-bw/2,by,bw*k,1);}
+ c.restore();
 }

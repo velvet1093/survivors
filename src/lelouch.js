@@ -10,11 +10,12 @@ import {effectivePassiveRank} from './game.js';
 // C.C. follows Lelouch and fires her pistol at nearby enemies.
 // Checkmate: kills fill the meter, and kills involving a commanded enemy fill it faster.
 // When it is full, the next Geass commands every ordinary enemy in a wide radius.
-// Gawain (ultimate): they board the knightmare together. It is untouchable, fires twin
+// Gawain (ultimate): they board the knightmare together. Hits strike its own armor instead
+// of the pair; if the armor breaks it is destroyed and they are thrown out. It fires twin
 // Hadron Cannons and lashes out with slash harkens.
 export const GEASS_RANGE=240,MASS_COMMAND_RANGE=340,CC_RANGE=380;
 export const GAWAIN_SECONDS=30,GAWAIN_KILL_TIME={normal:.4,elite:1,boss:4};
-export const LELOUCH_ULTIMATE={name:'Gawain',duration:GAWAIN_SECONDS,color:'#d8304a',description:'Lelouch and C.C. board the Gawain for thirty seconds, and every kill keeps it in the field longer: +0.4 seconds per ordinary enemy, +1 per elite and +4 per boss, up to thirty seconds remaining. C.C. pilots and Lelouch commands. The knightmare is untouchable, fires its twin Hadron Cannons through the crowd every 1.4 seconds and lashes the four nearest enemies with slash harkens twice a second.'};
+export const LELOUCH_ULTIMATE={name:'Gawain',duration:GAWAIN_SECONDS,color:'#d8304a',description:'Lelouch and C.C. board the Gawain for thirty seconds, and every kill keeps it in the field longer: +0.4 seconds per ordinary enemy, +1 per elite and +4 per boss, up to thirty seconds remaining. C.C. pilots and Lelouch commands. Hits damage the knightmare’s own armor instead of the pair; if the armor breaks, the Gawain is destroyed and they are thrown out early. It fires its twin Hadron Cannons through the crowd every 1.4 seconds and lashes the four nearest enemies with slash harkens twice a second.'};
 const commanded=e=>(e.geass||0)>0;
 export function geassDuration(g,rank){return 2.6+rank*.3+(g.p.meta?.geassDuration||0);}
 function command(g,e,{power,rank,fused,damage}){
@@ -83,13 +84,14 @@ export function lelouchKill(g,e){
  if(m.value>=m.max){g.toast='CHECKMATE READY · THE NEXT GEASS COMMANDS THEM ALL';g.toastTime=2.5;}
 }
 export const isCommanded=commanded;
+export const gawainArmor=p=>Math.round(200+p.maxHp*2);
 export function startGawain(g){
- const p=g.p,u=g.ultimate;p.pose='gawain';clearStatuses(p);u.tick=.5;u.harken=.2;u.r=620*p.area*(1+(p.meta.ultimateArea||0));
+ const p=g.p,u=g.ultimate;u.armor=u.armorMax=gawainArmor(p);p.gawainArmor=1;p.gawainHit=0;p.pose='gawain';clearStatuses(p);u.tick=.5;u.harken=.2;u.r=620*p.area*(1+(p.meta.ultimateArea||0));
  g.toast='GAWAIN · C.C. PILOTS, LELOUCH COMMANDS';g.toastTime=3;g.shake=Math.max(g.shake||0,6);
  g.effects.push({type:'gawain-land',x:p.x,y:p.y,r:120,life:.7,max:.7});
 }
 export function updateGawain(g,u,dt,{damage,burst}){
- const p=g.p;p.pose='gawain';g.invuln=Math.max(g.invuln||0,.35);
+ const p=g.p;p.pose='gawain';clearStatuses(p);p.gawainArmor=(u.armor??1)/(u.armorMax||1);p.gawainHit=Math.max(0,(p.gawainHit||0)-dt);
  // The cooldown waits for the knightmare to leave the field.
  g.special=Math.max(g.special||0,g.specialMax||0);u.tick-=dt;p.gawainFiring=Math.max(0,(p.gawainFiring||0)-dt);u.harken-=dt;
  const alive=g.enemies.filter(e=>e.hp>0).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y));
@@ -102,4 +104,13 @@ export function updateGawain(g,u,dt,{damage,burst}){
   for(const e of hits){damage(g,e,45*p.damage,'#ffd27a');if(!e.boss)applyStatus(e,'stun',.3);}
   if(hits.length)g.effects.push({type:'harken',x:p.x,y:p.y-40,targets:hits.map(e=>({x:e.x,y:e.y-(e.r||10)})),life:.3,max:.3});
   if(hits.length)burst(g,hits[0].x,hits[0].y,'#ffd27a',5,80);}
+}
+// The Gawain soaks hits with its own armor. Breaking it ends the ultimate early.
+export function gawainAbsorb(g,damage){
+ const u=g.ultimate;if(u?.type!=='lelouch'||!(u.armor>0))return false;const p=g.p;
+ u.armor=Math.max(0,u.armor-damage);p.gawainArmor=u.armor/u.armorMax;p.gawainHit=.15;
+ g.numbers.push({x:p.x,y:p.y-110,amount:Math.round(damage),life:.6,color:'#d8b048'});
+ if(u.armor<=0){u.duration=u.age;p.gawainArmor=0;g.toast='GAWAIN DESTROYED · C.C. EJECTS';g.toastTime=3;g.shake=Math.max(g.shake||0,10);
+  g.effects.push({type:'gawain-land',x:p.x,y:p.y,r:180,life:.8,max:.8},{type:'nova',x:p.x,y:p.y-50,r:140,color:'#ff6a3a',life:.6,max:.6});}
+ return true;
 }
