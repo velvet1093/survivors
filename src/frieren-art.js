@@ -111,13 +111,98 @@ function maidBody(r,{y,walk}){
  // Apron ties behind the waist.
  poly([[34,47],[39,45],[39,50]],A);
 }
-function arms(r,{y,walk,cast},look){
- const sleeve=look==='maid'?c.maid:c.white,light=look==='maid'?'#454c5e':'#ffffff',cuff=look==='maid'?'#fbfaf6':c.gold;
+// ---- Off-duty outfits ----
+const BARE={sleeve:SKIN.base,light:SKIN.light,cuff:null};
+function bareLegs(r,walk,{top=56,shoe,shoeLight,strap,geta}={}){
+ const {rect}=r;
+ for(const [x,d]of [[22,-walk],[30,walk]]){rect(x+d,top,5,67-top,SKIN.base);rect(x+d+4,top,1,67-top,SKIN.shade);
+  if(geta){rect(x+d-1,68,7,1,'#c89a6a');rect(x+d-1,69,7,2,'#8a6040');rect(x+d+1,67,3,1,strap);}
+  else{rect(x+d-1,67,7,4,shoe);rect(x+d,67,4,1,shoeLight);if(strap)rect(x+d,68,5,1,strap);rect(x+d-1,70,7,1,mix(shoe,'#000000',.4));}}
+}
+function casualBody(r,{y,walk}){
+ // Quiet Journey: a cream cable-knit sweater, a long sage skirt, a satchel and ankle boots.
+ const {rect,poly,line,put}=r,K='#e8dcc4',KS='#bfae8e',KL='#f8f0de',G='#7a9a7e',GS='#5a7a60';
+ for(const [x,d]of [[22,-walk],[30,walk]]){rect(x+d,62,5,4,c.tights);rect(x+d-1,65,7,6,c.boot);rect(x+d,65,1,5,'#b07a50');rect(x+d-1,65,7,1,'#a06a44');rect(x+d-1,70,7,1,'#4a2c1a');}
+ poly([[21,48],[35,48],[39+walk,64],[17+walk,64]],GS);poly([[22,48],[34,48],[37+walk,63],[19+walk,63]],G);for(const k of [-.6,0,.6])line(28+Math.round(k*7),50,28+Math.round(k*17)+walk,62,GS);line(19+walk,62,37+walk,62,'#9ab89e');
+ poly(shift([[19,38],[37,38],[38,50],[18,50]],y),KS);poly(shift([[20,39],[36,39],[37,49],[19,49]],y),K);
+ for(const x of [23,28,33])for(let yy=40;yy<49;yy+=2){put(x,yy+y,KL);put(x+1,yy+1+y,KS);}rect(19,48,18,2,KS);
+ rect(24,37+y,8,2,KS);rect(25,37+y,6,1,KL);
+ // Satchel strap from shoulder to the bag at her hip.
+ line(34,38+y,22,48,'#7a4a2a',2);poly([[16,47],[23,47],[23,53],[16,53]],'#8a5a38');rect(16,47,7,2,'#a06a44');put(19,49,c.gold);
+ return {sleeve:K,light:KL,cuff:KS};
+}
+function pajamaBody(r,{y,walk}){
+ // A Thousand Years of Sleep: a long starry lavender nightgown and fluffy slippers.
+ const {rect,poly,line,put}=r,N='#c8c0e8',NS='#9a90c8',NL='#e8e4f8',STAR='#f0d890';
+ for(const [x,d]of [[22,-walk],[30,walk]]){rect(x+d,64,5,3,SKIN.base);rect(x+d-2,66,9,5,'#f4f2f8');rect(x+d-1,66,7,1,'#ffffff');rect(x+d-2,70,9,1,'#c8c4d4');put(x+d+5,67,'#e8a8c8');}
+ poly([[20,38+y],[36,38+y],[42+walk,65],[14+walk,65]],NS);poly([[21,39+y],[35,39+y],[40+walk,64],[16+walk,64]],N);
+ for(const k of [-.5,0,.5])line(28+Math.round(k*8),44,28+Math.round(k*22)+walk,63,NS);
+ for(let x=15+walk;x<41+walk;x+=3)rect(x,63,2,2,NL);
+ for(const [x,yy]of [[23,45],[32,50],[20,56],[29,59],[36,57],[26,52]]){put(x,yy,STAR);put(x-1,yy,mix(STAR,N,.5));put(x+1,yy,mix(STAR,N,.5));put(x,yy-1,mix(STAR,N,.5));}
+ poly(shift([[24,38],[28,42],[32,38]],y),NL);put(28,40+y,'#e8a8c8');
+ return {sleeve:N,light:NL,cuff:NL};
+}
+function seasideBody(r,{y,walk}){
+ // Elven Seaside Retreat: a white one-piece with sage side panels and a gold ring, a sheer sarong.
+ const {rect,poly,line,put}=r,W='#f6f4ee',WS='#cfcabc',S='#8aae96';
+ bareLegs(r,walk,{top:52,shoe:'#a87a50',shoeLight:'#c89a6a',strap:'#7a4a2a'});
+ poly(shift([[21,39],[35,39],[34,52],[22,52]],y),SKIN.shade);poly(shift([[22,40],[34,40],[33,51],[23,51]],y),SKIN.base);
+ poly(shift([[22,41],[34,41],[33,53],[23,53]],y),WS);poly(shift([[23,42],[33,42],[32,52],[24,52]],y),W);
+ poly(shift([[22,43],[25,43],[24,52],[23,52]],y),S);poly(shift([[31,43],[34,43],[33,52],[32,52]],y),S);
+ rect(26,44+y,4,3,c.goldDark);rect(27,45+y,2,1,W);line(25,40+y,24,42+y,W);line(31,40+y,32,42+y,W);
+ poly([[21,51],[35,51],[39+walk,60],[30,58],[24,62],[18+walk,60]],'#e4ecec');poly([[22,52],[34,52],[37+walk,59],[30,57],[24,60],[20+walk,59]],'#f4fafa');rect(33,51,4,3,S);
+ return {...BARE};
+}
+function frillBody(r,{y,walk}){
+ // Seashell Frill Swimsuit: a mint swim dress with tiers of white frills.
+ const {rect,poly,line,put}=r,M='#a8dcc8',MS='#78b0a0',F='#ffffff';
+ bareLegs(r,walk,{top:54,shoe:'#f4f0ea',shoeLight:'#ffffff',strap:'#78b0a0'});
+ poly(shift([[21,39],[35,39],[34,49],[22,49]],y),MS);poly(shift([[22,40],[34,40],[33,48],[23,48]],y),M);
+ for(let x=22;x<35;x+=2)put(x,40+y,F);poly(shift([[24,43],[28,45],[24,47]],y),F);poly(shift([[32,43],[28,45],[32,47]],y),F);rect(27,44+y,2,2,'#f0a8b8');
+ for(const [top,bot,hb,col]of [[47,57,13,MS],[47,54,10,M]]){poly([[22,top],[34,top],[28+hb+walk,bot],[28-hb+walk,bot]],col);for(let x=28-hb+walk;x<28+hb+walk;x+=2){rect(x,bot-1,2,1,F);put(x,bot,x%4?F:'#d8f0e8');}}
+ line(22,50,18+walk,56,M);line(34,50,38+walk,56,M);
+ return {...BARE};
+}
+function bathBody(r,{y,walk}){
+ // Elven Hot-Spring Wrap: a striped white towel wrapped from the chest, wooden sandals.
+ const {rect,poly,line,put}=r,T='#f4f0ea',TS='#cfc8b8',ST='#a8c0b8';
+ bareLegs(r,walk,{top:56,geta:true,strap:'#c85a5a'});
+ poly(shift([[21,39],[35,39],[34,44],[22,44]],y),SKIN.shade);poly(shift([[22,39],[34,39],[33,44],[23,44]],y),SKIN.base);
+ poly([[20,42+y],[36,42+y],[38+walk,58],[18+walk,58]],TS);poly([[21,43+y],[35,43+y],[37+walk,57],[19+walk,57]],T);
+ for(const yy of [46,53])line(20,yy,36+walk*.5,yy,ST);line(30,43+y,32+walk,57,TS);poly(shift([[30,42],[35,42],[33,46]],y),T);
+ for(let x=19+walk;x<38+walk;x+=2)put(x,57,x%4?T:TS);
+ return {...BARE};
+}
+function sunHat(r,y){
+ // A wide straw sun hat with a sage ribbon.
+ const {rect,poly,line}=r;poly([[9,13+y],[16,9+y],[40,9+y],[47,13+y],[40,15+y],[16,15+y]],'#c8a868');poly([[11,13+y],[17,10+y],[39,10+y],[45,13+y],[39,14+y],[17,14+y]],'#e8cc88');
+ poly([[19,10+y],[21,4+y],[35,4+y],[37,10+y]],'#d8b878');rect(20,8+y,17,2,'#8aae96');line(22,5+y,34,5+y,'#f0dca0');
+}
+function nightcap(r,y,walk){
+ const {poly,rect,put}=r;
+ poly([[16,15+y],[21,7+y],[30,5+y],[38,8+y],[44+walk*.5,16+y],[46+walk*.5,24+y],[40,15+y],[34,12+y],[22,14+y]],'#9a90c8');
+ poly([[18,14+y],[22,8+y],[30,7+y],[37,10+y],[42,16+y],[38,14+y],[30,11+y],[22,13+y]],'#c8c0e8');rect(16,14+y,25,2,'#f4f2f8');
+ rect(44+Math.round(walk*.5),23+y,4,4,'#f0d890');put(45+Math.round(walk*.5),23+y,'#fff4c0');put(24,9+y,'#f0d890');put(33,10+y,'#f0d890');
+}
+function bunHair(r,y){
+ // Hair gathered into a bun on top, a folded towel set on it.
+ const {poly,rect,line}=r;poly([[21,9+y],[24,3+y],[32,3+y],[35,9+y],[32,12+y],[24,12+y]],c.hairShade);poly([[22,9+y],[25,4+y],[31,4+y],[34,9+y],[31,11+y],[25,11+y]],c.hair);line(25,5+y,30,5+y,c.hairLight);
+ rect(21,1+y,14,3,'#f4f0ea');rect(21,3+y,14,1,'#a8c0b8');rect(22,1+y,12,1,'#ffffff');
+}
+function looseHair(r,{y,walk}){
+ // Untied, sleep-mussed hair falling long behind her.
+ const {poly,line}=r;poly([[14,22+y],[17,11+y],[39,11+y],[42,22+y],[43+walk*.4,56],[38,60],[33,52],[23,52],[18,60],[13+walk*.4,56]],c.hairShade);
+ poly([[15,22+y],[18,13+y],[38,13+y],[41,22+y],[41+walk*.4,54],[38,57],[34,49],[22,49],[18,57],[15+walk*.4,54]],c.hair);
+ line(16,26,15+walk*.4,52,c.hairLight);line(40,26,41+walk*.4,52,c.hairMid);line(9,18+y,13,20+y,c.hairMid);line(44,16+y,41,20+y,c.hair);
+}
+function shellClips(r,y){for(const x of [16,38]){r.rect(x,11+y,3,3,'#f0a8b8');r.put(x+1,11+y,'#ffd8e0');r.put(x,13+y,'#c87890');}}
+function arms(r,{y,walk,cast},{sleeve,light,cuff,gold}){
  // Viewer-left arm hangs by her side; viewer-right hand grips the staff.
- limb(r,19,41+y,16-walk*.3,52,{color:sleeve,light,width:4});r.rect(14-walk*.3,52,5,2,cuff);
- if(cast){limb(r,37,41+y,43,33,{color:sleeve,light,width:4});r.rect(41,35,5,2,cuff);}
- else{limb(r,37,41+y,41,50,{color:sleeve,light,width:4});r.rect(39,50,5,2,cuff);}
- if(look!=='maid'){r.line(15-walk*.3,54,19-walk*.3,54,c.goldDark);}
+ const w=sleeve===SKIN.base?3:4;
+ limb(r,19,41+y,16-walk*.3,52,{color:sleeve,light,width:w});if(cuff)r.rect(14-walk*.3,52,5,2,cuff);
+ if(cast){limb(r,37,41+y,43,33,{color:sleeve,light,width:w});if(cuff)r.rect(41,35,5,2,cuff);}
+ else{limb(r,37,41+y,41,50,{color:sleeve,light,width:w});if(cuff)r.rect(39,50,5,2,cuff);}
+ if(gold)r.line(15-walk*.3,54,19-walk*.3,54,c.goldDark);
 }
 function headpiece(r,y){
  const {rect,put}=r;
@@ -126,15 +211,25 @@ function headpiece(r,y){
  rect(19,12+y,19,1,c.maid);put(28,9+y,'#ffffff');
 }
 
+const LOOKS={
+ default:{body:mageBody,arm:{sleeve:c.white,light:'#ffffff',cuff:c.gold,gold:true},cape:true},
+ maid:{body:maidBody,arm:{sleeve:c.maid,light:'#454c5e',cuff:'#fbfaf6'},frill:true,top:headpiece},
+ casual:{body:casualBody},
+ pajamas:{body:pajamaBody,hair:'loose',top:(r,m)=>nightcap(r,m.y,m.walk)},
+ swimsuit:{body:seasideBody,top:(r,m)=>sunHat(r,m.y)},
+ frillswim:{body:frillBody,top:(r,m)=>shellClips(r,m.y)},
+ bathsuit:{body:bathBody,hair:'bun',top:(r,m)=>bunHair(r,m.y)},
+};
+export const FRIEREN_LOOK_IDS=Object.keys(LOOKS);
 export function frierenPixels({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='default'}={}){
- const look=skin==='maid'?'maid':'default',mo=motion({frame,moving}),cast=attack||!!pose;
+ const L=LOOKS[skin]||LOOKS.default,mo=motion({frame,moving}),cast=attack||!!pose;
  const m={y:mo.y,walk:mo.walk,blink,expression,cast};const r=canvas();
- tails(r,m,look==='maid');
+ if(L.hair==='loose')looseHair(r,m);else if(L.hair!=='bun')tails(r,m,!!L.frill);
  if(!cast)staff(r,false);
- if(look==='maid')maidBody(r,m);else mageBody(r,m);
- arms(r,m,look);if(look!=='maid')capelet(r,m);
+ const gear=L.body(r,m)||{};
+ arms(r,m,L.arm||gear);if(L.cape)capelet(r,m);
  if(cast)staff(r,true);
  ears(r,m.y);face(r,m);fringe(r,m.y);
- if(look==='maid')headpiece(r,m.y);
+ if(L.top)L.top(r,m);
  return selout(r.pixels,INK);
 }

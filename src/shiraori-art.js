@@ -123,19 +123,20 @@ function robeLook(r,m,{hooded}){
  return hands;
 }
 function casualLook(r,m){
- const {y,walk}=m,{rect:R,poly:P,line:L}=r;hairBack(r,m);
- // Black pleated skirt, black thigh socks and white sneakers.
- for(const [x,d]of [[22,-walk],[29,walk]]){R(x+d,57,5,11,'#2a2632');R(x+d,57,5,2,SK.base);R(x-1+d,68,7,3,'#f2f0f4');R(x-1+d,70,7,1,'#a8a4b0');R(x+d,68,3,1,'#c8283a');}
- P([[19,50],[37,50],[40+walk*.4,58],[16+walk*.4,58]],'#1e1a24');P([[20,51],[36,51],[38+walk*.4,57],[18+walk*.4,57]],'#34303e');for(const x of [22,26,30,34])L(x,52,x+walk*.3,57,'#4a4656');
- // Oversized white hoodie with a black spider on the chest and kangaroo pocket.
- layer(r,[[18,38],[38,38],[40,52],[16,52]],['#bdb8c6','#f2f0f4','#ffffff'],y);
- P(shift([[24,44],[32,44],[33,49],[23,49]],y),'#dcd8e2');R(25,40+y,6,1,'#dcd8e2');
- r.rect(27,40+y,3,3,'#1e1a24');for(const [x0,y0,x1,y1]of [[26,40,24,38],[30,40,32,38],[26,42,24,44],[30,42,32,44]])L(x0,y0+y,x1,y1+y,'#1e1a24');
+ const {y,walk}=m,{rect:R,poly:P,line:L,put}=r,HD=['#14121a','#2a2632','#4a4656'],SKT=['#9a88b8','#c8b8e0','#e8dcf4'];hairBack(r,m);
+ // Lavender pleated skirt, black thigh socks and white sneakers with red laces.
+ for(const [x,d]of [[22,-walk],[29,walk]]){R(x+d,57,5,11,'#1e1a24');R(x+d,57,5,2,SK.base);R(x+d+1,59,1,8,'#3a3646');R(x-1+d,68,7,3,'#f2f0f4');R(x-1+d,70,7,1,'#a8a4b0');R(x+d+1,68,3,1,'#c8283a');}
+ P([[19,50],[37,50],[40+walk*.4,58],[16+walk*.4,58]],SKT[0]);P([[20,51],[36,51],[38+walk*.4,57],[18+walk*.4,57]],SKT[1]);for(const x of [22,26,30,34]){L(x,52,x+walk*.3,57,SKT[0]);put(x+1,52,SKT[2]);}
+ // Oversized black Elroe hoodie: a white spider on the chest, kangaroo pocket and red drawstrings.
+ layer(r,[[18,38],[38,38],[40,52],[16,52]],HD,y);
+ P(shift([[23,46],[33,46],[34,51],[22,51]],y),HD[0]);L(23,46+y,33,46+y,HD[2]);
+ r.rect(27,40+y,3,3,'#f4f0f6');put(28,39+y,'#f4f0f6');for(const [x0,y0,x1,y1]of [[26,40,23,38],[30,40,33,38],[26,42,23,44],[30,42,33,44],[26,41,22,41],[30,41,34,41]])L(x0,y0+y,x1,y1+y,'#f4f0f6');put(28,41+y,c.eye);
+ L(25,38+y,25,43+y,'#c8283a');L(31,38+y,31,43+y,'#c8283a');
  const pulse=m.cast?[0,-2,0,1][m.frame]:0,hands=[[14-walk*.3,53+walk*.3],[m.cast?45+pulse:41+walk*.3,m.cast?34+pulse:53-walk*.3]];
- for(const [i,[hx,hy]]of hands.entries()){const sx=i?37:19;limb(r,sx,40+y,hx,hy,{color:'#dcd8e2',light:'#ffffff',width:4,hand:SK.base,handShade:SK.shade});}
+ for(const [i,[hx,hy]]of hands.entries()){const sx=i?37:19;limb(r,sx,40+y,hx,hy,{color:HD[1],light:HD[2],width:4,hand:SK.base,handShade:SK.shade});R(hx-2,hy+1,5,1,HD[0]);}
  face(r,m);hairFront(r,m);
- // Hood down at the back of the neck.
- P(shift([[19,37],[24,35],[32,35],[37,37],[33,39],[23,39]],y),'#dcd8e2');
+ // Hood down behind the neck.
+ P(shift([[19,37],[24,35],[32,35],[37,37],[33,39],[23,39]],y),HD[2]);
  return hands;
 }
 function pajamaLook(r,m){

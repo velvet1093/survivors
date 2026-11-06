@@ -15,6 +15,7 @@ export function rimuruPixels({frame=0,moving=false,pose='',attack=false,expressi
   if(expression==='focused'||expression==='ultimate'){L(17,ey-3,22,ey-2,'#43677b');L(33,ey-2,38,ey-3,'#43677b');}
   L(26,ey+5,29,ey+5,'#547e92');return outline(r.pixels,ink);
  }
+ if(OFF_DUTY[skin])return offDutyPixels({frame,moving,pose,attack,expression,blink,skin});
  return humanPixels({frame,moving,pose,attack,expression,blink,skin});
 }
 // Human form. Long pale-blue hair, gold eyes and either the Tempest Traveler look (long blue
@@ -89,5 +90,59 @@ function humanPixels({frame,moving,pose,attack,expression,blink,skin}){
  P([[16,23+y],[16,15+y],[21,10+y],[28,8+y],[35,11+y],[40,17+y],[41,27+y],[39,36+y],[37,24+y],[34,19+y],[31,24+y],[28,20+y],[27,27+y],[25,20+y],[22,24+y],[20,20+y],[19,32+y],[16,37+y]],c.hair);
  P([[19,17+y],[23,12+y],[28,11+y],[26,17+y],[23,21+y],[21,18+y]],c.hairLight);P([[30,12+y],[34,13+y],[37,18+y],[38,23+y],[35,20+y],[33,17+y]],'#c5e7ea');
  L(17,25+y,17,34+y,'#bfdee4');L(38,26+y,38,35+y,c.hairShade);L(27,20+y,27,26+y,c.hairShade);
+ return selout(r.pixels,c.ink);
+}
+
+// ---- Off-duty outfits, on the same head, hair and skeleton as the human form ----
+function backHair(r,y,sway,c){const {poly:P,line:L}=r;
+ P([[15,20+y],[17,11+y],[24,6+y],[33,7+y],[40,13+y],[42,24+y],[44,40],[47+sway,50],[41,52],[37,44],[20,44],[15,52],[10-sway,49],[13,38]],c.hairShade);
+ P([[16,21+y],[19,12+y],[25,8+y],[33,9+y],[39,15+y],[41,25+y],[42,40],[44+sway,48],[41,49],[36,42],[21,42],[16,49],[13-sway,47],[15,37]],c.hair);
+ L(16,26,14-sway,46,c.hairLight);L(41,27,43+sway,46,'#c5e7ea');L(18,30,17,44,c.hairShade);}
+function headAndFringe(r,y,{blink,expression,cast},c){const {poly:P,line:L}=r;
+ face(r,y);const hurt=expression==='hurt',focus=expression==='focused'||expression==='ultimate'||cast;
+ for(const [x,side]of [[21,-1],[31,1]])eye(r,x,26+y,{iris:c.gold,irisDark:'#a07a30',lash:c.ink,side,closed:blink,hurt,focus});
+ mouth(r,34+y,expression,{lip:'#a27b70'});
+ P([[16,23+y],[16,15+y],[21,10+y],[28,8+y],[35,11+y],[40,17+y],[41,27+y],[39,36+y],[37,24+y],[34,19+y],[31,24+y],[28,20+y],[27,27+y],[25,20+y],[22,24+y],[20,20+y],[19,32+y],[16,37+y]],c.hair);
+ P([[19,17+y],[23,12+y],[28,11+y],[26,17+y],[23,21+y],[21,18+y]],c.hairLight);P([[30,12+y],[34,13+y],[37,18+y],[38,23+y],[35,20+y],[33,17+y]],'#c5e7ea');
+ L(17,25+y,17,34+y,'#bfdee4');L(38,26+y,38,35+y,c.hairShade);L(27,20+y,27,26+y,c.hairShade);}
+// A little slime face: a pale drop with two dashed eyes.
+function slimeFace(r,x,y,{body='#a6dfea',eye='#2a4a5a'}={}){const {rect,put}=r;rect(x,y+1,7,4,body);rect(x+1,y,5,1,body);put(x+1,y+2,eye);put(x+2,y+2,eye);put(x+4,y+2,eye);put(x+5,y+2,eye);rect(x+2,y+4,3,1,mix(body,eye,.35));}
+const OFF_DUTY={
+ casual:{// Tempest Hoodie: a blue hoodie with a slime print, dark jeans and white sneakers.
+  sleeve:'#5a8ac8',light:'#8ab4e0',cuff:'#3a5a8a',
+  body(r,{y,walk},c){const {rect:R,poly:P,line:L}=r;
+   for(const [x,d]of [[21,-walk],[30,walk]]){R(x+d,50,6,17,'#2a3448');R(x+d+1,51,1,14,'#4a5a78');R(x+d-1,66,8,5,'#f4f6fa');R(x+d-1,68,8,1,'#5a8ac8');R(x+d-1,70,8,1,'#a8b0c0');}
+   P([[18,37+y],[38,37+y],[39,52],[17,52]],'#3a5a8a');P([[19,38+y],[37,38+y],[38,51],[18,51]],'#5a8ac8');L(20,40+y,19,50,'#8ab4e0');R(18,49,21,3,'#3a5a8a');
+   slimeFace(r,25,42+y);P([[21,36+y],[35,36+y],[33,40+y],[23,40+y]],'#3a5a8a');L(24,38+y,24,44+y,'#e8eef6');L(32,38+y,32,44+y,'#e8eef6');}},
+ pajamas:{// Slime Sleep Onesie: a slime-blue onesie with the hood up and footies.
+  sleeve:'#4aa8e0',light:'#8ad0f4',cuff:'#2a78b0',hood:true,
+  body(r,{y,walk},c){const {rect:R,poly:P,line:L,put}=r;
+   for(const [x,d]of [[21,-walk],[30,walk]]){R(x+d,50,6,17,'#2a78b0');R(x+d+1,50,4,16,'#4aa8e0');R(x+d-1,65,8,6,'#2a78b0');R(x+d,65,6,1,'#8ad0f4');R(x+d-1,70,8,1,'#1a4a7a');}
+   P([[18,37+y],[38,37+y],[39,53],[17,53]],'#2a78b0');P([[19,38+y],[37,38+y],[38,52],[18,52]],'#4aa8e0');P([[20,40+y],[26,39+y],[24,46+y],[20,47+y]],'#8ad0f4');
+   L(28,39+y,28,52,'#2a78b0');for(const yy of [42,46,50])put(29,yy,'#e4f7ef');P([[24,50],[33,50],[32,53],[25,53]],'#2a78b0');}},
+ swimsuit:{// Tempest Splash: a teal rash guard with a white wave stripe, wave-print board shorts and sandals.
+  sleeve:'#4a9ac8',light:'#8acae8',cuff:'#ffffff',short:true,
+  body(r,{y,walk},c){const {rect:R,poly:P,line:L,put}=r;
+   for(const [x,d]of [[21,-walk],[30,walk]]){R(x+d,57,5,10,SKIN.base);R(x+d+4,57,1,10,SKIN.shade);R(x+d-1,67,7,4,'#2a4a7a');R(x+d,68,5,1,'#8acae8');R(x+d-1,70,7,1,'#14243a');}
+   P([[18,47],[38,47],[40+walk*.4,59],[29,59],[28,55],[27,59],[16+walk*.4,59]],'#1e3a62');P([[19,48],[37,48],[38+walk*.4,58],[29,58],[28,54],[27,58],[18+walk*.4,58]],'#2a4a7a');
+   for(let x=18;x<38;x+=4){put(x+walk*.3,53,'#ffffff');put(x+1+walk*.3,52,'#ffffff');put(x+2+walk*.3,53,'#ffffff');}R(18,47,20,2,'#ffffff');
+   P([[18,37+y],[38,37+y],[38,49],[18,49]],'#2a6a9a');P([[19,38+y],[37,38+y],[37,48],[19,48]],'#4a9ac8');for(let x=19;x<37;x++)put(x,43+Math.round(Math.sin(x*.8))+y,'#ffffff');
+   P([[24,37+y],[32,37+y],[30,40+y],[26,40+y]],'#2a6a9a');}},
+};
+function offDutyPixels({frame,moving,pose,attack,expression,blink,skin}){
+ const c=RIMURU_COLORS,o=OFF_DUTY[skin],r=canvas(),{rect:R,poly:P,line:L,put}=r,{walk,y}=motion({frame,moving}),cast=attack||!!pose,sway=moving?[0,1,0,-1][frame]:0;
+ backHair(r,y,sway,c);o.body(r,{y,walk},c);
+ const color=o.short?SKIN.base:o.sleeve,light=o.short?SKIN.light:o.light,lx=15-walk*.3,ly=51,rx=cast?45:41,ry=cast?31:51;
+ limb(r,20,40+y,lx,ly,{color,light,width:o.short?4:5});limb(r,36,40+y,rx,ry,{color,light,width:o.short?4:5});
+ if(o.short){P([[17,38+y],[22,37+y],[22,43+y],[16,43+y]],o.sleeve);P([[34,37+y],[39,38+y],[40,43+y],[34,43+y]],o.sleeve);}
+ else{R(lx-2,ly+1,6,2,o.cuff);R(rx-2,ry+1,6,2,o.cuff);}
+ if(cast){P([[43,26],[40,23],[43,18],[45,22],[49,17],[51,24],[48,28]],'#36546e');P([[43,25],[43,21],[46,24],[49,21],[49,25],[46,27]],'#7dc6e5');R(45,23,2,3,'#d2eff0');}
+ headAndFringe(r,y,{blink,expression,cast},c);
+ if(o.hood){
+  // The onesie's hood is a slime: a rounded blue cap with two dashed eyes on top.
+  P([[14,22+y],[15,13+y],[20,6+y],[28,3+y],[36,6+y],[41,13+y],[42,22+y],[39,21+y],[37,14+y],[32,10+y],[24,10+y],[19,14+y],[17,21+y]],'#2a78b0');
+  P([[15,21+y],[16,13+y],[21,7+y],[28,4+y],[35,7+y],[40,13+y],[41,21+y],[38,19+y],[36,14+y],[31,11+y],[25,11+y],[20,14+y],[18,19+y]],'#4aa8e0');
+  P([[19,10+y],[24,6+y],[28,5+y],[25,9+y],[21,12+y]],'#8ad0f4');L(22,8+y,25,8+y,'#2a4a5a');L(31,8+y,34,8+y,'#2a4a5a');
+ }
  return selout(r.pixels,c.ink);
 }
