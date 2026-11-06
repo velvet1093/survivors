@@ -150,9 +150,9 @@ export const ULTIMATE_RANKINGS={
   caution:'It compresses for two seconds before the hole opens, leaving you exposed, and bosses resist its pull.',
   bestWith:'Start the charge before the crowd reaches you, then fight inside Maximum Mass while the hole keeps feeding Garuda targets.'}),
  jacket:entry('A',{
-  reason:'Hotline Rampage makes Jacket untouchable for six seconds while he dashes to the nearest enemy three times a second and smashes everything around it with a hammer.',
+  reason:'Hotline Rampage makes Jacket untouchable and 20% faster for six seconds while he swings a hammer all around himself four times a second, smashing everything in reach.',
   comparison:'It is both a panic button and a clear: few ultimates combine full immunity with this much area damage, and weakened ordinary enemies die outright.',
-  caution:'It chooses its own path from enemy to enemy, so it can carry him into a pack; bosses are only stunned, never executed.',
+  caution:'Its reach is short, so you must walk him into the crowd yourself; bosses are only stunned, never executed.',
   bestWith:'Use it when surrounded or to escape a boss pattern, and take the Hammer Time mastery nodes for heavier smashes.'}),
  jinwoo:entry('A',{
   reason:'Arise empowers every shadow for eight seconds, 60% more damage and 40% faster attacks, and each enemy that falls in the domain rises as a temporary shadow soldier.',

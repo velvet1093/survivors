@@ -26,10 +26,10 @@ test('quick kills chain a Combo into a lethal frenzy, and an idle chain drains a
  jacketKill(g,{});assert.equal(g.mechanic.active,FRENZY_SECONDS);assert.equal(heroDamageBonus(g),1.3);assert.equal(heroMoveBonus(g),1.15);
  const d=quiet();for(let i=0;i<5;i++)jacketKill(d,{});const before=d.mechanic.value;for(let i=0;i<200;i++)updateRun(d,.02,{x:0,y:0});assert.ok(d.mechanic.value<before);assert.equal(d.mechanic.chain,0);
 });
-test('Hotline Rampage makes Jacket untouchable, dashes into the crowd and executes weakened enemies',()=>{
- const g=quiet(),weak=foe(g,60,0,100),boss=spawnEnemy(g,true,false);Object.assign(boss,{x:70,y:10,speed:0,attackCD:999});weak.hp=30;const bossHp=boss.hp;
+test('Hotline Rampage keeps Jacket in place, untouchable, smashing around him and executing weakened enemies',()=>{
+ const g=quiet(),weak=foe(g,40,0,100),boss=spawnEnemy(g,true,false);Object.assign(boss,{x:50,y:10,speed:0,attackCD:999});const start={x:g.p.x,y:g.p.y};weak.hp=30;const bossHp=boss.hp;
  g.special=0;assert.ok(useSpecial(g));assert.equal(g.ultimate.type,'jacket');for(let i=0;i<40;i++)updateRun(g,.02,{x:0,y:0});
- assert.equal(g.p.pose,'rampage');assert.ok(g.invuln>0);assert.ok(!g.enemies.includes(weak)||weak.hp<=0);assert.ok(boss.hp>0&&boss.hp<bossHp);
+ assert.equal(g.p.pose,'rampage');assert.deepEqual({x:g.p.x,y:g.p.y},start,'no dash or teleport');assert.ok(g.invuln>0);assert.ok(!g.enemies.includes(weak)||weak.hp<=0);assert.ok(boss.hp>0&&boss.hp<bossHp);
 });
 test('Jacket, the Biker and his off-duty outfits have distinct animated pixel art and icons',()=>{
  const looks=[...new Set([...SKINS.jacket.map(s=>s.id),'biker','casual','pajamas','swimsuit'])];assert.equal(new Set(looks.map(skin=>JSON.stringify(characterPixels('jacket',{skin})))).size,looks.length);

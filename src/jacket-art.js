@@ -4,7 +4,7 @@ import {canvas,motion,limb,selout,mix,SKIN} from './hero-kit.js';
 // cream sleeves and a cream "B", a cyan tee and blood-spattered jeans; an Uzi in one hand and
 // a hammer in the other. The Biker skin is the cyan helmet with its black visor, a magenta
 // puffer vest with a skull patch, torn jeans, tan boots and a bloody cleaver.
-export const JACKET_ART={ink:'#16121c',feather:'#f4f0e8',featherShade:'#c8c0b4',comb:'#d8303a',combShade:'#9a1a28',beak:'#f0b830',eye:'#141018',ring:'#4ac8d8',
+export const JACKET_ART={ink:'#16121c',feather:'#c8bca6',featherShade:'#7e7262',featherDark:'#4e4438',comb:'#8a1a22',combShade:'#4e0a12',flesh:'#a8323a',beak:'#b08a4a',beakShade:'#6a4a20',eye:'#060408',ring:'#3a4a58',
  maroon:'#8a2a3a',maroonShade:'#5a1a28',maroonLight:'#aa4a5a',cream:'#e8d4a8',creamShade:'#b8a07a',tee:'#4ac8d8',denim:'#4a6ab8',denimShade:'#2a4a88',denimLight:'#6a8ad8',blood:'#d82838',
  helmet:'#4ac8d8',helmetShade:'#2a8a9a',visor:'#0e0c14',vest:'#e02a7a',vestShade:'#a01a5a',vestLight:'#ff6aa8',boot:'#d8a040',bootShade:'#9a7028',glove:'#3a7ab8'};
 const c=JACKET_ART,INK=c.ink,ARM='#e8b08a',ARM_SHADE='#c08868';
@@ -20,17 +20,25 @@ export const JACKET_LOOK_IDS=Object.keys(LOOKS);
 
 function rooster(r,{y,blink,expression,cast}){
  const {poly,rect,line,put}=r,hurt=expression==='hurt',focus=cast||expression==='focused'||expression==='ultimate';
- // Red comb on the crown, then the feathered head and its ragged lower edge.
- poly(shift([[24,12],[25,4],[28,7],[30,2],[32,7],[35,5],[34,13]],y),c.combShade);poly(shift([[25,12],[26,6],[28,9],[30,4],[32,9],[34,7],[33,13]],y),c.comb);
- poly(shift([[17,22],[19,13],[25,9],[33,9],[38,13],[40,22],[40,33],[37,38],[34,36],[31,39],[28,37],[25,39],[22,36],[19,38],[16,33]],y),c.featherShade);
- poly(shift([[18,22],[20,14],[25,10],[33,10],[37,14],[39,22],[39,32],[36,36],[33,34],[30,37],[28,35],[26,37],[23,34],[20,36],[17,32]],y),c.feather);
- for(const [x0,y0,x1,y1]of [[19,24,18,32],[38,24,39,31],[22,14,25,12],[33,12,36,15]])line(x0,y0+y,x1,y1+y,c.featherShade);
- // Round black eyes ringed in cyan; a blink narrows them.
- for(const x of [22,32]){r.rect(x-1,19+y,6,6,c.ring);r.rect(x,20+y,4,4,c.eye);
-  if(blink)r.rect(x,21+y,4,2,c.feather),line(x,22+y,x+3,22+y,c.eye);else if(hurt)line(x,20+y,x+3,23+y,c.ring);else{put(x+1,21+y,'#ffffff');if(focus)r.rect(x-1,19+y,6,1,c.feather);}}
- // Yellow beak with a dark mouth line, red wattles below.
- poly(shift([[25,25],[31,25],[30,30],[28,32],[26,30]],y),c.beak);line(26,28+y,30,28+y,expression==='ultimate'?c.blood:'#8a5a10');if(expression==='ultimate'||hurt)rect(27,29+y,3,1,'#5a1a10');
- poly(shift([[25,31],[28,33],[31,31],[31,36],[28,38],[25,36]],y),c.combShade);poly(shift([[26,32],[28,33],[30,32],[30,35],[28,37],[26,35]],y),c.comb);
+ // A worn latex rooster mask: grimy grey-brown feathers, a dark crimson comb, raw red flesh
+ // around hollow black eye sockets, and a hooked tan beak set in a cruel slant.
+ poly(shift([[23,13],[23,4],[26,7],[27,1],[30,6],[32,2],[34,7],[36,5],[35,14]],y),c.combShade);poly(shift([[24,12],[24,6],[26,9],[27,3],[30,8],[32,4],[33,9],[35,7],[34,13]],y),c.comb);line(26,8+y,27,5+y,'#b03a40');
+ poly(shift([[16,22],[18,13],[24,9],[33,9],[39,13],[41,22],[41,33],[38,38],[35,35],[32,39],[29,36],[26,39],[23,35],[20,38],[15,33]],y),c.featherDark);
+ poly(shift([[17,22],[19,14],[24,10],[33,10],[38,14],[40,22],[40,32],[37,36],[34,33],[31,37],[29,34],[26,37],[23,33],[20,36],[16,32]],y),c.featherShade);
+ poly(shift([[19,21],[21,15],[25,12],[32,12],[36,15],[38,21],[37,28],[33,31],[24,31],[20,28]],y),c.feather);
+ for(const [x0,y0,x1,y1]of [[18,24,17,32],[39,24,40,31],[22,13,25,11],[33,11,36,14],[21,29,19,34],[36,29,38,34]])line(x0,y0+y,x1,y1+y,c.featherDark);
+ for(const [x,yy]of [[22,18],[35,19],[20,25],[37,26]])put(x,yy+y,c.featherShade);
+ // Raw red flesh around each sunken socket; the sockets stay hollow and black.
+ for(const x of [22,32]){r.rect(x-2,18+y,8,7,c.flesh);r.rect(x-1,17+y,6,1,c.flesh);r.rect(x,19+y,4,4,c.eye);put(x-1,20+y,c.combShade);put(x+4,21+y,c.combShade);
+  if(blink){r.rect(x,20+y,4,2,c.flesh);line(x,21+y,x+3,21+y,c.eye);}
+  else if(hurt){line(x,19+y,x+3,22+y,c.flesh);}
+  else{put(x+(x<28?2:1),20+y,c.ring);if(focus){line(x-1,18+y,x+4,x<28?19+y:18+y,c.featherDark);}}}
+ // Brows pressed down into a scowl.
+ line(19,17+y,25,19+y,c.featherDark);line(37,17+y,31,19+y,c.featherDark);
+ // Hooked beak, its lower edge stained, then the hanging dark wattles.
+ poly(shift([[25,23],[31,23],[32,26],[29,31],[27,30],[25,27]],y),c.beakShade);poly(shift([[26,23],[30,23],[31,26],[29,29],[27,28],[26,26]],y),c.beak);line(26,27+y,30,26+y,expression==='ultimate'?'#d82838':c.beakShade);put(29,30+y,'#d82838');
+ poly(shift([[24,30],[27,32],[30,31],[31,37],[28,40],[24,37]],y),c.combShade);poly(shift([[25,31],[27,33],[29,32],[30,36],[28,38],[25,36]],y),c.comb);put(26,34+y,'#b03a40');
+ if(expression==='ultimate'||hurt){rect(26,27+y,4,1,'#2a0a0a');}
 }
 function helmet(r,{y,blink,expression,cast}){
  const {poly,rect,line,put}=r,focus=cast||expression==='focused'||expression==='ultimate';
