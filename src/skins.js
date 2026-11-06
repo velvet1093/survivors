@@ -9,6 +9,7 @@ export const SKINS={
  denji:[base('Public Safety Devil Hunter'),{id:'devilhunter',name:'Devil Hunter · Black Jacket'}],
  shiraori:[base('White Weaver'),{id:'unveiled',name:'Spider God · Unveiled'}],
  jinwoo:[base('Hunter’s Coat'),{id:'monarch',name:'Shadow Monarch'}],
+ jacket:[base('Richard · Letterman Jacket'),{id:'biker',name:'Biker'}],
  guts:[base('Black Swordsman'),{id:'goldenage',name:'Band of the Hawk'},{id:'berserker',name:'Berserker Armor'}],
  featherine:[base('Witch of Theatergoing'),{id:'shrine',name:'Miko of Fragments'}],
  rimuru:[base('Tempest Traveler'),{id:'demonlord',name:'Demon Lord'}],

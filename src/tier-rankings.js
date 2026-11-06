@@ -49,6 +49,11 @@ export const CHARACTER_RANKINGS={
   comparison:'He is the strongest B hero: his damage beats the A brawlers, but he lacks Diavolo’s negation or Titan Eren’s resistance.',
   caution:'He moves slowly and must stand in the crowd to hit, so ranged enemies punish him.',
   bestWith:'Brand of Sacrifice for Astral Edge, defensive passives, and Berserker Armor saved for dense packs.'}),
+ jacket:entry('B',{
+  reason:'Jacket sprays the crowd with fast Uzi bursts and turns quick consecutive kills into a Combo; ten in a row starts a six-second frenzy of 30% more damage and 15% speed.',
+  comparison:'His Uzi out-damages most starting weapons and he is one of the fastest heroes, but he has little health and no defensive mechanic of his own.',
+  caution:'The Combo breaks after 2.5 seconds without a kill, so his frenzy depends on dense waves; against a lone boss it rarely triggers.',
+  bestWith:'Richard the Rooster early for damage and speed, Hotline Massacre as soon as both are maxed, and a shield or health passive.'}),
  jinwoo:entry('B',{
   reason:'Jinwoo levels through the System: each level-up allocates stat points, extracts a new shadow or grades one up, and his shadow army fights beside Kamish’s Wrath.',
   comparison:'His army builds slowly, then reaches damage in the roster’s upper middle as shadows climb toward Commander grade; he takes more damage than most heroes, which keeps his composite in B.',
@@ -144,6 +149,11 @@ export const ULTIMATE_RANKINGS={
   comparison:'Its damage on a packed crowd rivals the S domains and it fills Star Rage instantly. The charge-up and boss resistance keep it just below them.',
   caution:'It compresses for two seconds before the hole opens, leaving you exposed, and bosses resist its pull.',
   bestWith:'Start the charge before the crowd reaches you, then fight inside Maximum Mass while the hole keeps feeding Garuda targets.'}),
+ jacket:entry('A',{
+  reason:'Hotline Rampage makes Jacket untouchable for six seconds while he dashes to the nearest enemy three times a second and smashes everything around it with a hammer.',
+  comparison:'It is both a panic button and a clear: few ultimates combine full immunity with this much area damage, and weakened ordinary enemies die outright.',
+  caution:'It chooses its own path from enemy to enemy, so it can carry him into a pack; bosses are only stunned, never executed.',
+  bestWith:'Use it when surrounded or to escape a boss pattern, and take the Hammer Time mastery nodes for heavier smashes.'}),
  jinwoo:entry('A',{
   reason:'Arise empowers every shadow for eight seconds, 60% more damage and 40% faster attacks, and each enemy that falls in the domain rises as a temporary shadow soldier.',
   comparison:'It snowballs like no other ultimate: in a dense wave the risen soldiers multiply the army; against a lone boss it is a strong but plain damage window.',
@@ -230,6 +240,16 @@ export const ULTIMATE_RANKINGS={
 // (tools/balance/item-sim.mjs), keeping the better of a kiting and a close-range bot.
 // Fusions keep their passive ingredient equipped, as they do in a real build.
 export const WEAPON_RANKINGS={
+ uzi:entry('A',{
+  reason:'Uzi Spray fires fast bursts of bullets in a tight spread, adding bullets and piercing with every rank, and deals more damage than most starting weapons.',
+  comparison:'Close to Zafkiel Flintlock solo: strong single-lane damage, with less crowd reach than area weapons.',
+  caution:'Its bullets go where the nearest enemy is, so a flanking crowd can slip past the spray.',
+  bestWith:'Richard the Rooster for the Hotline Massacre evolution, plus area or cooldown passives.'}),
+ hotline:entry('A',{
+  reason:'Hotline Massacre fires two piercing streams and hurls a hammer every fourth burst that pierces the crowd and stuns everything it hits.',
+  comparison:'Among the strongest weapon evolutions measured, near Beelzebub and Final Chapter.',
+  caution:'It needs both max-rank ingredients: a maxed Uzi Spray and a maxed Richard the Rooster.',
+  bestWith:'Jacket, whose Combo frenzy stacks on top of its damage.'}),
  salvation:entry('S',{
   reason:'Salvation: Five Wishes measured the highest damage of any weapon by a wide margin, almost four times the median.',
   comparison:'Nothing else is close, but it takes two separate steps: Ultimate Madoka first, then the five-gem Quintet, so it arrives late.',
@@ -801,6 +821,11 @@ export const PASSIVE_RANKINGS={
   comparison:'For most heroes it is a steady health passive like Automail; on Jinwoo it is closer to a damage passive because his shadows carry his offence.',
   caution:'Outside Jinwoo it offers only maximum HP, with no damage, cooldown or mobility bonus.',
   bestWith:'Jinwoo, who starts with it and uses it to clear the Daily Quest faster for extra stats.'}),
+ roostermask:entry('B',{
+  reason:'Richard the Rooster adds 6% weapon damage and 4% move speed per rank; on Jacket it also adds 10% Combo per rank.',
+  comparison:'A balanced offence-and-speed passive, a little behind pure damage passives such as Power Band for one slot.',
+  caution:'Its Combo bonus is exclusive to Jacket; on other heroes it is a modest damage and speed passive.',
+  bestWith:'Jacket, where it evolves Uzi Spray into Hotline Massacre.'}),
  parallelminds:entry('A',{
   reason:'Parallel Minds adds 12% weapon damage and cuts cooldowns by 9%; on Shiraori it also hatches three more spiderlings.',
   comparison:'About as valuable as Blood Engine or Epitaph for one slot, and better on Shiraori, whose brood grows with every rank.',

@@ -27,6 +27,7 @@ import {gutsPixels} from './guts-art.js';
 import {redrawEren} from './hero-redesign.js';
 import {frierenPixels,FRIEREN_LOOK_IDS} from './frieren-art.js';
 import {jinwooPixels} from './jinwoo-art.js';
+import {jacketPixels} from './jacket-art.js';
 import {skinFor,tintPixels} from './skins.js';
 import {paintFace} from './expressions.js';
 // Original pixel art. The same native-resolution frames drive the roster and combat.
@@ -237,6 +238,7 @@ export function characterPixels(id,{frame=0,moving=false,pose='',attack=false,ex
   if(id==='erza'){const result=erzaPixels({frame,moving,pose,attack,expression,blink,skin:skinId,form});dataCache.set(key,result);return result;}
   if(id==='esdeath'){const result=esdeathPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='featherine'){const result=featherinePixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
+  if(id==='jacket'){const result=jacketPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='jinwoo'){const result=jinwooPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='frieren'&&FRIEREN_LOOK_IDS.includes(skinId)){const result=frierenPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='rimuru'&&['casual','pajamas','swimsuit'].includes(skinId)){const result=rimuruPixels({frame,moving,pose,attack,expression,blink,skin:skinId,form});dataCache.set(key,result);return result;}

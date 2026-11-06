@@ -1,0 +1,42 @@
+[
+ {
+  "id": "uzi",
+  "style": "kite",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 74,
+  "kills": 97,
+  "takenPerMin": 133.3,
+  "xp": 3000155
+ },
+ {
+  "id": "uzi",
+  "style": "kite",
+  "owner": true,
+  "hero": "jacket",
+  "dps": 81,
+  "kills": 110,
+  "takenPerMin": 126.8,
+  "xp": 2666821
+ },
+ {
+  "id": "hotline",
+  "style": "kite",
+  "owner": false,
+  "hero": "maomao",
+  "dps": 153.8,
+  "kills": 204,
+  "takenPerMin": 73,
+  "xp": 4000381
+ },
+ {
+  "id": "hotline",
+  "style": "kite",
+  "owner": true,
+  "hero": "jacket",
+  "dps": 157.9,
+  "kills": 203,
+  "takenPerMin": 84.3,
+  "xp": 4333672
+ }
+]

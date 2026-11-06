@@ -350,6 +350,16 @@
   "score": 21.7
  },
  {
+  "id": "roostermask",
+  "slots": 1,
+  "offense": 18,
+  "defence": 0,
+  "ultimate": 0,
+  "move": 12,
+  "magnet": 0,
+  "score": 21.6
+ },
+ {
   "id": "scroll",
   "slots": 1,
   "offense": 20.4,

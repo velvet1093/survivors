@@ -1,0 +1,94 @@
+[
+ {
+  "id": "jacket",
+  "style": "close",
+  "dps": 559.2,
+  "kills": 591,
+  "level": 20,
+  "lateTakenPerMin": 714.3,
+  "ehp": 111,
+  "regenPerMin": 60,
+  "pressure": 4.491,
+  "fusions": 0,
+  "rows": [
+   {
+    "dealt": 214124,
+    "kills": 441,
+    "level": 18,
+    "takenPerMin": 402.1,
+    "lateTakenPerMin": 550.1,
+    "ehp": 111,
+    "regenPerMin": 96,
+    "pressure": 2.657,
+    "bossShare": 0.51,
+    "ults": 8,
+    "fusions": 0
+   },
+   {
+    "dealt": 527101,
+    "kills": 673,
+    "level": 22,
+    "takenPerMin": 423.1,
+    "lateTakenPerMin": 672,
+    "ehp": 95,
+    "regenPerMin": 60,
+    "pressure": 4.335,
+    "bossShare": 0.39,
+    "ults": 8,
+    "fusions": 1
+   },
+   {
+    "dealt": 308179,
+    "kills": 573,
+    "level": 20,
+    "takenPerMin": 517.9,
+    "lateTakenPerMin": 874.2,
+    "ehp": 111,
+    "regenPerMin": 60,
+    "pressure": 5.124,
+    "bossShare": 0.5,
+    "ults": 7,
+    "fusions": 0
+   },
+   {
+    "dealt": 193957,
+    "kills": 441,
+    "level": 19,
+    "takenPerMin": 481.3,
+    "lateTakenPerMin": 756.6,
+    "ehp": 103,
+    "regenPerMin": 60,
+    "pressure": 4.647,
+    "bossShare": 0.53,
+    "ults": 7,
+    "fusions": 0
+   },
+   {
+    "dealt": 722262,
+    "kills": 845,
+    "level": 22,
+    "takenPerMin": 416.5,
+    "lateTakenPerMin": 661.3,
+    "ehp": 124,
+    "regenPerMin": 95,
+    "pressure": 3.016,
+    "bossShare": 0.36,
+    "ults": 8,
+    "fusions": 1
+   },
+   {
+    "dealt": 362870,
+    "kills": 609,
+    "level": 20,
+    "takenPerMin": 529.1,
+    "lateTakenPerMin": 851.7,
+    "ehp": 115,
+    "regenPerMin": 60,
+    "pressure": 4.867,
+    "bossShare": 0.48,
+    "ults": 8,
+    "fusions": 0
+   }
+  ]
+ }
+]

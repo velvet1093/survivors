@@ -400,6 +400,27 @@ export const TIER_MEASUREMENTS={
     ]
    ]
   },
+  "jacket": {
+   "label": "6 BOT RUNS · 10 MIN · CLOSE RANGE",
+   "stats": [
+    [
+     "Damage / sec",
+     "559"
+    ],
+    [
+     "Kills",
+     "591"
+    ],
+    [
+     "Level reached",
+     "20"
+    ],
+    [
+     "HP pool lost / min",
+     "449%"
+    ]
+   ]
+  },
   "jinwoo": {
    "label": "6 BOT RUNS · 10 MIN",
    "stats": [
@@ -453,7 +474,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-43%"
+     "-44%"
     ],
     [
      "Kills (3 min)",
@@ -470,7 +491,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-12%"
+     "-14%"
     ],
     [
      "Kills (3 min)",
@@ -487,7 +508,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-9%"
+     "-11%"
     ],
     [
      "Kills (3 min)",
@@ -508,7 +529,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+46%"
+     "+44%"
     ],
     [
      "Kills (3 min)",
@@ -529,7 +550,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-34%"
+     "-35%"
     ],
     [
      "Kills (3 min)",
@@ -550,7 +571,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-50%"
+     "-51%"
     ],
     [
      "Kills (3 min)",
@@ -592,7 +613,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-32%"
+     "-33%"
     ],
     [
      "Kills (3 min)",
@@ -613,7 +634,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+2%"
+     "+0%"
     ],
     [
      "Kills (3 min)",
@@ -634,7 +655,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-3%"
+     "-5%"
     ],
     [
      "Kills (3 min)",
@@ -655,7 +676,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-27%"
+     "-29%"
     ],
     [
      "Kills (3 min)",
@@ -672,7 +693,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-19%"
+     "-21%"
     ],
     [
      "Kills (3 min)",
@@ -693,7 +714,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+33%"
+     "+31%"
     ],
     [
      "Kills (3 min)",
@@ -714,7 +735,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-19%"
+     "-20%"
     ],
     [
      "Kills (3 min)",
@@ -731,7 +752,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+270%"
+     "+263%"
     ],
     [
      "Kills (3 min)",
@@ -748,7 +769,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-16%"
+     "-18%"
     ],
     [
      "Kills (3 min)",
@@ -765,7 +786,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+3%"
+     "+1%"
     ],
     [
      "Kills (3 min)",
@@ -786,7 +807,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+42%"
+     "+40%"
     ],
     [
      "Kills (3 min)",
@@ -803,7 +824,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+48%"
+     "+45%"
     ],
     [
      "Kills (3 min)",
@@ -824,7 +845,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+95%"
+     "+92%"
     ],
     [
      "Kills (3 min)",
@@ -845,7 +866,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+9%"
+     "+7%"
     ],
     [
      "Kills (3 min)",
@@ -866,7 +887,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+16%"
+     "+14%"
     ],
     [
      "Kills (3 min)",
@@ -883,7 +904,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-7%"
+     "-8%"
     ],
     [
      "Kills (3 min)",
@@ -904,7 +925,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+51%"
+     "+48%"
     ],
     [
      "Kills (3 min)",
@@ -925,7 +946,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+72%"
+     "+69%"
     ],
     [
      "Kills (3 min)",
@@ -946,7 +967,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+74%"
+     "+71%"
     ],
     [
      "Kills (3 min)",
@@ -963,7 +984,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-10%"
+     "-12%"
     ],
     [
      "Kills (3 min)",
@@ -984,7 +1005,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+54%"
+     "+51%"
     ],
     [
      "Kills (3 min)",
@@ -1005,7 +1026,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+57%"
+     "+54%"
     ],
     [
      "Kills (3 min)",
@@ -1039,7 +1060,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-26%"
+     "-27%"
     ],
     [
      "Kills (3 min)",
@@ -1060,7 +1081,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-1%"
+     "-3%"
     ],
     [
      "Kills (3 min)",
@@ -1077,7 +1098,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+15%"
+     "+13%"
     ],
     [
      "Kills (3 min)",
@@ -1098,7 +1119,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-25%"
+     "-26%"
     ],
     [
      "Kills (3 min)",
@@ -1119,7 +1140,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-18%"
+     "-20%"
     ],
     [
      "Kills (3 min)",
@@ -1136,7 +1157,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-41%"
+     "-42%"
     ],
     [
      "Kills (3 min)",
@@ -1157,7 +1178,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-31%"
+     "-32%"
     ],
     [
      "Kills (3 min)",
@@ -1178,7 +1199,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+32%"
+     "+30%"
     ],
     [
      "Kills (3 min)",
@@ -1199,7 +1220,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-21%"
+     "-22%"
     ],
     [
      "Kills (3 min)",
@@ -1220,7 +1241,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+36%"
+     "+34%"
     ],
     [
      "Kills (3 min)",
@@ -1241,7 +1262,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+12%"
+     "+10%"
     ],
     [
      "Kills (3 min)",
@@ -1262,7 +1283,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-2%"
+     "-4%"
     ],
     [
      "Kills (3 min)",
@@ -1279,7 +1300,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-45%"
+     "-46%"
     ],
     [
      "Kills (3 min)",
@@ -1296,7 +1317,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-2%"
+     "-3%"
     ],
     [
      "Kills (3 min)",
@@ -1313,7 +1334,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-11%"
+     "-12%"
     ],
     [
      "Kills (3 min)",
@@ -1330,7 +1351,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-11%"
+     "-13%"
     ],
     [
      "Kills (3 min)",
@@ -1351,7 +1372,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+51%"
+     "+49%"
     ],
     [
      "Kills (3 min)",
@@ -1372,7 +1393,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+101%"
+     "+97%"
     ],
     [
      "Kills (3 min)",
@@ -1393,7 +1414,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+40%"
+     "+38%"
     ],
     [
      "Kills (3 min)",
@@ -1414,7 +1435,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+13%"
+     "+11%"
     ],
     [
      "Kills (3 min)",
@@ -1435,7 +1456,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-27%"
+     "-28%"
     ],
     [
      "Kills (3 min)",
@@ -1456,7 +1477,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+65%"
+     "+63%"
     ],
     [
      "Kills (3 min)",
@@ -1477,7 +1498,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+80%"
+     "+77%"
     ],
     [
      "Kills (3 min)",
@@ -1498,7 +1519,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+0%"
+     "-2%"
     ],
     [
      "Kills (3 min)",
@@ -1519,7 +1540,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+140%"
+     "+136%"
     ],
     [
      "Kills (3 min)",
@@ -1540,7 +1561,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+25%"
+     "+23%"
     ],
     [
      "Kills (3 min)",
@@ -1561,7 +1582,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+55%"
+     "+52%"
     ],
     [
      "Kills (3 min)",
@@ -1578,11 +1599,53 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-21%"
+     "-23%"
     ],
     [
      "Kills (3 min)",
      "76"
+    ]
+   ]
+  },
+  "uzi": {
+   "label": "SOLO AT MAX RANK · CLOSE RANGE",
+   "stats": [
+    [
+     "Damage / sec",
+     "81"
+    ],
+    [
+     "vs. median weapon",
+     "+4%"
+    ],
+    [
+     "Kills (3 min)",
+     "94"
+    ],
+    [
+     "On Jacket",
+     "87 / sec"
+    ]
+   ]
+  },
+  "hotline": {
+   "label": "SOLO AT MAX RANK · CLOSE RANGE",
+   "stats": [
+    [
+     "Damage / sec",
+     "159"
+    ],
+    [
+     "vs. median weapon",
+     "+103%"
+    ],
+    [
+     "Kills (3 min)",
+     "204"
+    ],
+    [
+     "On Jacket",
+     "165 / sec"
     ]
    ]
   },
@@ -1595,7 +1658,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "-28%"
+     "-29%"
     ],
     [
      "Kills (3 min)",
@@ -1616,7 +1679,7 @@ export const TIER_MEASUREMENTS={
     ],
     [
      "vs. median weapon",
-     "+37%"
+     "+35%"
     ],
     [
      "Kills (3 min)",
@@ -2202,6 +2265,23 @@ export const TIER_MEASUREMENTS={
     [
      "Effective HP",
      "+0%"
+    ]
+   ]
+  },
+  "roostermask": {
+   "label": "FROM STAT FORMULAS",
+   "stats": [
+    [
+     "Weapon offense",
+     "+18%"
+    ],
+    [
+     "Effective HP",
+     "+0%"
+    ],
+    [
+     "Move speed",
+     "+12%"
     ]
    ]
   },
