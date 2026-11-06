@@ -1,5 +1,5 @@
 // Native 56 × 76 sprite clusters. Faces use small, quiet eyes rather than large white blocks.
-// Eren's Titan forms; his human outfits are drawn in eren-art.js.
+// Eren's Titan forms; his human outfits are drawn in eren-art.js. Frieren lives in frieren-art.js.
 export function redrawEren(r,{frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='default',form=0,evolved=''}={}){
  const {rect,poly,line}=r,ink='#283239',walk=moving?[0,2,0,-2][frame]:0,y=moving?-(frame%2):0,cast=attack||pose==='shift',tone='#e7c5a6',lit='#f4d9b8',shade='#b98e77',hair='#443c36',hairShade='#292c2c',hairLight='#73604b';
  if(form){
@@ -14,29 +14,5 @@ export function redrawEren(r,{frame=0,moving=false,pose='',attack=false,expressi
   poly([[17,25+y],[16,17+y],[20,10+y],[28,7+y],[37,12+y],[40,23+y],[36,29+y],[34,20+y],[30,16+y],[26,22+y],[23,18+y],[20,27+y]],hair);poly([[20,19+y],[22,13+y],[28,10+y],[35,14+y],[36,19+y],[30,13+y],[25,17+y],[22,16+y]],hairLight);line(18,28+y,17,35+y,'#65513e',2);line(37,27+y,38,35+y,'#65513e',2);
   for(const xx of [22,32]){line(xx,24+y,xx+3,25+y,ink);rect(xx+1,26+y,3,2,'#97dba4');rect(xx+2,26+y,1,1,'#f0f4bf');}poly([[23,30+y],[28,31+y],[34,30+y],[33,34+y],[27,35+y],[23,33+y]],'#684b43');for(const xx of [24,27,30,32])rect(xx,31+y,2,2,'#ecdbb4');rect(27,35+y,4,1,'#e0b18c');for(const [xx,yy,w,h]of [[lx-3,ly-2,9,9],[rx-3,ry-2,9,9],[19-walk,57,6,9],[33+walk,57,6,9],[23,34,5,4],[31,34,5,4]]){poly([[xx,yy+2],[xx+3,yy],[xx+w,yy+1],[xx+w-1,yy+h],[xx+1,yy+h]],'#658e9a');poly([[xx+2,yy+2],[xx+4,yy+1],[xx+w-2,yy+2],[xx+w-2,yy+h-1],[xx+2,yy+h-2]],'#a9d1d0');line(xx+3,yy+2,xx+3,yy+h-2,'#edf1d4');}return r.pixels;
  }
- return r.pixels;
-}
-export function redrawFrieren(r,{frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='default'}={}){
- const {rect,poly,line}=r,maid=skin==='maid',walk=moving?[0,1,0,-1][frame]:0,y=moving?-(frame%2):0,cast=attack||pose==='spell',ink='#343b4b',hair='#dce1e8',hairShade='#8f9bb1',hairMid='#b4c0cf',hairLight='#fff6e7',cream='#eee9d6',creamLight='#fff7e4',gold='#bc9753',goldLight='#e8ce8e',dark='#333c50',tone='#f3d9bb';
- // Twin tails curl out behind the shoulders and sway independently.
- for(const side of [-1,1]){const x=side<0?14:39,sw=side*walk;poly([[x-2,16+y],[x+3,16+y],[x+5,25],[x+3+sw,40],[x+8+sw,47],[x+4+sw,53],[x-1+sw,52],[x-5+sw,46],[x-4,31]],hairShade);poly([[x-1,18+y],[x+2,18+y],[x+2,30],[x+sw,40],[x+5+sw,47],[x+3+sw,50],[x+sw,48],[x-2+sw,41],[x-2,29]],hair);line(x,23,x-1+sw,36,hairLight);line(x+side,42,x+4+sw,47,hairMid,2);rect(x-2,18+y,6,2,maid?'#323b4d':'#b49b64');}
- for(const [x,d]of [[22,-walk],[30,walk]]){rect(x+d,54,5,13,dark);rect(x+d+1,56,2,6,'#586278');rect(x+d-1,63,7,7,maid?'#2e3647':'#786952');rect(x+d,63,2,5,maid?'#9099a7':'#b79d73');rect(x+d-2,69,9,2,'#303641');if(maid){rect(x+d,64,5,3,'#e1dfd4');rect(x+d+2,67,2,3,'#555e70');}}
- if(maid){
-  poly([[21,37],[35,37],[37,46],[42+walk,58],[38,62],[30,61],[24,63],[15+walk,60],[19,48]],'#262f42');poly([[22,40],[33,40],[33,48],[37+walk,57],[32,59],[23,58],[19+walk,57],[22,49]],cream);poly([[22,40],[26,43],[29,40],[32,43],[34,40],[33,48],[23,48]],creamLight);rect(26,38,6,5,dark);rect(28,42,2,5,'#687386');rect(23,48,12,3,'#b8c1c5');poly([[24,50],[32,50],[34,57],[27,59],[21,57]],creamLight);for(const xx of [16,21,26,31,36]){rect(xx+walk,59,4,3,'#aeb9c6');rect(xx+walk,59,3,2,creamLight);}line(18,39,14,46,'#566075',6);line(37,39,41,46,'#566075',6);rect(12,44,7,4,cream);rect(39,44,7,4,cream);rect(14,48,4,5,tone);rect(40,48,4,5,tone);poly([[20,49],[17,51],[13,49],[15,53],[20,53]],creamLight);
- }else{
-  poly([[22,36],[34,36],[36,46],[39+walk,57],[33,61],[26,59],[20,61],[16+walk,57],[21,47]],'#b3b6b0');poly([[23,38],[33,38],[33,47],[36+walk,56],[31,58],[27,56],[21,58],[19+walk,56],[23,47]],cream);rect(26,37,5,18,dark);for(const yy of [41,45,49])rect(26,yy,5,1,'#b2b9b7');line(19+walk,56,26,59,gold,2);line(28,57,36+walk,56,gold,2);line(20+walk,55,25,57,goldLight);line(29,56,35+walk,55,goldLight);
-  line(19,41,15,49,'#b5b9b3',5);line(37,41,41,49,'#b5b9b3',5);rect(13,48,6,4,gold);rect(40,48,5,4,gold);rect(14,51,4,4,tone);rect(40,51,4,4,tone);
-  poly([[18,36],[24,33],[28,36],[33,33],[39,36],[42,42],[37,47],[30,43],[27,41],[21,47],[14,43]],gold);poly([[18,36],[24,35],[28,38],[33,35],[38,37],[40,42],[36,44],[29,40],[27,39],[21,44],[16,42]],creamLight);line(19,41,22,42,'#d6ceb3');line(34,42,37,41,'#d6ceb3');rect(27,37,3,3,gold);rect(28,37,1,2,'#bf6570');
- }
- // Ears extend beyond a softly tapered face. Earrings hang clear of the cape.
- poly([[18,23+y],[7,21+y],[12,28+y],[19,29+y]],'#cda88f');poly([[37,23+y],[48,21+y],[43,28+y],[36,29+y]],'#cda88f');line(11,23+y,17,26+y,tone,2);line(39,25+y,45,23+y,tone,2);
- poly([[18,19+y],[23,13+y],[33,14+y],[38,21+y],[37,30+y],[32,36+y],[25,36+y],[20,32+y],[17,26+y]],'#d6b89f');poly([[20,20+y],[24,15+y],[32,16+y],[36,21+y],[35,30+y],[31,35+y],[25,34+y],[20,29+y]],tone);poly([[22,22+y],[34,22+y],[34,28+y],[30,32+y],[23,30+y]],'#ffe9c9');
- poly([[16,25+y],[14,19+y],[18,12+y],[26,9+y],[33,10+y],[39,15+y],[40,24+y],[37,28+y],[35,20+y],[31,17+y],[28,22+y],[25,17+y],[21,24+y],[19,21+y],[19,29+y]],hairShade);poly([[16,20+y],[19,14+y],[26,11+y],[32,12+y],[37,16+y],[38,23+y],[34,18+y],[31,14+y],[28,20+y],[25,14+y],[21,21+y],[19,18+y]],hair);line(20,15+y,25,12+y,hairLight,2);line(28,12+y,34,14+y,hairLight);line(18,22+y,18,29+y,hairMid,2);line(37,23+y,37,29+y,hairMid,2);
- poly([[18,19+y],[23,17+y],[27,20+y],[30,17+y],[35,19+y],[38,23+y],[36,27+y],[33,24+y],[31,22+y],[28,26+y],[25,23+y],[22,25+y],[20,22+y],[18,27+y]],hair);line(23,19+y,26,22+y,hairLight);line(31,19+y,34,21+y,hairLight);
- // Frieren's half-lidded green gaze is deliberately restrained.
- for(const xx of [21,32]){if(blink||expression==='hurt')line(xx,29+y,xx+3,29+y,ink);else{rect(xx,28+y,4,3,'#f6efdd');rect(xx+1,28+y,2,3,'#72a28b');rect(xx+2,28+y,1,3,'#3e685b');rect(xx+1,28+y,1,1,'#d4e9bb');line(xx,27+y,xx+3,27+y,ink);if(expression==='focused'||expression==='ultimate')rect(xx,28+y,1,1,ink);}}rect(27,34+y,3,1,'#aa7e7b');rect(16,29+y,1,4,goldLight);rect(16,32+y,2,3,'#b2677b');rect(39,29+y,1,4,goldLight);rect(38,32+y,2,3,'#b2677b');
- if(maid){for(let i=0;i<6;i++){const xx=17+i*4,yy=12-Math.round(Math.sin(i*Math.PI/5)*3)+y;rect(xx,yy,4,4,'#bdc6d0');rect(xx,yy,3,3,creamLight);}line(18,15+y,36,15+y,dark);poly([[12,17+y],[8,14+y],[9,21+y],[14,21+y]],dark);poly([[40,17+y],[46,14+y],[45,21+y],[40,21+y]],dark);}
- // Slanted red staff, gold crescent and jewel. Casting changes the hand and staff angle.
- const sx=cast?43:47,sy=cast?17:21;line(sx,sy+8,sx-7,69,'#693f4b',3);line(sx+1,sy+9,sx-6,69,'#b16c69');rect(sx-9,66,5,3,gold);poly([[sx-5,sy],[sx-4,sy-7],[sx+2,sy-11],[sx+7,sy-7],[sx+8,sy],[sx+4,sy+7],[sx-1,sy+8],[sx-5,sy+4]],gold);poly([[sx-3,sy],[sx-2,sy-5],[sx+2,sy-7],[sx+5,sy-4],[sx+5,sy+1],[sx+2,sy+5],[sx-1,sy+5]],'#6c4852');rect(sx-1,sy-4,5,6,'#a14c65');rect(sx,sy-4,3,2,'#e78b96');rect(sx,sy-3,1,1,'#ffe1b8');line(sx-3,sy+5,sx+3,sy+5,goldLight);line(42,52,cast?40:43,cast?44:49,tone,2);
  return r.pixels;
 }

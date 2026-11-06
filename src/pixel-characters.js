@@ -24,7 +24,8 @@ import {rimuruPixels} from './rimuru-art.js';
 import {diavoloPixels} from './diavolo-art.js';
 import {yukiPixels} from './yuki-art.js';
 import {gutsPixels} from './guts-art.js';
-import {redrawEren,redrawFrieren} from './hero-redesign.js';
+import {redrawEren} from './hero-redesign.js';
+import {frierenPixels} from './frieren-art.js';
 import {skinFor,tintPixels} from './skins.js';
 import {paintFace} from './expressions.js';
 // Original pixel art. The same native-resolution frames drive the roster and combat.
@@ -200,7 +201,6 @@ function esdeathFrame({frame=0,moving=false,pose='',attack=false,expression='neu
  poly([[14,17+y],[17,11+y],[25,7+y],[32,8+y],[40,13+y],[41,18+y],[36,20+y],[18,20+y]],p.shade);poly([[16,16+y],[19,12+y],[26,9+y],[32,10+y],[38,14+y],[39,17+y]],p.coat);line(17,15+y,26,10+y,p.light);line(26,10+y,38,15+y,p.light);rect(15,17+y,25,3,deep);line(17,18+y,38,18+y,'#b5c6d6');poly([[19,20+y],[38,19+y],[35,22+y],[29,24+y],[21,23+y]],navy);line(22,22+y,34,22+y,'#93a9b9');rect(26,13+y,5,5,navy);rect(28,12+y,1,7,'#b8cbd2');rect(25,15+y,7,1,'#b8cbd2');rect(27,14+y,3,3,'#3c526b');
  return outline(r.pixels,p.ink);
 }
-function frierenFrame(options){const r=raster();redrawFrieren(r,options);return outline(r.pixels,'#29333f');}
 
 function zeroSuitFrame({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='zerosuit'}){
  const r=raster(),{rect,poly,line}=r,ink='#293347',blue=skin==='stealth'?'#3c465c':'#4e85c3',shade=skin==='stealth'?'#252e46':'#33517f',light=skin==='stealth'?'#727c94':'#a0c9ed',hair='#e4c275',hairDark='#a98855',tone='#ffe2c6',walk=moving?[0,2,0,-2][frame]:0,y=moving?-frame%2:0;
@@ -250,7 +250,7 @@ export function characterPixels(id,{frame=0,moving=false,pose='',attack=false,ex
   if(id==='samus'&&skinId==='fusion'){const result=fusionSuitFrame({frame,moving,pose,attack,expression});dataCache.set(key,result);return result;}
   if(id==='megumi'){const result=megumiPixels({frame,moving,pose,attack,expression,blink,skin:skinId==='training'?'training':'default'});dataCache.set(key,result);return result;}
   if(id==='samus'&&['zerosuit','stealth'].includes(skinId)&&pose!=='bomb'){const result=zeroSuitFrame({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
-  if(id==='frieren'){const result=frierenFrame({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
+  if(id==='frieren'){const result=frierenPixels({frame,moving,pose,attack,expression,blink,skin:skinId});dataCache.set(key,result);return result;}
   if(id==='samus'){const result=tintPixels(variaSuitPixels({frame,moving,pose,attack,expression,blink}),skinFor(id,skinId));dataCache.set(key,result);return result;}
   if(id==='esdeath'){const result=tintPixels(esdeathFrame({frame,moving,pose,attack,expression,blink}),skinFor(id,skinId));dataCache.set(key,result);return result;}
   if(id==='shinji'){const result=evaFrame({frame,moving,pose,attack,expression,blink,skin:skinFor(id,skinId),evolved});dataCache.set(key,result);return result;}

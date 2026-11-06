@@ -2,10 +2,11 @@ import {canvas,motion,limb,selout,mix} from './hero-kit.js';
 // Shiraori: pale skin, long lavender-white hair falling in loose strands over her face,
 // a long braid over her left shoulder, glowing red eyes and a red choker. Her base look
 // is the white hooded robe: wide bell sleeves with lilac diamond inlays and gold cuffs,
-// a beige under-bust band and belt, a long trailing cloak and frilled white socks.
+// a beige under-bust band and belt, a long trailing cloak and frilled white socks. Unveiled, she wears a white dress with a braided rope belt, billowing
+// sleeves, a lilac trailing panel, fur-trimmed silver boots and carries her red scythe.
 export const SHIRAORI_ART={ink:'#2a2433',hair:'#e4dcef',hairDark:'#9e8eb8',hairLight:'#ffffff',hairMid:'#c4b6d8',eye:'#e2303e',eyeDark:'#8a1020'};
 const c=SHIRAORI_ART,SK={base:'#fbeee8',shade:'#e0c4c4',deep:'#c49aa0',light:'#ffffff'};
-const ROBE=['#9c8e7c','#e6dccc','#fff8ee'],TRIM='#d6bfa0',TRIM_DARK='#a88e70',LILAC='#d8a8d8',GOLD='#e6cf7a',CHOKER='#c8283a';
+const ROBE=['#b4aac4','#f4f0f4','#ffffff'],TRIM='#d6bfa0',TRIM_DARK='#a88e70',LILAC='#d8a8d8',GOLD='#e6cf7a',CHOKER='#c8283a';
 const shift=(pts,y)=>pts.map(([x,yy])=>[x,yy+y]);
 function layer(r,pts,[dark,mid,light],y=0){const p=shift(pts,y);r.poly(p,dark);const cx=p.reduce((s,q)=>s+q[0],0)/p.length,cy=p.reduce((s,q)=>s+q[1],0)/p.length;r.poly(p.map(([x,yy])=>{const dx=cx-x,dy=cy-yy,l=Math.hypot(dx,dy)||1;return [x+dx/l,yy+dy/l];}),mid);if(light){const left=[...p].sort((a,b)=>a[0]-b[0]).slice(0,2);r.line(left[0][0]+1,left[0][1],left[1][0]+1,left[1][1],light);}}
 
@@ -85,7 +86,7 @@ function dress(r,m){
 }
 function sleeves(r,m,{raise=0}={}){
  const {y,walk,cast,frame}=m,{poly:P,rect:R,line:L,put}=r,pulse=cast?[0,-2,0,1][frame]:0,sway=walk*.3;
- const OPEN='#7a6c5c',hands=[];
+ const OPEN='#8a8098',hands=[];
  for(let i=0;i<2;i++){
   const raised=i===1&&cast||i===0&&cast&&raise>1,X=x=>i?56-x:x;
   if(raised){
@@ -170,12 +171,53 @@ function swimLook(r,m){
  return hands;
 }
 
+function unveiledLook(r,m){
+ const {y,walk,cast,frame}=m,{rect:R,poly:P,line:L,put}=r,W='#f4f0f6',WS='#c4b8d8',WL='#ffffff',PU=['#7a6ab8','#a890d0','#d8c4ec'];
+ hairBack(r,m);
+ // Long trailing back panel, lilac on its underside, sweeping out behind her.
+ P([[20,47],[37,47],[46+walk,59],[50+walk,68],[40,67],[31,62],[24,66],[12-walk,64],[16,56]],PU[0]);
+ P([[21,48],[36,48],[44+walk,59],[47+walk,66],[40,65],[31,60],[24,64],[14-walk,62],[17,56]],PU[1]);L(38,52,46+walk,64,PU[2]);L(18,55,15-walk,61,PU[2]);
+ // Fur-trimmed silver knee boots.
+ for(const [x,d]of [[22,-walk],[29,walk]]){R(x+d,55,5,4,SK.base);R(x+4+d,55,1,4,SK.shade);
+  R(x+d,59,5,11,'#c8ccd8');R(x+d+1,59,1,10,'#f0f2f6');R(x+d+4,59,1,11,'#8a8e9c');R(x+d,64,5,1,'#8a8e9c');R(x-1+d,69,7,2,'#9a9eac');R(x-1+d,70,7,1,'#5a5e6a');
+  for(let i=0;i<6;i+=2){R(x-1+i+d,57,2,2,'#4a4a56');put(x+i+d,56,'#6a6a78');}}
+ // Short white skirt, shorter at the front, with soft folds.
+ P([[20,47],[36,47],[40+walk*.4,56],[34,58],[28,56],[22,58],[16+walk*.4,56]],WS);P([[21,47],[35,47],[38+walk*.4,55],[34,57],[28,55],[22,57],[18+walk*.4,55]],W);
+ L(24,49,21+walk*.4,56,WS);L(32,49,35+walk*.4,56,WS);L(28,49,28,55,WL);
+ // Fitted white bodice trimmed with braided rope across the bust.
+ P(shift([[20,39],[36,39],[35,48],[21,48]],y),WS);P(shift([[21,40],[35,40],[34,47],[22,47]],y),W);L(22,42+y,22,46,WL);
+ for(let x=21;x<36;x++){put(x,40+y,x%2?'#a8b4d8':'#e0e6f6');put(x,41+y,x%2?'#e0e6f6':'#a8b4d8');}
+ // A rope belt slung diagonally with a gold knot and a red braided tassel.
+ for(let i=0;i<=16;i++){const x=20+i,yy=Math.round(45+i*.25);put(x,yy,i%2?'#a8b4d8':'#e0e6f6');put(x,yy+1,i%2?'#7a88b0':'#a8b4d8');}
+ R(31,48,3,2,'#e6cf7a');put(32,48,'#fff0b0');for(let yy=50;yy<57;yy++){put(32,yy,yy%2?'#c8283a':'#8a1424');put(33,yy,yy%2?'#8a1424':'#c8283a');}
+ // Billowing detached sleeves from shoulder to wrist.
+ const pulse=cast?[0,-2,0,1][frame]:0,hands=[];
+ for(const i of [0,1]){const X=x=>i?56-x:x,raised=i===1&&cast;
+  if(raised){const hx=45+pulse,hy=31+pulse;P([[36,39+y],[41,37+y],[hx+2,hy+3],[hx-2,hy+6],[38,46+y]],WS);P([[37,40+y],[41,38+y],[hx+1,hy+3],[hx-2,hy+5],[38,45+y]],W);L(39,40+y,hx-1,hy+4,'#e8c8e8');R(hx-1,hy,3,3,SK.base);hands.push([hx,hy]);continue;}
+  const sw=(i?-1:1)*walk*.3;
+  P([[X(21),39+y],[X(15),39+y],[X(10),44+y],[X(10)+sw,51],[X(13)+sw,55],[X(18)+sw,54],[X(21),48]],WS);
+  P([[X(20),40+y],[X(15),40+y],[X(11),44+y],[X(11)+sw,50],[X(14)+sw,54],[X(18)+sw,53],[X(20),47]],W);
+  L(X(14),41+y,X(12)+sw,49,WL);P([[X(12)+sw,50],[X(18)+sw,52],[X(14)+sw,54]],'#e8c8e8');
+  const hx=X(15)+sw,hy=55;R(hx-1,hy,3,3,SK.base);R(hx-1,hy+2,3,1,SK.shade);hands.push([hx,hy]);
+ }
+ // The red scythe: a silver pole held at her side, its blade curving over her shoulder.
+ const [sx,sy]=hands[0];L(sx,12,sx+1,70,'#7a7e8c',2);L(sx,12,sx,69,'#d8dce6');R(sx-1,10,3,3,'#9a9eac');
+ P([[sx+1,11],[sx-4,8],[sx-9,10],[sx-12,15],[sx-13,22],[sx-10,18],[sx-6,14],[sx,14]],'#7a1020');
+ P([[sx,12],[sx-4,10],[sx-8,12],[sx-11,16],[sx-11,19],[sx-8,15],[sx-4,13],[sx,13]],'#d8283a');L(sx-4,9,sx-10,13,'#ff8090');
+ for(const [dx,dy]of [[-6,15],[-9,17]])put(sx+dx,dy,'#ff8090');
+ face(r,m);
+ // A small red feather ornament on the choker.
+ P(shift([[31,37],[34,36],[33,40],[31,39]],y),'#c8283a');put(32,37+y,'#f06070');
+ hairFront(r,m);
+ return [hands[0],hands[1]];
+}
+
 const cache=new Map();
 export function shiraoriPixels({frame=0,moving=false,pose='',attack=false,expression='neutral',blink=false,skin='default'}={}){
  const key=[frame,moving,pose,attack,expression,blink,skin].join(':');if(cache.has(key))return cache.get(key);
  const mo=motion({frame,moving}),m={frame:((frame%4)+4)%4,moving,pose,attack,expression,blink,walk:mo.walk*2,y:mo.y,cast:attack||!!pose};
  const r=canvas();
- const hands=skin==='casual'?casualLook(r,m):skin==='pajamas'?pajamaLook(r,m):skin==='swimsuit'?swimLook(r,m):robeLook(r,m,{hooded:skin!=='unveiled'});
+ const hands=skin==='casual'?casualLook(r,m):skin==='pajamas'?pajamaLook(r,m):skin==='swimsuit'?swimLook(r,m):skin==='unveiled'?unveiledLook(r,m):robeLook(r,m,{hooded:true});
  // Casting spins a web sigil at her raised hand; the ultimate weaves a larger one overhead.
  if(m.cast){const [hx,hy]=hands[1];webSigil(r,hx+2,hy-5);if(pose==='summon'||pose==='ultimate')webSigil(r,28,4,{big:true});}
  const result=selout(r.pixels,c.ink);cache.set(key,result);return result;
