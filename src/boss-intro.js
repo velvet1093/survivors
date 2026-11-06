@@ -5,6 +5,9 @@ import {cinematicArt} from './boss-cinema-art.js';
 // Entrance names describe a short vision of the boss's signature power. The
 // vision can reveal a Titan body without changing the live boss's phase.
 export const BOSS_CINEMATICS={
+ suzaku:{theme:'cosmic',ability:'LANCELOT · THE WHITE KNIGHT',caption:'A white knightmare lands in a spray of sparks. Inside, a young pilot obeys a curse that will not let him die.',beats:['THE LANCELOT LAUNCHES','THE MVS BLADES IGNITE','“LIVE!”'],duration:4.3},
+ cornelia:{theme:'inferno',ability:'THE WITCH OF BRITANNIA · ROYAL GUARD',caption:'Violet Gloucesters form ranks behind a princess with a drawn sword. Her army has never retreated.',beats:['THE ROYAL GUARD ASSEMBLES','THE WITCH OF BRITANNIA RIDES','CHARGE!'],duration:4.3},
+ charles:{theme:'ritual',ability:'ALL HAIL BRITANNIA · THE SWORD OF AKASHA',caption:'The Emperor of the Holy Britannian Empire rises from his throne. Behind him the Thought Elevator opens on the World of C.',beats:['THE EMPEROR SPEAKS','ALL HAIL BRITANNIA!','THE SWORD OF AKASHA STIRS'],duration:4.5},
  jellal:{theme:'cosmic',ability:'HEAVENLY BODY MAGIC · GRAND CHARIOT',caption:'Seven stars align over a blue-haired mage. The red mark beneath his eye glows as the sky answers.',beats:['THE STARS BEGIN TO MOVE','THE GRAND CHARIOT TAKES SHAPE','HEAVEN FALLS ON HIS COMMAND'],duration:4.3},
  geld:{theme:'horror',ability:'STARVED · THE ORC DISASTER',caption:'An endless army marches out of the swamp. At its heart a crowned Orc Lord devours everything in his path.',beats:['THE HUNGRY ARMY MARCHES','THE ORC LORD RAISES HIS CLEAVER','NOTHING IS LEFT UNEATEN'],duration:4.4},
  kokushibo:{theme:'ritual',ability:'MOON BREATHING · UPPER MOON ONE',caption:'Crescent blades hang in the night air. Six eyes open above a blade grown from living flesh.',beats:['THE MOON RISES RED','SIX EYES OPEN IN THE DARK','THE FIRST FORM IS DRAWN'],duration:4.4},
