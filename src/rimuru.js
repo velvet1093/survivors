@@ -8,7 +8,7 @@ export function castBlackFlame(g,target,power){
 }
 function impact(g,s,{damage,burst}){
  if(s.impacted)return;s.impacted=true;s.life=0;const radius=(32+s.rank*7+(s.fused?24:0))*g.p.area;
- g.effects.push({type:'nova',x:s.x,y:s.y,r:radius,color:'#9ccfeb',life:.32,max:.32});damagePropsInRadius(g,s.x,s.y,radius,s.damage*.6);
+ g.effects.push({type:'blackflame-burst',x:s.x,y:s.y,r:radius,fused:!!s.fused,color:'#9ccfeb',life:.42,max:.42});damagePropsInRadius(g,s.x,s.y,radius,s.damage*.6);
  for(const e of g.enemies)if(e.hp>0&&distance(e,s)<radius+e.r){damage(g,e,s.damage,'#b9e7ee');applyStatus(e,'burning',s.fused?4:2.5,{power:s.damage*.13,source:'blackflame'});if(s.fused){applyStatus(e,'cursed',3);const d=distance(e,s);if(d>8)moveBody(g,e,(s.x-e.x)/d*Math.min(35,d-8)*(e.boss?.15:1),(s.y-e.y)/d*Math.min(35,d-8)*(e.boss?.15:1),Math.min(e.r*.6,19));}}
  burst(g,s.x,s.y,'#9dc9e9',7,80);
 }

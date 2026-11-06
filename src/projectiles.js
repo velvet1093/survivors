@@ -10,6 +10,7 @@ import {drawPalletRound,drawLonginus} from './eva-effects.js';
 import {drawPoisonVial} from './maomao-effects.js';
 import {drawRedOrb} from './gojo-effects.js';
 import {drawRoseArrow} from './madoka-effects.js';
+import {drawZoltraakBolt} from './frieren-effects.js';
 import {drawPairedProjectile} from './paired-attack-art.js';
 const TAU=Math.PI*2;
 const line=(c,points,color,width)=>{c.strokeStyle=color;c.lineWidth=width;c.lineCap='round';c.lineJoin='round';c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();};
@@ -44,7 +45,7 @@ export function drawPlayerProjectile(c,s,{zoom=1,area=1,reducedMotion=false}={})
   else if(s.type==='red')drawRedOrb(c,s,reducedMotion);
   else if(s.type==='missile'||s.type==='supermissile'){trail(s.color,22);poly(c,[[-8,-4],[7,-4],[14,0],[7,4],[-8,4]],s.type==='supermissile'?'#a6d5a3':'#e6d9cb');poly(c,[[5,-4],[14,0],[5,4]],s.type==='supermissile'?'#6ca489':'#d1777b');poly(c,[[-8,-4],[-12,-8],[-10,0],[-12,8],[-8,4]],'#8e9da4');}
   else if(s.type==='powerbeam'){trail(s.color,s.charged?24:16);disc(c,3,0,s.charged?8:4,s.beamStage>=2?'#dbf7fc':s.fused?'#b9f5d6':'#ffe0a1');disc(c,5,-1,s.charged?3:1.5,'#fffae0');}
-  else if(s.type==='zoltraak'){trail('#c2e7d7',30);poly(c,[[20,0],[3,-4],[-5,0],[3,4]],'#f0f4cd');}
+  else if(s.type==='zoltraak')drawZoltraakBolt(c,s,reducedMotion);
   else if(s.type==='pallet')drawPalletRound(c,s,reducedMotion);
   else if(s.type==='icelance'){trail('#6bc6ed',23);poly(c,[[22,0],[-3,-6],[-13,0],[-3,6]],'#b2eafa');line(c,[[-10,0],[19,0]],'#f5fffc',2);line(c,[[-3,-4],[5,0],[-3,4]],'#64aed7',1);}
   else if(s.type==='rosebow')drawRoseArrow(c,s,reducedMotion);

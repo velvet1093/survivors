@@ -39,6 +39,9 @@ import {drawEvaEffect,drawEvaAura} from './eva-effects.js';
 import {drawMaomaoEffect} from './maomao-effects.js';
 import {drawGojoEffect} from './gojo-effects.js';
 import {drawMadokaEffect} from './madoka-effects.js';
+import {drawZoltraakRay} from './frieren-effects.js';
+import {drawShiraoriEffect} from './shiraori-effects.js';
+import {drawRimuruEffect} from './rimuru-art-effects.js';
 import {drawGem,drawUnitStatuses,drawCombatField} from './combat-art.js';
 import {terrain,propSprite} from './pixel-world.js';
 import {drawHero,drawEnemy} from './sprites.js';
@@ -94,15 +97,14 @@ function drawWorldLoot(c,g){
 }
 function drawEffects(c,g){
   for(const e of g.effects){const progress=1-e.life/e.max;c.save();c.globalAlpha=Math.min(1,e.life/e.max*2);
-    if(drawSalvationEffect(c,e,progress,!!g.p.reducedMotion)||drawPairedEffect(c,e,progress,!!g.p.reducedMotion)||drawKurumiClockEffect(c,e,progress,!!g.p.reducedMotion)||drawGutsSlash(c,e,progress,!!g.p.reducedMotion)||drawDenjiSlash(c,e,progress,!!g.p.reducedMotion)||drawMegumiEffect(c,e,progress,!!g.p.reducedMotion)||drawEvaEffect(c,e,progress,!!g.p.reducedMotion)||drawMaomaoEffect(c,e,progress,!!g.p.reducedMotion)||drawGojoEffect(c,e,progress,!!g.p.reducedMotion)||drawMadokaEffect(c,e,progress,!!g.p.reducedMotion)){c.restore();continue;}
+    if(drawSalvationEffect(c,e,progress,!!g.p.reducedMotion)||drawPairedEffect(c,e,progress,!!g.p.reducedMotion)||drawKurumiClockEffect(c,e,progress,!!g.p.reducedMotion)||drawGutsSlash(c,e,progress,!!g.p.reducedMotion)||drawDenjiSlash(c,e,progress,!!g.p.reducedMotion)||drawMegumiEffect(c,e,progress,!!g.p.reducedMotion)||drawEvaEffect(c,e,progress,!!g.p.reducedMotion)||drawMaomaoEffect(c,e,progress,!!g.p.reducedMotion)||drawGojoEffect(c,e,progress,!!g.p.reducedMotion)||drawMadokaEffect(c,e,progress,!!g.p.reducedMotion)||drawZoltraakRay(c,e,progress,!!g.p.reducedMotion)||drawShiraoriEffect(c,e,progress,!!g.p.reducedMotion)||drawRimuruEffect(c,e,progress,!!g.p.reducedMotion)){c.restore();continue;}
     if(drawErzaEffect(c,e,progress,!!g.p.reducedMotion)){c.restore();continue;}
     if(e.type==='crimson-strike'){drawCrimsonStrike(c,e,progress,!!g.p.reducedMotion);c.restore();continue;}
     if(e.type==='thunder-blast'){c.strokeStyle='#e9c889';c.lineWidth=3;c.beginPath();c.arc(e.x,e.y,e.r*(.25+progress*.75),0,TAU);c.stroke();for(let i=0;i<7;i++){const a=i*2.399,r=e.r*(.3+progress*.6);path(c,[[e.x+Math.cos(a)*r*.3,e.y+Math.sin(a)*r*.3],[e.x+Math.cos(a+.15)*r*.7,e.y+Math.sin(a+.15)*r*.7],[e.x+Math.cos(a)*r,e.y+Math.sin(a)*r]],'#ffedc3',2);}}
     if(e.type==='odm-slash'){drawOdmAttack(c,e,progress,!!g.p.reducedMotion);c.restore();continue;}
     if(e.type==='titan-impact'){const r=e.r*(.3+progress*.7);c.strokeStyle=e.color;c.lineWidth=4*(1-progress)+1;c.beginPath();c.ellipse(e.x,e.y,r,r*.48,0,0,TAU);c.stroke();for(let i=0;i<6;i++){const a=i*TAU/6;path(c,[[e.x+Math.cos(a)*r*.3,e.y+Math.sin(a)*r*.15],[e.x+Math.cos(a)*r,e.y+Math.sin(a)*r*.5]],'#c7b89b',2);}}
     if(e.type==='ki-charge'){const r=e.r*(1-e.life/e.max);ellipse(c,e.x,e.y,r,r,e.color+'55');c.strokeStyle=e.color;c.lineWidth=2;c.beginPath();c.arc(e.x,e.y,Math.max(1,r),0,TAU);c.stroke();}
-    if(e.type==='zoltraak'){path(c,[[e.x,e.y],[e.tx,e.ty]],'#34465a',e.width+4);path(c,[[e.x,e.y],[e.tx,e.ty]],e.color,e.width);path(c,[[e.x,e.y],[e.tx,e.ty]],'#fffbed',Math.max(1,e.width*.3));}
-    else if(e.type==='powerbomb'){const r=e.r*Math.min(1,progress*1.3);c.strokeStyle='#f9e5ae';c.lineWidth=7*(1-progress)+1;c.beginPath();c.arc(e.x,e.y,r,0,TAU);c.stroke();c.fillStyle='#eac87c12';c.fill();}
+    if(e.type==='powerbomb'){const r=e.r*Math.min(1,progress*1.3);c.strokeStyle='#f9e5ae';c.lineWidth=7*(1-progress)+1;c.beginPath();c.arc(e.x,e.y,r,0,TAU);c.stroke();c.fillStyle='#eac87c12';c.fill();}
     else if(e.type==='clock-mark'||e.type==='clock-muzzle'){const r=e.r*(.5+progress*.5);c.strokeStyle=e.color;c.lineWidth=1;c.beginPath();c.arc(e.x,e.y,r,0,TAU);c.stroke();for(let i=0;i<12;i++){const a=i*TAU/12;path(c,[[e.x+Math.cos(a)*r*.85,e.y+Math.sin(a)*r*.85],[e.x+Math.cos(a)*r,e.y+Math.sin(a)*r]],e.color,1);}path(c,[[e.x,e.y-r*.6],[e.x,e.y],[e.x+r*.45,e.y]],'#f6dfb9',2);}
     else if(e.type==='frost-burst'){const r=e.r*(.2+progress*.8);c.strokeStyle='#cceafa';c.lineWidth=2;c.beginPath();c.arc(e.x,e.y,r,0,TAU);c.stroke();for(let i=0;i<12;i++){const a=i*TAU/12,x=e.x+Math.cos(a)*r,y=e.y+Math.sin(a)*r;path(c,[[x-3,y+6],[x,y-6],[x+3,y+6]],'#d3edf7',2);}}
     else if(e.type==='positron'){c.lineCap='square';path(c,[[e.x,e.y],[e.tx,e.ty]],'#d9c7a533',e.width*3);path(c,[[e.x,e.y],[e.tx,e.ty]],'#efd79c',e.width);path(c,[[e.x,e.y],[e.tx,e.ty]],'#fff9df',3);}
